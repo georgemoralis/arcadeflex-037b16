@@ -5,11 +5,13 @@
  */
 package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
+//drivers imports
+import static gr.codebb.arcadeflex.v037b16.drivers.tnzs.*;
+//to be organized
 import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
 import static mame037b16.common.*;
 import static mame037b16.osdependH.*;
-import static mame037b16.drivers.tnzs.*;
 import static mame037b16.drawgfx.*;
 import static mame037b16.drawgfxH.*;
 import static common.libc.expressions.*;

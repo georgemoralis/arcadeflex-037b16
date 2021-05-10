@@ -5,7 +5,9 @@
  */
 package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
-
+//drivers imports
+import static gr.codebb.arcadeflex.v037b16.drivers.speedbal.*;
+//to be organized
 import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
 import static mame037b16.osdependH.*;
@@ -20,7 +22,6 @@ import static mame037b7.palette.palette_transparent_pen;
 import static mame037b7.palette.palette_used_colors;
 import static mame037b7.paletteH.PALETTE_COLOR_TRANSPARENT;
 import static mame037b7.paletteH.PALETTE_COLOR_USED;
-import static mame037b16.drivers.speedbal.*;
 
 public class speedbal {
 
@@ -41,8 +42,6 @@ public class speedbal {
     static osd_bitmap bitmap_ch;
 
     /* foreground char  */
-
-
     static int TOTAL_COLORS(int gfxn) {
         return Machine.gfx[gfxn].total_colors * Machine.gfx[gfxn].color_granularity;
     }
