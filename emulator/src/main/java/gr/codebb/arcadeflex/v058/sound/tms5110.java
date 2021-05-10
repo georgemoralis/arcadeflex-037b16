@@ -5,13 +5,16 @@
  */
 package gr.codebb.arcadeflex.v058.sound;
 
+//sound imports
+import static gr.codebb.arcadeflex.v058.sound.tms5110H.*;
+import static gr.codebb.arcadeflex.v058.sound.tms5110r.*;
+
+//to be organized
 import static arcadeflex036.osdepend.logerror;
 import static common.libc.cstdlib.rand;
 import static common.libc.cstring.memset;
 import static common.libc.expressions.sizeof;
 import common.ptr.ShortPtr;
-import static gr.codebb.arcadeflex.v058.sound.tms5110H.*;
-import static gr.codebb.arcadeflex.v058.sound.tms5110r.*;
 
 public class tms5110 {
 

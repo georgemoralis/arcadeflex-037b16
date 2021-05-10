@@ -4,11 +4,13 @@
  */
 package gr.codebb.arcadeflex.v058.sound;
 
+//sound imports
+import static gr.codebb.arcadeflex.v058.sound.sn76496H.*;
 
+//to be organized
 import arcadeflex037b16.fucPtr.WriteHandlerPtr;
 import static common.libc.cstdio.sprintf;
 import common.ptr.ShortPtr;
-import static gr.codebb.arcadeflex.v058.sound.sn76496H.*;
 import static mame037b16.mame.Machine;
 import mame056.sndintrf.snd_interface;
 import mame056.sndintrfH.MachineSound;
