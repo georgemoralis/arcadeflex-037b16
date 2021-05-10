@@ -1,10 +1,11 @@
 /**
- * ported to v0.56
  * ported to v0.37b16
  * ported to v0.36
  */
 package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 
@@ -17,7 +18,6 @@ import static mame037b16.drawgfx.*;
 import static mame037b16.common.*;
 import static mame037b16.drawgfxH.*;
 import static common.libc.expressions.*;
-import static mame056.memoryH.*;
 import static mame037b16.commonH.*;
 
 public class gunsmoke {

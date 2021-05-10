@@ -3,8 +3,10 @@
  * using automatic conversion tool v0.01
  */
 package gr.codebb.arcadeflex.v037b16.drivers;
-//vidhrdw imports
 
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
+//vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.superqix.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 //to be organized
@@ -16,7 +18,6 @@ import static mame037b16.drawgfxH.*;
 import static mame037b16.driverH.*;
 import static mame056.inptport.*;
 import static mame056.inptportH.*;
-import static mame056.memoryH.*;
 import static mame056.sndintrfH.*;
 import static mame056.cpuexec.*;
 

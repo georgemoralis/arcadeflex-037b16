@@ -7,6 +7,8 @@ package gr.codebb.arcadeflex.v037b16.machine;
 
 //drivers imports
 import static gr.codebb.arcadeflex.v037b16.drivers.tnzs.*;
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
@@ -15,7 +17,6 @@ import static mame037b16.commonH.*;
 import static mame056.cpuintrfH.*;
 import static mame037b16.common.*;
 import static mame056.cpuexec.*;
-import static mame056.memoryH.*;
 import static mame056.memory.*;
 import static mame056.inptport.*;
 import static arcadeflex036.osdepend.*;
