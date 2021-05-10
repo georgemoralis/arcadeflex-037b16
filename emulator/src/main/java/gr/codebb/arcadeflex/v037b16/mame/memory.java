@@ -4,8 +4,17 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+import arcadeflex037b16.fucPtr.ReadHandlerPtr;
+import static common.libc.cstdio.printf;
+import common.ptr.UBytePtr;
+import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
+import static java.lang.System.exit;
+import static mame037b16.driverH.MAX_CPU;
+import static mame056.cpuintrfH.cpu_getactivecpu;
+
 public class memory {
-/*TODO*///
+
+    /*TODO*///
 /*TODO*/////#define MEM_DUMP
 /*TODO*/////#define CHECK_MASKS
 /*TODO*///
@@ -15,68 +24,96 @@ public class memory {
 /*TODO*///#define MEMWRITESTART			profiler_mark(PROFILER_MEMWRITE);
 /*TODO*///#define MEMWRITEEND(ret)		{ (ret); profiler_mark(PROFILER_END); return; }
 /*TODO*///
-/*TODO*///#define DATABITS_TO_SHIFT(d)	(((d) == 32) ? 2 : ((d) == 16) ? 1 : 0)
+    public static int DATABITS_TO_SHIFT(int d) {
+        return (((d) == 32) ? 2 : ((d) == 16) ? 1 : 0);
+    }
+
+    /* helper macros */
+    public static boolean HANDLER_IS_RAM(int h) {
+        return ((h) == STATIC_RAM);
+    }
+
+    public static boolean HANDLER_IS_ROM(int h) {
+        return ((h) == STATIC_ROM);
+    }
+
+    public static boolean HANDLER_IS_RAMROM(int h) {
+        return ((h) == STATIC_RAMROM);
+    }
+
+    public static boolean HANDLER_IS_NOP(int h) {
+        return ((h) == STATIC_NOP);
+    }
+
+    public static boolean HANDLER_IS_BANK(int h) {
+        return ((h) >= STATIC_BANK1 && (h) <= STATIC_BANKMAX);
+    }
+
+    public static boolean HANDLER_IS_STATIC(int h) {
+        return (h < STATIC_COUNT && h != -15000);//special handle for arcadeflex
+    }
+
+    public static int HANDLER_TO_BANK(int h) {
+        return h;
+    }
+
+    /*TODO*///#define BANK_TO_HANDLER(b)		((void *)(b))
 /*TODO*///
-/*TODO*////* helper macros */
-/*TODO*///#define HANDLER_IS_RAM(h)		((FPTR)(h) == STATIC_RAM)
-/*TODO*///#define HANDLER_IS_ROM(h)		((FPTR)(h) == STATIC_ROM)
-/*TODO*///#define HANDLER_IS_RAMROM(h)	((FPTR)(h) == STATIC_RAMROM)
-/*TODO*///#define HANDLER_IS_NOP(h)		((FPTR)(h) == STATIC_NOP)
-/*TODO*///#define HANDLER_IS_BANK(h)		((FPTR)(h) >= STATIC_BANK1 && (FPTR)(h) <= STATIC_BANKMAX)
-/*TODO*///#define HANDLER_IS_STATIC(h)	((FPTR)(h) < STATIC_COUNT)
-/*TODO*///
-/*TODO*///#define HANDLER_TO_BANK(h)		((FPTR)(h))
-/*TODO*///#define BANK_TO_HANDLER(b)		((void *)(b))
-/*TODO*///
-/*TODO*///
-/*TODO*////*-------------------------------------------------
-/*TODO*///	TYPE DEFINITIONS
-/*TODO*///-------------------------------------------------*/
-/*TODO*///
-/*TODO*///struct bank_data
-/*TODO*///{
-/*TODO*///	UINT8 				used;				/* is this bank used? */
-/*TODO*///	UINT8 				cpu;				/* the CPU it is used for */
-/*TODO*///	offs_t 				base;				/* the base offset */
-/*TODO*///	offs_t				readoffset;			/* original base offset for reads */
-/*TODO*///	offs_t				writeoffset;		/* original base offset for writes */
-/*TODO*///};
-/*TODO*///
-/*TODO*///struct handler_data
-/*TODO*///{
-/*TODO*///	void *				handler;			/* function pointer for handler */
-/*TODO*///	offs_t				offset;				/* base offset for handler */
-/*TODO*///};
-/*TODO*///
-/*TODO*///struct table_data
-/*TODO*///{
-/*TODO*///	UINT8 *				table;				/* pointer to base of table */
-/*TODO*///	UINT8 				subtable_count;		/* number of subtables used */
-/*TODO*///	UINT8 				subtable_alloc;		/* number of subtables allocated */
-/*TODO*///	struct handler_data *handlers;			/* pointer to which set of handlers */
-/*TODO*///};
-/*TODO*///
-/*TODO*///struct memport_data
-/*TODO*///{
-/*TODO*///	int					cpu;				/* CPU index */
-/*TODO*///	int					abits;				/* address bits */
-/*TODO*///	int 				dbits;				/* data bits */
-/*TODO*///	int					ebits;				/* effective address bits */
-/*TODO*///	offs_t				mask;				/* address mask */
-/*TODO*///	struct table_data	read;				/* memory read lookup table */
-/*TODO*///	struct table_data	write;				/* memory write lookup table */
-/*TODO*///};
-/*TODO*///
-/*TODO*///struct cpu_data
-/*TODO*///{
-/*TODO*///	void *				rombase;			/* ROM base pointer */
-/*TODO*///	void *				rambase;			/* RAM base pointer */
-/*TODO*///	opbase_handler 		opbase;				/* opcode base handler */
-/*TODO*///
-/*TODO*///	struct memport_data	mem;				/* memory tables */
-/*TODO*///	struct memport_data	port;				/* port tables */
-/*TODO*///};
-/*TODO*///
+    /*-------------------------------------------------
+            TYPE DEFINITIONS
+    -------------------------------------------------*/
+    public static class bank_data {
+
+        int used;/* is this bank used? */
+        int cpu;/* the CPU it is used for */
+        int base;/* the base offset */
+        int readoffset;/* original base offset for reads */
+        int writeoffset;/* original base offset for writes */
+    }
+
+    public static class handler_data {
+
+        public Object handler;/* function pointer for handler */
+        public int offset;/* base offset for handler */
+
+        public static handler_data[] create(int n) {
+            handler_data[] a = new handler_data[n];
+            for (int k = 0; k < n; k++) {
+                a[k] = new handler_data();
+            }
+            return a;
+        }
+    }
+
+    public static class table_data {
+
+        UBytePtr table;/* pointer to base of table */
+        int /*UINT8*/ subtable_count;/* number of subtables used */
+        int /*UINT8*/ subtable_alloc;/* number of subtables allocated */
+        handler_data[] handlers;/* pointer to which set of handlers */
+    }
+
+    public static class memport_data {
+
+        int cpu;/* CPU index */
+        int abits;/* address bits */
+        int dbits;/* data bits */
+        int ebits;/* effective address bits */
+        int /*offs_t*/ mask;/* address mask */
+        table_data read = new table_data();/* memory read lookup table */
+        table_data write = new table_data();/* memory write lookup table */
+    }
+
+    public static class cpu_data {
+
+        UBytePtr rombase;/* ROM base pointer */
+        UBytePtr rambase;/* RAM base pointer */
+        opbase_handlerPtr opbase;/* opcode base handler */
+        memport_data mem = new memport_data();/* memory tables */
+        memport_data port = new memport_data();/* port tables */
+    }
+
+    /*TODO*///
 /*TODO*///struct memory_address_table
 /*TODO*///{
 /*TODO*///	int 				bits;				/* address bits */
@@ -85,136 +122,94 @@ public class memory {
 /*TODO*///
 /*TODO*///
 /*TODO*///
-/*TODO*////*-------------------------------------------------
-/*TODO*///	GLOBAL VARIABLES
-/*TODO*///-------------------------------------------------*/
-/*TODO*///
-/*TODO*///UINT8 *						OP_ROM;							/* opcode ROM base */
-/*TODO*///UINT8 *						OP_RAM;							/* opcode RAM base */
-/*TODO*///UINT8		 				opcode_entry;					/* opcode readmem entry */
-/*TODO*///
-/*TODO*///UINT8 *						readmem_lookup;					/* memory read lookup table */
-/*TODO*///static UINT8 *				writemem_lookup;				/* memory write lookup table */
-/*TODO*///static UINT8 *				readport_lookup;				/* port read lookup table */
-/*TODO*///static UINT8 *				writeport_lookup;				/* port write lookup table */
-/*TODO*///
-/*TODO*///offs_t						mem_amask;						/* memory address mask */
-/*TODO*///static offs_t				port_amask;						/* port address mask */
-/*TODO*///
-/*TODO*///UINT8 *						cpu_bankbase[STATIC_COUNT];		/* array of bank bases */
-/*TODO*///struct ExtMemory			ext_memory[MAX_EXT_MEMORY];		/* externally-allocated memory */
-/*TODO*///
-/*TODO*///static opbase_handler		opbasefunc;						/* opcode base override */
-/*TODO*///
-/*TODO*///static struct handler_data 	rmemhandler8[ENTRY_COUNT];		/* 8-bit memory read handlers */
-/*TODO*///static struct handler_data 	rmemhandler16[ENTRY_COUNT];		/* 16-bit memory read handlers */
-/*TODO*///static struct handler_data 	rmemhandler32[ENTRY_COUNT];		/* 32-bit memory read handlers */
-/*TODO*///static struct handler_data 	wmemhandler8[ENTRY_COUNT];		/* 8-bit memory write handlers */
-/*TODO*///static struct handler_data 	wmemhandler16[ENTRY_COUNT];		/* 16-bit memory write handlers */
-/*TODO*///static struct handler_data 	wmemhandler32[ENTRY_COUNT];		/* 32-bit memory write handlers */
-/*TODO*///
-/*TODO*///static struct handler_data 	rporthandler8[ENTRY_COUNT];		/* 8-bit port read handlers */
-/*TODO*///static struct handler_data 	rporthandler16[ENTRY_COUNT];	/* 16-bit port read handlers */
-/*TODO*///static struct handler_data 	rporthandler32[ENTRY_COUNT];	/* 32-bit port read handlers */
-/*TODO*///static struct handler_data 	wporthandler8[ENTRY_COUNT];		/* 8-bit port write handlers */
-/*TODO*///static struct handler_data 	wporthandler16[ENTRY_COUNT];	/* 16-bit port write handlers */
-/*TODO*///static struct handler_data 	wporthandler32[ENTRY_COUNT];	/* 32-bit port write handlers */
-/*TODO*///
-/*TODO*///static read8_handler 		rmemhandler8s[STATIC_COUNT];	/* copy of 8-bit static read memory handlers */
+    /*-------------------------------------------------
+	GLOBAL VARIABLES
+    -------------------------------------------------*/
+    public static UBytePtr OP_ROM = new UBytePtr();/* opcode ROM base */
+    public static UBytePtr OP_RAM = new UBytePtr();/* opcode RAM base */
+    public static int opcode_entry;/* opcode readmem entry */
+    public static UBytePtr readmem_lookup;/* memory read lookup table */
+    public static UBytePtr writemem_lookup;/* memory write lookup table */
+    public static UBytePtr readport_lookup;/* port read lookup table */
+    public static UBytePtr writeport_lookup;/* port write lookup table */
+    public static int mem_amask;/* memory address mask */
+    public static int port_amask;/* port address mask */
+
+    public static UBytePtr[] cpu_bankbase = new UBytePtr[STATIC_COUNT];/* array of bank bases */
+    public static ExtMemory[] ext_memory = ExtMemory.create(MAX_EXT_MEMORY);/* externally-allocated memory */
+
+    public static opbase_handlerPtr opbasefunc;/* opcode base override */
+
+    public static handler_data[] rmemhandler8 = handler_data.create(ENTRY_COUNT);/* 8-bit memory read handlers */
+    public static handler_data[] rmemhandler16 = handler_data.create(ENTRY_COUNT);/* 16-bit memory read handlers */
+    public static handler_data[] rmemhandler32 = handler_data.create(ENTRY_COUNT);/* 32-bit memory read handlers */
+    public static handler_data[] wmemhandler8 = handler_data.create(ENTRY_COUNT);/* 8-bit memory write handlers */
+    public static handler_data[] wmemhandler16 = handler_data.create(ENTRY_COUNT);/* 16-bit memory write handlers */
+    public static handler_data[] wmemhandler32 = handler_data.create(ENTRY_COUNT);/* 32-bit memory write handlers */
+
+    public static handler_data[] rporthandler8 = handler_data.create(ENTRY_COUNT);/* 8-bit port read handlers */
+    public static handler_data[] rporthandler16 = handler_data.create(ENTRY_COUNT);/* 16-bit port read handlers */
+    public static handler_data[] rporthandler32 = handler_data.create(ENTRY_COUNT);/* 32-bit port read handlers */
+    public static handler_data[] wporthandler8 = handler_data.create(ENTRY_COUNT);/* 8-bit port write handlers */
+    public static handler_data[] wporthandler16 = handler_data.create(ENTRY_COUNT);/* 16-bit port write handlers */
+    public static handler_data[] wporthandler32 = handler_data.create(ENTRY_COUNT);/* 32-bit port write handlers */
+
+ /*TODO*///static read8_handler 		rmemhandler8s[STATIC_COUNT];	/* copy of 8-bit static read memory handlers */
 /*TODO*///static write8_handler 		wmemhandler8s[STATIC_COUNT];	/* copy of 8-bit static write memory handlers */
 /*TODO*///
-/*TODO*///static struct cpu_data 		cpudata[MAX_CPU];				/* data gathered for each CPU */
-/*TODO*///static struct bank_data 	bankdata[MAX_BANKS];			/* data gathered for each bank */
-/*TODO*///
+    public static cpu_data[] cpudata = new cpu_data[MAX_CPU];/* data gathered for each CPU */
+    public static bank_data[] bankdata = new bank_data[MAX_BANKS];/* data gathered for each bank */
+ /*TODO*///
 /*TODO*///offs_t encrypted_opcode_start[MAX_CPU],encrypted_opcode_end[MAX_CPU];
-/*TODO*///
-/*TODO*///
-/*TODO*////*-------------------------------------------------
-/*TODO*///	PROTOTYPES
-/*TODO*///-------------------------------------------------*/
-/*TODO*///
-/*TODO*///static int CLIB_DECL fatalerror(const char *string, ...);
-/*TODO*///static UINT8 get_handler_index(struct handler_data *table, void *handler, offs_t start);
-/*TODO*///static UINT8 alloc_new_subtable(const struct memport_data *memport, struct table_data *tabledata, UINT8 previous_value);
-/*TODO*///static void populate_table(struct memport_data *memport, int iswrite, offs_t start, offs_t stop, UINT8 handler);
-/*TODO*///static void *assign_dynamic_bank(int cpu, offs_t start);
-/*TODO*///static void install_mem_handler(struct memport_data *memport, int iswrite, offs_t start, offs_t end, void *handler);
-/*TODO*///static void install_port_handler(struct memport_data *memport, int iswrite, offs_t start, offs_t end, void *handler);
-/*TODO*///static void set_static_handler(int idx,
-/*TODO*///		read8_handler r8handler, read16_handler r16handler, read32_handler r32handler,
-/*TODO*///		write8_handler w8handler, write16_handler w16handler, write32_handler w32handler);
-/*TODO*///static int init_cpudata(void);
-/*TODO*///static int init_memport(int cpu, struct memport_data *data, int abits, int dbits, int ismemory);
-/*TODO*///static int verify_memory(void);
-/*TODO*///static int verify_ports(void);
-/*TODO*///static int allocate_memory(void);
-/*TODO*///static int populate_memory(void);
-/*TODO*///static int populate_ports(void);
-/*TODO*///static void register_banks(void);
-/*TODO*///static int mem_address_bits_of_cpu(int cpu);
-/*TODO*///static int port_address_bits_of_cpu(int cpu);
-/*TODO*///static int init_static(void);
-/*TODO*///
-/*TODO*///#ifdef MEM_DUMP
-/*TODO*///static void mem_dump(void);
-/*TODO*///#endif
-/*TODO*///#ifdef CHECK_MASKS
-/*TODO*///static void verify_masks(void);
-/*TODO*///#endif
-/*TODO*///
-/*TODO*///
-/*TODO*///
-/*TODO*////*-------------------------------------------------
-/*TODO*///	memory_init - initialize the memory system
-/*TODO*///-------------------------------------------------*/
-/*TODO*///
-/*TODO*///int memory_init(void)
-/*TODO*///{
-/*TODO*///#ifdef CHECK_MASKS
-/*TODO*///	verify_masks();
-/*TODO*///#endif
-/*TODO*///
-/*TODO*///	/* init the static handlers */
-/*TODO*///	if (!init_static())
-/*TODO*///		return 0;
-/*TODO*///
-/*TODO*///	/* init the CPUs */
-/*TODO*///	if (!init_cpudata())
-/*TODO*///		return 0;
-/*TODO*///
-/*TODO*///	/* verify the memory handlers and check banks */
-/*TODO*///	if (!verify_memory())
-/*TODO*///		return 0;
-/*TODO*///	if (!verify_ports())
-/*TODO*///		return 0;
-/*TODO*///
-/*TODO*///	/* allocate memory for sparse address spaces */
-/*TODO*///	if (!allocate_memory())
-/*TODO*///		return 0;
-/*TODO*///
-/*TODO*///	/* then fill in the tables */
-/*TODO*///	if (!populate_memory())
-/*TODO*///		return 0;
-/*TODO*///	if (!populate_ports())
-/*TODO*///		return 0;
-/*TODO*///
-/*TODO*///	register_banks();
-/*TODO*///
-/*TODO*///#ifdef MEM_DUMP
-/*TODO*///	/* dump the final memory configuration */
-/*TODO*///	mem_dump();
-/*TODO*///#endif
-/*TODO*///
-/*TODO*///	return 1;
-/*TODO*///}
-/*TODO*///
-/*TODO*///
-/*TODO*////*-------------------------------------------------
-/*TODO*///	memory_shutdown - free memory
-/*TODO*///-------------------------------------------------*/
-/*TODO*///
-/*TODO*///void memory_shutdown(void)
-/*TODO*///{
+
+    /*-------------------------------------------------
+	memory_init - initialize the memory system
+    -------------------------------------------------*/
+ /*-------------------------------------------------
+	memory_init - initialize the memory system
+    -------------------------------------------------*/
+    public static int memory_init() {
+        /* init the static handlers */
+        if (init_static() == 0) {
+            return 0;
+        }
+
+        /* init the CPUs */
+        if (init_cpudata() == 0) {
+            return 0;
+        }
+
+        /* verify the memory handlers and check banks */
+        if (verify_memory() == 0) {
+            return 0;
+        }
+        if (verify_ports() == 0) {
+            return 0;
+        }
+
+        /* allocate memory for sparse address spaces */
+        if (allocate_memory() == 0) {
+            return 0;
+        }
+
+        /* then fill in the tables */
+        if (populate_memory() == 0) {
+            return 0;
+        }
+        if (populate_ports() == 0) {
+            return 0;
+        }
+        /*TODO*///	register_banks();
+        /* dump the final memory configuration */
+        mem_dump();
+        return 1;
+    }
+
+    /*-------------------------------------------------
+	memory_shutdown - free memory
+    -------------------------------------------------*/
+    public static void memory_shutdown() {
+        /*TODO*///{
 /*TODO*///	struct ExtMemory *ext;
 /*TODO*///	int cpu;
 /*TODO*///
@@ -236,19 +231,17 @@ public class memory {
 /*TODO*///	for (ext = ext_memory; ext->data; ext++)
 /*TODO*///		free(ext->data);
 /*TODO*///	memset(ext_memory, 0, sizeof(ext_memory));
-/*TODO*///}
-/*TODO*///
-/*TODO*///
-/*TODO*////*-------------------------------------------------
-/*TODO*///	memory_set_opcode_base - set the base of
-/*TODO*///	ROM
-/*TODO*///-------------------------------------------------*/
-/*TODO*///
-/*TODO*///void memory_set_opcode_base(int cpu, void *base)
-/*TODO*///{
-/*TODO*///	cpudata[cpu].rombase = base;
-/*TODO*///}
-/*TODO*///
+    }
+
+    /*-------------------------------------------------
+	memory_set_opcode_base - set the base of
+	ROM
+    -------------------------------------------------*/
+    public static void memory_set_opcode_base(int cpu, UBytePtr base) {
+        cpudata[cpu].rombase = base;
+    }
+
+    /*TODO*///
 /*TODO*///
 /*TODO*///void memory_set_encrypted_opcode_range(int cpu,offs_t min_address,offs_t max_address)
 /*TODO*///{
@@ -257,27 +250,26 @@ public class memory {
 /*TODO*///}
 /*TODO*///
 /*TODO*///
-/*TODO*////*-------------------------------------------------
-/*TODO*///	memory_set_context - set the memory context
-/*TODO*///-------------------------------------------------*/
-/*TODO*///
-/*TODO*///void memory_set_context(int activecpu)
-/*TODO*///{
-/*TODO*///	OP_RAM = cpu_bankbase[STATIC_RAM] = cpudata[activecpu].rambase;
-/*TODO*///	OP_ROM = cpudata[activecpu].rombase;
-/*TODO*///	opcode_entry = STATIC_ROM;
-/*TODO*///
-/*TODO*///	readmem_lookup = cpudata[activecpu].mem.read.table;
-/*TODO*///	writemem_lookup = cpudata[activecpu].mem.write.table;
-/*TODO*///	readport_lookup = cpudata[activecpu].port.read.table;
-/*TODO*///	writeport_lookup = cpudata[activecpu].port.write.table;
-/*TODO*///
-/*TODO*///	mem_amask = cpudata[activecpu].mem.mask;
-/*TODO*///	port_amask = cpudata[activecpu].port.mask;
-/*TODO*///
-/*TODO*///	opbasefunc = cpudata[activecpu].opbase;
-/*TODO*///}
-/*TODO*///
+    /*-------------------------------------------------
+	memory_set_context - set the memory context
+    -------------------------------------------------*/
+    public static void memory_set_context(int activecpu) {
+        OP_RAM = cpu_bankbase[STATIC_RAM] = cpudata[activecpu].rambase;
+        OP_ROM = cpudata[activecpu].rombase;
+        opcode_entry = STATIC_ROM;
+
+        readmem_lookup = cpudata[activecpu].mem.read.table;
+        writemem_lookup = cpudata[activecpu].mem.write.table;
+        readport_lookup = cpudata[activecpu].port.read.table;
+        writeport_lookup = cpudata[activecpu].port.write.table;
+
+        mem_amask = cpudata[activecpu].mem.mask;
+        port_amask = cpudata[activecpu].port.mask;
+
+        opbasefunc = cpudata[activecpu].opbase;
+    }
+
+    /*TODO*///
 /*TODO*///
 /*TODO*////*-------------------------------------------------
 /*TODO*///	memory_set_bankhandler_r - set readmemory
@@ -323,44 +315,55 @@ public class memory {
 /*TODO*///}
 /*TODO*///
 /*TODO*///
-/*TODO*////*-------------------------------------------------
-/*TODO*///	memory_set_opbase_handler - change op-code
-/*TODO*///	memory base
-/*TODO*///-------------------------------------------------*/
-/*TODO*///
-/*TODO*///opbase_handler memory_set_opbase_handler(int cpu, opbase_handler function)
-/*TODO*///{
-/*TODO*///	opbase_handler old = cpudata[cpu].opbase;
-/*TODO*///	cpudata[cpu].opbase = function;
-/*TODO*///	if (cpu == cpu_getactivecpu())
-/*TODO*///		opbasefunc = function;
-/*TODO*///	return old;
-/*TODO*///}
-/*TODO*///
-/*TODO*///
-/*TODO*////*-------------------------------------------------
-/*TODO*///	install_mem_read_handler - install dynamic
-/*TODO*///	read handler for 8-bit case
-/*TODO*///-------------------------------------------------*/
-/*TODO*///
-/*TODO*///data8_t *install_mem_read_handler(int cpu, offs_t start, offs_t end, mem_read_handler handler)
-/*TODO*///{
-/*TODO*///	/* sanity check */
-/*TODO*///	if (cpudata[cpu].mem.dbits != 8)
-/*TODO*///	{
-/*TODO*///		printf("fatal: install_mem_read_handler called on %d-bit cpu\n",cpudata[cpu].mem.dbits);
-/*TODO*///		exit(1);
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	/* install the handler */
-/*TODO*///	install_mem_handler(&cpudata[cpu].mem, 0, start, end, (void *)handler);
-/*TODO*///#ifdef MEM_DUMP
-/*TODO*///	/* dump the new memory configuration */
-/*TODO*///	mem_dump();
-/*TODO*///#endif
-/*TODO*///	return memory_find_base(cpu, start);
-/*TODO*///}
-/*TODO*///
+    /*-------------------------------------------------
+            memory_set_opbase_handler - change op-code
+            memory base
+    -------------------------------------------------*/
+    public static opbase_handlerPtr memory_set_opbase_handler(int cpu, opbase_handlerPtr function) {
+        opbase_handlerPtr old = cpudata[cpu].opbase;
+        cpudata[cpu].opbase = function;
+        if (cpu == cpu_getactivecpu()) {
+            opbasefunc = function;
+        }
+        return old;
+    }
+
+    /*-------------------------------------------------
+	install_mem_read_handler - install dynamic
+	read handler for 8-bit case
+    -------------------------------------------------*/
+    public static UBytePtr install_mem_read_handler(int cpu, int start, int end, ReadHandlerPtr handler) {
+        /* sanity check */
+        if (cpudata[cpu].mem.dbits != 8) {
+            printf("fatal: install_mem_read_handler called on %d-bit cpu\n", cpudata[cpu].mem.dbits);
+            exit(1);
+        }
+
+        /* install the handler */
+        install_mem_handler(cpudata[cpu].mem, 0, start, end, -15000, handler);
+
+        /* dump the new memory configuration */
+        mem_dump();
+
+        return memory_find_base(cpu, start);
+    }
+
+    public static UBytePtr install_mem_read_handler(int cpu, int start, int end, int _handler) {
+        /* sanity check */
+        if (cpudata[cpu].mem.dbits != 8) {
+            printf("fatal: install_mem_read_handler called on %d-bit cpu\n", cpudata[cpu].mem.dbits);
+            exit(1);
+        }
+
+        /* install the handler */
+        install_mem_handler(cpudata[cpu].mem, 0, start, end, _handler, null);
+
+        /* dump the new memory configuration */
+        mem_dump();
+
+        return memory_find_base(cpu, start);
+    }
+    /*TODO*///
 /*TODO*///
 /*TODO*////*-------------------------------------------------
 /*TODO*///	install_mem_read16_handler - install dynamic
