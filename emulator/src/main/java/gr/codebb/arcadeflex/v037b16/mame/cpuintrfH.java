@@ -195,7 +195,7 @@ public class cpuintrfH {
 /*TODO*///	CPU_HD6309,
 /*TODO*///#endif
 /*TODO*///#if (HAS_M6809)
-/*TODO*///	CPU_M6809,
+public static final int	CPU_M6809=30;//dummy!
 /*TODO*///#endif
 /*TODO*///#if (HAS_KONAMI)
 /*TODO*///	CPU_KONAMI,
@@ -317,7 +317,7 @@ public class cpuintrfH {
 /*TODO*///	CPU_Z80_MSX,
 /*TODO*///#endif
 /*TODO*///#endif
-/*TODO*///    CPU_COUNT
+    public static final int CPU_COUNT = 50; // DUMMY! TODO
 /*TODO*///};
 /*TODO*///
     /* set this if the CPU is used as a slave for audio. It will not be emulated if */
@@ -391,7 +391,7 @@ public class cpuintrfH {
         public abstract void exit();
 
         public abstract int execute(int cycles);
-        public burnPtr burn;
+        public static burnPtr burn;
 
         public abstract Object init_context(); //not in mame , used specific for arcadeflex
 
