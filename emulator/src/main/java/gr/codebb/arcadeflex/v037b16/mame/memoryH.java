@@ -4,18 +4,14 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
+//to be organized
 import arcadeflex037b16.fucPtr.ReadHandlerPtr;
 import arcadeflex037b16.fucPtr.WriteHandlerPtr;
 import common.ptr.UBytePtr;
-import static mame056.cpuintrfH.cpu_get_pc_byte;
-import static mame056.cpuintrfH.cpu_set_op_base;
-import static mame056.memory.OP_RAM;
-import static mame056.memory.OP_ROM;
-import static mame056.memory.cpu_bankbase;
-import static mame056.memory.cpu_setOPbase16;
-import static mame056.memory.mem_amask;
-import static mame056.memory.opcode_entry;
-import static mame056.memory.readmem_lookup;
+
 
 public class memoryH {
 
