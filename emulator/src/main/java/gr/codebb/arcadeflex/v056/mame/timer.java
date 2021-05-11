@@ -5,15 +5,13 @@
 package gr.codebb.arcadeflex.v056.mame;
 
 //mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
-
 //to be organized
 import static mame037b16.driverH.MAX_CPU;
 import static mame037b16.mame.Machine;
-import static mame056.cpuexecH.CPU_FLAGS_MASK;
-import mame056.cpuintrfH.burnPtr;
-import static mame056.cpuintrfH.cpu_gettotalcpu;
-import static mame056.cpuintrf.*;
+
 
 public class timer {
 

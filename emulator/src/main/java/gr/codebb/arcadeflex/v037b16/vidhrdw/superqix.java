@@ -6,6 +6,7 @@
 package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
 //mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
@@ -19,7 +20,6 @@ import static mame037b16.drawgfx.*;
 import static common.libc.cstring.*;
 import static mame037b16.common.*;
 import static mame037b16.drawgfxH.*;
-import static mame056.cpuexec.*;
 import static mame037b16.commonH.*;
 import static mame037b7.palette.*;
 

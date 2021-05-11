@@ -5,7 +5,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
-//vidhrdw imports
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 
 //to be organized
@@ -17,10 +18,9 @@ import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
 import static mame037b16.commonH.*;
 import static mame037b16.common.*;
-import static mame056.cpuexec.*;
 import static common.libc.cstring.*;
-import static mame056.cpuexecH.*;
 import static common.libc.expressions.*;
+import static mame056.cpu.m6809.m6809H.M6809_INT_NMI;
 
 public class yiear {
 

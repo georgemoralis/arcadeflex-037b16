@@ -6,6 +6,7 @@
 package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
 //mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 //vidhrdw imports
@@ -19,7 +20,6 @@ import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static mame037b16.common.*;
 import static mame037b16.drawgfxH.*;
-import static mame056.cpuexec.*;
 import static mame037b16.commonH.*;
 
 public class exctsccr {
