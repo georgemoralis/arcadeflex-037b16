@@ -10,6 +10,9 @@ import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
+//sound imports
+import static gr.codebb.arcadeflex.v037b16.sound.dac.*;
+import static gr.codebb.arcadeflex.v037b16.sound.dacH.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.kchamp.*;
@@ -27,8 +30,6 @@ import static mame056.sndintrfH.*;
 import static mame056.sndintrf.*;
 import static mame056.sound.ay8910.*;
 import static mame056.sound.ay8910H.*;
-import static mame056.sound.dac.*;
-import static mame056.sound.dacH.*;
 import static mame056.sound.MSM5205.*;
 import static mame056.sound.MSM5205H.*;
 
