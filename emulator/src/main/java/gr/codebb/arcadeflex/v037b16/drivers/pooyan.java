@@ -9,6 +9,8 @@ package gr.codebb.arcadeflex.v037b16.drivers;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
+//sndhrdw imports
+import static gr.codebb.arcadeflex.v037b16.sndhrdw.timeplt.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.pooyan.*;
@@ -21,8 +23,6 @@ import static mame056.inptport.*;
 import static mame056.inptportH.*;
 import static mame056.sndintrf.*;
 import static mame056.sndintrfH.*;
-
-import static mame056.sndhrdw.timeplt.*;
 
 public class pooyan {
 

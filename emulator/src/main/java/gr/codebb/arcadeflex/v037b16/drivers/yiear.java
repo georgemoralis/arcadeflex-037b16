@@ -23,7 +23,7 @@ import static mame056.inptport.*;
 import static mame056.inptportH.*;
 import static mame056.sndintrfH.*;
 
-import static mame056.sndhrdw.trackfld.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.sndhrdw.trackfld.*;
 
 public class yiear {
 

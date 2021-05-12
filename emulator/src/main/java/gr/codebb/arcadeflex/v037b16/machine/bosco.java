@@ -13,6 +13,8 @@ import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
+//sndhrdw imports
+import static gr.codebb.arcadeflex.v037b16.sndhrdw.bosco.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.bosco.*;
 //to be organized
@@ -23,7 +25,6 @@ import static mame037b16.commonH.*;
 import static mame056.sound.samples.*;
 import static arcadeflex036.osdepend.*;
 import static mame037b16.common.*;
-import static mame056.sndhrdw.bosco.*;
 
 public class bosco {
 
