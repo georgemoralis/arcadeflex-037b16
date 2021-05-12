@@ -4,6 +4,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.drivers;
 
+//machine imports
+import static gr.codebb.arcadeflex.v037b16.machine.bagman.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
@@ -26,7 +28,6 @@ import static mame056.sndintrfH.*;
 import static mame056.sound.ay8910.*;
 import static mame056.sound.ay8910H.*;
 import static mame037b16.common.*;
-import static mame056.machine.bagman.*;
 import static mame056.sound._5110intf.tms5110_CTL_w;
 import static mame056.sound._5110intf.tms5110_PDC_w;
 import mame056.sound._5110intfH.TMS5110interface;

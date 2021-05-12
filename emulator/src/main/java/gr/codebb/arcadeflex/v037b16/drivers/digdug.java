@@ -4,6 +4,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.drivers;
 
+//machine imports
+import static gr.codebb.arcadeflex.v037b16.machine.digdug.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
@@ -20,7 +22,6 @@ import static mame037b16.drawgfxH.*;
 import static mame037b16.driverH.*;
 import static mame056.inptportH.*;
 import static mame056.sndintrfH.*;
-import static mame056.machine.digdug.*;
 import static mame056.sound.namco.*;
 import static mame056.sound.namcoH.*;
 
