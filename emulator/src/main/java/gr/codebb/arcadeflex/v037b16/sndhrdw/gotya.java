@@ -6,7 +6,7 @@
 package gr.codebb.arcadeflex.v037b16.sndhrdw;
 
 import static arcadeflex037b16.fucPtr.*;
-import static mame056.sound.samples.*;
+import static gr.codebb.arcadeflex.v037b16.sound.samples.*;
 
 public class gotya {
 

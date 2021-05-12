@@ -11,6 +11,8 @@ import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 //sndhrdw imports
 import static gr.codebb.arcadeflex.v037b16.sndhrdw.bosco.*;
+//sound imports
+import static gr.codebb.arcadeflex.v037b16.sound.samplesH.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.bosco.*;
@@ -23,7 +25,6 @@ import static mame056.inptportH.*;
 import static mame056.sndintrfH.*;
 import static mame056.sound.namco.*;
 import static mame056.sound.namcoH.*;
-import mame056.sound.samplesH.Samplesinterface;
 
 public class bosco {
 
