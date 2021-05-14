@@ -80,246 +80,71 @@ public class cpuintrfH {
 
     public static final int CPU_DUMMY = 0;
     public static final int CPU_Z80 = 1;
-    /*TODO*///#if (HAS_8080)
-/*TODO*///	CPU_8080,
-/*TODO*///#endif
-/*TODO*///#if (HAS_8085A)
-/*TODO*///	CPU_8085A,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6502)
-/*TODO*///	CPU_M6502,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M65C02)
-/*TODO*///	CPU_M65C02,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M65SC02)
-/*TODO*///	CPU_M65SC02,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M65CE02)
-/*TODO*///	CPU_M65CE02,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6509)
-/*TODO*///	CPU_M6509,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6510)
-/*TODO*///	CPU_M6510,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6510T)
-/*TODO*///	CPU_M6510T,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M7501)
-/*TODO*///	CPU_M7501,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M8502)
-/*TODO*///	CPU_M8502,
-/*TODO*///#endif
-/*TODO*///#if (HAS_N2A03)
-/*TODO*///	CPU_N2A03,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M4510)
-/*TODO*///	CPU_M4510,
-/*TODO*///#endif
-/*TODO*///#if (HAS_H6280)
-/*TODO*///	CPU_H6280,
-/*TODO*///#endif
-/*TODO*///#if (HAS_I86)
-/*TODO*///	CPU_I86,
-/*TODO*///#endif
-/*TODO*///#if (HAS_I88)
-/*TODO*///	CPU_I88,
-/*TODO*///#endif
-/*TODO*///#if (HAS_I186)
-/*TODO*///	CPU_I186,
-/*TODO*///#endif
-/*TODO*///#if (HAS_I188)
-/*TODO*///	CPU_I188,
-/*TODO*///#endif
-/*TODO*///#if (HAS_I286)
-/*TODO*///	CPU_I286,
-/*TODO*///#endif
-/*TODO*///#if (HAS_V20)
-/*TODO*///	CPU_V20,
-/*TODO*///#endif
-/*TODO*///#if (HAS_V30)
-/*TODO*///	CPU_V30,
-/*TODO*///#endif
-/*TODO*///#if (HAS_V33)
-/*TODO*///	CPU_V33,
-/*TODO*///#endif
-/*TODO*///#if (HAS_I8035)
-/*TODO*///	CPU_I8035,
-/*TODO*///#endif
-/*TODO*///#if (HAS_I8039)
-/*TODO*///	CPU_I8039,
-/*TODO*///#endif
-/*TODO*///#if (HAS_I8048)
-/*TODO*///	CPU_I8048,
-/*TODO*///#endif
-/*TODO*///#if (HAS_N7751)
-/*TODO*///	CPU_N7751,
-/*TODO*///#endif
-/*TODO*///#if (HAS_I8X41)
-/*TODO*///	CPU_I8X41,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6800)
-/*TODO*///	CPU_M6800,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6801)
-/*TODO*///	CPU_M6801,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6802)
-/*TODO*///	CPU_M6802,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6803)
-/*TODO*///	CPU_M6803,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6808)
-/*TODO*///	CPU_M6808,
-/*TODO*///#endif
-/*TODO*///#if (HAS_HD63701)
-/*TODO*///	CPU_HD63701,
-/*TODO*///#endif
-/*TODO*///#if (HAS_NSC8105)
-/*TODO*///	CPU_NSC8105,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6805)
-/*TODO*///	CPU_M6805,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M68705)
-/*TODO*///	CPU_M68705,
-/*TODO*///#endif
-/*TODO*///#if (HAS_HD63705)
-/*TODO*///	CPU_HD63705,
-/*TODO*///#endif
-/*TODO*///#if (HAS_HD6309)
-/*TODO*///	CPU_HD6309,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6809)
-public static final int	CPU_M6809=30;//dummy!
-/*TODO*///#endif
-/*TODO*///#if (HAS_KONAMI)
-/*TODO*///	CPU_KONAMI,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M68000)
-/*TODO*///	CPU_M68000,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M68010)
-/*TODO*///	CPU_M68010,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M68EC020)
-/*TODO*///	CPU_M68EC020,
-/*TODO*///#endif
-/*TODO*///#if (HAS_M68020)
-/*TODO*///	CPU_M68020,
-/*TODO*///#endif
-/*TODO*///#if (HAS_T11)
-/*TODO*///	CPU_T11,
-/*TODO*///#endif
-/*TODO*///#if (HAS_S2650)
-/*TODO*///	CPU_S2650,
-/*TODO*///#endif
-/*TODO*///#if (HAS_TMS34010)
-/*TODO*///	CPU_TMS34010,
-/*TODO*///#endif
-/*TODO*///#if (HAS_TMS34020)
-/*TODO*///	CPU_TMS34020,
-/*TODO*///#endif
-/*TODO*///#if (HAS_TMS9900)
-/*TODO*///	CPU_TMS9900,
-/*TODO*///#endif
-/*TODO*///#if (HAS_TMS9940)
-/*TODO*///	CPU_TMS9940,
-/*TODO*///#endif
-/*TODO*///#if (HAS_TMS9980)
-/*TODO*///	CPU_TMS9980,
-/*TODO*///#endif
-/*TODO*///#if (HAS_TMS9985)
-/*TODO*///	CPU_TMS9985,
-/*TODO*///#endif
-/*TODO*///#if (HAS_TMS9989)
-/*TODO*///	CPU_TMS9989,
-/*TODO*///#endif
-/*TODO*///#if (HAS_TMS9995)
-/*TODO*///	CPU_TMS9995,
-/*TODO*///#endif
-/*TODO*///#if (HAS_TMS99105A)
-/*TODO*///	CPU_TMS99105A,
-/*TODO*///#endif
-/*TODO*///#if (HAS_TMS99110A)
-/*TODO*///	CPU_TMS99110A,
-/*TODO*///#endif
-/*TODO*///#if (HAS_Z8000)
-/*TODO*///	CPU_Z8000,
-/*TODO*///#endif
-/*TODO*///#if (HAS_TMS320C10)
-/*TODO*///	CPU_TMS320C10,
-/*TODO*///#endif
-/*TODO*///#if (HAS_CCPU)
-/*TODO*///	CPU_CCPU,
-/*TODO*///#endif
-/*TODO*///#if (HAS_ADSP2100)
-/*TODO*///	CPU_ADSP2100,
-/*TODO*///#endif
-/*TODO*///#if (HAS_ADSP2105)
-/*TODO*///	CPU_ADSP2105,
-/*TODO*///#endif
-/*TODO*///#if (HAS_PSXCPU)
-/*TODO*///	CPU_PSXCPU,
-/*TODO*///#endif
-/*TODO*///#if (HAS_ASAP)
-/*TODO*///	CPU_ASAP,
-/*TODO*///#endif
-/*TODO*///#if (HAS_UPD7810)
-/*TODO*///	CPU_UPD7810,
-/*TODO*///#endif
-/*TODO*///
-/*TODO*///#ifdef MESS
-/*TODO*///#if (HAS_APEXC)
-/*TODO*///	CPU_APEXC,
-/*TODO*///#endif
-/*TODO*///#if (HAS_ARM)
-/*TODO*///	CPU_ARM,
-/*TODO*///#endif
-/*TODO*///#if (HAS_CDP1802)
-/*TODO*///	CPU_CDP1802,
-/*TODO*///#endif
-/*TODO*///#if (HAS_CP1600)
-/*TODO*///	CPU_CP1600,
-/*TODO*///#endif
-/*TODO*///#if (HAS_F8)
-/*TODO*///	CPU_F8,
-/*TODO*///#endif
-/*TODO*///#if (HAS_G65816)
-/*TODO*///	CPU_G65816,
-/*TODO*///#endif
-/*TODO*///#if (HAS_LH5801)
-/*TODO*///	CPU_LH5801,
-/*TODO*///#endif
-/*TODO*///#if (HAS_PDP1)
-/*TODO*///	CPU_PDP1,
-/*TODO*///#endif
-/*TODO*///#if (HAS_SATURN)
-/*TODO*///	CPU_SATURN,
-/*TODO*///#endif
-/*TODO*///#if (HAS_SC61860)
-/*TODO*///	CPU_SC61860,
-/*TODO*///#endif
-/*TODO*///#if (HAS_SH2)
-/*TODO*///	CPU_SH2,
-/*TODO*///#endif
-/*TODO*///#if (HAS_SPC700)
-/*TODO*///	CPU_SPC700,
-/*TODO*///#endif
-/*TODO*///#if (HAS_Z80GB)
-/*TODO*///	CPU_Z80GB,
-/*TODO*///#endif
-/*TODO*///#if (HAS_Z80_MSX)
-/*TODO*///	CPU_Z80_MSX,
-/*TODO*///#endif
-/*TODO*///#endif
-    public static final int CPU_COUNT = 50; // DUMMY! TODO
-/*TODO*///};
-/*TODO*///
+    public static final int CPU_8080 = 2;
+    public static final int CPU_8085A = 3;
+    public static final int CPU_M6502 = 4;
+    public static final int CPU_M65C02 = 5;
+    public static final int CPU_M65SC02 = 6;
+    public static final int CPU_M65CE02 = 7;
+    public static final int CPU_M6509 = 8;
+    public static final int CPU_M6510 = 9;
+    public static final int CPU_M6510T = 10;
+    public static final int CPU_M7501 = 11;
+    public static final int CPU_M8502 = 12;
+    public static final int CPU_N2A03 = 13;
+    public static final int CPU_M4510 = 14;
+    public static final int CPU_H6280 = 15;
+    public static final int CPU_I86 = 16;
+    public static final int CPU_I88 = 17;
+    public static final int CPU_I186 = 18;
+    public static final int CPU_I188 = 19;
+    public static final int CPU_I286 = 20;
+    public static final int CPU_V20 = 21;
+    public static final int CPU_V30 = 22;
+    public static final int CPU_V33 = 23;
+    public static final int CPU_I8035 = 24;
+    public static final int CPU_I8039 = 25;
+    public static final int CPU_I8048 = 26;
+    public static final int CPU_N7751 = 27;
+    public static final int CPU_I8X41 = 28;
+    public static final int CPU_M6800 = 29;
+    public static final int CPU_M6801 = 30;
+    public static final int CPU_M6802 = 31;
+    public static final int CPU_M6803 = 32;
+    public static final int CPU_M6808 = 33;
+    public static final int CPU_HD63701 = 34;
+    public static final int CPU_NSC8105 = 35;
+    public static final int CPU_M6805 = 36;
+    public static final int CPU_M68705 = 37;
+    public static final int CPU_HD63705 = 38;
+    public static final int CPU_HD6309 = 39;
+    public static final int CPU_M6809 = 40;
+    public static final int CPU_KONAMI = 41;
+    public static final int CPU_M68000 = 42;
+    public static final int CPU_M68010 = 43;
+    public static final int CPU_M68EC020 = 44;
+    public static final int CPU_M68020 = 45;
+    public static final int CPU_T11 = 46;
+    public static final int CPU_S2650 = 47;
+    public static final int CPU_TMS34010 = 48;
+    public static final int CPU_TMS34020 = 49;
+    public static final int CPU_TMS9900 = 50;
+    public static final int CPU_TMS9940 = 51;
+    public static final int CPU_TMS9980 = 52;
+    public static final int CPU_TMS9985 = 53;
+    public static final int CPU_TMS9989 = 54;
+    public static final int CPU_TMS9995 = 55;
+    public static final int CPU_TMS99105A = 56;
+    public static final int CPU_TMS99110A = 57;
+    public static final int CPU_Z8000 = 58;
+    public static final int CPU_TMS320C10 = 59;
+    public static final int CPU_CCPU = 60;
+    public static final int CPU_ADSP2100 = 61;
+    public static final int CPU_ADSP2105 = 62;
+    public static final int CPU_PSXCPU = 63;
+    public static final int CPU_ASAP = 64;
+    public static final int CPU_UPD7810 = 65;
+
     /* set this if the CPU is used as a slave for audio. It will not be emulated if */
  /* sound is disabled, therefore speeding up a lot the emulation. */
     public static final int CPU_AUDIO_CPU = 0x8000;
