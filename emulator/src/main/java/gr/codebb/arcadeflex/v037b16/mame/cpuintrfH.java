@@ -144,6 +144,7 @@ public class cpuintrfH {
     public static final int CPU_PSXCPU = 63;
     public static final int CPU_ASAP = 64;
     public static final int CPU_UPD7810 = 65;
+    public static final int CPU_COUNT = 66;
 
     /* set this if the CPU is used as a slave for audio. It will not be emulated if */
  /* sound is disabled, therefore speeding up a lot the emulation. */
