@@ -5,6 +5,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 //sndhrdw imports
 import static gr.codebb.arcadeflex.v037b16.sndhrdw.pleiads.*;
 //vidhrdw imports
@@ -17,7 +19,6 @@ import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static common.libc.cstring.*;
 import static mame037b16.common.*;
-import static mame037b16.drawgfxH.*;
 
 public class naughtyb {
 

@@ -9,6 +9,7 @@ import static gr.codebb.arcadeflex.v037b16.cpu.z80.z80H.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.sauro.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
@@ -18,7 +19,6 @@ import static common.ptr.*;
 import static common.libc.cstring.*;
 import static mame037b16.common.*;
 import static mame037b16.commonH.*;
-import static mame037b16.drawgfxH.*;
 import static mame037b16.driverH.*;
 import static mame056.inptport.*;
 import static mame056.inptportH.*;

@@ -4,110 +4,212 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+import common.ptr.UBytePtr;
+import common.subArrays.IntArray;
+import static common.util.*;
+import java.util.Arrays;
+import mame037b16.osdependH.osd_bitmap;
+
 public class drawgfxH {
-/*TODO*///#define MAX_GFX_PLANES 8
-/*TODO*///#define MAX_GFX_SIZE 64
-/*TODO*///
-/*TODO*///#define RGN_FRAC(num,den) (0x80000000 | (((num) & 0x0f) << 27) | (((den) & 0x0f) << 23))
-/*TODO*///#define IS_FRAC(offset) ((offset) & 0x80000000)
-/*TODO*///#define FRAC_NUM(offset) (((offset) >> 27) & 0x0f)
-/*TODO*///#define FRAC_DEN(offset) (((offset) >> 23) & 0x0f)
-/*TODO*///#define FRAC_OFFSET(offset) ((offset) & 0x007fffff)
-/*TODO*///
-/*TODO*///#define STEP4(START,STEP)  (START),(START)+1*(STEP),(START)+2*(STEP),(START)+3*(STEP)
-/*TODO*///#define STEP8(START,STEP)  STEP4(START,STEP),STEP4((START)+4*(STEP),STEP)
-/*TODO*///#define STEP16(START,STEP) STEP8(START,STEP),STEP8((START)+8*(STEP),STEP)
-/*TODO*///
-/*TODO*///
-/*TODO*///struct GfxLayout
-/*TODO*///{
-/*TODO*///	UINT16 width,height; /* width and height (in pixels) of chars/sprites */
-/*TODO*///	UINT32 total; /* total numer of chars/sprites in the rom */
-/*TODO*///	UINT16 planes; /* number of bitplanes */
-/*TODO*///	UINT32 planeoffset[MAX_GFX_PLANES]; /* start of every bitplane (in bits) */
-/*TODO*///	UINT32 xoffset[MAX_GFX_SIZE]; /* position of the bit corresponding to the pixel */
-/*TODO*///	UINT32 yoffset[MAX_GFX_SIZE]; /* of the given coordinates */
-/*TODO*///	UINT16 charincrement; /* distance between two consecutive characters/sprites (in bits) */
-/*TODO*///};
-/*TODO*///
-/*TODO*///#define GFX_RAW 0x12345678
-/*TODO*///
-/*TODO*///
-/*TODO*///struct GfxElement
-/*TODO*///{
-/*TODO*///	int width,height;
-/*TODO*///
-/*TODO*///	unsigned int total_elements;	/* total number of characters/sprites */
-/*TODO*///	int color_granularity;	/* number of colors for each color code */
-/*TODO*///							/* (for example, 4 for 2 bitplanes gfx) */
-/*TODO*///	UINT32 *colortable;	/* map color codes to screen pens */
-/*TODO*///	int total_colors;
-/*TODO*///	UINT32 *pen_usage;	/* an array of total_elements entries. */
-/*TODO*///						/* It is a table of the pens each character uses */
-/*TODO*///						/* (bit 0 = pen 0, and so on). This is used by */
-/*TODO*///						/* drawgfgx() to do optimizations like skipping */
-/*TODO*///						/* drawing of a totally transparent character */
-/*TODO*///	UINT8 *gfxdata;		/* pixel data */
-/*TODO*///	int line_modulo;	/* amount to add to get to the next line (usually = width) */
-/*TODO*///	int char_modulo;	/* = line_modulo * height */
-/*TODO*///	int flags;
-/*TODO*///};
-/*TODO*///
-/*TODO*///#define GFX_PACKED				1	/* two 4bpp pixels are packed in one byte of gfxdata */
-/*TODO*///#define GFX_SWAPXY				2	/* characters are mirrored along the top-left/bottom-right diagonal */
-/*TODO*///#define GFX_DONT_FREE_GFXDATA	4	/* gfxdata was not malloc()ed, so don't free it on exit */
-/*TODO*///
-/*TODO*///
-/*TODO*///struct GfxDecodeInfo
-/*TODO*///{
-/*TODO*///	int memory_region;	/* memory region where the data resides (usually 1) */
-/*TODO*///						/* -1 marks the end of the array */
-/*TODO*///	int start;	/* beginning of data to decode */
-/*TODO*///	struct GfxLayout *gfxlayout;
-/*TODO*///	int color_codes_start;	/* offset in the color lookup table where color codes start */
-/*TODO*///	int total_color_codes;	/* total number of color codes */
-/*TODO*///};
-/*TODO*///
-/*TODO*///
-/*TODO*///struct rectangle
-/*TODO*///{
-/*TODO*///	int min_x,max_x;
-/*TODO*///	int min_y,max_y;
-/*TODO*///};
-/*TODO*///
+
+    public static final int MAX_GFX_PLANES = 8;
+    public static final int MAX_GFX_SIZE = 64;
+
+    public static int RGN_FRAC(int num, int den) {
+        return (0x80000000 | (((num) & 0x0f) << 27) | (((den) & 0x0f) << 23));
+    }
+
+    public static int IS_FRAC(int offset) {
+        return ((offset) & 0x80000000);
+    }
+
+    public static int FRAC_NUM(int offset) {
+        return (((offset) >>> 27) & 0x0f);
+    }
+
+    public static int FRAC_DEN(int offset) {
+        return (((offset) >>> 23) & 0x0f);
+    }
+
+    public static int FRAC_OFFSET(int offset) {
+        return ((offset) & 0x007fffff);
+    }
+
+    public static int[] STEP4(int START, int STEP) {
+        return new int[]{(START), (START) + 1 * (STEP), (START) + 2 * (STEP), (START) + 3 * (STEP)};
+    }
+
+    public static int[] STEP8(int START, int STEP) {
+        return combineIntArrays(STEP4(START, STEP), STEP4((START) + 4 * (STEP), STEP));
+    }
+
+    public static int[] STEP16(int START, int STEP) {
+        return combineIntArrays(STEP8(START, STEP), STEP8((START) + 8 * (STEP), STEP));
+    }
+
+    public static class GfxLayout {
+
+        public GfxLayout() {
+        }
+
+        public GfxLayout(int width, int height, int total, int planes, int planeoffset[], int xoffset[], int yoffset[], int charincrement) {
+            this.width = width;
+            this.height = height;
+            this.total = total;
+            this.planes = planes;
+            this.planeoffset = planeoffset;
+            this.xoffset = xoffset;
+            this.yoffset = yoffset;
+            this.charincrement = charincrement;
+        }
+
+        public GfxLayout(GfxLayout c) {
+            width = c.width;
+            height = c.height;
+            total = c.total;
+            planes = c.planes;
+            planeoffset = Arrays.copyOf(c.planeoffset, c.planeoffset.length);
+            xoffset = Arrays.copyOf(c.xoffset, c.xoffset.length);
+            yoffset = Arrays.copyOf(c.yoffset, c.yoffset.length);
+            charincrement = c.charincrement;
+        }
+
+        public /*UNINT16*/ int width, height;/* width and height of chars/sprites */
+        public /*UNINT32*/ int total;/* total numer of chars/sprites in the rom */
+        public /*UNINT16*/ int planes;/* number of bitplanes */
+        public /*UNINT32*/ int planeoffset[];/* start of every bitplane */
+        public /*UNINT32*/ int xoffset[];/* coordinates of the bit corresponding to the pixel */
+        public /*UNINT32*/ int yoffset[];/* of the given coordinates */
+        public /*UNINT16*/ int charincrement;/* distance between two consecutive characters/sprites */
+    }
+
+    public static int GFX_RAW = 0x12345678;
+
+    public static class GfxElement {
+
+        public int width, height;
+        public /*unsigned */ int total_elements;/* total number of characters/sprites */
+        public int color_granularity;/* number of colors for each color code (for example, 4 for 2 bitplanes gfx) */
+        public IntArray colortable;/* map color codes to screen pens */ /* if this is 0, the function does a verbatim copy */
+        public int total_colors;
+        public /*unsigned */ int[] pen_usage;/* an array of total_elements ints. */
+        public UBytePtr gfxdata;/* pixel data */
+        public int line_modulo;/* amount to add to get to the next line (usually = width) */
+        public int char_modulo;/* = line_modulo * height */
+        public int flags;
+    }
+
+    public static final int GFX_PACKED = 1;/* two 4bpp pixels are packed in one byte of gfxdata */
+    public static final int GFX_SWAPXY = 2;/* characters are mirrored along the top-left/bottom-right diagonal */
+    public static final int GFX_DONT_FREE_GFXDATA = 4;/* gfxdata was not malloc()ed, so don't free it on exit */
+
+    public static class GfxDecodeInfo {
+
+        public GfxDecodeInfo(int mr, int s, GfxLayout g, int ccs, int tcc) {
+            memory_region = mr;
+            start = s;
+            if (g != null) {
+                gfxlayout = new GfxLayout(g);
+            } else {
+                gfxlayout = null;
+            }
+            color_codes_start = ccs;
+            total_color_codes = tcc;
+        }
+
+        public GfxDecodeInfo(int s, GfxLayout g, int ccs, int tcc) {
+            start = s;
+            if (g != null) {
+                gfxlayout = new GfxLayout(g);
+            } else {
+                gfxlayout = null;
+            }
+            color_codes_start = ccs;
+            total_color_codes = tcc;
+        }
+
+        public GfxDecodeInfo(int s) {
+            this(s, s, null, 0, 0);
+        }
+
+        public int memory_region;/* memory region where the data resides (usually 1)  -1 marks the end of the array */
+        public int start;/* beginning of data data to decode (offset in RAM[]) */
+        public GfxLayout gfxlayout;
+        public int color_codes_start;/* offset in the color lookup table where color codes start */
+        public int total_color_codes;/* total number of color codes */
+    }
+
+    public static class rectangle {
+
+        public rectangle() {
+        }
+
+        public rectangle(int min_x, int max_x, int min_y, int max_y) {
+            this.min_x = min_x;
+            this.max_x = max_x;
+            this.min_y = min_y;
+            this.max_y = max_y;
+        }
+
+        public rectangle(rectangle rec) {
+            min_x = rec.min_x;
+            max_x = rec.max_x;
+            min_y = rec.min_y;
+            max_y = rec.max_y;
+        }
+
+        public int min_x, max_x;
+        public int min_y, max_y;
+    }
+    /*TODO*///
 /*TODO*///struct _alpha_cache {
 /*TODO*///	const UINT8 *alphas;
 /*TODO*///	const UINT8 *alphad;
 /*TODO*///	UINT8 alpha[0x101][0x100];
 /*TODO*///};
 /*TODO*///
-/*TODO*///enum
-/*TODO*///{
-/*TODO*///	TRANSPARENCY_NONE,			/* opaque with remapping */
-/*TODO*///	TRANSPARENCY_NONE_RAW,		/* opaque with no remapping */
-/*TODO*///	TRANSPARENCY_PEN,			/* single pen transparency with remapping */
-/*TODO*///	TRANSPARENCY_PEN_RAW,		/* single pen transparency with no remapping */
-/*TODO*///	TRANSPARENCY_PENS,			/* multiple pen transparency with remapping */
-/*TODO*///	TRANSPARENCY_PENS_RAW,		/* multiple pen transparency with no remapping */
-/*TODO*///	TRANSPARENCY_COLOR,			/* single remapped pen transparency with remapping */
-/*TODO*///	TRANSPARENCY_PEN_TABLE,		/* special pen remapping modes (see DRAWMODE_xxx below) with remapping */
-/*TODO*///	TRANSPARENCY_PEN_TABLE_RAW,	/* special pen remapping modes (see DRAWMODE_xxx below) with no remapping */
-/*TODO*///	TRANSPARENCY_BLEND,			/* blend two bitmaps, shifting the source and ORing to the dest with remapping */
-/*TODO*///	TRANSPARENCY_BLEND_RAW,		/* blend two bitmaps, shifting the source and ORing to the dest with no remapping */
-/*TODO*///	TRANSPARENCY_ALPHAONE,		/* single pen transparency, single pen alpha */
-/*TODO*///	TRANSPARENCY_ALPHA,			/* single pen transparency, other pens alpha */
-/*TODO*///
-/*TODO*///	TRANSPARENCY_MODES			/* total number of modes; must be last */
-/*TODO*///};
-/*TODO*///
-/*TODO*///enum
-/*TODO*///{
-/*TODO*///	DRAWMODE_NONE,
-/*TODO*///	DRAWMODE_SOURCE,
-/*TODO*///	DRAWMODE_SHADOW
-/*TODO*///};
-/*TODO*///
-/*TODO*///
+    public static final int TRANSPARENCY_NONE = 0;/* opaque with remapping */
+    public static final int TRANSPARENCY_NONE_RAW = 1;/* opaque with no remapping */
+    public static final int TRANSPARENCY_PEN = 2;/* single pen transparency with remapping */
+    public static final int TRANSPARENCY_PEN_RAW = 3;/* single pen transparency with no remapping */
+    public static final int TRANSPARENCY_PENS = 4;/* multiple pen transparency with remapping */
+    public static final int TRANSPARENCY_PENS_RAW = 5;/* multiple pen transparency with no remapping */
+    public static final int TRANSPARENCY_COLOR = 6;/* single remapped pen transparency with remapping */
+    public static final int TRANSPARENCY_PEN_TABLE = 7;/* special pen remapping modes (see DRAWMODE_xxx below) with remapping */
+    public static final int TRANSPARENCY_PEN_TABLE_RAW = 8;/* special pen remapping modes (see DRAWMODE_xxx below) with no remapping */
+    public static final int TRANSPARENCY_BLEND = 9;/* blend two bitmaps, shifting the source and ORing to the dest with remapping */
+    public static final int TRANSPARENCY_BLEND_RAW = 10;/* blend two bitmaps, shifting the source and ORing to the dest with no remapping */
+    public static final int TRANSPARENCY_ALPHAONE = 11;/* single pen transparency, single pen alpha */
+    public static final int TRANSPARENCY_ALPHA = 12;/* single pen transparency, other pens alpha */
+
+    public static final int TRANSPARENCY_MODES = 13;/* total number of modes; must be last */
+
+ /* drawing mode case TRANSPARENCY_PEN_TABLE */
+    public static final int DRAWMODE_NONE = 0;
+    public static final int DRAWMODE_SOURCE = 1;
+    public static final int DRAWMODE_SHADOW = 2;
+
+    public static abstract interface plot_pixel_procPtr {
+
+        public abstract void handler(osd_bitmap bitmap, int x, int y, int pen);
+    }
+
+    public static abstract interface read_pixel_procPtr {
+
+        public abstract int handler(osd_bitmap bitmap, int x, int y);
+    }
+
+    public static abstract interface plot_box_procPtr {
+
+        public abstract void handler(osd_bitmap bitmap, int x, int y, int width, int height, int pen);
+    }
+
+    public static abstract interface mark_dirty_procPtr {
+
+        public abstract void handler(int sx, int sy, int ex, int ey);
+    }
+
+    /*TODO*///
 /*TODO*///INLINE void alpha_set_level(int level) {
 /*TODO*///	if(level == 0)
 /*TODO*///		level = -1;

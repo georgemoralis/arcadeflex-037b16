@@ -7,6 +7,7 @@ package gr.codebb.arcadeflex.v037b16.drivers;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 //sound imports
 import static gr.codebb.arcadeflex.v058.sound.sn76496.*;
 import static gr.codebb.arcadeflex.v058.sound.sn76496H.*;
@@ -16,7 +17,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.exedexes.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
 import static mame037b16.commonH.*;
-import static mame037b16.drawgfxH.*;
 import static mame037b16.driverH.*;
 import static mame056.inptportH.*;
 import static mame056.sndintrfH.*;

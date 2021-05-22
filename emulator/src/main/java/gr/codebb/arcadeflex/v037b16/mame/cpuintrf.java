@@ -4,6 +4,10 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
+
+//to be organized
 import static arcadeflex036.osdepend.*;
 import arcadeflex037b16.fucPtr.InterruptPtr;
 import arcadeflex037b16.fucPtr.ReadHandlerPtr;

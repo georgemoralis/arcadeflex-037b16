@@ -7,6 +7,8 @@ package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
 //drivers imports
 import static gr.codebb.arcadeflex.v037b16.drivers.speedbal.*;
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
@@ -15,7 +17,6 @@ import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static common.libc.cstring.*;
 import static mame037b16.common.*;
-import static mame037b16.drawgfxH.*;
 import static mame037b7.palette.palette_init_used_colors;
 import static mame037b7.palette.palette_recalc;
 import static mame037b7.palette.palette_transparent_pen;

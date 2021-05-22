@@ -10,6 +10,7 @@ import static gr.codebb.arcadeflex.v037b16.machine.bagman.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 //sound imports
 import static gr.codebb.arcadeflex.v058.sound.tms5110H.*;
 //vidhrdw imports
@@ -23,7 +24,6 @@ import static mame037b16.commonH.*;
 import static mame056.inptportH.*;
 import static mame037b16.driverH.*;
 import static mame056.inptport.*;
-import static mame037b16.drawgfxH.*;
 import static mame056.sndintrfH.*;
 import static mame056.sound.ay8910.*;
 import static mame056.sound.ay8910H.*;

@@ -7,6 +7,8 @@ package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
 //drivers imports
 import static gr.codebb.arcadeflex.v037b16.drivers.sauro.*;
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 
@@ -17,7 +19,6 @@ import static mame037b16.osdependH.*;
 import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static common.libc.cstring.*;
-import static mame037b16.drawgfxH.*;
 import static common.libc.expressions.*;
 import static mame037b16.commonH.*;
 
