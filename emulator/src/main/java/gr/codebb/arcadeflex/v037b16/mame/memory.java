@@ -1111,16 +1111,15 @@ public class memory {
                         mwa_ptr++;
                     }
 
-                    /*TODO*///
-/*TODO*///			/* track banks used */
-/*TODO*///			for (; !IS_MEMPORT_END(mwa); mwa++)
-/*TODO*///				if (!IS_MEMPORT_MARKER(mwa) && HANDLER_IS_BANK(mwa->handler))
-/*TODO*///				{
-/*TODO*///					bank = HANDLER_TO_BANK(mwa->handler);
-/*TODO*///					bankdata[bank].used = 1;
-/*TODO*///					bankdata[bank].cpunum = -1;
-/*TODO*///				}
-/*TODO*///				mwa++;
+                    /* track banks used */
+                    for (; !IS_MEMPORT_END(mwa[mwa_ptr]); mwa_ptr++) {
+                        if (!IS_MEMPORT_MARKER(mwa[mwa_ptr]) && HANDLER_IS_BANK(mwa[mwa_ptr].handler)) {
+                            bank = HANDLER_TO_BANK(mwa[mwa_ptr].handler);
+                            bankdata[bank].used = 1;
+                            bankdata[bank].cpunum = -1;
+                        }
+                        mwa_ptr++;
+                    }
                 } else {
                     //do the same for 16,32bit handlers
                     throw new UnsupportedOperationException("Unsupported");
