@@ -4,7 +4,17 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+import common.ptr.IntPtr;
+import common.ptr.UBytePtr;
+import common.subArrays.IntArray;
+import common.subArrays.UShortArray;
+import static mame037b16.drawgfx.SHIFT0;
+import static mame037b16.drawgfx.SHIFT1;
+import static mame037b16.drawgfx.SHIFT2;
+import static mame037b16.drawgfx.SHIFT3;
+
 public class drawgfx_modes8 {
+
     /*TODO*///#define ADJUST_8													\
 /*TODO*///	int ydir;														\
 /*TODO*///	if (flipy)														\
@@ -126,7 +136,83 @@ public class drawgfx_modes8 {
 /*TODO*///		}
 /*TODO*///	}
 /*TODO*///})
-/*TODO*///
+    public static void blockmove_8toN_opaque8(UBytePtr srcdata, int srcwidth, int srcheight, int srcmodulo, int leftskip, int topskip, int flipx, int flipy, UBytePtr dstdata, int dstwidth, int dstheight, int dstmodulo, IntArray paldata) {
+        int ydir;
+        if (flipy != 0) {
+            dstdata.inc(dstmodulo * (dstheight - 1));
+            srcdata.inc((srcheight - dstheight - topskip) * srcmodulo);
+            ydir = -1;
+        } else {
+            srcdata.inc(topskip * srcmodulo);
+            ydir = 1;
+        }
+        if (flipx != 0) {
+            dstdata.inc(dstwidth - 1);
+            srcdata.inc((srcwidth - dstwidth - leftskip));
+        } else {
+            srcdata.inc(leftskip);
+        }
+        srcmodulo -= dstwidth;
+
+        if (flipx != 0) {
+            int end;
+
+            while (dstheight != 0) {
+                end = dstdata.offset - dstwidth;
+                while (dstdata.offset >= end + 8) {
+                    dstdata.dec(8);
+                    dstdata.write(8, paldata.read(srcdata.read(0)));
+                    dstdata.write(7, paldata.read(srcdata.read(1)));
+                    dstdata.write(6, paldata.read(srcdata.read(2)));
+                    dstdata.write(5, paldata.read(srcdata.read(3)));
+                    dstdata.write(4, paldata.read(srcdata.read(4)));
+                    dstdata.write(3, paldata.read(srcdata.read(5)));
+                    dstdata.write(2, paldata.read(srcdata.read(6)));
+                    dstdata.write(1, paldata.read(srcdata.read(7)));
+
+                    srcdata.inc(8);
+                }
+                while (dstdata.offset > end) {
+                    dstdata.write(0, paldata.read(srcdata.read(0)));
+                    srcdata.inc();
+                    dstdata.dec();
+                }
+
+                srcdata.inc(srcmodulo);
+                dstdata.inc((ydir * dstmodulo + dstwidth * 1));
+                dstheight--;
+            }
+        } else {
+            int end;//DATA_TYPE *end;
+
+            while (dstheight != 0) {
+                end = dstdata.offset + dstwidth;
+                while (dstdata.offset <= end - 8) {
+                    dstdata.write(0, paldata.read(srcdata.read(0)));
+                    dstdata.write(1, paldata.read(srcdata.read(1)));
+                    dstdata.write(2, paldata.read(srcdata.read(2)));
+                    dstdata.write(3, paldata.read(srcdata.read(3)));
+                    dstdata.write(4, paldata.read(srcdata.read(4)));
+                    dstdata.write(5, paldata.read(srcdata.read(5)));
+                    dstdata.write(6, paldata.read(srcdata.read(6)));
+                    dstdata.write(7, paldata.read(srcdata.read(7)));
+                    srcdata.inc(8);
+                    dstdata.inc(8);
+                }
+                while (dstdata.offset < end) {
+                    dstdata.write(0, paldata.read(srcdata.read(0)));
+                    srcdata.inc();
+                    dstdata.inc();
+                }
+
+                srcdata.inc(srcmodulo);
+                dstdata.inc((ydir * dstmodulo - dstwidth * 1));
+                dstheight--;
+            }
+        }
+    }
+
+    /*TODO*///
 /*TODO*///DECLARE_SWAP_RAW_PRI(blockmove_4toN_opaque,(COMMON_ARGS,
 /*TODO*///		COLOR_ARG),
 /*TODO*///{
@@ -328,7 +414,143 @@ public class drawgfx_modes8 {
 /*TODO*///		}
 /*TODO*///	}
 /*TODO*///})
-/*TODO*///
+    public static void blockmove_8toN_transpen8(UBytePtr srcdata, int srcwidth, int srcheight, int srcmodulo, int leftskip, int topskip, int flipx, int flipy, UBytePtr dstdata, int dstwidth, int dstheight, int dstmodulo, IntArray paldata, int transpen) {
+        int ydir;
+        if (flipy != 0) {
+            dstdata.inc(dstmodulo * (dstheight - 1));
+            srcdata.inc((srcheight - dstheight - topskip) * srcmodulo);
+            ydir = -1;
+        } else {
+            srcdata.inc(topskip * srcmodulo);
+            ydir = 1;
+        }
+        if (flipx != 0) {
+            dstdata.inc(dstwidth - 1);
+            srcdata.inc(srcwidth - dstwidth - leftskip);
+        } else {
+            srcdata.inc(leftskip);
+        }
+        srcmodulo -= dstwidth;
+        if (flipx != 0) {
+            int end;
+            int trans4;
+            IntPtr sd4;
+
+            trans4 = transpen * 0x01010101;
+
+            while (dstheight != 0) {
+
+                end = dstdata.offset - dstwidth;
+                while (((long) srcdata.offset & 3) != 0 && dstdata.offset > end) /* longword align */ {
+                    int col;
+
+                    col = srcdata.readinc();
+                    if (col != transpen) {
+                        dstdata.write(0, (char) paldata.read(col));
+                    }
+                    dstdata.dec();
+                }
+
+                sd4 = new IntPtr(srcdata);
+                while (dstdata.offset >= end + 4) {
+                    int col4;
+
+                    dstdata.dec(4);
+                    if ((col4 = sd4.read(0)) != trans4) {
+                        int xod4;
+
+                        xod4 = col4 ^ trans4;
+                        if ((xod4 & (0xff << SHIFT0)) != 0) {
+                            dstdata.write(4, (char) paldata.read(((col4 >> SHIFT0) & 0xff)));
+                        }
+                        if ((xod4 & (0xff << SHIFT1)) != 0) {
+                            dstdata.write(3, (char) paldata.read((((col4 >> SHIFT1) & 0xff))));
+                        }
+                        if ((xod4 & (0xff << SHIFT2)) != 0) {
+                            dstdata.write(2, (char) paldata.read((((col4 >> SHIFT2) & 0xff))));
+                        }
+                        if ((xod4 & (0xff << SHIFT3)) != 0) {
+                            dstdata.write(1, (char) paldata.read((((col4 >> SHIFT3) & 0xff))));
+                        }
+                    }
+                    sd4.base += 4;
+                }
+                srcdata.set(sd4.readCA(), sd4.getBase());
+                while (dstdata.offset > end) {
+                    int col;
+
+                    col = srcdata.readinc();
+                    if (col != transpen) {
+                        dstdata.write(0, (char) paldata.read(col));
+                    }
+                    dstdata.dec();
+                }
+
+                srcdata.inc(srcmodulo);
+                dstdata.inc(ydir * dstmodulo + dstwidth);
+                dstheight--;
+            }
+        } else {
+            int end;
+            int trans4;
+            IntPtr sd4;
+
+            trans4 = transpen * 0x01010101;
+
+            while (dstheight != 0) {
+                end = dstdata.offset + dstwidth;
+                while (((long) srcdata.offset & 3) != 0 && dstdata.offset < end) /* longword align */ {
+                    int col;
+
+                    col = srcdata.readinc();
+                    if (col != transpen) {
+                        dstdata.write(0, (char) paldata.read(col));
+                    }
+                    dstdata.inc();
+                }
+                sd4 = new IntPtr(srcdata);
+                while (dstdata.offset <= end - 4) {
+                    int col4;
+
+                    if ((col4 = sd4.read(0)) != trans4) {
+                        int xod4;
+
+                        xod4 = col4 ^ trans4;
+                        if ((xod4 & (0xff << SHIFT0)) != 0) {
+                            dstdata.write(0, (char) paldata.read(((col4 >> SHIFT0) & 0xff)));
+                        }
+                        if ((xod4 & (0xff << SHIFT1)) != 0) {
+                            dstdata.write(1, (char) paldata.read((char) (((col4 >> SHIFT1) & 0xff))));
+                        }
+                        if ((xod4 & (0xff << SHIFT2)) != 0) {
+                            dstdata.write(2, (char) paldata.read((((col4 >> SHIFT2) & 0xff))));
+                        }
+                        if ((xod4 & (0xff << SHIFT3)) != 0) {
+                            dstdata.write(3, (char) paldata.read((((col4 >> SHIFT3) & 0xff))));
+                        }
+                    }
+                    dstdata.inc(4);
+                    sd4.base += 4;
+                }
+                srcdata.set(sd4.readCA(), sd4.getBase());
+                while (dstdata.offset < end) {
+                    int col;
+
+                    col = srcdata.readinc();
+                    if (col != transpen) {
+                        dstdata.write(0, (char) paldata.read(col));
+                    }
+                    dstdata.inc();
+                }
+
+                srcdata.inc(srcmodulo);
+                dstdata.inc(ydir * dstmodulo - dstwidth);
+                dstheight--;
+            }
+        }
+    }
+
+    /*TODO*///
 /*TODO*///DECLARE_SWAP_RAW_PRI(blockmove_4toN_transpen,(COMMON_ARGS,
 /*TODO*///		COLOR_ARG,int transpen),
 /*TODO*///{
@@ -661,7 +883,61 @@ public class drawgfx_modes8 {
 /*TODO*///		}
 /*TODO*///	}
 /*TODO*///})
-/*TODO*///
+    public static void blockmove_8toN_transcolor8(UBytePtr srcdata, int srcwidth, int srcheight, int srcmodulo, int leftskip, int topskip, int flipx, int flipy, UBytePtr dstdata, int dstwidth, int dstheight, int dstmodulo, IntArray paldata, UShortArray colortable, int transcolor) {
+        int ydir;
+        if (flipy != 0) {
+            dstdata.inc(dstmodulo * (dstheight - 1));
+            srcdata.inc((srcheight - dstheight - topskip) * srcmodulo);
+            ydir = -1;
+        } else {
+            srcdata.inc(topskip * srcmodulo);
+            ydir = 1;
+        }
+        if (flipx != 0) {
+            dstdata.inc(dstwidth - 1);
+            srcdata.inc(srcwidth - dstwidth - leftskip);
+        } else {
+            srcdata.inc(leftskip);
+        }
+        srcmodulo -= dstwidth;
+
+        if (flipx != 0) {
+            int end;
+
+            while (dstheight != 0) {
+                end = dstdata.offset - dstwidth;
+                while (dstdata.offset > end) {
+                    if (colortable.read(srcdata.read()) != transcolor) {
+                        dstdata.write(0, (char) paldata.read(srcdata.read()));
+                    }
+                    srcdata.inc();
+                    dstdata.dec();
+                }
+
+                srcdata.inc(srcmodulo);
+                dstdata.inc(ydir * dstmodulo + dstwidth * 1);
+                dstheight--;
+            }
+        } else {
+            int end;
+
+            while (dstheight != 0) {
+                end = dstdata.offset + dstwidth;
+                while (dstdata.offset < end) {
+                    if (colortable.read(srcdata.read()) != transcolor) {
+                        dstdata.write(0, (char) paldata.read(srcdata.read()));
+                    }
+                    srcdata.inc();
+                    dstdata.inc();
+                }
+
+                srcdata.inc(srcmodulo);
+                dstdata.inc(ydir * dstmodulo - dstwidth * 1);
+                dstheight--;
+            }
+        }
+    }
+    /*TODO*///
 /*TODO*///DECLARE_SWAP_RAW_PRI(blockmove_4toN_transcolor,(COMMON_ARGS,
 /*TODO*///		COLOR_ARG,const UINT16 *colortable,int transcolor),
 /*TODO*///{
