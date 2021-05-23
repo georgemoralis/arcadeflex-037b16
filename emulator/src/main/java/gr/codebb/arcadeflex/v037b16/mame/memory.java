@@ -1118,7 +1118,7 @@ public class memory {
                             bankdata[bank].used = 1;
                             bankdata[bank].cpunum = -1;
                         }
-                        mwa_ptr++;
+                        //mwa_ptr++;
                     }
                 } else {
                     //do the same for 16,32bit handlers
