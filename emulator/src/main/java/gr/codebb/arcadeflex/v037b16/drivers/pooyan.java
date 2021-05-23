@@ -10,6 +10,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 //sndhrdw imports
 import static gr.codebb.arcadeflex.v037b16.sndhrdw.timeplt.*;
 //vidhrdw imports
@@ -18,7 +19,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.pooyan.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
 import static mame037b16.commonH.*;
-import static mame037b16.driverH.*;
 import static mame056.inptport.*;
 import static mame056.inptportH.*;
 import static mame056.sndintrf.*;

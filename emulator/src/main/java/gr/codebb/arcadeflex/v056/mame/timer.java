@@ -8,8 +8,8 @@ package gr.codebb.arcadeflex.v056.mame;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 //to be organized
-import static mame037b16.driverH.MAX_CPU;
 import static mame037b16.mame.Machine;
 
 

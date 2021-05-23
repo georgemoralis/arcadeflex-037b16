@@ -5,7 +5,7 @@
 package gr.codebb.arcadeflex.v037b16.mame;
 
 //mame imports
-import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 
 //to be organized
 import static arcadeflex036.osdepend.*;
@@ -19,8 +19,6 @@ import gr.codebb.arcadeflex.v056.mame.timer.timer_callback;
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 import java.util.ArrayList;
-import static mame037b16.driverH.MAX_CPU;
-import static mame037b16.driverH.VIDEO_UPDATE_AFTER_VBLANK;
 import static mame037b16.mame.Machine;
 import static mame037b16.mame.updatescreen;
 import mame056.cpu.dummy_cpu;

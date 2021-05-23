@@ -11,6 +11,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 //sndhrdw imports
 import static gr.codebb.arcadeflex.v037b16.sndhrdw.polyplay.*;
 //vidhrdw imports
@@ -21,7 +22,6 @@ import static arcadeflex037b16.fucPtr.*;
 import common.ptr.UBytePtr;
 import static mame037b16.commonH.*;
 import static mame056.inptportH.*;
-import static mame037b16.driverH.*;
 import static mame056.inptport.*;
 import static mame056.sndintrfH.*;
 import static common.libc.cstdlib.*;

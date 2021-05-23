@@ -8,6 +8,7 @@ package gr.codebb.arcadeflex.v037b16.mame;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 
 //to be organized
 import static arcadeflex036.osdepend.logerror;
@@ -20,7 +21,6 @@ import static java.lang.System.exit;
 import static mame037b16.common.memory_region;
 import static mame037b16.common.memory_region_length;
 import static mame037b16.commonH.REGION_CPU1;
-import static mame037b16.driverH.MAX_CPU;
 import static mame037b16.mame.Machine;
 
 public class memory {
