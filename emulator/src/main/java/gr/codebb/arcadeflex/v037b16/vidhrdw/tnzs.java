@@ -9,6 +9,7 @@ package gr.codebb.arcadeflex.v037b16.vidhrdw;
 import static gr.codebb.arcadeflex.v037b16.drivers.tnzs.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.paletteH.*;
 
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
@@ -19,7 +20,6 @@ import static mame037b16.drawgfx.*;
 import static common.libc.expressions.*;
 import static mame037b16.mame.Machine;
 import static mame037b7.palette.*;
-import static mame037b7.paletteH.*;
 
 public class tnzs {
 

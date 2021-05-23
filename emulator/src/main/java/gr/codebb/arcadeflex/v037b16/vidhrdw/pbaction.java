@@ -7,6 +7,7 @@ package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.paletteH.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 
@@ -22,7 +23,6 @@ import static common.libc.expressions.*;
 import static mame037b7.palette.palette_recalc;
 import static mame037b7.palette.palette_transparent_pen;
 import static mame037b7.palette.palette_used_colors;
-import static mame037b7.paletteH.PALETTE_COLOR_TRANSPARENT;
 
 public class pbaction {
 
