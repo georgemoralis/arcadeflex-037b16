@@ -9,6 +9,7 @@ package gr.codebb.arcadeflex.v037b16.vidhrdw;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 
@@ -47,58 +48,23 @@ public class superqix {
             if (generic_vh_start.handler() != 0) {
                 return 1;
             }
-
-            /* palette RAM is accessed thorough I/O ports, so we have to */
- /* allocate it ourselves */
- /*if ((paletteram = malloc(256 * sizeof(unsigned char))) == 0)
-             {
-             generic_vh_stop();
-             return 1;
-             }*/
             paletteram = new UBytePtr(256);
-
-            /*if ((superqix_bitmapram = malloc(0x7000 * sizeof(unsigned char))) == 0)
-             {
-             free(paletteram);
-             generic_vh_stop();
-             return 1;
-             }*/
             superqix_bitmapram = new UBytePtr(0x7000);
-            /*
-             if ((superqix_bitmapram2 = malloc(0x7000 * sizeof(unsigned char))) == 0)
-             {
-             free(superqix_bitmapram);
-             free(paletteram);
-             generic_vh_stop();
-             return 1;
-             }*/
             superqix_bitmapram2 = new UBytePtr(0x7000);
 
             if ((superqix_bitmapram_dirty = new char[0x7000]) == null) {
-                //free(superqix_bitmapram2);
-                //free(superqix_bitmapram);
-                //free(paletteram);
                 generic_vh_stop.handler();
                 return 1;
             }
             memset(superqix_bitmapram_dirty, 1, 0x7000);
 
             if ((superqix_bitmapram2_dirty = new char[0x7000]) == null) {
-                //free(superqix_bitmapram_dirty);
-                //free(superqix_bitmapram2);
-                //free(superqix_bitmapram);
-                //free(paletteram);
                 generic_vh_stop.handler();
                 return 1;
             }
             memset(superqix_bitmapram2_dirty, 1, 0x7000);
 
             if ((tmpbitmap2 = bitmap_alloc(256, 256)) == null) {
-                //free(superqix_bitmapram2_dirty);
-                //free(superqix_bitmapram_dirty);
-                //free(superqix_bitmapram2);
-                //free(superqix_bitmapram);
-                //free(paletteram);
                 generic_vh_stop.handler();
                 return 1;
             }

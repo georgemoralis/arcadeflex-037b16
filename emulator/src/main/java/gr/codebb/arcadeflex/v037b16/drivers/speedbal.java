@@ -8,14 +8,14 @@ package gr.codebb.arcadeflex.v037b16.drivers;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.speedbal.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.interrupt;
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.CPU_Z80;
-import gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.MachineCPU;
 import static mame037b16.common.*;
 import static mame037b16.commonH.*;
 import static mame056.inptport.*;
@@ -23,7 +23,6 @@ import static mame056.inptportH.*;
 import static mame056.sndintrfH.*;
 import static mame056.sound._3526intf.*;
 import static mame056.sound._3812intfH.*;
-import static mame037b7.palette.paletteram;
 import static mame037b7.palette.paletteram_RRRRGGGGBBBBxxxx_swap_w;
 
 public class speedbal {
