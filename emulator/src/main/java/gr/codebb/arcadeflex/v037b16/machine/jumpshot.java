@@ -6,8 +6,10 @@ package gr.codebb.arcadeflex.v037b16.machine;
 
 import static common.ptr.*;
 
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+//to be organized
 import static mame037b16.common.*;
-import static mame037b16.commonH.*;
 
 public class jumpshot {
 

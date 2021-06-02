@@ -7,11 +7,11 @@ package gr.codebb.arcadeflex.v037b16.machine;
 
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
+import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 //to be organized
 import static common.ptr.*;
 import static common.libc.cstring.*;
 import static mame037b16.common.*;
-import static mame037b16.commonH.*;
 
 
 public class kabuki {

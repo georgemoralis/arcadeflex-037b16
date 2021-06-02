@@ -6,11 +6,11 @@ package gr.codebb.arcadeflex.v037b16.mame;
 
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
-import gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.MachineCPU;
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
 import static common.util.*;
-import static mame037b16.commonH.*;
 import static mame056.inptportH.*;
 import static mame056.sndintrfH.*;
 

@@ -4,11 +4,13 @@
  */
 package gr.codebb.arcadeflex.v037b16.sndhrdw;
 
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+//to be organized
 import static mame056.sndintrfH.*;
 import static mame037b16.mame.*;
 import static mame037b5.sound.mixer.*;
 import static mame037b16.common.*;
-import static mame037b16.commonH.*;
 import static common.ptr.*;
 import static arcadeflex037b16.fucPtr.*;
 

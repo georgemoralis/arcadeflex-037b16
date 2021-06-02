@@ -4,9 +4,10 @@
  */
 package gr.codebb.arcadeflex.v037b16.machine;
 
+//mame imports 
+import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+//to be organized
 import static common.ptr.*;
-
-import static mame037b16.commonH.*;
 import static mame037b16.common.*;
 
 public class pacplus {

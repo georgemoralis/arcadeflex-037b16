@@ -9,6 +9,7 @@ package gr.codebb.arcadeflex.v037b16.vidhrdw;
 import static gr.codebb.arcadeflex.v037b16.drivers.sauro.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 
@@ -20,7 +21,6 @@ import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static common.libc.cstring.*;
 import static common.libc.expressions.*;
-import static mame037b16.commonH.*;
 
 public class sauro {
 

@@ -13,6 +13,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 //sndhrdw imports
 import static gr.codebb.arcadeflex.v037b16.sndhrdw.bosco.*;
 //sound imports
@@ -23,7 +24,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.bosco.*;
 import static arcadeflex037b16.fucPtr.*;
 import static mame056.inptport.*;
 import static common.ptr.*;
-import static mame037b16.commonH.*;
 import static arcadeflex036.osdepend.*;
 import static mame037b16.common.memory_region;
 
