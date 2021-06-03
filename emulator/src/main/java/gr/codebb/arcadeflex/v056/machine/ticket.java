@@ -7,11 +7,10 @@ package gr.codebb.arcadeflex.v056.machine;
 //mame imports
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
-
+import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 //to be organized
 import arcadeflex037b16.fucPtr.ReadHandlerPtr;
 import arcadeflex037b16.fucPtr.WriteHandlerPtr;
-import static mame037b16.common.dispensed_tickets;
 import static mame037b16.mame.set_led_status;
 
 public class ticket {

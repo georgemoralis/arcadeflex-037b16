@@ -4,8 +4,9 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import java.util.ArrayList;
-import static mame037b16.common.flip_screen_x;
+
 
 public class commonH {
 

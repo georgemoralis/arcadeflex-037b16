@@ -4,6 +4,8 @@
  */
 package gr.codebb.arcadeflex.v058.sound;
 
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 //sound imports
 import static gr.codebb.arcadeflex.v058.sound.vlm5030H.*;
 
@@ -15,8 +17,6 @@ import static common.libc.cstring.memset;
 import static common.libc.expressions.sizeof;
 import common.ptr.ShortPtr;
 import common.ptr.UBytePtr;
-import static mame037b16.common.memory_region;
-import static mame037b16.common.memory_region_length;
 import static mame037b16.common.readsamples;
 import static mame037b16.mame.Machine;
 import static mame037b5.sound.mixer.mixer_allocate_channel;

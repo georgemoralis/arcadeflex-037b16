@@ -10,13 +10,13 @@ import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 //to be organized
 import static mame037b16.drawgfx.*;
 import static mame037b16.osdependH.*;
 import static mame037b16.mame.*;
 import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
-import static mame037b16.common.*;
 import static common.libc.cstring.*;
 import static common.libc.expressions.*;
 import static mame056.cpu.m6809.m6809H.M6809_INT_NMI;

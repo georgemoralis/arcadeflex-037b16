@@ -10,7 +10,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
-
+import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 //to be organized
 import static arcadeflex036.osdepend.logerror;
 import arcadeflex037b16.fucPtr.ReadHandlerPtr;
@@ -19,8 +19,6 @@ import static common.libc.cstdio.*;
 import static common.libc.cstring.memset;
 import common.ptr.UBytePtr;
 import static java.lang.System.exit;
-import static mame037b16.common.memory_region;
-import static mame037b16.common.memory_region_length;
 import static mame037b16.mame.Machine;
 
 public class memory {

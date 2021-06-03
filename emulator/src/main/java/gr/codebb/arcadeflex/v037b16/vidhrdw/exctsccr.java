@@ -11,6 +11,7 @@ import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 
@@ -20,7 +21,6 @@ import static common.ptr.*;
 import static mame037b16.osdependH.*;
 import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
-import static mame037b16.common.*;
 
 public class exctsccr {
 

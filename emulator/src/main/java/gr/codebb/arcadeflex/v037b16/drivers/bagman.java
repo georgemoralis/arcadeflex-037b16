@@ -13,6 +13,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 //sound imports
 import static gr.codebb.arcadeflex.v058.sound.tms5110H.*;
 //vidhrdw imports
@@ -27,7 +28,6 @@ import static mame056.inptport.*;
 import static mame056.sndintrfH.*;
 import static mame056.sound.ay8910.*;
 import static mame056.sound.ay8910H.*;
-import static mame037b16.common.*;
 import static mame056.sound._5110intf.tms5110_CTL_w;
 import static mame056.sound._5110intf.tms5110_PDC_w;
 import mame056.sound._5110intfH.TMS5110interface;

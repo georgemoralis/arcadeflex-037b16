@@ -6,6 +6,7 @@ package gr.codebb.arcadeflex.v037b16.sndhrdw;
 
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
 import common.ptr.ShortPtr;
@@ -13,7 +14,6 @@ import static common.libc.cstring.memset;
 import static mame056.sndintrfH.MachineSound;
 import static mame056.sound.streams.*;
 import static common.ptr.*;
-import static mame037b16.common.*;
 
 public class wiping {
 
