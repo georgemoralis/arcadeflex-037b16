@@ -16,6 +16,8 @@ import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 //sound imports
 import static gr.codebb.arcadeflex.v058.sound.tms5110H.*;
+import static gr.codebb.arcadeflex.v037b16.sound._5110intf.*;
+import static gr.codebb.arcadeflex.v037b16.sound._5110intfH.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.bagman.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
@@ -28,9 +30,6 @@ import static mame056.inptport.*;
 import static mame056.sndintrfH.*;
 import static mame056.sound.ay8910.*;
 import static mame056.sound.ay8910H.*;
-import static mame056.sound._5110intf.tms5110_CTL_w;
-import static mame056.sound._5110intf.tms5110_PDC_w;
-import mame056.sound._5110intfH.TMS5110interface;
 
 public class bagman {
 
