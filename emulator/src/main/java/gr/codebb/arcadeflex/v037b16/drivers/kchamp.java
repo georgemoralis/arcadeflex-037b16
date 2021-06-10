@@ -19,6 +19,8 @@ import static gr.codebb.arcadeflex.v037b16.sound.dac.*;
 import static gr.codebb.arcadeflex.v037b16.sound.dacH.*;
 import static gr.codebb.arcadeflex.v037b16.sound.MSM5205.*;
 import static gr.codebb.arcadeflex.v037b16.sound.MSM5205H.*;
+import static gr.codebb.arcadeflex.v037b16.sound.ay8910.*;
+import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.kchamp.*;
@@ -30,8 +32,6 @@ import static mame056.inptport.*;
 import static mame056.inptportH.*;
 import static mame056.sndintrfH.*;
 import static mame056.sndintrf.*;
-import static mame056.sound.ay8910.*;
-import static mame056.sound.ay8910H.*;
 
 public class kchamp {
 

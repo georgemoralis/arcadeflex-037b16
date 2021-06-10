@@ -13,6 +13,8 @@ import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 //sound imports
 import static gr.codebb.arcadeflex.v058.sound.sn76496.*;
 import static gr.codebb.arcadeflex.v058.sound.sn76496H.*;
+import static gr.codebb.arcadeflex.v037b16.sound.ay8910.*;
+import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.exedexes.*;
@@ -20,9 +22,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.exedexes.*;
 import static arcadeflex037b16.fucPtr.*;
 import static mame056.inptportH.*;
 import static mame056.sndintrfH.*;
-
-import static mame056.sound.ay8910.*;
-import static mame056.sound.ay8910H.*;
 import static mame056.sndintrf.*;
 import static mame056.inptport.*;
 
