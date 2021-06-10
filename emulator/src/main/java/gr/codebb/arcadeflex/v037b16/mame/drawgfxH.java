@@ -4,11 +4,14 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+//mame imports
+import gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
+//to be organized
 import common.ptr.UBytePtr;
 import common.subArrays.IntArray;
 import static common.util.*;
 import java.util.Arrays;
-import mame037b16.osdependH.osd_bitmap;
+
 
 public class drawgfxH {
 

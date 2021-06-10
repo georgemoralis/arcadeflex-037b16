@@ -8,6 +8,7 @@ package gr.codebb.arcadeflex.v037b16.mame;
 import static arcadeflex036.video.osd_alloc_bitmap;
 import static arcadeflex036.video.osd_free_bitmap;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 
 //to organized
 import static common.libc.cstdio.*;
@@ -17,7 +18,7 @@ import static mame037b16.common.set_visible_area;
 import static mame037b16.mame.Machine;
 import static mame037b16.mame.schedule_full_refresh;
 import static mame037b16.mameH.MAX_MEMORY_REGIONS;
-import mame037b16.osdependH.osd_bitmap;
+
 
 public class common {
 

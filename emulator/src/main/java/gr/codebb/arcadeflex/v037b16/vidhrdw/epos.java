@@ -7,12 +7,12 @@ package gr.codebb.arcadeflex.v037b16.vidhrdw;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
+import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
 import static mame037b16.drawgfx.*;
 import static mame037b16.mame.*;
-import mame037b16.osdependH.osd_bitmap;
 
 public class epos {
 

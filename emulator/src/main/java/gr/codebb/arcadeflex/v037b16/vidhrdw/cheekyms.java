@@ -10,6 +10,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.dac.*;
 //vidhrdw imports
@@ -17,7 +18,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
-import static mame037b16.osdependH.*;
 import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static common.libc.cstring.*;
