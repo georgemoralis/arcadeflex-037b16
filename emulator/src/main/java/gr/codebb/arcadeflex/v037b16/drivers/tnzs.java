@@ -30,7 +30,6 @@ import static mame056.inptport.*;
 import static mame056.inptportH.*;
 import static mame056.sndintrfH.*;
 import static mame056.sndintrf.*;
-import static mame037b7.palette.*;
 
 
 public class tnzs {

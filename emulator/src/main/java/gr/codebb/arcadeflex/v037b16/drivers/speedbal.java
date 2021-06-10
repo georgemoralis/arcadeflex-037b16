@@ -24,7 +24,6 @@ import static common.ptr.*;
 import static mame056.inptport.*;
 import static mame056.inptportH.*;
 import static mame056.sndintrfH.*;
-import static mame037b7.palette.paletteram_RRRRGGGGBBBBxxxx_swap_w;
 
 public class speedbal {
 

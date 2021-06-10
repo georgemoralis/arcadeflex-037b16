@@ -23,7 +23,6 @@ import static arcadeflex037b16.fucPtr.*;
 import static mame056.inptport.*;
 import static mame056.inptportH.*;
 import static mame056.sndintrfH.*;
-import static mame037b7.palette.*;
 
 public class superqix {
 
