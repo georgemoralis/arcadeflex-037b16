@@ -4,8 +4,12 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+import gr.codebb.arcadeflex.v037b16.mame.osdependH.osd_bitmap;
+import static mame037b16.drawgfx.plot_pixel;
+
 public class drawgfx {
-/*TODO*///#ifdef LSB_FIRST
+
+    /*TODO*///#ifdef LSB_FIRST
 /*TODO*///#define SHIFT0 0
 /*TODO*///#define SHIFT1 8
 /*TODO*///#define SHIFT2 16
@@ -3548,12 +3552,11 @@ public class drawgfx {
 /*TODO*///	profiler_mark(PROFILER_END);
 /*TODO*///}
 /*TODO*///
-/*TODO*///void plot_pixel2(struct osd_bitmap *bitmap1,struct osd_bitmap *bitmap2,int x,int y,int pen)
-/*TODO*///{
-/*TODO*///	plot_pixel(bitmap1, x, y, pen);
-/*TODO*///	plot_pixel(bitmap2, x, y, pen);
-/*TODO*///}
-/*TODO*///
+    public static void plot_pixel2(osd_bitmap bitmap1, osd_bitmap bitmap2, int x, int y, int pen) {
+        plot_pixel.handler(bitmap1, x, y, pen);
+        plot_pixel.handler(bitmap2, x, y, pen);
+    }
+    /*TODO*///
 /*TODO*///static void pp_8_nd(struct osd_bitmap *b,int x,int y,UINT32 p)  { b->line[y][x] = p; }
 /*TODO*///static void pp_8_nd_fx(struct osd_bitmap *b,int x,int y,UINT32 p)  { b->line[y][b->width-1-x] = p; }
 /*TODO*///static void pp_8_nd_fy(struct osd_bitmap *b,int x,int y,UINT32 p)  { b->line[b->height-1-y][x] = p; }
