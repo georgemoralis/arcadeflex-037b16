@@ -3,15 +3,59 @@
  * 
  */
 package gr.codebb.arcadeflex.v037b16.mame;
+import static gr.codebb.arcadeflex.common.libc.cstring.memcpy;
+import static common.libc.cstdio.sprintf;
+import static common.libc.cstring.memcpy;
+import static common.libc.cstring.memset;
+import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.TRANSPARENCY_NONE;
+import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.TRANSPARENCY_NONE_RAW;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.ORIENTATION_FLIP_X;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.ORIENTATION_FLIP_Y;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.ORIENTATION_SWAP_XY;
+import gr.codebb.arcadeflex.v037b16.mame.osdependH.osd_bitmap;
+import static gr.codebb.arcadeflex.v037b16.mame.paletteH.PALETTE_COLOR_TRANSPARENT;
+import static gr.codebb.arcadeflex.v037b16.mame.paletteH.PALETTE_COLOR_UNUSED;
+import static gr.codebb.arcadeflex.v037b16.mame.paletteH.PALETTE_COLOR_USED;
+import static mame037b16.drawgfx.drawgfx;
+import static mame037b16.drawgfx.fillbitmap;
+import static mame037b16.drawgfx.plot_box;
+import static mame037b16.mame.Machine;
+import static mame037b16.mame.schedule_full_refresh;
+import static mame037b16.mame.update_video_and_audio;
+import static mame037b16.mameH.MAX_GFX_ELEMENTS;
+import static mame037b7.palette.palette_recalc;
+import static mame037b7.palette.palette_used_colors;
+import static mame056.inptportH.IPT_UI_CANCEL;
+import static mame056.inptportH.IPT_UI_DOWN;
+import static mame056.inptportH.IPT_UI_LEFT;
+import static mame056.inptportH.IPT_UI_RIGHT;
+import static mame056.inptportH.IPT_UI_SHOW_GFX;
+import static mame056.inptportH.IPT_UI_UP;
+import static mame056.input.code_pressed;
+import static mame056.input.code_pressed_memory_repeat;
+import static mame056.input.input_ui_pressed;
+import static mame056.input.input_ui_pressed_repeat;
+import static mame056.inputH.KEYCODE_LCONTROL;
+import static mame056.inputH.KEYCODE_LSHIFT;
+import static mame056.inputH.KEYCODE_PGDN;
+import static mame056.inputH.KEYCODE_PGUP;
+import static mame056.inputH.KEYCODE_RCONTROL;
+import static mame056.inputH.KEYCODE_RSHIFT;
+import static mame056.usrintrf.switch_true_orientation;
+import static mame056.usrintrf.switch_ui_orientation;
+import static mame056.usrintrf.ui_text;
+import static common.libc.cstring.memcpy;
 
 public class usrintrf {
-/*TODO*///
+
+    /*TODO*///
 /*TODO*///static int setup_selected;
 /*TODO*///static int osd_selected;
 /*TODO*///static int jukebox_selected;
 /*TODO*///static int single_step;
-/*TODO*///static int trueorientation;
-/*TODO*///static int orientation_count;
+    static int trueorientation;
+
+    /*TODO*///static int orientation_count;
 /*TODO*///
 /*TODO*///
 /*TODO*///void switch_ui_orientation(void)
@@ -386,13 +430,12 @@ public class usrintrf {
 /*TODO*///}
 /*TODO*///
 /*TODO*///
-/*TODO*///
-/*TODO*///static void erase_screen(struct osd_bitmap *bitmap)
-/*TODO*///{
-/*TODO*///	fillbitmap(bitmap,Machine->uifont->colortable[0],NULL);
-/*TODO*///	schedule_full_refresh();
-/*TODO*///}
-/*TODO*///
+    public static void erase_screen(osd_bitmap bitmap) {
+        fillbitmap(bitmap, Machine.uifont.colortable.read(0), null);
+        schedule_full_refresh();
+    }
+
+    /*TODO*///
 /*TODO*///
 /*TODO*////***************************************************************************
 /*TODO*///
@@ -918,309 +961,280 @@ public class usrintrf {
 /*TODO*///	displaytext(bitmap,dt);
 /*TODO*///}
 /*TODO*///
-/*TODO*///static void showcharset(struct osd_bitmap *bitmap)
-/*TODO*///{
-/*TODO*///	int i;
-/*TODO*///	char buf[80];
-/*TODO*///	int bank,color,firstdrawn;
-/*TODO*///	int palpage;
-/*TODO*///	int changed;
-/*TODO*///	int game_is_neogeo=0;
-/*TODO*///	unsigned char *orig_used_colors=0;
-/*TODO*///
-/*TODO*///
-/*TODO*///	if (palette_used_colors)
-/*TODO*///	{
-/*TODO*///		orig_used_colors = malloc(Machine->drv->total_colors * sizeof(unsigned char));
-/*TODO*///		if (!orig_used_colors) return;
-/*TODO*///
-/*TODO*///		memcpy(orig_used_colors,palette_used_colors,Machine->drv->total_colors * sizeof(unsigned char));
-/*TODO*///	}
-/*TODO*///
+    public static void showcharset(osd_bitmap bitmap) {
+        int i;
+        String buf = "";
+        int bank, color, firstdrawn;
+        int palpage;
+        int changed;
+        int game_is_neogeo = 0;
+        char[] u8_orig_used_colors = null;
+
+        if (palette_used_colors != null) {
+            u8_orig_used_colors = new char[Machine.drv.total_colors];
+            if (u8_orig_used_colors == null) {
+                return;
+            }
+
+            memcpy(u8_orig_used_colors, palette_used_colors, Machine.drv.total_colors);
+        }
+        /*TODO*///
+/*TODO*///#ifndef MESS
+/*TODO*///#ifndef TINY_COMPILE
 /*TODO*///	if (Machine->gamedrv->clone_of == &driver_neogeo ||
 /*TODO*///			(Machine->gamedrv->clone_of &&
 /*TODO*///				Machine->gamedrv->clone_of->clone_of == &driver_neogeo))
 /*TODO*///		game_is_neogeo=1;
-/*TODO*///
-/*TODO*///	bank = -1;
-/*TODO*///	color = 0;
-/*TODO*///	firstdrawn = 0;
-/*TODO*///	palpage = 0;
-/*TODO*///
-/*TODO*///	changed = 1;
-/*TODO*///
-/*TODO*///	do
-/*TODO*///	{
-/*TODO*///		int cpx,cpy,skip_chars;
-/*TODO*///
-/*TODO*///		if (bank >= 0)
-/*TODO*///		{
-/*TODO*///			cpx = Machine->uiwidth / Machine->gfx[bank]->width;
-/*TODO*///			cpy = (Machine->uiheight - Machine->uifontheight) / Machine->gfx[bank]->height;
-/*TODO*///			skip_chars = cpx * cpy;
-/*TODO*///		}
-/*TODO*///		else cpx = cpy = skip_chars = 0;
-/*TODO*///
-/*TODO*///		if (changed)
-/*TODO*///		{
-/*TODO*///			int lastdrawn=0;
-/*TODO*///
-/*TODO*///			erase_screen(bitmap);
-/*TODO*///
-/*TODO*///			/* validity check after char bank change */
-/*TODO*///			if (bank >= 0)
-/*TODO*///			{
-/*TODO*///				if (firstdrawn >= Machine->gfx[bank]->total_elements)
-/*TODO*///				{
-/*TODO*///					firstdrawn = Machine->gfx[bank]->total_elements - skip_chars;
-/*TODO*///					if (firstdrawn < 0) firstdrawn = 0;
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///
-/*TODO*///			if(bank!=2 || !game_is_neogeo)
-/*TODO*///			{
-/*TODO*///				switch_ui_orientation();
-/*TODO*///
-/*TODO*///				if (bank >= 0)
-/*TODO*///				{
-/*TODO*///					int table_offs;
-/*TODO*///					int flipx,flipy;
-/*TODO*///
-/*TODO*///					if (palette_used_colors && Machine->gfx[bank]->colortable)
-/*TODO*///					{
-/*TODO*///						memset(palette_used_colors,PALETTE_COLOR_TRANSPARENT,Machine->drv->total_colors * sizeof(unsigned char));
-/*TODO*///						table_offs = Machine->gfx[bank]->colortable - Machine->remapped_colortable
-/*TODO*///								+ Machine->gfx[bank]->color_granularity * color;
-/*TODO*///						for (i = 0;i < Machine->gfx[bank]->color_granularity;i++)
-/*TODO*///							palette_used_colors[Machine->game_colortable[table_offs + i]] = PALETTE_COLOR_USED;
-/*TODO*///						palette_recalc();	/* do it twice in case of previous overflow */
-/*TODO*///						palette_recalc();	/*(we redraw the screen only when it changes) */
-/*TODO*///					}
-/*TODO*///
-/*TODO*///#ifndef PREROTATE_GFX
-/*TODO*///					flipx = (Machine->orientation ^ trueorientation) & ORIENTATION_FLIP_X;
-/*TODO*///					flipy = (Machine->orientation ^ trueorientation) & ORIENTATION_FLIP_Y;
-/*TODO*///
-/*TODO*///					if (Machine->orientation & ORIENTATION_SWAP_XY)
-/*TODO*///					{
-/*TODO*///						int t;
-/*TODO*///						t = flipx; flipx = flipy; flipy = t;
-/*TODO*///					}
-/*TODO*///#else
-/*TODO*///					flipx = 0;
-/*TODO*///					flipy = 0;
 /*TODO*///#endif
+/*TODO*///#endif
+
+        bank = -1;
+        color = 0;
+        firstdrawn = 0;
+        palpage = 0;
+
+        changed = 1;
+
+        do {
+            int cpx, cpy, skip_chars;
+
+            if (bank >= 0) {
+                cpx = Machine.uiwidth / Machine.gfx[bank].width;
+                cpy = (Machine.uiheight - Machine.uifontheight) / Machine.gfx[bank].height;
+                skip_chars = cpx * cpy;
+            } else {
+                cpx = cpy = skip_chars = 0;
+            }
+
+            if (changed != 0) {
+                int lastdrawn = 0;
+
+                erase_screen(bitmap);
+
+                /* validity check after char bank change */
+                if (bank >= 0) {
+                    if (firstdrawn >= Machine.gfx[bank].total_elements) {
+                        firstdrawn = Machine.gfx[bank].total_elements - skip_chars;
+                        if (firstdrawn < 0) {
+                            firstdrawn = 0;
+                        }
+                    }
+                }
+
+                if (bank != 2 || game_is_neogeo == 0) {
+                    switch_ui_orientation();
+
+                    if (bank >= 0) {
+                        int table_offs;
+                        int flipx, flipy;
+
+                        if (palette_used_colors != null && Machine.gfx[bank].colortable != null) {
+                            memset(palette_used_colors, PALETTE_COLOR_TRANSPARENT, Machine.drv.total_colors);
+                            table_offs = Machine.gfx[bank].colortable.offset - Machine.remapped_colortable.offset
+                                    + Machine.gfx[bank].color_granularity * color;
+                            for (i = 0; i < Machine.gfx[bank].color_granularity; i++) {
+                                palette_used_colors.write(Machine.game_colortable[table_offs + i], PALETTE_COLOR_USED);
+                            }
+                            palette_recalc();
+                            /* do it twice in case of previous overflow */
+                            palette_recalc();
+                            /*(we redraw the screen only when it changes) */
+                        }
+
+                        flipx = (Machine.orientation ^ trueorientation) & ORIENTATION_FLIP_X;
+                        flipy = (Machine.orientation ^ trueorientation) & ORIENTATION_FLIP_Y;
+
+                        if ((Machine.orientation & ORIENTATION_SWAP_XY) != 0) {
+                            int t;
+                            t = flipx;
+                            flipx = flipy;
+                            flipy = t;
+                        }
+                        for (i = 0; i + firstdrawn < Machine.gfx[bank].total_elements && i < cpx * cpy; i++) {
+                            drawgfx(bitmap, Machine.gfx[bank],
+                                    i + firstdrawn, color, /*sprite num, color*/
+                                    flipx, flipy,
+                                    (i % cpx) * Machine.gfx[bank].width + Machine.uixmin,
+                                    Machine.uifontheight + (i / cpx) * Machine.gfx[bank].height + Machine.uiymin,
+                                    null, Machine.gfx[bank].colortable != null ? TRANSPARENCY_NONE : TRANSPARENCY_NONE_RAW, 0);
+
+                            lastdrawn = i + firstdrawn;
+                        }
+                    } else {
+                        int sx, sy, colors;
+
+                        colors = Machine.drv.total_colors - 256 * palpage;
+                        if (colors > 256) {
+                            colors = 256;
+                        }
+                        if (palette_used_colors != null) {
+                            memset(palette_used_colors, PALETTE_COLOR_UNUSED, Machine.drv.total_colors);
+                            memset(palette_used_colors, 256 * palpage, PALETTE_COLOR_USED, colors);
+                            palette_recalc();
+                            /* do it twice in case of previous overflow */
+                            palette_recalc();
+                            /*(we redraw the screen only when it changes) */
+                        }
+
+                        for (i = 0; i < 16; i++) {
+                            String bf = "";
+
+                            sx = 3 * Machine.uifontwidth + (Machine.uifontwidth * 4 / 3) * (i % 16);
+                            bf = sprintf("%X", i);
+                            ui_text(bitmap, bf, sx, 2 * Machine.uifontheight);
+                            if (16 * i < colors) {
+                                sy = 3 * Machine.uifontheight + (Machine.uifontheight) * (i % 16);
+                                bf = sprintf("%3X", i + 16 * palpage);
+                                ui_text(bitmap, bf, 0, sy);
+                            }
+                        }
+
+                        for (i = 0; i < colors; i++) {
+                            sx = Machine.uixmin + 3 * Machine.uifontwidth + (Machine.uifontwidth * 4 / 3) * (i % 16);
+                            sy = Machine.uiymin + 2 * Machine.uifontheight + (Machine.uifontheight) * (i / 16) + Machine.uifontheight;
+                            plot_box.handler(bitmap, sx, sy, Machine.uifontwidth * 4 / 3, Machine.uifontheight, Machine.pens[i + 256 * palpage]);
+                        }
+                    }
+
+                    switch_true_orientation();
+                } /*TODO*///#ifndef MESS
+                /*TODO*///#ifndef TINY_COMPILE
+                else /* neogeo sprite tiles */ {
+                    /*TODO*///				struct rectangle clip;
 /*TODO*///
-/*TODO*///					for (i = 0; i+firstdrawn < Machine->gfx[bank]->total_elements && i<cpx*cpy; i++)
-/*TODO*///					{
-/*TODO*///						drawgfx(bitmap,Machine->gfx[bank],
-/*TODO*///								i+firstdrawn,color,  /*sprite num, color*/
-/*TODO*///								flipx,flipy,
-/*TODO*///								(i % cpx) * Machine->gfx[bank]->width + Machine->uixmin,
-/*TODO*///								Machine->uifontheight + (i / cpx) * Machine->gfx[bank]->height + Machine->uiymin,
-/*TODO*///								0,Machine->gfx[bank]->colortable ? TRANSPARENCY_NONE : TRANSPARENCY_NONE_RAW,0);
-/*TODO*///
-/*TODO*///						lastdrawn = i+firstdrawn;
-/*TODO*///					}
-/*TODO*///				}
-/*TODO*///				else
-/*TODO*///				{
-/*TODO*///					int sx,sy,colors;
-/*TODO*///
-/*TODO*///					colors = Machine->drv->total_colors - 256 * palpage;
-/*TODO*///					if (colors > 256) colors = 256;
-/*TODO*///					if (palette_used_colors)
-/*TODO*///					{
-/*TODO*///						memset(palette_used_colors,PALETTE_COLOR_UNUSED,Machine->drv->total_colors * sizeof(unsigned char));
-/*TODO*///						memset(palette_used_colors+256*palpage,PALETTE_COLOR_USED,colors * sizeof(unsigned char));
-/*TODO*///						palette_recalc();	/* do it twice in case of previous overflow */
-/*TODO*///						palette_recalc();	/*(we redraw the screen only when it changes) */
-/*TODO*///					}
-/*TODO*///
-/*TODO*///					for (i = 0;i < 16;i++)
-/*TODO*///					{
-/*TODO*///						char bf[40];
-/*TODO*///
-/*TODO*///						sx = 3*Machine->uifontwidth + (Machine->uifontwidth*4/3)*(i % 16);
-/*TODO*///						sprintf(bf,"%X",i);
-/*TODO*///						ui_text(bitmap,bf,sx,2*Machine->uifontheight);
-/*TODO*///						if (16*i < colors)
-/*TODO*///						{
-/*TODO*///							sy = 3*Machine->uifontheight + (Machine->uifontheight)*(i % 16);
-/*TODO*///							sprintf(bf,"%3X",i+16*palpage);
-/*TODO*///							ui_text(bitmap,bf,0,sy);
-/*TODO*///						}
-/*TODO*///					}
-/*TODO*///
-/*TODO*///					for (i = 0;i < colors;i++)
-/*TODO*///					{
-/*TODO*///						sx = Machine->uixmin + 3*Machine->uifontwidth + (Machine->uifontwidth*4/3)*(i % 16);
-/*TODO*///						sy = Machine->uiymin + 2*Machine->uifontheight + (Machine->uifontheight)*(i / 16) + Machine->uifontheight;
-/*TODO*///						plot_box(bitmap,sx,sy,Machine->uifontwidth*4/3,Machine->uifontheight,Machine->pens[i + 256*palpage]);
-/*TODO*///					}
-/*TODO*///				}
-/*TODO*///
-/*TODO*///				switch_true_orientation();
-/*TODO*///			}
-/*TODO*///			else	/* neogeo sprite tiles */
-/*TODO*///			{
-/*TODO*///				struct rectangle clip;
-/*TODO*///
-/*TODO*///				clip.min_x = Machine->uixmin;
-/*TODO*///				clip.max_x = Machine->uixmin + Machine->uiwidth - 1;
-/*TODO*///				clip.min_y = Machine->uiymin;
-/*TODO*///				clip.max_y = Machine->uiymin + Machine->uiheight - 1;
+/*TODO*///				clip.min_x = Machine.uixmin;
+/*TODO*///				clip.max_x = Machine.uixmin + Machine.uiwidth - 1;
+/*TODO*///				clip.min_y = Machine.uiymin;
+/*TODO*///				clip.max_y = Machine.uiymin + Machine.uiheight - 1;
 /*TODO*///
 /*TODO*///				if (palette_used_colors)
 /*TODO*///				{
-/*TODO*///					memset(palette_used_colors,PALETTE_COLOR_TRANSPARENT,Machine->drv->total_colors * sizeof(unsigned char));
-/*TODO*///					memset(palette_used_colors+Machine->gfx[bank]->color_granularity*color,PALETTE_COLOR_USED,Machine->gfx[bank]->color_granularity * sizeof(unsigned char));
+/*TODO*///					memset(palette_used_colors,PALETTE_COLOR_TRANSPARENT,Machine.drv.total_colors * sizeof(unsigned char));
+/*TODO*///					memset(palette_used_colors+Machine.gfx[bank].color_granularity*color,PALETTE_COLOR_USED,Machine.gfx[bank].color_granularity * sizeof(unsigned char));
 /*TODO*///					palette_recalc();	/* do it twice in case of previous overflow */
 /*TODO*///					palette_recalc();	/*(we redraw the screen only when it changes) */
 /*TODO*///				}
 /*TODO*///
 /*TODO*///				for (i = 0; i+firstdrawn < no_of_tiles && i<cpx*cpy; i++)
 /*TODO*///				{
-/*TODO*///					if (bitmap->depth == 16)
-/*TODO*///						NeoMVSDrawGfx16(bitmap->line,Machine->gfx[bank],
+/*TODO*///					if (bitmap.depth == 16)
+/*TODO*///						NeoMVSDrawGfx16(bitmap.line,Machine.gfx[bank],
 /*TODO*///							i+firstdrawn,color,  /*sprite num, color*/
 /*TODO*///							0,0,
-/*TODO*///							(i % cpx) * Machine->gfx[bank]->width + Machine->uixmin,
-/*TODO*///							Machine->uifontheight+1 + (i / cpx) * Machine->gfx[bank]->height + Machine->uiymin,
+/*TODO*///							(i % cpx) * Machine.gfx[bank].width + Machine.uixmin,
+/*TODO*///							Machine.uifontheight+1 + (i / cpx) * Machine.gfx[bank].height + Machine.uiymin,
 /*TODO*///							16,16,&clip);
 /*TODO*///					else
-/*TODO*///						NeoMVSDrawGfx(bitmap->line,Machine->gfx[bank],
+/*TODO*///						NeoMVSDrawGfx(bitmap.line,Machine.gfx[bank],
 /*TODO*///							i+firstdrawn,color,  /*sprite num, color*/
 /*TODO*///							0,0,
-/*TODO*///							(i % cpx) * Machine->gfx[bank]->width + Machine->uixmin,
-/*TODO*///							Machine->uifontheight+1 + (i / cpx) * Machine->gfx[bank]->height + Machine->uiymin,
+/*TODO*///							(i % cpx) * Machine.gfx[bank].width + Machine.uixmin,
+/*TODO*///							Machine.uifontheight+1 + (i / cpx) * Machine.gfx[bank].height + Machine.uiymin,
 /*TODO*///							16,16,&clip);
 /*TODO*///
 /*TODO*///					lastdrawn = i+firstdrawn;
 /*TODO*///				}
-/*TODO*///			}
+                }
+                /*TODO*///#endif
 /*TODO*///#endif
-/*TODO*///#endif
-/*TODO*///#endif
 /*TODO*///
-/*TODO*///			if (bank >= 0)
-/*TODO*///				sprintf(buf,"GFXSET %d COLOR %2X CODE %X-%X",bank,color,firstdrawn,lastdrawn);
-/*TODO*///			else
-/*TODO*///				strcpy(buf,"PALETTE");
-/*TODO*///			ui_text(bitmap,buf,0,0);
-/*TODO*///
-/*TODO*///			changed = 0;
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		update_video_and_audio();
-/*TODO*///
-/*TODO*///		if (code_pressed(KEYCODE_LCONTROL) || code_pressed(KEYCODE_RCONTROL))
-/*TODO*///		{
-/*TODO*///			skip_chars = cpx;
-/*TODO*///		}
-/*TODO*///		if (code_pressed(KEYCODE_LSHIFT) || code_pressed(KEYCODE_RSHIFT))
-/*TODO*///		{
-/*TODO*///			skip_chars = 1;
-/*TODO*///		}
-/*TODO*///
-/*TODO*///
-/*TODO*///		if (input_ui_pressed_repeat(IPT_UI_RIGHT,8))
-/*TODO*///		{
-/*TODO*///			if (bank+1 < MAX_GFX_ELEMENTS && Machine->gfx[bank + 1])
-/*TODO*///			{
-/*TODO*///				bank++;
-/*TODO*/////				firstdrawn = 0;
-/*TODO*///				changed = 1;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		if (input_ui_pressed_repeat(IPT_UI_LEFT,8))
-/*TODO*///		{
-/*TODO*///			if (bank > -1)
-/*TODO*///			{
-/*TODO*///				bank--;
-/*TODO*/////				firstdrawn = 0;
-/*TODO*///				changed = 1;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		if (code_pressed_memory_repeat(KEYCODE_PGDN,4))
-/*TODO*///		{
-/*TODO*///			if (bank >= 0)
-/*TODO*///			{
-/*TODO*///				if (firstdrawn + skip_chars < Machine->gfx[bank]->total_elements)
-/*TODO*///				{
-/*TODO*///					firstdrawn += skip_chars;
-/*TODO*///					changed = 1;
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///			else
-/*TODO*///			{
-/*TODO*///				if (256 * (palpage + 1) < Machine->drv->total_colors)
-/*TODO*///				{
-/*TODO*///					palpage++;
-/*TODO*///					changed = 1;
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		if (code_pressed_memory_repeat(KEYCODE_PGUP,4))
-/*TODO*///		{
-/*TODO*///			if (bank >= 0)
-/*TODO*///			{
-/*TODO*///				firstdrawn -= skip_chars;
-/*TODO*///				if (firstdrawn < 0) firstdrawn = 0;
-/*TODO*///				changed = 1;
-/*TODO*///			}
-/*TODO*///			else
-/*TODO*///			{
-/*TODO*///				if (palpage > 0)
-/*TODO*///				{
-/*TODO*///					palpage--;
-/*TODO*///					changed = 1;
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		if (input_ui_pressed_repeat(IPT_UI_UP,6))
-/*TODO*///		{
-/*TODO*///			if (bank >= 0)
-/*TODO*///			{
-/*TODO*///				if (color < Machine->gfx[bank]->total_colors - 1)
-/*TODO*///				{
-/*TODO*///					color++;
-/*TODO*///					changed = 1;
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		if (input_ui_pressed_repeat(IPT_UI_DOWN,6))
-/*TODO*///		{
-/*TODO*///			if (color > 0)
-/*TODO*///			{
-/*TODO*///				color--;
-/*TODO*///				changed = 1;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		if (input_ui_pressed(IPT_UI_SNAPSHOT))
+                if (bank >= 0) {
+                    buf = sprintf("GFXSET %d COLOR %2X CODE %X-%X", bank, color, firstdrawn, lastdrawn);
+                } else {
+                    buf = "PALETTE";
+                }
+                ui_text(bitmap, buf, 0, 0);
+
+                changed = 0;
+            }
+
+            update_video_and_audio();
+
+            if (code_pressed(KEYCODE_LCONTROL) != 0 || code_pressed(KEYCODE_RCONTROL) != 0) {
+                skip_chars = cpx;
+            }
+            if (code_pressed(KEYCODE_LSHIFT) != 0 || code_pressed(KEYCODE_RSHIFT) != 0) {
+                skip_chars = 1;
+            }
+
+            if (input_ui_pressed_repeat(IPT_UI_RIGHT, 8) != 0) {
+                if (bank + 1 < MAX_GFX_ELEMENTS && Machine.gfx[bank + 1] != null) {
+                    bank++;
+//				firstdrawn = 0;
+                    changed = 1;
+                }
+            }
+
+            if (input_ui_pressed_repeat(IPT_UI_LEFT, 8) != 0) {
+                if (bank > -1) {
+                    bank--;
+//				firstdrawn = 0;
+                    changed = 1;
+                }
+            }
+
+            if (code_pressed_memory_repeat(KEYCODE_PGDN, 4) != 0) {
+                if (bank >= 0) {
+                    if (firstdrawn + skip_chars < Machine.gfx[bank].total_elements) {
+                        firstdrawn += skip_chars;
+                        changed = 1;
+                    }
+                } else {
+                    if (256 * (palpage + 1) < Machine.drv.total_colors) {
+                        palpage++;
+                        changed = 1;
+                    }
+                }
+            }
+
+            if (code_pressed_memory_repeat(KEYCODE_PGUP, 4) != 0) {
+                if (bank >= 0) {
+                    firstdrawn -= skip_chars;
+                    if (firstdrawn < 0) {
+                        firstdrawn = 0;
+                    }
+                    changed = 1;
+                } else {
+                    if (palpage > 0) {
+                        palpage--;
+                        changed = 1;
+                    }
+                }
+            }
+
+            if (input_ui_pressed_repeat(IPT_UI_UP, 6) != 0) {
+                if (bank >= 0) {
+                    if (color < Machine.gfx[bank].total_colors - 1) {
+                        color++;
+                        changed = 1;
+                    }
+                }
+            }
+
+            if (input_ui_pressed_repeat(IPT_UI_DOWN, 6) != 0) {
+                if (color > 0) {
+                    color--;
+                    changed = 1;
+                }
+            }
+
+            /*TODO*///		if (input_ui_pressed(IPT_UI_SNAPSHOT))
 /*TODO*///			osd_save_snapshot(bitmap);
-/*TODO*///	} while (!input_ui_pressed(IPT_UI_SHOW_GFX) &&
-/*TODO*///			!input_ui_pressed(IPT_UI_CANCEL));
-/*TODO*///
-/*TODO*///	if (palette_used_colors)
-/*TODO*///	{
-/*TODO*///		/* this should force a full refresh by the video driver */
-/*TODO*///		memset(palette_used_colors,PALETTE_COLOR_TRANSPARENT,Machine->drv->total_colors * sizeof(unsigned char));
-/*TODO*///		palette_recalc();
-/*TODO*///		/* restore the game used colors array */
-/*TODO*///		memcpy(palette_used_colors,orig_used_colors,Machine->drv->total_colors * sizeof(unsigned char));
-/*TODO*///		free(orig_used_colors);
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	schedule_full_refresh();
-/*TODO*///}
-/*TODO*///
+        } while (input_ui_pressed(IPT_UI_SHOW_GFX) == 0
+                && input_ui_pressed(IPT_UI_CANCEL) == 0);
+
+        if (palette_used_colors != null) {
+            /* this should force a full refresh by the video driver */
+            memset(palette_used_colors, PALETTE_COLOR_TRANSPARENT, Machine.drv.total_colors);
+            palette_recalc();
+            /* restore the game used colors array */
+            memcpy(palette_used_colors, u8_orig_used_colors, Machine.drv.total_colors);
+            u8_orig_used_colors = null;
+        }
+
+        schedule_full_refresh();
+    }
+    /*TODO*///
 /*TODO*///
 /*TODO*///#ifdef MAME_DEBUG
 /*TODO*///static void showtotalcolors(struct osd_bitmap *bitmap)
