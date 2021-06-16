@@ -9,4 +9,10 @@ public class cstring {
             dst[i] = src.read(i);
         }
     }
+
+    public static void memcpy(UBytePtr dst, char[] src, int size) {
+        for (int i = 0; i < Math.min(size, src.length); i++) {
+            dst.write(i, src[i]);
+        }
+    }
 }
