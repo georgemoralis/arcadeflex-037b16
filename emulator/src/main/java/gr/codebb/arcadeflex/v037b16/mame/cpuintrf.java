@@ -8,27 +8,21 @@ package gr.codebb.arcadeflex.v037b16.mame;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
-import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
-
+import static gr.codebb.arcadeflex.v037b16.mame.hiscore.*;
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
+import static gr.codebb.arcadeflex.v056.mame.timer.*;
+import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 //to be organized
 import static arcadeflex036.osdepend.*;
 import arcadeflex037b16.fucPtr.InterruptPtr;
 import arcadeflex037b16.fucPtr.ReadHandlerPtr;
 import arcadeflex037b16.fucPtr.WriteHandlerPtr;
 import gr.codebb.arcadeflex.v037b16.cpu.z80.z80;
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
-import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
-import gr.codebb.arcadeflex.v056.mame.timer.timer_callback;
-import static gr.codebb.arcadeflex.v056.mame.timer.*;
-import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 import java.util.ArrayList;
 import static mame037b16.mame.Machine;
 import static mame037b16.mame.updatescreen;
 import mame056.cpu.dummy_cpu;
-import static mame056.hiscore.hs_close;
-import static mame056.hiscore.hs_init;
-import static mame056.hiscore.hs_open;
-import static mame056.hiscore.hs_update;
 
 public class cpuintrf {
 
@@ -308,8 +302,8 @@ public class cpuintrf {
 /*TODO*///
 /*TODO*////* warning the ordering must match the one of the enum in driver.h! */
     public static cpu_interface cpuintf[]
-            = { new dummy_cpu(),
-            new z80()//CPU1(Z80,	   z80, 	 1,255,1.00,Z80_IGNORE_INT,    Z80_IRQ_INT,    Z80_NMI_INT,    8, 16,	  0,16,LE,1, 4	),
+            = {new dummy_cpu(),
+                new z80()//CPU1(Z80,	   z80, 	 1,255,1.00,Z80_IGNORE_INT,    Z80_IRQ_INT,    Z80_NMI_INT,    8, 16,	  0,16,LE,1, 4	),
             /*TODO*///#endif
             /*TODO*///#if (HAS_8080)
             /*TODO*///	CPU0(8080,	   i8080,	 4,255,1.00,I8080_NONE, 	   I8080_INTR,	   I8080_TRAP,	   8, 16,	  0,16,LE,1, 3	),
