@@ -26,9 +26,7 @@ import mame037b7.sound.fmH.FM_TIMERHANDLER_Ptr;
 import mame056.sndintrf.snd_interface;
 import static mame056.sndintrf.sndintf;
 import static mame056.sndintrf.sound_name;
-import mame056.sndintrfH.MachineSound;
-import static mame056.sndintrfH.SOUND_AY8910;
-import static mame056.sndintrfH.SOUND_YM2203;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static mame056.sound.streams.stream_init;
 import static mame056.sound.streams.stream_update;
 

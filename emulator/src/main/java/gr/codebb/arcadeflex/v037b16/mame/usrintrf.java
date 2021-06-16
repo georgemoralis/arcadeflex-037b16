@@ -5,10 +5,6 @@
 package gr.codebb.arcadeflex.v037b16.mame;
 
 //common imports
-import static arcadeflex036.sound.osd_get_mastervolume;
-import static arcadeflex036.sound.osd_set_mastervolume;
-import static arcadeflex036.sound.osd_sound_enable;
-import static arcadeflex036.video.osd_get_brightness;
 import static gr.codebb.arcadeflex.common.libc.cstring.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
@@ -101,6 +97,10 @@ import static mame056.inputH.seq_get_1;
 import static mame056.sndintrf.sound_clock;
 import static mame056.sndintrf.sound_name;
 import static mame056.sndintrf.sound_num;
+import static arcadeflex036.sound.osd_get_mastervolume;
+import static arcadeflex036.sound.osd_set_mastervolume;
+import static arcadeflex036.sound.osd_sound_enable;
+import static arcadeflex036.video.osd_get_brightness;
 
 public class usrintrf {
 
@@ -2708,8 +2708,8 @@ public class usrintrf {
         menu_action[menu_total++] = UI_STATS;
         menu_item[menu_total] = ui_getstring(UI_gameinfo);
         menu_action[menu_total++] = UI_GAMEINFO;
-        menu_item[menu_total] = ui_getstring(UI_history);
-        menu_action[menu_total++] = UI_HISTORY;
+/*TODO*///        menu_item[menu_total] = ui_getstring(UI_history);
+/*TODO*///        menu_action[menu_total++] = UI_HISTORY;
 
         if (options.cheat != 0) {
             menu_item[menu_total] = ui_getstring(UI_cheat);
@@ -2762,9 +2762,9 @@ public class usrintrf {
                 case UI_GAMEINFO:
                     res = displaygameinfo(bitmap, sel >> SEL_BITS);
                     break;
-                case UI_HISTORY:
+/*TODO*///                case UI_HISTORY:
                     /*TODO*///                    res = displayhistory(bitmap, sel >> SEL_BITS);
-                    break;
+/*TODO*///                    break;
                 case UI_CHEAT:
                     res = cheat_menu(bitmap, sel >> SEL_BITS);
                     break;

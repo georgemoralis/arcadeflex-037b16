@@ -9,7 +9,7 @@ import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 //to be organized
 import static mame056.sndintrf.*;
-import static mame056.sndintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.sound.sn76477H.*;
 import static mame056.sound.streams.*;
 import static common.libc.expressions.*;

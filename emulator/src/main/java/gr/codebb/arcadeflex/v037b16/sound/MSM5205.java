@@ -17,7 +17,7 @@ import static common.libc.cstdio.*;
 import static arcadeflex036.osdepend.logerror;
 import static mame037b16.mame.Machine;
 import static mame056.sndintrf.*;
-import static mame056.sndintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static mame037b5.sound.mixer.mixer_set_volume;
 import static mame056.sound.streams.*;
 

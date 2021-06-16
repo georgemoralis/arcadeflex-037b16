@@ -4,10 +4,12 @@
  */
 package gr.codebb.arcadeflex.v037b16.sndhrdw;
 
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
+//to be organized
 import static arcadeflex037b16.fucPtr.*;
 import common.ptr.ShortPtr;
 import static common.libc.expressions.*;
-import static mame056.sndintrfH.MachineSound;
 import static mame037b5.sound.mixer.*;
 
 public class polyplay {

@@ -4,7 +4,7 @@
 package gr.codebb.arcadeflex.v037b16.sound;
 
 import static mame056.sndintrf.*;
-import static mame056.sndintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 
 public class CustomSound extends snd_interface {
 

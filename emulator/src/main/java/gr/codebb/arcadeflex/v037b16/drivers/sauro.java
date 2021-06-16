@@ -14,6 +14,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound._3812intfH.*;
 import static gr.codebb.arcadeflex.v037b16.sound._3812intf.*;
@@ -26,7 +27,6 @@ import static common.ptr.*;
 import static common.libc.cstring.*;
 import static mame056.inptport.*;
 import static mame056.inptportH.*;
-import static mame056.sndintrfH.*;
 import static mame056.sndintrf.*;
 
 public class sauro {

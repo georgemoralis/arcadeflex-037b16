@@ -13,6 +13,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound._3812intfH.*;
 import static gr.codebb.arcadeflex.v037b16.sound._3812intf.*;
@@ -23,7 +24,6 @@ import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
 import static mame056.inptport.*;
 import static mame056.inptportH.*;
-import static mame056.sndintrfH.*;
 
 public class speedbal {
 

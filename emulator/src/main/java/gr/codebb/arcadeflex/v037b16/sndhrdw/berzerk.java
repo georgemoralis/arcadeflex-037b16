@@ -5,12 +5,13 @@
  */
 package gr.codebb.arcadeflex.v037b16.sndhrdw;
 
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 //machine imports
 import static gr.codebb.arcadeflex.v037b16.machine.berzerk.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.samples.*;
 //to be organized
-import static mame056.sndintrfH.*;
 import static mame037b16.mame.*;
 import static arcadeflex037b16.fucPtr.*;
 import static common.libc.expressions.NOT;

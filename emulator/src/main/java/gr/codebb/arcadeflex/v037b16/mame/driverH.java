@@ -8,11 +8,11 @@ package gr.codebb.arcadeflex.v037b16.mame;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
 import static common.util.*;
 import static mame056.inptportH.*;
-import static mame056.sndintrfH.*;
 
 public class driverH {
 

@@ -5,7 +5,7 @@
  */
 package gr.codebb.arcadeflex.v037b16.sound;
 
-import mame056.sndintrfH;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
 import static common.libc.cstdio.*;
@@ -18,7 +18,6 @@ import static gr.codebb.arcadeflex.v056.mame.timer.timer_set;
 import static mame037b16.mame.Machine;
 import gr.codebb.arcadeflex.v037b16.sound._3812intfH.*;
 import static mame056.sndintrf.*;
-import static mame056.sndintrfH.*;
 import static mame037b7.sound.fmopl.*;
 import static mame037b7.sound.fmoplH.*;
 import static mame056.sound.streams.*;
@@ -37,22 +36,22 @@ public class _3812intf extends snd_interface {
     }
 
     @Override
-    public int chips_num(sndintrfH.MachineSound msound) {
+    public int chips_num(MachineSound msound) {
         return ((YM3812interface) msound.sound_interface).num;
     }
 
     @Override
-    public int chips_clock(sndintrfH.MachineSound msound) {
+    public int chips_clock(MachineSound msound) {
         return ((YM3812interface) msound.sound_interface).baseclock;
     }
 
     @Override
-    public int start(sndintrfH.MachineSound msound) {
+    public int start(MachineSound msound) {
         chiptype = OPL_TYPE_YM3812;
         return OPL_sh_start(msound);
     }
 
-    public static int OPL_sh_start(sndintrfH.MachineSound msound) {
+    public static int OPL_sh_start(MachineSound msound) {
 
         int i;
         int rate = Machine.sample_rate;

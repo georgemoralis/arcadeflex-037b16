@@ -13,6 +13,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 //machine imports
 import static gr.codebb.arcadeflex.v037b16.machine.tnzs.*;
 //sound imports
@@ -28,7 +29,6 @@ import static common.ptr.*;
 import static mame037b16.mame.Machine;
 import static mame056.inptport.*;
 import static mame056.inptportH.*;
-import static mame056.sndintrfH.*;
 import static mame056.sndintrf.*;
 
 

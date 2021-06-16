@@ -7,8 +7,8 @@ package gr.codebb.arcadeflex.v037b16.sndhrdw;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 //to be organized
-import static mame056.sndintrfH.*;
 import static mame037b16.mame.*;
 import static mame037b5.sound.mixer.*;
 import static common.ptr.*;

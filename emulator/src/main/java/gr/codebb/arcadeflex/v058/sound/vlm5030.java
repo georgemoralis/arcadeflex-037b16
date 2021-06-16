@@ -6,6 +6,7 @@ package gr.codebb.arcadeflex.v058.sound;
 
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 //sound imports
 import static gr.codebb.arcadeflex.v058.sound.vlm5030H.*;
 
@@ -21,8 +22,6 @@ import static mame037b16.common.readsamples;
 import static mame037b16.mame.Machine;
 import static mame037b5.sound.mixer.mixer_allocate_channel;
 import mame056.sndintrf.snd_interface;
-import mame056.sndintrfH.MachineSound;
-import static mame056.sndintrfH.SOUND_VLM5030;
 import mame056.sound.streams.StreamInitPtr;
 import static mame056.sound.streams.stream_init;
 import static mame056.sound.streams.stream_update;

@@ -14,6 +14,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 //sound imports
 import static gr.codebb.arcadeflex.v058.sound.tms5110H.*;
 import static gr.codebb.arcadeflex.v037b16.sound._5110intf.*;
@@ -29,7 +30,6 @@ import static arcadeflex037b16.fucPtr.*;
 import common.ptr.UBytePtr;
 import static mame056.inptportH.*;
 import static mame056.inptport.*;
-import static mame056.sndintrfH.*;
 
 public class bagman {
 

@@ -11,6 +11,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 //sndhrdw imports
 import static gr.codebb.arcadeflex.v037b16.sndhrdw.gotya.*;
 //sound imports
@@ -24,7 +25,6 @@ import static mame056.inptport.input_port_0_r;
 import static mame056.inptport.input_port_1_r;
 import static mame056.inptport.input_port_2_r;
 import static mame056.inptportH.*;
-import static mame056.sndintrfH.*;
 
 public class gotya {
 
