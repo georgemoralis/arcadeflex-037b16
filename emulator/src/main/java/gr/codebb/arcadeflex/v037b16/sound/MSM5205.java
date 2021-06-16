@@ -8,6 +8,7 @@ package gr.codebb.arcadeflex.v037b16.sound;
 //mame imports
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.MSM5205H.*;
 //to be organized
@@ -16,7 +17,6 @@ import static common.ptr.*;
 import static common.libc.cstdio.*;
 import static arcadeflex036.osdepend.logerror;
 import static mame037b16.mame.Machine;
-import static mame056.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static mame037b5.sound.mixer.mixer_set_volume;
 import static mame056.sound.streams.*;

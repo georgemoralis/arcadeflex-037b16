@@ -10,8 +10,8 @@ import static common.ptr.*;
 import static arcadeflex036.osdepend.*;
 import static gr.codebb.arcadeflex.v058.sound.tms5110.*;
 import static mame037b16.mame.*;
-import static mame056.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 import gr.codebb.arcadeflex.v037b16.sound._5110intfH.*;
 import static mame056.sound.streams.*;
 

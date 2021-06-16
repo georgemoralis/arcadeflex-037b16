@@ -8,6 +8,7 @@ package gr.codebb.arcadeflex.v037b16.sound;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound._2608intfH.*;
 //to be organized
@@ -15,6 +16,7 @@ import arcadeflex037b16.fucPtr.ReadHandlerPtr;
 import arcadeflex037b16.fucPtr.WriteHandlerPtr;
 import static common.libc.cstdio.sprintf;
 import common.ptr.UBytePtr;
+import gr.codebb.arcadeflex.v037b16.mame.sndintrf.snd_interface;
 import static mame037b16.mame.Machine;
 import static mame037b7.sound.fm.YM2608Init;
 import static mame037b7.sound.fm.YM2608Read;
@@ -27,9 +29,6 @@ import mame037b7.sound.fmH.FM_IRQHANDLER_Ptr;
 import mame037b7.sound.fmH.FM_TIMERHANDLER_Ptr;
 import static mame037b7.sound.fmH.YM2608_NUMBUF;
 import static mame037b7.sound.fmH.YM2610_NUMBUF;
-import mame056.sndintrf.snd_interface;
-import static mame056.sndintrf.sndintf;
-import static mame056.sndintrf.sound_name;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static mame056.sound.streams.stream_init_multi;
 import static mame056.sound.streams.stream_update;

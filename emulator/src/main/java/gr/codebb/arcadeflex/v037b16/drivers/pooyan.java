@@ -13,6 +13,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 //sndhrdw imports
 import static gr.codebb.arcadeflex.v037b16.sndhrdw.timeplt.*;
 //vidhrdw imports
@@ -22,7 +23,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.pooyan.*;
 import static arcadeflex037b16.fucPtr.*;
 import static mame056.inptport.*;
 import static mame056.inptportH.*;
-import static mame056.sndintrf.*;
 
 public class pooyan {
 

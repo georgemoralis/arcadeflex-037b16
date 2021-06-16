@@ -8,7 +8,7 @@ package gr.codebb.arcadeflex.v037b16.sound;
 import static arcadeflex037b16.fucPtr.*;
 import static common.libc.cstdio.*;
 import static common.ptr.*;
-import static mame056.sndintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.sound.dacH.*;
 import static mame037b16.mame.Machine;

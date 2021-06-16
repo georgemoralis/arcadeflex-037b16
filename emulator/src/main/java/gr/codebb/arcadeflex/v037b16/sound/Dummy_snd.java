@@ -5,7 +5,7 @@
  */
 package gr.codebb.arcadeflex.v037b16.sound;
 
-import static mame056.sndintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 
 public class Dummy_snd extends snd_interface {

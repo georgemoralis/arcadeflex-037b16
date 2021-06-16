@@ -14,6 +14,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.paletteH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.ui_text.*;
 import static gr.codebb.arcadeflex.v037b16.mame.ui_textH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.usrintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 //to be organized
 import static arcadeflex036.video.osd_mark_dirty;
 import static arcadeflex036.video.osd_pause;
@@ -94,9 +95,6 @@ import static mame056.inputH.KEYCODE_K;
 import static mame056.inputH.KEYCODE_O;
 import static mame056.inputH.keyboard_pressed_memory;
 import static mame056.inputH.seq_get_1;
-import static mame056.sndintrf.sound_clock;
-import static mame056.sndintrf.sound_name;
-import static mame056.sndintrf.sound_num;
 import static arcadeflex036.sound.osd_get_mastervolume;
 import static arcadeflex036.sound.osd_set_mastervolume;
 import static arcadeflex036.sound.osd_sound_enable;

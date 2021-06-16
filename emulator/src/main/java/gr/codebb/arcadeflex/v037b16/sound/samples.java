@@ -11,7 +11,7 @@ import static arcadeflex036.osdepend.logerror;
 
 import static mame037b16.common.*;
 import static mame037b16.mame.Machine;
-import static mame056.sndintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static mame037b5.sound.mixer.*;
 import static mame037b5.sound.mixerH.*;

@@ -7,8 +7,8 @@ package gr.codebb.arcadeflex.v037b16.sound;
 //mame imports
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 //to be organized
-import static mame056.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.sound.sn76477H.*;
 import static mame056.sound.streams.*;

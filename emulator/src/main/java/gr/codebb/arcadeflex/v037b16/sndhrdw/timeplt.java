@@ -6,12 +6,12 @@ package gr.codebb.arcadeflex.v037b16.sndhrdw;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910.*;
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
-import static mame056.sndintrf.*;
 import static mame037b5.sound.mixerH.*;
 import static mame056.sound.streams.*;
 

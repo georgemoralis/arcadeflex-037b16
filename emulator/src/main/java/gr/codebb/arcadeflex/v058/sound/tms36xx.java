@@ -4,6 +4,8 @@
  */
 package gr.codebb.arcadeflex.v058.sound;
 
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 //sound imports
 import static gr.codebb.arcadeflex.v058.sound.tms36xxH.*;
 
@@ -12,9 +14,9 @@ import static arcadeflex036.osdepend.logerror;
 import static common.libc.cstdio.sprintf;
 import static common.libc.cstring.memset;
 import common.ptr.ShortPtr;
+import gr.codebb.arcadeflex.v037b16.mame.sndintrf.snd_interface;
 import static mame037b16.mame.Machine;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
-import mame056.sndintrf.snd_interface;
 import mame056.sound.streams.StreamInitPtr;
 import static mame056.sound.streams.stream_init;
 import static mame056.sound.streams.stream_update;

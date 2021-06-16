@@ -7,6 +7,7 @@ package gr.codebb.arcadeflex.v037b16.sound;
 
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
 //to be organized
@@ -15,14 +16,13 @@ import arcadeflex037b16.fucPtr.WriteHandlerPtr;
 import common.ptr.ShortPtr;
 import static mame037b16.mame.Machine;
 import static mame037b5.sound.mixer.mixer_set_volume;
-import mame056.sndintrf.snd_interface;
-import static mame056.sndintrf.sound_name;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import mame056.sound.streams.StreamInitMultiPtr;
 import static mame056.sound.streams.stream_init_multi;
 import static mame056.sound.streams.stream_update;
 import static arcadeflex036.osdepend.*;
 import static common.libc.cstdio.sprintf;
+import gr.codebb.arcadeflex.v037b16.mame.sndintrf.snd_interface;
 
 public class ay8910 extends snd_interface {
 
