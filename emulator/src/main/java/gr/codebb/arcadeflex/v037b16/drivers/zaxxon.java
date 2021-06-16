@@ -13,6 +13,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inputH.*;
 //sndhrdw imports
 import static gr.codebb.arcadeflex.v037b16.sndhrdw.zaxxon.*;
 //sound imports
@@ -26,7 +27,6 @@ import static common.ptr.*;
 import static common.libc.cstdlib.*;
 import static mame056.inptport.*;
 import static mame056.inptportH.*;
-import static mame056.inputH.*;
 import static mame037b7.machine.segacrpt.*;
 
 public class zaxxon {

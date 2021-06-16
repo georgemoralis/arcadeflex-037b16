@@ -5,6 +5,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.drivers;
 
+//drivers imports
+import static gr.codebb.arcadeflex.v037b16.drivers.zaxxon.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
@@ -15,6 +17,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inputH.*;
 //sound imports
 import static gr.codebb.arcadeflex.v058.sound.sn76496.*;
 import static gr.codebb.arcadeflex.v058.sound.sn76496H.*;
@@ -27,9 +30,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.zaxxon.*;
 import static arcadeflex037b16.fucPtr.*;
 import static mame056.inptport.*;
 import static mame056.inptportH.*;
-import static mame056.inputH.*;
-import static gr.codebb.arcadeflex.v037b16.drivers.zaxxon.*;
-
 
 public class congo {
 
