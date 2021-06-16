@@ -14,11 +14,11 @@ import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
 import static common.libc.cstring.*;
-import static mame056.inptport.*;
 import static arcadeflex036.osdepend.*;
 
 public class tnzs {

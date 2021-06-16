@@ -13,6 +13,8 @@ import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inputH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 //machine imports
 import static gr.codebb.arcadeflex.v037b16.machine.galaga.*;
 //sound imports
@@ -22,8 +24,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.galaga.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
-
-import static mame056.inptportH.*;
 import static mame056.sound.namco.namco_soundregs;
 import static mame056.sound.namco.pengo_sound_w;
 import mame056.sound.namcoH.namco_interface;

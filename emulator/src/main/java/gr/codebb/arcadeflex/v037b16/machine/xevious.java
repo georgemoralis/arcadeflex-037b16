@@ -13,6 +13,7 @@ import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.samples.*;
 //to be organized
@@ -20,9 +21,6 @@ import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
 import static arcadeflex036.osdepend.logerror;
 import static common.libc.cstring.memcmp;
-import static mame056.inptport.input_port_0_r;
-import static mame056.inptport.input_port_1_r;
-import static mame056.inptport.readinputport;
 
 public class xevious {
 

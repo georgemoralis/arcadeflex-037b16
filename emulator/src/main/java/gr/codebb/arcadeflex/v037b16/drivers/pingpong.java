@@ -12,6 +12,8 @@ import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 //sound imports
 import static gr.codebb.arcadeflex.v058.sound.sn76496.*;
 import static gr.codebb.arcadeflex.v058.sound.sn76496H.*;
@@ -21,8 +23,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
 import common.ptr.UBytePtr;
-import static mame056.inptportH.*;
-import static mame056.inptport.*;
 
 public class pingpong {
 

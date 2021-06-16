@@ -18,6 +18,8 @@ import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inputH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 //sound imports
 import static gr.codebb.arcadeflex.v058.sound.sn76496.*;
 import static gr.codebb.arcadeflex.v058.sound.sn76496H.*;
@@ -28,8 +30,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.zaxxon.*;
 //to organized
 import static arcadeflex037b16.fucPtr.*;
-import static mame056.inptport.*;
-import static mame056.inptportH.*;
 
 public class congo {
 

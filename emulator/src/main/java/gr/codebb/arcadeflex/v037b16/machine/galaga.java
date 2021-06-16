@@ -12,6 +12,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.samples.*;
 //vidhrdw imports
@@ -21,9 +22,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.galaga.*;
 import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
 import static arcadeflex036.osdepend.logerror;
-import static mame056.inptport.input_port_0_r;
-import static mame056.inptport.input_port_1_r;
-import static mame056.inptport.readinputport;
 
 public class galaga {
 

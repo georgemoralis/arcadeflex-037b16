@@ -7,6 +7,8 @@ package gr.codebb.arcadeflex.v037b16.mame;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 
 //to be organized
 import static arcadeflex036.osdepend.*;
@@ -27,8 +29,6 @@ import static mame056.hiscore.hs_close;
 import static mame056.hiscore.hs_init;
 import static mame056.hiscore.hs_open;
 import static mame056.hiscore.hs_update;
-import static mame056.inptport.inputport_vblank_end;
-import static mame056.inptport.update_input_ports;
 
 public class cpuintrf {
 

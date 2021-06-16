@@ -13,6 +13,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.paletteH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 //to be organized
@@ -26,7 +27,6 @@ import static mame037b7.palette.palette_init_used_colors;
 import static mame037b7.palette.palette_recalc;
 import static mame037b7.palette.palette_transparent_pen;
 import static mame037b7.palette.palette_used_colors;
-import static mame056.inptport.readinputport;
 
 public class citycon {
 

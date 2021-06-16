@@ -9,10 +9,10 @@ import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
 import static common.util.*;
-import static mame056.inptportH.*;
 
 public class driverH {
 
@@ -263,7 +263,7 @@ public class driverH {
     public static final int GAME_REQUIRES_16BIT = 0x0100;/* cannot fit in 256 colors */
     public static final int GAME_NO_COCKTAIL = 0x0200;/* screen flip support is missing */
     public static final int GAME_UNEMULATED_PROTECTION = 0x0400;/* game's protection not fully emulated */
-    public static final int GAME_IMPERFECT_GRAPHICS=0x0800;/* graphics are wrong/incomplete */
+    public static final int GAME_IMPERFECT_GRAPHICS = 0x0800;/* graphics are wrong/incomplete */
     public static final int NOT_A_DRIVER = 0x4000;/* set by the fake "root" driver_ and by "containers" e.g. driver_neogeo. */
 
  /* monitor parameters to be used with the GAME() macro */

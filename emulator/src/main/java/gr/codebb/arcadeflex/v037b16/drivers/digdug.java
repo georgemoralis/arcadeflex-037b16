@@ -14,6 +14,8 @@ import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 //sound imports
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
@@ -21,7 +23,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.digdug.*;
 //to organized
 import arcadeflex037b16.fucPtr.InputPortPtr;
 import arcadeflex037b16.fucPtr.RomLoadPtr;
-import static mame056.inptportH.*;
 import static mame056.sound.namco.*;
 import static mame056.sound.namcoH.*;
 

@@ -13,6 +13,8 @@ import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.dac.*;
 import static gr.codebb.arcadeflex.v037b16.sound.dacH.*;
@@ -24,8 +26,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 
 //to be organized
 import static arcadeflex037b16.fucPtr.*;
-import static mame056.inptportH.*;
-import static mame056.inptport.*;
 
 public class champbas {
 

@@ -10,6 +10,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 
@@ -21,10 +22,6 @@ import static mame037b16.drawgfx.*;
 import static common.libc.cstring.*;
 import static common.libc.expressions.*;
 import static mame037b5.sound.mixer.*;
-import static mame056.inptport.input_port_5_r;
-import static mame056.inptport.input_port_6_r;
-import static mame056.inptport.input_port_7_r;
-import static mame056.inptport.input_port_8_r;
 
 public class bking2 {
 

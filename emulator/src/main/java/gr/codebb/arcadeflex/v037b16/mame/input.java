@@ -1,12 +1,12 @@
 /**
- * Ported to 0.56
+ * Ported to 0.37b16
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
 import static common.libc.cstring.*;
 import static common.libc.ctime.*;
-import static mame056.inptport.*;
-import static mame056.inptportH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inputH.*;
 import static mame037b16.mame.*;
 import static arcadeflex036.input.*;
