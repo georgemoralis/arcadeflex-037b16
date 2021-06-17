@@ -5,6 +5,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+//generic imports
+import gr.codebb.arcadeflex.v037b16.generic.hiscoreFileParser;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
@@ -15,7 +17,6 @@ import static arcadeflex056.fileio.osd_fclose;
 import static arcadeflex056.fileio.osd_fopen;
 import static arcadeflex056.fileio.osd_fread;
 import static arcadeflex056.fileio.osd_fwrite;
-import arcadeflex056.util.hiscoreFileParser;
 import common.ptr.UBytePtr;
 import static mame037b16.mame.Machine;
 import static arcadeflex036.osdepend.*;
