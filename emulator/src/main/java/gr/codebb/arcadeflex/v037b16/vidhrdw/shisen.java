@@ -5,6 +5,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static arcadeflex036.osdepend.logerror;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
@@ -16,7 +18,6 @@ import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 //to be organized
-import static arcadeflex037b16.fucPtr.*;
 import static common.libc.cstring.memset;
 import static common.ptr.*;
 import static mame037b16.mame.*;

@@ -6,6 +6,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.drivers;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //cpu imports
 import static gr.codebb.arcadeflex.v037b16.cpu.z80.z80H.*;
 //mame imports
@@ -26,8 +28,6 @@ import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.blueprnt.*;
-//to organized
-import static arcadeflex037b16.fucPtr.*;
 
 public class blueprnt {
 

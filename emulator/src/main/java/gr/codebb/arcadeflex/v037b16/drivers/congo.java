@@ -5,6 +5,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.drivers;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //drivers imports
 import static gr.codebb.arcadeflex.v037b16.drivers.zaxxon.*;
 //mame imports
@@ -28,8 +30,6 @@ import static gr.codebb.arcadeflex.v037b16.sound.samplesH.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.zaxxon.*;
-//to organized
-import static arcadeflex037b16.fucPtr.*;
 
 public class congo {
 

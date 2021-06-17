@@ -3,8 +3,10 @@
  * using automatic conversion tool v0.01
  */
 package gr.codebb.arcadeflex.v037b16.drivers;
-//cpu imports
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
+//cpu imports
 import static gr.codebb.arcadeflex.v037b16.cpu.z80.z80H.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
@@ -25,7 +27,6 @@ import static gr.codebb.arcadeflex.v037b16.sound._3812intf.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.sauro.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 //to be organized
-import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
 import static common.libc.cstring.*;
 

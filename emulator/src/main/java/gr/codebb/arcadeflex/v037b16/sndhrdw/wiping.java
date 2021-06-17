@@ -3,13 +3,13 @@
  *  ported to 0.37b7
  */
 package gr.codebb.arcadeflex.v037b16.sndhrdw;
-
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 //to be organized
-import static arcadeflex037b16.fucPtr.*;
 import common.ptr.ShortPtr;
 import static common.libc.cstring.memset;
 import static mame056.sound.streams.*;

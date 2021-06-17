@@ -4,6 +4,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.machine;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //cpu imports
 import static gr.codebb.arcadeflex.v037b16.cpu.z80.z80H.*;
 //mame imports
@@ -17,7 +19,6 @@ import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.samples.*;
 //to be organized
-import static arcadeflex037b16.fucPtr.*;
 import static common.ptr.*;
 import static arcadeflex036.osdepend.logerror;
 import static common.libc.cstring.memcmp;

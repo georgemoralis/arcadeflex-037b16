@@ -3,6 +3,8 @@
  * ported to v0.37b7
  */
 package gr.codebb.arcadeflex.v037b16.sndhrdw;
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
@@ -11,7 +13,6 @@ import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910.*;
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
 //to be organized
-import static arcadeflex037b16.fucPtr.*;
 import static mame037b5.sound.mixerH.*;
 import static mame056.sound.streams.*;
 

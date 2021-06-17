@@ -4,7 +4,9 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
-import arcadeflex037b16.fucPtr.InterruptPtr;
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
+//mame functions
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 
 public class cpuintrfH {

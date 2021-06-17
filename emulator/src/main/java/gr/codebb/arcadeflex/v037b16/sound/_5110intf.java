@@ -5,7 +5,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.sound;
 
-import static arcadeflex037b16.fucPtr.*;
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 import static common.ptr.*;
 import static arcadeflex036.osdepend.*;
 import static gr.codebb.arcadeflex.v058.sound.tms5110.*;

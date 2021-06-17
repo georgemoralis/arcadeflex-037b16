@@ -4,6 +4,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
@@ -13,8 +15,6 @@ import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 //to be organized
 import static arcadeflex036.osdepend.logerror;
-import arcadeflex037b16.fucPtr.ReadHandlerPtr;
-import arcadeflex037b16.fucPtr.WriteHandlerPtr;
 import static common.libc.cstdio.*;
 import static common.libc.cstring.memset;
 import common.ptr.UBytePtr;

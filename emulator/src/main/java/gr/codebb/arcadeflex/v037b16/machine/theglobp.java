@@ -2,12 +2,14 @@
  * Ported to v0.37b16
  */
 package gr.codebb.arcadeflex.v037b16.machine;
+
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 //to be organized
-import static arcadeflex037b16.fucPtr.*;
 import static arcadeflex036.osdepend.*;
 import static common.ptr.*;
 

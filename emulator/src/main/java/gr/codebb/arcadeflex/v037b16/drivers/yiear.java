@@ -3,6 +3,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.drivers;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
@@ -20,8 +22,6 @@ import static gr.codebb.arcadeflex.v058.sound.vlm5030H.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.yiear.*;
-//to be organized
-import static arcadeflex037b16.fucPtr.*;
 
 import static gr.codebb.arcadeflex.WIP.v037b16.sndhrdw.trackfld.*;
 

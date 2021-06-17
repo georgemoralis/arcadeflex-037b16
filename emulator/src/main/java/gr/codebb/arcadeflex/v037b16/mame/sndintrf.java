@@ -3,6 +3,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
@@ -25,7 +27,6 @@ import gr.codebb.arcadeflex.v037b16.sound._2608intf;
 import gr.codebb.arcadeflex.v037b16.sound.MSM5205;
 import gr.codebb.arcadeflex.v037b16.sound._5110intf;
 //to be organized
-import static arcadeflex037b16.fucPtr.*;
 import static mame037b16.common.*;
 import static mame056.sound.streams.*;
 import static arcadeflex036.osdepend.*;

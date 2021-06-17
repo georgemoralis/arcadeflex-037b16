@@ -5,6 +5,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.machine;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //cpu imports
 import static gr.codebb.arcadeflex.v037b16.cpu.z80.z80H.*;
 //mame imports
@@ -12,7 +14,6 @@ import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 //sndhrdw imports
 //to be organized
-import static arcadeflex037b16.fucPtr.*;
 import static mame037b16.mame.set_led_status;
 
 public class berzerk {

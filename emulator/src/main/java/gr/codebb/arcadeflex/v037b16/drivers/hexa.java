@@ -4,6 +4,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.drivers;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
@@ -22,7 +24,6 @@ import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.hexa.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 //to be organized
-import static arcadeflex037b16.fucPtr.*;
 import common.ptr.UBytePtr;
 
 public class hexa {

@@ -5,9 +5,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.sound;
 
-import arcadeflex037b16.fucPtr.ReadHandlerPtr;
-import arcadeflex037b16.fucPtr.WriteHandlerPtr;
-import arcadeflex037b16.fucPtr.WriteYmHandlerPtr;
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 
 public class ay8910H {
 

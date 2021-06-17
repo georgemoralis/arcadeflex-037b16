@@ -5,9 +5,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.machine;
 
-import arcadeflex037b16.fucPtr.InitMachinePtr;
-import arcadeflex037b16.fucPtr.ReadHandlerPtr;
-import arcadeflex037b16.fucPtr.WriteHandlerPtr;
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 
 
 public class bagman {

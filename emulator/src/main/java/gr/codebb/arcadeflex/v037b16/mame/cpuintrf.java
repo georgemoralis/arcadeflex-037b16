@@ -4,6 +4,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
@@ -15,9 +17,6 @@ import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 //to be organized
 import static arcadeflex036.osdepend.*;
-import arcadeflex037b16.fucPtr.InterruptPtr;
-import arcadeflex037b16.fucPtr.ReadHandlerPtr;
-import arcadeflex037b16.fucPtr.WriteHandlerPtr;
 import gr.codebb.arcadeflex.v037b16.cpu.z80.z80;
 import java.util.ArrayList;
 import static mame037b16.mame.Machine;

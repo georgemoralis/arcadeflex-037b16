@@ -3,6 +3,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.drivers;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //machine imports
 import static gr.codebb.arcadeflex.v037b16.machine.bosco.*;
 //mame imports
@@ -22,7 +24,6 @@ import static gr.codebb.arcadeflex.v037b16.sound.samplesH.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.bosco.*;
 //to organized
-import static arcadeflex037b16.fucPtr.*;
 import static mame056.sound.namco.*;
 import static mame056.sound.namcoH.*;
 

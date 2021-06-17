@@ -4,6 +4,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.drivers;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //machine imports
 import static gr.codebb.arcadeflex.v037b16.machine.bagman.*;
 //mame imports
@@ -28,7 +30,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.bagman.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 
 //to be organized
-import static arcadeflex037b16.fucPtr.*;
 import common.ptr.UBytePtr;
 
 public class bagman {

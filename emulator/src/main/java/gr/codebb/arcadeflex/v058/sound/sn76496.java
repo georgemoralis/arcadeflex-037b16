@@ -4,6 +4,8 @@
  */
 package gr.codebb.arcadeflex.v058.sound;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
@@ -11,7 +13,6 @@ import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v058.sound.sn76496H.*;
 
 //to be organized
-import arcadeflex037b16.fucPtr.WriteHandlerPtr;
 import static common.libc.cstdio.sprintf;
 import common.ptr.ShortPtr;
 import static mame037b16.mame.Machine;

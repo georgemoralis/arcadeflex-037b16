@@ -5,12 +5,10 @@
  */
 package gr.codebb.arcadeflex.v037b16.sndhrdw;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.samples.*;
-import static gr.codebb.arcadeflex.v037b16.sound.samplesH.*;
-//to be organized
-import static arcadeflex037b16.fucPtr.*;
-
 
 public class zaxxon {
 

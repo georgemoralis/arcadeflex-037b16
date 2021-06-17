@@ -5,9 +5,10 @@
  */
 package gr.codebb.arcadeflex.v037b16.sound;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
-import static arcadeflex037b16.fucPtr.*;
 import static mame037b7.sound.fmoplH.*;
 import gr.codebb.arcadeflex.v037b16.sound._3812intfH.*;
 

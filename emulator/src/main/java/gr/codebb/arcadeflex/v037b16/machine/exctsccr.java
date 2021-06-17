@@ -5,7 +5,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.machine;
 
-import static arcadeflex037b16.fucPtr.*;
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 import static common.ptr.*;
 import static common.libc.cstring.memcpy;
 

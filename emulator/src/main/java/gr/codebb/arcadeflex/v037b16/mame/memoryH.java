@@ -4,12 +4,12 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
 //to be organized
-import arcadeflex037b16.fucPtr.ReadHandlerPtr;
-import arcadeflex037b16.fucPtr.WriteHandlerPtr;
 import common.ptr.UBytePtr;
 
 

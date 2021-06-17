@@ -5,14 +5,14 @@
  */
 package gr.codebb.arcadeflex.v037b16.sound;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
 //to be organized
-import arcadeflex037b16.fucPtr.ReadHandlerPtr;
-import arcadeflex037b16.fucPtr.WriteHandlerPtr;
 import common.ptr.ShortPtr;
 import static mame037b16.mame.Machine;
 import static mame037b5.sound.mixer.mixer_set_volume;

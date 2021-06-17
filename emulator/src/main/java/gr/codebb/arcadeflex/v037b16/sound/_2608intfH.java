@@ -5,12 +5,10 @@
  */
 package gr.codebb.arcadeflex.v037b16.sound;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
-//to be organized
-import arcadeflex037b16.fucPtr.ReadHandlerPtr;
-import arcadeflex037b16.fucPtr.WriteHandlerPtr;
-import arcadeflex037b16.fucPtr.WriteYmHandlerPtr;
 
 public class _2608intfH {
 

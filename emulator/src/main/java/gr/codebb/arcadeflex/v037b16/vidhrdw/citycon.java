@@ -5,6 +5,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static arcadeflex036.osdepend.logerror;
 import static arcadeflex036.video.osd_free_bitmap;
@@ -17,7 +19,6 @@ import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 //to be organized
-import static arcadeflex037b16.fucPtr.*;
 import static common.libc.cstring.memset;
 import static common.libc.expressions.NOT;
 import common.ptr.UBytePtr;

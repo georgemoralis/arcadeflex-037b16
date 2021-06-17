@@ -6,6 +6,8 @@ package gr.codebb.arcadeflex.v037b16.mame;
 
 //java imports
 import java.util.HashMap;
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
@@ -17,7 +19,6 @@ import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 //to be organized
 import static arcadeflex036.osdepend.logerror;
-import static arcadeflex037b16.fucPtr.*;
 import static mame037b16.mame.*;
 
 public class inptport {

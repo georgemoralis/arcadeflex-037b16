@@ -4,9 +4,8 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
-import arcadeflex037b16.fucPtr.ShStartPtr;
-import arcadeflex037b16.fucPtr.ShStopPtr;
-import arcadeflex037b16.fucPtr.ShUpdatePtr;
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 
 public class sndintrfH {
 
