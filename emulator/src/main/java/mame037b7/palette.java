@@ -36,7 +36,7 @@ public class palette {
     public static final int PALETTIZED_16BIT = 2;
 
     static int total_shrinked_pens;
-    public static char[] shrinked_pens;
+    public static int[] shrinked_pens;
     public static /*UINT16*/ char[] shrinked_palette;
     public static /*UINT16*/ char[] palette_map;/* map indexes from game_palette to shrinked_palette */
 
@@ -97,7 +97,7 @@ public class palette {
                 break;
         }
 
-        shrinked_pens = new char[total_shrinked_pens * 2];
+        shrinked_pens = new int[total_shrinked_pens * 4];
         shrinked_palette = new char[3 * total_shrinked_pens];
 
         Machine.pens = new int[Machine.drv.total_colors * 2];
@@ -271,7 +271,7 @@ public class palette {
                     Machine.pens[i] = shrinked_pens[palette_map[i]];
                 }
 
-                palette_transparent_pen = shrinked_pens[TRANSPARENT_PEN];
+                palette_transparent_pen = (char)shrinked_pens[TRANSPARENT_PEN];
                 /* for dynamic palette games */
             }
             break;
@@ -318,7 +318,7 @@ public class palette {
                     Machine.pens[i] = shrinked_pens[rgbpenindex(r, g, b)];
                 }
 
-                palette_transparent_pen = shrinked_pens[0];
+                palette_transparent_pen = (char)shrinked_pens[0];
                 /* we are forced to use black for the transparent pen */
             }
             break;
@@ -344,7 +344,7 @@ public class palette {
                     Machine.pens[i] = shrinked_pens[i + RESERVED_PENS];
                 }
 
-                palette_transparent_pen = shrinked_pens[TRANSPARENT_PEN];
+                palette_transparent_pen = (char)shrinked_pens[TRANSPARENT_PEN];
                 /* for dynamic palette games */
             }
             break;
@@ -368,7 +368,7 @@ public class palette {
         if (color == palette_transparent_color) {
             int i;
 
-            palette_transparent_pen = shrinked_pens[rgbpenindex(red, green, blue)];
+            palette_transparent_pen = (char)shrinked_pens[rgbpenindex(red, green, blue)];
 
             if (color == -1) {
                 return;

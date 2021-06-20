@@ -1429,7 +1429,7 @@ public class video {
 /*TODO*///
 /*TODO*///
 /*TODO*///
-    public static int osd_allocate_colors(int totalcolors, /*unsigned*/ char[] palette, char[] pens, int modifiable) {
+    public static int osd_allocate_colors(int totalcolors, /*unsigned*/ char[] palette, int[] pens, int modifiable) {
 
         /*TODO*///TEMPHACK*/
         video_depth = Machine.scrbitmap.depth;
@@ -1501,12 +1501,12 @@ public class video {
                     }
                 }
                 for (i = 0; i < totalcolors; i++) {
-                    pens[i] = (char) i;
+                    pens[i] =  i;
                 }
 
                 /* map black to pen 0, otherwise the screen border will not be black */
                 pens[bestblack] = 0;
-                pens[0] = (char) bestblack;
+                pens[0] = bestblack;
 
                 Machine.uifont.colortable.write(0, pens[bestblack]);
                 Machine.uifont.colortable.write(1, pens[bestwhite]);
@@ -1525,7 +1525,7 @@ public class video {
                 /* fill the palette starting from the end, so we mess up badly written */
  /* drivers_old which don't go through Machine->pens[] */
                 for (i = 0; i < totalcolors; i++) {
-                    pens[i] = (char) ((screen_colors - 1) - i);
+                    pens[i] =  ((screen_colors - 1) - i);
                 }
             }
 
