@@ -39,6 +39,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.bosco.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.espial.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.funkybee.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.yiear.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.thief.*;
 
 /**
  *
@@ -3600,9 +3601,9 @@ public class driver {
         /*TODO*///
         /*TODO*///	/* Pacific Novelty games */
         /*TODO*///	driver_sharkatt,	/* (c) [1980] */
-        /*TODO*///	driver_thief,		/* (c) 1981 */
-        /*TODO*///	driver_natodef,	/* (c) 1982 */
-        /*TODO*///	driver_natodefa,	/* (c) 1982 */
+        	driver_thief,		/* (c) 1981 */
+        	driver_natodef,	/* (c) 1982 */
+        	driver_natodefa,	/* (c) 1982 */
         /*TODO*///	driver_mrflea,	/* (c) 1982 */
         /*TODO*///
         /*TODO*///	/* Tecfri games */
