@@ -9,7 +9,6 @@ import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
-import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 import static gr.codebb.arcadeflex.v037b16.mame.input.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
@@ -49,7 +48,6 @@ import static gr.codebb.arcadeflex.v037b16.mame.usrintrf.showcopyright;
 import static gr.codebb.arcadeflex.v037b16.mame.usrintrf.showgamewarnings;
 import static gr.codebb.arcadeflex.v037b16.mame.usrintrf.switch_true_orientation;
 import static gr.codebb.arcadeflex.v037b16.mame.usrintrf.switch_ui_orientation;
-import static mame037b16.common.readroms;
 import static mame037b16.common.set_visible_area;
 
 public class mame {
