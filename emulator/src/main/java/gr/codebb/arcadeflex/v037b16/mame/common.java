@@ -28,6 +28,7 @@ import static arcadeflex056.fileio.osd_fopen;
 import static arcadeflex056.fileio.osd_fread;
 import static arcadeflex056.fileio.osd_fseek;
 import static arcadeflex056.fileio.osd_fsize;
+import static common.libc.expressions.sizeof;
 
 public class common {
 
@@ -52,7 +53,8 @@ public class common {
         UBytePtr regionbase;/* base of current region */
         int /*UINT32*/ regionlength;/* length of current region */
         String errorbuf = "";/* accumulated errors */
- /*TODO*///	UINT8		tempbuf[65536];			/* temporary buffer */
+        char[]/*UINT8*/ tempbuf = new char[65536];
+        /* temporary buffer */
     }
 
     /**
@@ -148,7 +150,6 @@ public class common {
         return (ROMENTRY_ISCONTINUE(romp, romp_ptr)) ? romp_ptr : -1;
     }
 
-    
     /**
      * *************************************************************************
      *
@@ -1007,55 +1008,49 @@ public class common {
         if (datamask == 0xff && (groupsize == 1 || reversed == 0) && skip == 0) {
             return rom_fread(romdata, base, numbytes);
         }
-        throw new UnsupportedOperationException("Unsupported");
-        /*TODO*///
-/*TODO*///	/* chunky reads for complex loads */
-/*TODO*///	skip += groupsize;
-/*TODO*///	while (numbytes)
-/*TODO*///	{
-/*TODO*///		int evengroupcount = (sizeof(romdata->tempbuf) / groupsize) * groupsize;
-/*TODO*///		int bytesleft = (numbytes > evengroupcount) ? evengroupcount : numbytes;
-/*TODO*///		UINT8 *bufptr = romdata->tempbuf;
-/*TODO*///
-/*TODO*///		/* read as much as we can */
-/*TODO*///		debugload("  Reading %X bytes into buffer\n", bytesleft);
-/*TODO*///		if (rom_fread(romdata, romdata->tempbuf, bytesleft) != bytesleft)
-/*TODO*///			return 0;
-/*TODO*///		numbytes -= bytesleft;
-/*TODO*///
-/*TODO*///		debugload("  Copying to %08X\n", (int)base);
-/*TODO*///
-/*TODO*///		/* unmasked cases */
-/*TODO*///		if (datamask == 0xff)
-/*TODO*///		{
-/*TODO*///			/* non-grouped data */
-/*TODO*///			if (groupsize == 1)
-/*TODO*///				for (i = 0; i < bytesleft; i++, base += skip)
-/*TODO*///					*base = *bufptr++;
-/*TODO*///
-/*TODO*///			/* grouped data -- non-reversed case */
-/*TODO*///			else if (!reversed)
-/*TODO*///				while (bytesleft)
+        /* chunky reads for complex loads */
+        skip += groupsize;
+        while (numbytes != 0) {
+            int evengroupcount = (sizeof(romdata.tempbuf) / groupsize) * groupsize;
+            int bytesleft = (numbytes > evengroupcount) ? evengroupcount : numbytes;
+            UBytePtr bufptr = new UBytePtr(romdata.tempbuf);
+
+            /* read as much as we can */
+            debugload("  Reading %X bytes into buffer\n", bytesleft);
+            if (rom_fread(romdata, bufptr, bytesleft) != bytesleft) {
+                return 0;
+            }
+            numbytes -= bytesleft;
+
+            debugload("  Copying to %08X\n", (int) base.offset);
+
+            /* unmasked cases */
+            if (datamask == 0xff) {
+                /* non-grouped data */
+                if (groupsize == 1) {
+                    for (i = 0; i < bytesleft; i++, base.offset += skip) {
+                        base.write(bufptr.readinc());
+                    }
+                } /* grouped data -- non-reversed case */ else if (reversed == 0) {
+                    throw new UnsupportedOperationException("Unsupported");
+                    /*TODO*///				while (bytesleft)
 /*TODO*///				{
 /*TODO*///					for (i = 0; i < groupsize && bytesleft; i++, bytesleft--)
 /*TODO*///						base[i] = *bufptr++;
 /*TODO*///					base += skip;
 /*TODO*///				}
-/*TODO*///
-/*TODO*///			/* grouped data -- reversed case */
-/*TODO*///			else
-/*TODO*///				while (bytesleft)
+                } /* grouped data -- reversed case */ else {
+                    throw new UnsupportedOperationException("Unsupported");
+                    /*TODO*///				while (bytesleft)
 /*TODO*///				{
 /*TODO*///					for (i = groupsize - 1; i >= 0 && bytesleft; i--, bytesleft--)
 /*TODO*///						base[i] = *bufptr++;
 /*TODO*///					base += skip;
 /*TODO*///				}
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		/* masked cases */
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			/* non-grouped data */
+                }
+            } /* masked cases */ else {
+                throw new UnsupportedOperationException("Unsupported");
+                /*TODO*///			/* non-grouped data */
 /*TODO*///			if (groupsize == 1)
 /*TODO*///				for (i = 0; i < bytesleft; i++, base += skip)
 /*TODO*///					*base = (*base & ~datamask) | ((*bufptr++ << datashift) & datamask);
@@ -1077,10 +1072,10 @@ public class common {
 /*TODO*///						base[i] = (base[i] & ~datamask) | ((*bufptr++ << datashift) & datamask);
 /*TODO*///					base += skip;
 /*TODO*///				}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	debugload("  All done\n");
-/*TODO*///	return ROM_GETLENGTH(romp);
+            }
+        }
+        debugload("  All done\n");
+        return ROM_GETLENGTH(romp, rom_ptr);
     }
 
     /*TODO*///
