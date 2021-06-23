@@ -12,6 +12,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.paletteH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 //to be organized
@@ -19,7 +20,6 @@ import static common.libc.cstring.memset;
 import static common.ptr.*;
 import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
-import static mame037b7.palette.palette_recalc;
 import java.util.ArrayList;
 import java.util.Arrays;
 import static mame037b7.palette.palette_transparent_pen;

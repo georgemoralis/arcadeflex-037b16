@@ -32,7 +32,6 @@ import static mame037b16.mame.Machine;
 import static mame037b16.mame.schedule_full_refresh;
 import static mame037b16.mame.update_video_and_audio;
 import static mame037b16.mameH.MAX_GFX_ELEMENTS;
-import static mame037b7.palette.palette_recalc;
 import static mame037b7.palette.palette_used_colors;
 import static common.libc.cstring.memset;
 import static common.libc.cstring.strlen;
@@ -57,6 +56,7 @@ import static arcadeflex036.sound.osd_get_mastervolume;
 import static arcadeflex036.sound.osd_set_mastervolume;
 import static arcadeflex036.sound.osd_sound_enable;
 import static arcadeflex036.video.osd_get_brightness;
+import static gr.codebb.arcadeflex.v037b16.mame.palette.palette_recalc;
 
 public class usrintrf {
 

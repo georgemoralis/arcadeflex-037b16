@@ -15,8 +15,8 @@ import static mame037b16.mame.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static arcadeflex036.video.*;
+import static gr.codebb.arcadeflex.v037b16.mame.palette.colormode;
 import static gr.codebb.arcadeflex.v037b16.mame.palette.palette_change_color_8;
-import static gr.codebb.arcadeflex.v037b16.mame.palette.palette_recalc_8;
 
 public class palette {
 
@@ -30,7 +30,6 @@ public class palette {
     public static IntArray pen_cachedcount;
     public static UBytePtr just_remapped;/* colors which have been remapped in this frame, returned by palette_recalc() */
 
-    static int use_16bit;
     public static final int NO_16BIT = 0;
     public static final int STATIC_16BIT = 1;
     public static final int PALETTIZED_16BIT = 2;
@@ -73,15 +72,15 @@ public class palette {
         }
         if (Machine.color_depth == 16 || (Machine.gamedrv.flags & GAME_REQUIRES_16BIT) != 0) {
             if (Machine.color_depth == 8 || Machine.drv.total_colors > 65532) {
-                use_16bit = STATIC_16BIT;
+                colormode = STATIC_16BIT;
             } else {
-                use_16bit = PALETTIZED_16BIT;
+                colormode = PALETTIZED_16BIT;
             }
         } else {
-            use_16bit = NO_16BIT;
+            colormode = NO_16BIT;
         }
 
-        switch (use_16bit) {
+        switch (colormode) {
             case NO_16BIT:
                 if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) != 0) {
                     total_shrinked_pens = DYNAMIC_MAX_PENS;
@@ -194,7 +193,7 @@ public class palette {
             (Machine.drv.vh_init_palette).handler(game_palette, Machine.game_colortable, memory_region(REGION_PROMS));
         }
 
-        switch (use_16bit) {
+        switch (colormode) {
             case NO_16BIT: {
                 /* initialize shrinked palette to all black */
                 for (i = 0; i < total_shrinked_pens; i++) {
@@ -434,7 +433,7 @@ public class palette {
             return;
         }
 
-        switch (use_16bit) {
+        switch (colormode) {
             case NO_16BIT:
                 palette_change_color_8(color, red & 0xFF, green & 0xFF, blue & 0xFF);
                 break;
@@ -634,34 +633,6 @@ public class palette {
         } else {
             return null;
         }
-    }
-
- 
-
-    public static UBytePtr palette_recalc() {
-        UBytePtr ret = null;
-
-        /* if we are not dynamically reducing the palette, return NULL. */
-        if (palette_used_colors != null) {
-            switch (use_16bit) {
-                case NO_16BIT:
-                default:
-                    ret = palette_recalc_8();
-                    break;
-                case STATIC_16BIT:
-                    ret = palette_recalc_16_static();
-                    break;
-                case PALETTIZED_16BIT:
-                    ret = palette_recalc_16_palettized();
-                    break;
-            }
-        }
-
-        if (ret != null) {
-//TODO///            artwork_remap();
-        }
-
-        return ret;
     }
 
     /**

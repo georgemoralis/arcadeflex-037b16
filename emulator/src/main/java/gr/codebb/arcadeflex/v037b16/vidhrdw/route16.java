@@ -13,6 +13,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.sn76477.*;
 //to be organized
@@ -20,7 +21,6 @@ import static common.ptr.*;
 import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static mame037b7.palette.palette_change_color;
-import static mame037b7.palette.palette_recalc;
 
 public class route16 {
 

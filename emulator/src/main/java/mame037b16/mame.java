@@ -37,6 +37,8 @@ import static mame037b16.driver.*;
 import static mame037b16.drawgfx.*;
 import static arcadeflex056.fileio.*;
 import common.subArrays.IntArray;
+import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapC.tilemap_close;
+import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapC.tilemap_init;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.cpu_init;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.cpu_run;
 import static gr.codebb.arcadeflex.v037b16.mame.memory.memory_init;
@@ -619,7 +621,7 @@ public class mame {
         int res = 1;
 
         if (vh_open() == 0) {
-            /*TODO*///            tilemap_init();
+                        tilemap_init();
             if (drv.vh_start == null || drv.vh_start.handler() == 0)/* start the video hardware */ {
                 if (sound_start() == 0) /* start the audio hardware */ {
                     int region;
@@ -706,7 +708,7 @@ public class mame {
                 printf("Unable to start video emulation\n");
             }
 
-            /*TODO*///            tilemap_close();
+                        tilemap_close();
             vh_close();
         } else if (bailing == 0) {
             bailing = 1;
@@ -725,7 +727,7 @@ public class mame {
         }
         /*TODO*///        artwork_kill();
         res = 0;
-        /*TODO*///        tilemap_close();
+               tilemap_close();
         vh_close();
         return res;
     }

@@ -13,6 +13,7 @@ import static arcadeflex036.video.osd_modify_pen;
 import static common.libc.cstdio.*;
 import static common.libc.cstring.memset;
 import common.ptr.UBytePtr;
+import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapC.tilemap_dirty_palette;
 import static mame037b16.mame.Machine;
 import static mame037b7.palette.BLACK_PEN;
 import static mame037b7.palette.PALETTE_COLOR_NEEDS_REMAP;
@@ -48,13 +49,14 @@ public class palette {
 /*TODO*///								/* returned by palette_recalc() */
 /*TODO*///int has_remap = 0;
 /*TODO*///
-/*TODO*///static int colormode;
-/*TODO*///#define PALETTIZED_8BIT		0
-/*TODO*///#define STATIC_16BIT		1
-/*TODO*///#define PALETTIZED_16BIT	2
-/*TODO*///#define DIRECT_15BIT        3
-/*TODO*///#define DIRECT_32BIT        4
-/*TODO*///
+    public static int colormode;
+    public static final int PALETTIZED_8BIT = 0;
+    public static final int STATIC_16BIT = 1;
+    public static final int PALETTIZED_16BIT = 2;
+    public static final int DIRECT_15BIT = 3;
+    public static final int DIRECT_32BIT = 4;
+
+    /*TODO*///
 /*TODO*///static int total_shrinked_pens;
 /*TODO*///UINT32 *shrinked_pens;
 /*TODO*///static UINT8 *shrinked_palette;
@@ -1333,44 +1335,44 @@ public class palette {
         }
         return 0;
     }
-    /*TODO*///
-/*TODO*///
-/*TODO*///const UINT8 *palette_recalc(void)
-/*TODO*///{
-/*TODO*///	const UINT8 *ret = NULL;
-/*TODO*///
-/*TODO*///	switch (colormode)
-/*TODO*///	{
-/*TODO*///	case PALETTIZED_8BIT:
-/*TODO*///	default:
-/*TODO*///		if (palette_used_colors != 0)
-/*TODO*///			ret = palette_recalc_8();
-/*TODO*///		break;
-/*TODO*///	case STATIC_16BIT:
-/*TODO*///		if (palette_used_colors != 0)
+
+    public static UBytePtr palette_recalc() {
+        UBytePtr ret = null;
+
+        switch (colormode) {
+            case PALETTIZED_8BIT:
+            default:
+                if (palette_used_colors != null) {
+                    ret = palette_recalc_8();
+                }
+                break;
+            case STATIC_16BIT:
+                throw new UnsupportedOperationException("Unsupported");
+            /*TODO*///		if (palette_used_colors != 0)
 /*TODO*///			ret = palette_recalc_16_static();
 /*TODO*///		break;
-/*TODO*///	case PALETTIZED_16BIT:
-/*TODO*///		if (palette_used_colors != 0)
+            case PALETTIZED_16BIT:
+                throw new UnsupportedOperationException("Unsupported");
+            /*TODO*///		if (palette_used_colors != 0)
 /*TODO*///			ret = palette_recalc_16_palettized();
 /*TODO*///		break;
-/*TODO*///	case DIRECT_15BIT:
-/*TODO*///	case DIRECT_32BIT:
-/*TODO*///		if(has_remap)
+            case DIRECT_15BIT:
+            case DIRECT_32BIT:
+                throw new UnsupportedOperationException("Unsupported");
+            /*TODO*///		if(has_remap)
 /*TODO*///			ret = just_remapped;
 /*TODO*///		break;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	if (ret)
-/*TODO*///	{
-/*TODO*///		tilemap_dirty_palette(ret);
-/*TODO*///		if( !alpha_active )
+        }
+
+        if (ret != null) {
+            tilemap_dirty_palette(ret);
+            /*TODO*///		if( !alpha_active )
 /*TODO*///			artwork_remap();
-/*TODO*///	}
-/*TODO*///	return ret;
-/*TODO*///}
-/*TODO*///
-/*TODO*///void palette_post_screen_update_cb(void)
+        }
+        return ret;
+    }
+
+    /*TODO*///void palette_post_screen_update_cb(void)
 /*TODO*///{
 /*TODO*///	if(has_remap)
 /*TODO*///	{
@@ -1379,7 +1381,6 @@ public class palette {
 /*TODO*///	}
 /*TODO*///}
 /*TODO*///
-
     /**
      * ****************************************************************************
      *

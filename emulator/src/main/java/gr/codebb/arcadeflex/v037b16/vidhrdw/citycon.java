@@ -8,14 +8,13 @@ package gr.codebb.arcadeflex.v037b16.vidhrdw;
 //generic functions
 import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
-import static arcadeflex036.osdepend.logerror;
-import static arcadeflex036.video.osd_free_bitmap;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.paletteH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
+import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 //to be organized
@@ -25,10 +24,10 @@ import common.ptr.UBytePtr;
 import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static mame037b7.palette.palette_init_used_colors;
-import static mame037b7.palette.palette_recalc;
 import static mame037b7.palette.palette_transparent_pen;
 import static mame037b7.palette.palette_used_colors;
-
+import static arcadeflex036.osdepend.logerror;
+import static arcadeflex036.video.osd_free_bitmap;
 public class citycon {
 
     public static UBytePtr citycon_charlookup = new UBytePtr();

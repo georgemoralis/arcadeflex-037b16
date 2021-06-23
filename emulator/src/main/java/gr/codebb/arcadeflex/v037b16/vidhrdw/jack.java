@@ -20,7 +20,6 @@ import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static common.libc.cstring.*;
 import static common.libc.expressions.NOT;
-import static mame037b7.palette.palette_recalc;
 
 public class jack {
 

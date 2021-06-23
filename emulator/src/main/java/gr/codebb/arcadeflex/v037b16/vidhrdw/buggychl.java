@@ -13,6 +13,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.paletteH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 //to be organized
@@ -21,7 +22,6 @@ import static common.libc.expressions.NOT;
 import common.ptr.UBytePtr;
 import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
-import static mame037b7.palette.palette_recalc;
 import static mame037b7.palette.palette_transparent_pen;
 import static mame037b7.palette.palette_used_colors;
 

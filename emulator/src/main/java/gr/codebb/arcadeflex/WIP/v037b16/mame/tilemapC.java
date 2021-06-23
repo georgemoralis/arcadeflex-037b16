@@ -4,7 +4,12 @@
  */
 package gr.codebb.arcadeflex.WIP.v037b16.mame;
 
+import common.ptr.UBytePtr;
+import common.subArrays.IntArray;
+import gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.GetMemoryOffsetPtr;
+import gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.GetTileInfoPtr;
 import gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.struct_tile_info;
+import gr.codebb.arcadeflex.v037b16.mame.osdependH.osd_bitmap;
 
 public class tilemapC {
 
@@ -36,75 +41,76 @@ public class tilemapC {
 /*TODO*///};
 /*TODO*///
     public static class struct_tilemap {
-        /*TODO*///	UINT32 (*get_memory_offset)( UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows );
-/*TODO*///	int *memory_offset_to_cached_indx;
-/*TODO*///	UINT32 *cached_indx_to_memory_offset;
-/*TODO*///	int logical_flip_to_cached_flip[4];
-/*TODO*///
-/*TODO*///	/* callback to interpret video VRAM for the tilemap */
-/*TODO*///	void (*tile_get_info)( int memory_offset );
-/*TODO*///
-/*TODO*///	UINT32 max_memory_offset;
-/*TODO*///	UINT32 num_tiles;
-/*TODO*///	UINT32 num_logical_rows, num_logical_cols;
-/*TODO*///	UINT32 num_cached_rows, num_cached_cols;
-/*TODO*///	UINT32 tile_size;
-/*TODO*///	UINT32 num_pens;
-/*TODO*///	UINT32 cached_width, cached_height; /* size in pixels of tilemap as a whole */
-/*TODO*///
-/*TODO*///	struct cached_tile_info *cached_tile_info;
-/*TODO*///
-/*TODO*///	int dx, dx_if_flipped;
-/*TODO*///	int dy, dy_if_flipped;
-/*TODO*///	int scrollx_delta, scrolly_delta;
-/*TODO*///
-/*TODO*///	int enable;
-/*TODO*///	int attributes;
-/*TODO*///
-/*TODO*///	int type;
-/*TODO*///	int transparent_pen;
-/*TODO*///	UINT32 fgmask[4];
-/*TODO*///	UINT32 bgmask[4];
-/*TODO*///
-/*TODO*///	int bNeedRender;
-/*TODO*///
-/*TODO*///	UINT32 *pPenToPixel[8];
-/*TODO*///
+
+        public GetMemoryOffsetPtr get_memory_offset;
+        public int[] memory_offset_to_cached_indx;
+        public int[] cached_indx_to_memory_offset;
+        public int[] logical_flip_to_cached_flip = new int[4];
+
+        /* callback to interpret video RAM for the tilemap */
+        public GetTileInfoPtr tile_get_info;
+
+        public int/*UINT32*/ max_memory_offset;
+        public int/*UINT32*/ num_tiles;
+
+        public int/*UINT32*/ num_logical_rows, num_logical_cols;
+        public int/*UINT32*/ num_cached_rows, num_cached_cols;
+
+        public int/*UINT32*/ tile_size;
+        public int/*UINT32*/ num_pens;
+        public int/*UINT32*/ cached_width, cached_height;
+
+        /*TODO*///	struct cached_tile_info *cached_tile_info;
+        public int dx, dx_if_flipped;
+        public int dy, dy_if_flipped;
+        public int scrollx_delta, scrolly_delta;
+
+        public int enable;
+        public int attributes;
+
+        public int type;
+        public int transparent_pen;
+        public int[] fgmask = new int[4];
+        public int[] bgmask = new int[4];
+
+        public int bNeedRender;
+
+        public IntArray[] pPenToPixel = new IntArray[8];
+        /*TODO*///
 /*TODO*///	void (*draw_tile)( struct tilemap *tilemap, UINT32 cached_indx, UINT32 col, UINT32 row );
 /*TODO*///
 /*TODO*///	void (*draw)( int, int );
 /*TODO*///	void (*draw_opaque)( int, int );
 /*TODO*///	void (*draw_alpha)( int, int );
 /*TODO*///
-/*TODO*///	UINT8 *priority,	/* priority for each tile */
-/*TODO*///		**priority_row;
-/*TODO*///
-/*TODO*///	UINT8 *visible; /* boolean flag for each tile */
-/*TODO*///
-/*TODO*///	UINT8 *dirty_vram; /* boolean flag for each tile */
-/*TODO*///
-/*TODO*///	UINT8 *dirty_pixels;
-/*TODO*///
-/*TODO*///	int scroll_rows, scroll_cols;
-/*TODO*///	int *rowscroll, *colscroll;
-/*TODO*///
-/*TODO*///	int orientation;
-/*TODO*///	int clip_left,clip_right,clip_top,clip_bottom;
-/*TODO*///
+        public char[] u8_priority;/* priority for each tile */
+        public UBytePtr[] priority_row;
+
+        public int[] u8_visible;/* boolean flag for each tile */
+        public int[] u8_dirty_vram;/* boolean flag for each tile */
+        public int[] u8_dirty_pixels;
+
+        public int scroll_rows, scroll_cols;
+        public int[] rowscroll;
+        public int[] colscroll;
+
+        public int orientation;
+        public int clip_left, clip_right, clip_top, clip_bottom;
+        /*TODO*///
 /*TODO*///	UINT16 tile_depth, tile_granularity;
 /*TODO*///	UINT8 *tile_dirty_map;
 /*TODO*///
-/*TODO*///	/* cached color data */
-/*TODO*///	struct osd_bitmap *pixmap;
-/*TODO*///	int pixmap_line_offset;
-/*TODO*///
+        /* cached color data */
+        public osd_bitmap pixmap;
+        public int pixmap_line_offset;
+        /*TODO*///
 /*TODO*///	struct tilemap_mask *foreground;
 /*TODO*///	/* for transparent layers, or the front half of a split layer */
 /*TODO*///
 /*TODO*///	struct tilemap_mask *background;
 /*TODO*///	/* for the back half of a split layer */
 /*TODO*///
-/*TODO*///	struct tilemap *next; /* resource tracking */
+        public struct_tilemap next;
     }
     /*TODO*///
 /*TODO*///struct osd_bitmap *priority_bitmap; /* priority buffer (corresponds to screen bitmap) */
@@ -705,9 +711,9 @@ public class tilemapC {
 /*TODO*///	tilemap_mark_all_tiles_dirty(ALL_TILEMAPS);
 /*TODO*///}
 /*TODO*///
-/*TODO*///int tilemap_init( void )
-/*TODO*///{
-/*TODO*///	UINT32 value, data, bit;
+    public static int tilemap_init() {
+        System.out.println("todo tilemap_init");
+        /*TODO*///	UINT32 value, data, bit;
 /*TODO*///	for( value=0; value<0x100; value++ )
 /*TODO*///	{
 /*TODO*///		data = 0;
@@ -723,20 +729,21 @@ public class tilemapC {
 /*TODO*///		priority_bitmap_line_offset = priority_bitmap->line[1] - priority_bitmap->line[0];
 /*TODO*///		return 0;
 /*TODO*///	}
-/*TODO*///	return -1;
-/*TODO*///}
-/*TODO*///
-/*TODO*///void tilemap_close( void )
-/*TODO*///{
-/*TODO*///	while( first_tilemap )
+        return -1;
+    }
+
+    public static void tilemap_close() {
+        System.out.println("todo tilemap_close");
+        /*TODO*///	while( first_tilemap )
 /*TODO*///	{
 /*TODO*///		struct tilemap *next = first_tilemap->next;
 /*TODO*///		tilemap_dispose( first_tilemap );
 /*TODO*///		first_tilemap = next;
 /*TODO*///	}
 /*TODO*///	osd_free_bitmap( priority_bitmap );
-/*TODO*///}
-/*TODO*///
+    }
+
+    /*TODO*///
 /*TODO*////***********************************************************************************/
 /*TODO*///
 /*TODO*///struct tilemap *tilemap_create(
@@ -918,9 +925,9 @@ public class tilemapC {
 /*TODO*///	tilemap->enable = enable?1:0;
 /*TODO*///}
 /*TODO*///
-/*TODO*///void tilemap_set_flip( struct tilemap *tilemap, int attributes )
-/*TODO*///{
-/*TODO*///	if( tilemap==ALL_TILEMAPS )
+    public static void tilemap_set_flip(struct_tilemap tilemap, int attributes) {
+        System.out.println("TODO tilemap_set_flip");
+        /*TODO*///	if( tilemap==ALL_TILEMAPS )
 /*TODO*///	{
 /*TODO*///		tilemap = first_tilemap;
 /*TODO*///		while( tilemap )
@@ -955,8 +962,9 @@ public class tilemapC {
 /*TODO*///		mappings_update( tilemap );
 /*TODO*///		tilemap_mark_all_tiles_dirty( tilemap );
 /*TODO*///	}
-/*TODO*///}
-/*TODO*///
+    }
+
+    /*TODO*///
 /*TODO*///void tilemap_set_clip( struct tilemap *tilemap, const struct rectangle *clip )
 /*TODO*///{
 /*TODO*///	int left,top,right,bottom;
@@ -1094,9 +1102,9 @@ public class tilemapC {
 /*TODO*///	}
 /*TODO*///}
 /*TODO*///
-/*TODO*///void tilemap_dirty_palette( const UINT8 *dirty_pens )
-/*TODO*///{
-/*TODO*///	UINT32 *color_base = Machine->remapped_colortable;
+    public static void tilemap_dirty_palette(UBytePtr dirty_pens) {
+        System.out.println("tilemap_dirty_palette TODO");
+        /*TODO*///	UINT32 *color_base = Machine->remapped_colortable;
 /*TODO*///	struct tilemap *tilemap = first_tilemap;
 /*TODO*///	while( tilemap )
 /*TODO*///	{
@@ -1150,8 +1158,8 @@ public class tilemapC {
 /*TODO*///		}
 /*TODO*///		tilemap = tilemap->next;
 /*TODO*///	}
-/*TODO*///}
-/*TODO*///
+    }
+    /*TODO*///
 /*TODO*////***********************************************************************************/
 /*TODO*///
 /*TODO*///static void draw_bitmask(

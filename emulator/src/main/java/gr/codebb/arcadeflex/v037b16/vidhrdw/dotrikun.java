@@ -9,6 +9,7 @@ package gr.codebb.arcadeflex.v037b16.vidhrdw;
 import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 
@@ -16,7 +17,6 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static mame037b7.palette.palette_change_color;
-import static mame037b7.palette.palette_recalc;
 
 public class dotrikun {
 

@@ -29,6 +29,8 @@ import static arcadeflex056.fileio.osd_fread;
 import static arcadeflex056.fileio.osd_fseek;
 import static arcadeflex056.fileio.osd_fsize;
 import static common.libc.expressions.sizeof;
+import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapC.*;
 
 public class common {
 
@@ -495,7 +497,7 @@ public class common {
     public static void updateflip() {
         int min_x, max_x, min_y, max_y;
 
-        /*TODO*///tilemap_set_flip(ALL_TILEMAPS,(TILEMAP_FLIPX & flip_screen_x) | (TILEMAP_FLIPY & flip_screen_y));
+        tilemap_set_flip(ALL_TILEMAPS, (TILEMAP_FLIPX & flip_screen_x[0]) | (TILEMAP_FLIPY & flip_screen_y[0]));
         min_x = Machine.drv.default_visible_area.min_x;
         max_x = Machine.drv.default_visible_area.max_x;
         min_y = Machine.drv.default_visible_area.min_y;

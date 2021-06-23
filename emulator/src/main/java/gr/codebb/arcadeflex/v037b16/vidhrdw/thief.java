@@ -12,6 +12,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 //to be organized
@@ -20,7 +21,6 @@ import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static common.libc.cstring.*;
 import static mame037b7.palette.palette_change_color;
-import static mame037b7.palette.palette_recalc;
 import static arcadeflex036.video.osd_free_bitmap;
 
 public class thief {

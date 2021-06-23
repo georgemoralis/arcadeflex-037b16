@@ -23,7 +23,6 @@ import static common.ptr.*;
 import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static mame037b7.palette.palette_change_color;
-import static mame037b7.palette.palette_recalc;
 
 public class taitosj {
 
