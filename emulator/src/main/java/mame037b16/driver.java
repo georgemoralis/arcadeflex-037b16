@@ -3600,7 +3600,7 @@ public class driver {
         /*TODO*///	driver_wbeachvl,	/* (c) 1995 */
         /*TODO*///
         /*TODO*///	/* Pacific Novelty games */
-        /*TODO*///	driver_sharkatt,	/* (c) [1980] */
+        	driver_sharkatt,	/* (c) [1980] */
         	driver_thief,		/* (c) 1981 */
         	driver_natodef,	/* (c) 1982 */
         	driver_natodefa,	/* (c) 1982 */
