@@ -26,6 +26,7 @@ import gr.codebb.arcadeflex.v037b16.sound._2203intf;
 import gr.codebb.arcadeflex.v037b16.sound._2608intf;
 import gr.codebb.arcadeflex.v037b16.sound.MSM5205;
 import gr.codebb.arcadeflex.v037b16.sound._5110intf;
+import gr.codebb.arcadeflex.v037b16.sound._5220intf;
 //to be organized
 import static mame037b16.common.*;
 import static mame056.sound.streams.*;
@@ -281,9 +282,6 @@ public class sndintrf {
 /*TODO*///int YMZ280B_clock(const struct MachineSound *msound) { return ((struct YMZ280Binterface*)msound->sound_interface)->baseclock[0]; }
 /*TODO*///int YMZ280B_num(const struct MachineSound *msound) { return ((struct YMZ280Binterface*)msound->sound_interface)->num; }
 /*TODO*///#endif
-/*TODO*///#if (HAS_TMS5220)
-/*TODO*///int TMS5220_clock(const struct MachineSound *msound) { return ((struct TMS5220interface*)msound->sound_interface)->baseclock; }
-/*TODO*///#endif
 /*TODO*///#if (HAS_YM2151 || HAS_YM2151_ALT)
 /*TODO*///int YM2151_clock(const struct MachineSound *msound) { return ((struct YM2151interface*)msound->sound_interface)->baseclock; }
 /*TODO*///int YM2151_num(const struct MachineSound *msound) { return ((struct YM2151interface*)msound->sound_interface)->num; }
@@ -517,19 +515,7 @@ public class sndintrf {
                 new namco(),
                 new tms36xx(),
                 new _5110intf(),
-                /*TODO*///#endif
-                /*TODO*///#if (HAS_TMS5220)
-                /*TODO*///    {
-                /*TODO*///		SOUND_TMS5220,
-                /*TODO*///		"TMS5220",
-                /*TODO*///		0,
-                /*TODO*///		TMS5220_clock,
-                /*TODO*///		tms5220_sh_start,
-                /*TODO*///		tms5220_sh_stop,
-                /*TODO*///		tms5220_sh_update,
-                /*TODO*///		0
-                /*TODO*///	},
-                new Dummy_snd(),
+                new _5220intf(),
                 new vlm5030(),
                 /*TODO*///#endif
                 /*TODO*///#if (HAS_ADPCM)
