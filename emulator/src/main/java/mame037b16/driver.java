@@ -41,6 +41,8 @@ import static gr.codebb.arcadeflex.v037b16.drivers.funkybee.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.yiear.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.thief.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.vulgus.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.skydiver.*;
+
 /**
  *
  * @author shadow-laptop
@@ -2811,7 +2813,7 @@ public class driver {
         /*TODO*///	/* Tourn. Table */	/* 030170			1978/03 [6507] */
         /*TODO*///	driver_avalnche,	/* 030574			1978/04 [6502] */
         /*TODO*///	driver_firetrk,	/* 030926			1978/06 [6808] */
-        /*TODO*///	driver_skydiver,	/* 009787			1978/06 [6800] */
+        	driver_skydiver,	/* 009787			1978/06 [6800] */
         /*TODO*///	/* Smokey Joe */	/* 030926			1978/07 [6502] */
         /*TODO*///	driver_sbrkout,	/* 033442-033455	1978/09 [6502] */
         /*TODO*///	driver_atarifb,	/* 033xxx			1978/10 [6502] */
