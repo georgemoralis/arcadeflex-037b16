@@ -1380,7 +1380,7 @@ public class pacman {
                         pacman_interrupt, 1
                 )
             },
-            60.606060f, 2500, /* frames per second, vblank duration */
+            60.606060, 2500, /* frames per second, vblank duration */
             1, /* single CPU, no need for interleaving */
             pacman_init_machine,
             /* video hardware */
@@ -1413,7 +1413,7 @@ public class pacman {
                         pacman_interrupt, 1
                 )
             },
-            60.606060f, 2500, /* frames per second, vblank duration */
+            60.606060, 2500, /* frames per second, vblank duration */
             1, /* single CPU, no need for interleaving */
             pacman_init_machine,
             /* video hardware */
@@ -1446,7 +1446,7 @@ public class pacman {
                         pacman_interrupt, 1
                 )
             },
-            60.606060f, 2500, /* frames per second, vblank duration */
+            60.606060, 2500, /* frames per second, vblank duration */
             1, /* single CPU, no need for interleaving */
             theglobp_init_machine,
             /* video hardware */
@@ -1479,7 +1479,7 @@ public class pacman {
                         nmi_interrupt, 1
                 )
             },
-            60.606060f, 2500, /* frames per second, vblank duration */
+            60.606060, 2500, /* frames per second, vblank duration */
             1, /* single CPU, no need for interleaving */
             null,
             /* video hardware */
@@ -1512,7 +1512,7 @@ public class pacman {
                         nmi_interrupt, 1
                 )
             },
-            60.606060f, 2500, /* frames per second, vblank duration */
+            60.606060, 2500, /* frames per second, vblank duration */
             1, /* single CPU, no need for interleaving */
             null,
             /* video hardware */
@@ -1545,7 +1545,7 @@ public class pacman {
                         interrupt, 1
                 )
             },
-            60.606060f, 2500, /* frames per second, vblank duration */
+            60.606060, 2500, /* frames per second, vblank duration */
             1, /* single CPU, no need for interleaving */
             null,
             /* video hardware */

@@ -28,7 +28,7 @@ public class driverH {
         public MachineDriver() {
         } //null implementation
 
-        public MachineDriver(MachineCPU[] mcp, float fps, int vblank, int cpu_slices, InitMachinePtr im, int sw, int sh, rectangle va, GfxDecodeInfo[] gdi, int tc, int ctl, VhConvertColorPromPtr vccp, int vattr, VhEofCallbackPtr veof, VhStartPtr vsta, VhStopPtr vsto, VhUpdatePtr vup, int sattr, int obs1, int obs2, int obs3, MachineSound[] snd) {
+        public MachineDriver(MachineCPU[] mcp, double fps, int vblank, int cpu_slices, InitMachinePtr im, int sw, int sh, rectangle va, GfxDecodeInfo[] gdi, int tc, int ctl, VhConvertColorPromPtr vccp, int vattr, VhEofCallbackPtr veof, VhStartPtr vsta, VhStopPtr vsto, VhUpdatePtr vup, int sattr, int obs1, int obs2, int obs3, MachineSound[] snd) {
             CopyArray(cpu, mcp);
             frames_per_second = fps;
             vblank_duration = vblank;
@@ -62,7 +62,7 @@ public class driverH {
 
         /* basic machine hardware */
         public MachineCPU cpu[] = MachineCPU.create(MAX_CPU);
-        public float frames_per_second;
+        public double frames_per_second;
         public int vblank_duration;/* in microseconds - see description below */
         public int cpu_slices_per_frame;/* for multicpu games. 1 is the minimum, meaning */
  /* that each CPU runs for the whole video frame */

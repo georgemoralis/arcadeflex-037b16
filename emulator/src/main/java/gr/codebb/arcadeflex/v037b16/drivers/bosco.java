@@ -386,7 +386,7 @@ public class bosco {
                         bosco_interrupt_3, 2
                 )
             },
-            60.606060f, DEFAULT_60HZ_VBLANK_DURATION, /* frames per second, vblank duration */
+            60.606060, DEFAULT_60HZ_VBLANK_DURATION, /* frames per second, vblank duration */
             100, /* 100 CPU slices per frame - an high value to ensure proper */
             /* synchronization of the CPUs */
             bosco_init_machine,

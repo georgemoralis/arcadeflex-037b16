@@ -276,7 +276,7 @@ public class rallyx {
                         interrupt, 1
                 )
             },
-            60.606060f, DEFAULT_60HZ_VBLANK_DURATION, /* frames per second, vblank duration */
+            60.606060, DEFAULT_60HZ_VBLANK_DURATION, /* frames per second, vblank duration */
             1, /* single CPU, no need for interleaving */
             null,
             /* video hardware */
