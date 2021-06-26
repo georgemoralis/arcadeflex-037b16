@@ -42,6 +42,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.yiear.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.thief.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.vulgus.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.skydiver.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.troangel.*;
 
 /**
  *
@@ -998,7 +999,7 @@ public class driver {
         /*TODO*///	driver_olibochu,	/* M47 (c) 1981 + "GDI presents" */
         /*TODO*///	driver_mpatrol,	/* M52 (c) 1982 */
         /*TODO*///	driver_mpatrolw,	/* M52 (c) 1982 + Williams license */
-        /*TODO*///	driver_troangel,	/* (c) 1983 */
+        	driver_troangel,	/* (c) 1983 */
         /*TODO*///	driver_yard,		/* (c) 1983 */
         /*TODO*///	driver_vsyard,	/* (c) 1983/1984 */
         /*TODO*///	driver_vsyard2,	/* (c) 1983/1984 */
