@@ -4,7 +4,7 @@
 package mame056.cpu.m6809;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
-import static mame056.cpu.m6809.m6809H.*;
+import static gr.codebb.arcadeflex.v037b16.cpu.m6809.m6809H.*;
 import static common.libc.cstdio.*;
 import static arcadeflex036.osdepend.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.cpu_getactivecpu;

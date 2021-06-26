@@ -9,7 +9,6 @@ import static gr.codebb.arcadeflex.v037b16.cpu.m6800.m6800Η.*;
 import static gr.codebb.arcadeflex.v037b16.cpu.m6800.m6800ops.*;
 import static gr.codebb.arcadeflex.v037b16.cpu.m6800.m6800tbl.*;
 //mame imports
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;

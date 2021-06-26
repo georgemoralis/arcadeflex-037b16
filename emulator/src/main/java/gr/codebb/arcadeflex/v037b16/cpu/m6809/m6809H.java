@@ -1,9 +1,10 @@
 /**
- * ported to v0.56
+ * ported to v0.37b16
  */
-package mame056.cpu.m6809;
+package gr.codebb.arcadeflex.v037b16.cpu.m6809;
 
 public class m6809H {
+
     public static final int M6809_PC = 1;
     public static final int M6809_S = 2;
     public static final int M6809_CC = 3;
@@ -19,11 +20,11 @@ public class m6809H {
 
     public static final int M6809_IRQ_LINE = 0;/* IRQ line number */
     public static final int M6809_FIRQ_LINE = 1;/* FIRQ line number */
-    
-    
-	public static final int M6809_INT_NONE  = 0;   /* No interrupt required */
-	public static final int M6809_INT_IRQ	= 1;	/* Standard IRQ interrupt */
-	public static final int M6809_INT_FIRQ	= 2;	/* Fast IRQ */
-	public static final int M6809_INT_NMI	= 4;	/* NMI */
+
+
+    public static final int M6809_INT_NONE = 0;/* No interrupt required */
+    public static final int M6809_INT_IRQ = 1;/* Standard IRQ interrupt */
+    public static final int M6809_INT_FIRQ = 2;/* Fast IRQ */
+    public static final int M6809_INT_NMI = 4;/* NMI */
 
 }
