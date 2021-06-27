@@ -3,6 +3,7 @@
  */
 package mame056.cpu.m6809;
 //mame imports
+
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.cpu.m6809.m6809H.*;
 import static common.libc.cstdio.*;
@@ -28,7 +29,7 @@ public class m6809 extends cpu_interface {
     public int[] m6809_ICount = {50000};
 
     public m6809() {
-      /*TODO*///  cpu_num = CPU_M6809;
+        /*TODO*///  cpu_num = CPU_M6809;
         num_irqs = 2;
         default_vector = 0;
         icount = m6809_ICount;
@@ -128,8 +129,6 @@ public class m6809 extends cpu_interface {
     public static final int M6809_LDS = 32;/* set when LDS occured at least once */
 
     public void CHECK_IRQ_LINES() {
-        //if(m6809log!=null) fprintf(m6809log,"M6809#%d irq_linesb :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d S1:%d S2:%d\n", cpu_getactivecpu(),m6809.pc,m6809.ppc,m6809.a,m6809.b,getDreg(),m6809.dp,m6809.u,m6809.s,m6809.x,m6809.y,m6809.cc,ea,m6809.irq_state[M6809_IRQ_LINE],m6809.irq_state[M6809_FIRQ_LINE]);
-
         if (m6809.irq_state[M6809_IRQ_LINE] != CLEAR_LINE || m6809.irq_state[M6809_FIRQ_LINE] != CLEAR_LINE) {
             m6809.int_state &= ~M6809_SYNC;/* clear SYNC flag */
         }
@@ -146,7 +145,7 @@ public class m6809 extends cpu_interface {
                 m6809.extra_cycles += 10;/* subtract +10 cycles */
             }
             m6809.cc |= CC_IF | CC_II;/* inhibit FIRQ and IRQ */
-            m6809.pc = (char) RM16(0xfff6);
+            m6809.pc = RM16(0xfff6);
             CHANGE_PC();
             m6809.irq_callback.handler(M6809_FIRQ_LINE);
         } else if (m6809.irq_state[M6809_IRQ_LINE] != CLEAR_LINE && ((m6809.cc & CC_II) == 0)) {
@@ -168,12 +167,10 @@ public class m6809 extends cpu_interface {
                 m6809.extra_cycles += 19;/* subtract +19 cycles */
             }
             m6809.cc |= CC_II;/* inhibit IRQ */
-            m6809.pc = (char) RM16(0xfff8);
+            m6809.pc = RM16(0xfff8);
             CHANGE_PC();
             m6809.irq_callback.handler(M6809_IRQ_LINE);
         }
-        //if(m6809log!=null) fprintf(m6809log,"M6809#%d irq_lines :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(),(int)m6809.pc,(int)m6809.ppc,(int)m6809.a,(int)m6809.b,getDreg(),(int)m6809.dp,(int)m6809.u,(int)m6809.s,(int)m6809.x,(int)m6809.y,(int)m6809.cc,ea);
-
     }
 
     public char RM(int addr) {
@@ -555,7 +552,7 @@ public class m6809 extends cpu_interface {
     @Override
     public int get_reg(int regnum) {
         switch (regnum) {
-/*TODO*///            case REG_PC:
+            /*TODO*///            case REG_PC:
             case M6809_PC:
                 return m6809.pc;
             /*TODO*///case REG_SP:
@@ -689,8 +686,8 @@ public class m6809 extends cpu_interface {
      */
     @Override
     public void set_irq_line(int irqline, int state) {
-/*TODO*///        if (irqline == IRQ_LINE_NMI) 
-{
+        /*TODO*///        if (irqline == IRQ_LINE_NMI) 
+        {
             if (m6809.nmi_state == state) {
                 return;
             }
@@ -726,7 +723,7 @@ public class m6809 extends cpu_interface {
             m6809.cc |= CC_IF | CC_II;/* inhibit FIRQ and IRQ */
             m6809.pc = (char) (RM16(0xfffc));
             CHANGE_PC();
-/*TODO*///        } else if (irqline < 2) {
+            /*TODO*///        } else if (irqline < 2) {
             //LOG(("M6809#%d set_irq_line %d, %d\n", cpu_getactivecpu(), irqline, state));
             m6809.irq_state[irqline] = state;
             if (state == CLEAR_LINE) {
