@@ -43,6 +43,8 @@ import static gr.codebb.arcadeflex.v037b16.drivers.thief.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.vulgus.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.skydiver.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.troangel.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.mpatrol.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.yard.*;
 
 /**
  *
@@ -145,8 +147,8 @@ public class driver {
         /* "Pacman hardware" games */
         driver_pacman, /* (c) 1980 Namco */
         /*056*/ driver_puckman,
-//        /*056*/ driver_puckmana,
-  //      /*056*/ driver_puckmod,
+        //        /*056*/ driver_puckmana,
+        //      /*056*/ driver_puckmod,
         driver_pacmod, /* (c) 1981 Midway */
         driver_hangly, /* hack */
         driver_hangly2, /* hack */
@@ -154,7 +156,7 @@ public class driver {
         driver_pacheart, /* hack */
         driver_piranha, /* hack */
         driver_pacplus,
-  //      /*056*/ driver_mschamp,
+        //      /*056*/ driver_mschamp,
         driver_mspacman, /* (c) 1981 Midway */ /* made by Gencomp */
         driver_mspacmab, /* bootleg */
         driver_mspacmat, /* hack */
@@ -997,12 +999,12 @@ public class driver {
         /*TODO*///
         /*TODO*///	driver_redalert,	/* (c) 1981 + "GDI presents" */
         /*TODO*///	driver_olibochu,	/* M47 (c) 1981 + "GDI presents" */
-        /*TODO*///	driver_mpatrol,	/* M52 (c) 1982 */
-        /*TODO*///	driver_mpatrolw,	/* M52 (c) 1982 + Williams license */
-        	driver_troangel,	/* (c) 1983 */
-        /*TODO*///	driver_yard,		/* (c) 1983 */
-        /*TODO*///	driver_vsyard,	/* (c) 1983/1984 */
-        /*TODO*///	driver_vsyard2,	/* (c) 1983/1984 */
+        driver_mpatrol, /* M52 (c) 1982 */
+        driver_mpatrolw, /* M52 (c) 1982 + Williams license */
+        driver_troangel, /* (c) 1983 */
+        driver_yard, /* (c) 1983 */
+        driver_vsyard, /* (c) 1983/1984 */
+        driver_vsyard2, /* (c) 1983/1984 */
         /*TODO*///	driver_travrusa,	/* (c) 1983 */
         /*TODO*///	driver_motorace,	/* (c) 1983 Williams license */
         /*TODO*///	/* M62 */
@@ -1616,9 +1618,9 @@ public class driver {
         /*TODO*///	/* their web site. The list is sorted by production date.                       */
         /*TODO*///	/* A comprehensive list of Capcom games with board info can be found here:      */
         /*TODO*///	/* http://www.emugaming.com/strider/capcom_list.shtml                           */
-        	driver_vulgus,	/*  5/1984 (c) 1984 */
-        	driver_vulgus2,	/*  5/1984 (c) 1984 */
-        	driver_vulgusj,	/*  5/1984 (c) 1984 */
+        driver_vulgus, /*  5/1984 (c) 1984 */
+        driver_vulgus2, /*  5/1984 (c) 1984 */
+        driver_vulgusj, /*  5/1984 (c) 1984 */
         /*TODO*///	driver_sonson,	/*  7/1984 (c) 1984 */
         /*TODO*///	driver_sonsonj,	/*  7/1984 (c) 1984 (Japan) */
 
@@ -2814,7 +2816,7 @@ public class driver {
         /*TODO*///	/* Tourn. Table */	/* 030170			1978/03 [6507] */
         /*TODO*///	driver_avalnche,	/* 030574			1978/04 [6502] */
         /*TODO*///	driver_firetrk,	/* 030926			1978/06 [6808] */
-        	driver_skydiver,	/* 009787			1978/06 [6800] */
+        driver_skydiver, /* 009787			1978/06 [6800] */
         /*TODO*///	/* Smokey Joe */	/* 030926			1978/07 [6502] */
         /*TODO*///	driver_sbrkout,	/* 033442-033455	1978/09 [6502] */
         /*TODO*///	driver_atarifb,	/* 033xxx			1978/10 [6502] */
@@ -3603,10 +3605,10 @@ public class driver {
         /*TODO*///	driver_wbeachvl,	/* (c) 1995 */
         /*TODO*///
         /*TODO*///	/* Pacific Novelty games */
-        	driver_sharkatt,	/* (c) [1980] */
-        	driver_thief,		/* (c) 1981 */
-        	driver_natodef,	/* (c) 1982 */
-        	driver_natodefa,	/* (c) 1982 */
+        driver_sharkatt, /* (c) [1980] */
+        driver_thief, /* (c) 1981 */
+        driver_natodef, /* (c) 1982 */
+        driver_natodefa, /* (c) 1982 */
         /*TODO*///	driver_mrflea,	/* (c) 1982 */
         /*TODO*///
         /*TODO*///	/* Tecfri games */
