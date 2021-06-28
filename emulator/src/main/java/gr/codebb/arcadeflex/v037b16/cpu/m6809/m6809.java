@@ -76,7 +76,7 @@ public class m6809 extends cpu_interface {
     public static final int CC_E = 0x80;/* entire state pushed */
 
  /* 6809 registers */
-    private static m6809_Regs m6809 = new m6809_Regs();
+    public static m6809_Regs m6809 = new m6809_Regs();
 
     public static int ea;
 
