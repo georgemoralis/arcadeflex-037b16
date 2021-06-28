@@ -27,6 +27,8 @@ import gr.codebb.arcadeflex.v037b16.sound._2608intf;
 import gr.codebb.arcadeflex.v037b16.sound.MSM5205;
 import gr.codebb.arcadeflex.v037b16.sound._5110intf;
 import gr.codebb.arcadeflex.v037b16.sound._5220intf;
+import gr.codebb.arcadeflex.v037b16.sound.cem3394;
+
 //to be organized
 import static mame037b16.common.*;
 import static mame056.sound.streams.*;
@@ -306,9 +308,6 @@ public class sndintrf {
 /*TODO*///#if (HAS_K054539)
 /*TODO*///int K054539_clock(const struct MachineSound *msound) { return ((struct K054539interface*)msound->sound_interface)->clock; }
 /*TODO*///int K054539_num(const struct MachineSound *msound) { return ((struct K054539interface*)msound->sound_interface)->num; }
-/*TODO*///#endif
-/*TODO*///#if (HAS_CEM3394)
-/*TODO*///int cem3394_num(const struct MachineSound *msound) { return ((struct cem3394_interface*)msound->sound_interface)->numchips; }
 /*TODO*///#endif
 /*TODO*///#if (HAS_QSOUND)
 /*TODO*///int qsound_clock(const struct MachineSound *msound) { return ((struct QSound_interface*)msound->sound_interface)->clock; }
@@ -661,19 +660,7 @@ public class sndintrf {
                 /*TODO*///		0
                 /*TODO*///	},
                 new Dummy_snd(),
-                /*TODO*///#endif
-                /*TODO*///#if (HAS_CEM3394)
-                /*TODO*///	{
-                /*TODO*///		SOUND_CEM3394,
-                /*TODO*///		"CEM3394",
-                /*TODO*///		cem3394_num,
-                /*TODO*///		0,
-                /*TODO*///		cem3394_sh_start,
-                /*TODO*///		cem3394_sh_stop,
-                /*TODO*///		0,
-                /*TODO*///		0
-                /*TODO*///	},
-                new Dummy_snd(),
+                new cem3394(),
                 /*TODO*///#endif
                 /*TODO*///#if (HAS_C140)
                 /*TODO*///	{
