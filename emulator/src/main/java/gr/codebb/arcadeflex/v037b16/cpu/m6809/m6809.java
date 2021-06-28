@@ -379,8 +379,16 @@ public class m6809 extends cpu_interface {
         ea |= m6809.dp << 8;
     }
 
-    /*TODO*///#define IMM8	EAD = PCD; PC++
-    /*TODO*///#define IMM16	EAD = PCD; PC+=2
+    public static void IMM8() {
+        ea = m6809.pc;
+        m6809.pc = (m6809.pc + 1) & 0xFFFF;
+    }
+
+    public static void IMM16() {
+        ea = m6809.pc;
+        m6809.pc = (m6809.pc + 2) & 0xFFFF;
+    }
+
     public static void EXTENDED() {
         ea = IMMWORD();
     }
