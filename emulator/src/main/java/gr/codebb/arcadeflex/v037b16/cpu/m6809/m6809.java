@@ -432,7 +432,7 @@ public class m6809 extends cpu_interface {
     }
 
     /* macros for branch instructions */
-    public void BRANCH(boolean f) {
+    public static void BRANCH(boolean f) {
         int t = IMMBYTE();
         if (f) {
             m6809.pc = (m6809.pc + SIGNED(t)) & 0xFFFF;
@@ -440,7 +440,7 @@ public class m6809 extends cpu_interface {
         }
     }
 
-    public void LBRANCH(boolean f) {
+    public static void LBRANCH(boolean f) {
         int t = IMMWORD();
         if (f) {
             m6809_ICount[0] -= 1;
