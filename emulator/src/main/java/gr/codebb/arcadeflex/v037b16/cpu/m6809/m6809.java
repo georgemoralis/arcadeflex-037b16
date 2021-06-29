@@ -6,6 +6,7 @@ package gr.codebb.arcadeflex.v037b16.cpu.m6809;
 
 //cpu imports
 import static gr.codebb.arcadeflex.v037b16.cpu.m6809.m6809H.*;
+import static gr.codebb.arcadeflex.v037b16.cpu.m6809.m6809tlb.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
@@ -449,7 +450,7 @@ public class m6809 extends cpu_interface {
         }
     }
 
-    public int NXORV() {
+    public static int NXORV() {
         return ((m6809.cc & CC_N) ^ ((m6809.cc & CC_V) << 2));
     }
 
@@ -845,7 +846,7 @@ public class m6809 extends cpu_interface {
                 //CALL_MAME_DEBUG;
                 m6809.ireg = ROP(m6809.pc);
                 m6809.pc = (m6809.pc + 1) & 0xFFFF;
-                /*TODO*/// (*m6809_main[m6809.ireg])();
+                m6809_main[m6809.ireg].handler();
                 m6809_ICount[0] -= cycles1[m6809.ireg];
             } while (m6809_ICount[0] > 0);
 
@@ -893,8 +894,11 @@ public class m6809 extends cpu_interface {
 /*TODO*///	case 0x1c: EA=X-4;												m6809_ICount-=1;   break;
 /*TODO*///	case 0x1d: EA=X-3;												m6809_ICount-=1;   break;
 /*TODO*///	case 0x1e: EA=X-2;												m6809_ICount-=1;   break;
-/*TODO*///	case 0x1f: EA=X-1;												m6809_ICount-=1;   break;
-/*TODO*///
+            case 0x1f:
+                ea = (m6809.x - 1) & 0xFFFF;
+                m6809_ICount[0] -= 1;
+                break;
+            /*TODO*///
 /*TODO*///	case 0x20: EA=Y;												m6809_ICount-=1;   break;
 /*TODO*///	case 0x21: EA=Y+1;												m6809_ICount-=1;   break;
 /*TODO*///	case 0x22: EA=Y+2;												m6809_ICount-=1;   break;
@@ -996,13 +1000,18 @@ public class m6809 extends cpu_interface {
 /*TODO*///	case 0x7d: EA=S-3;												m6809_ICount-=1;   break;
 /*TODO*///	case 0x7e: EA=S-2;												m6809_ICount-=1;   break;
 /*TODO*///	case 0x7f: EA=S-1;												m6809_ICount-=1;   break;
-/*TODO*///
-/*TODO*///	case 0x80: EA=X;	X++;										m6809_ICount-=2;   break;
-/*TODO*///	case 0x81: EA=X;	X+=2;										m6809_ICount-=3;   break;
+            case 0x80:
+                ea = m6809.x & 0xFFFF;
+                m6809.x = (m6809.x + 1) & 0xFFFF;
+                m6809_ICount[0] -= 2;
+                break;
+            /*TODO*///	case 0x81: EA=X;	X+=2;										m6809_ICount-=3;   break;
 /*TODO*///	case 0x82: X--; 	EA=X;										m6809_ICount-=2;   break;
 /*TODO*///	case 0x83: X-=2;	EA=X;										m6809_ICount-=3;   break;
-/*TODO*///	case 0x84: EA=X;																   break;
-/*TODO*///	case 0x85: EA=X+SIGNED(B);										m6809_ICount-=1;   break;
+            case 0x84:
+                ea = m6809.x & 0xFFFF;
+                break;
+            /*TODO*///	case 0x85: EA=X+SIGNED(B);										m6809_ICount-=1;   break;
 /*TODO*///	case 0x86: EA=X+SIGNED(A);										m6809_ICount-=1;   break;
 /*TODO*///	case 0x87: EA=0;																   break; /*   ILLEGAL*/
 /*TODO*///	case 0x88: IMMBYTE(EA); 	EA=X+SIGNED(EA);					m6809_ICount-=1;   break; /* this is a hack to make Vectrex work. It should be m6809_ICount-=1. Dunno where the cycle was lost :( */
@@ -1065,12 +1074,18 @@ public class m6809 extends cpu_interface {
 /*TODO*///	case 0xbe: EA=0;																   break; /*   ILLEGAL*/
 /*TODO*///	case 0xbf: IMMWORD(ea); 						EAD=RM16(EAD);	m6809_ICount-=8;   break;
 /*TODO*///
-/*TODO*///	case 0xc0: EA=U;			U++;								m6809_ICount-=2;   break;
-/*TODO*///	case 0xc1: EA=U;			U+=2;								m6809_ICount-=3;   break;
+            case 0xc0:
+                ea = m6809.u & 0xFFFF;
+                m6809.u = (m6809.u + 1) & 0xFFFF;
+                m6809_ICount[0] -= 2;
+                break;
+            /*TODO*///	case 0xc1: EA=U;			U+=2;								m6809_ICount-=3;   break;
 /*TODO*///	case 0xc2: U--; 			EA=U;								m6809_ICount-=2;   break;
 /*TODO*///	case 0xc3: U-=2;			EA=U;								m6809_ICount-=3;   break;
-/*TODO*///	case 0xc4: EA=U;																   break;
-/*TODO*///	case 0xc5: EA=U+SIGNED(B);										m6809_ICount-=1;   break;
+            case 0xc4:
+                ea = m6809.u & 0xFFFF;
+                break;
+            /*TODO*///	case 0xc5: EA=U+SIGNED(B);										m6809_ICount-=1;   break;
 /*TODO*///	case 0xc6: EA=U+SIGNED(A);										m6809_ICount-=1;   break;
 /*TODO*///	case 0xc7: EA=0;																   break; /*ILLEGAL*/
 /*TODO*///	case 0xc8: IMMBYTE(EA); 	EA=U+SIGNED(EA);					m6809_ICount-=1;   break;

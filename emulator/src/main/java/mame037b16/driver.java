@@ -45,6 +45,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.skydiver.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.troangel.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.mpatrol.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.yard.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.shaolins.*;
 
 /**
  *
@@ -2559,8 +2560,8 @@ public class driver {
         /*TODO*///	driver_roadf2,	/* GX461 (c) 1984 */
         driver_yiear, /* GX407 (c) 1985 */
         driver_yiear2, /* GX407 (c) 1985 */
-        /*TODO*///	driver_kicker,	/* GX477 (c) 1985 */
-        /*TODO*///	driver_shaolins,	/* GX477 (c) 1985 */
+        driver_kicker, /* GX477 (c) 1985 */
+        driver_shaolins, /* GX477 (c) 1985 */
         driver_pingpong,
         /*TODO*///	driver_gberet,	/* GX577 (c) 1985 */
         /*TODO*///	driver_rushatck,	/* GX577 (c) 1985 */
