@@ -14,6 +14,8 @@ import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
 
 //to be organized
 import static common.ptr.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapC.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.*;
 import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.coin_counter_w;
@@ -28,7 +30,7 @@ public class vulgus {
     public static UBytePtr vulgus_scroll_high = new UBytePtr();
 
     static int vulgus_palette_bank;
-    //static struct tilemap *fg_tilemap, *bg_tilemap;
+    static struct_tilemap fg_tilemap, bg_tilemap;
 
     /**
      * *************************************************************************
@@ -100,31 +102,31 @@ public class vulgus {
      *
      **************************************************************************
      */
-    /*public static GetTileInfoPtr get_fg_tile_info = new GetTileInfoPtr() { public void handler(int tile_index) 
+    public static GetTileInfoPtr get_fg_tile_info = new GetTileInfoPtr() { public void handler(int tile_index) 
 	{
 		int code, color;
 	
-		code = vulgus_fgvideoram[tile_index];
-		color = vulgus_fgvideoram[tile_index + 0x400];
+		code = vulgus_fgvideoram.read(tile_index);
+		color = vulgus_fgvideoram.read(tile_index + 0x400);
 		SET_TILE_INFO(
 				0,
 				code + ((color & 0x80) << 1),
 				color & 0x3f,
-				0)
+				0);
 	} };
 	
 	public static GetTileInfoPtr get_bg_tile_info = new GetTileInfoPtr() { public void handler(int tile_index) 
 	{
 		int code, color;
 	
-		code = vulgus_bgvideoram[tile_index];
-		color = vulgus_bgvideoram[tile_index + 0x400];
+		code = vulgus_bgvideoram.read(tile_index);
+		color = vulgus_bgvideoram.read(tile_index + 0x400);
 		SET_TILE_INFO(
 				1,
 				code + ((color & 0x80) << 1),
 				(color & 0x1f) + (0x20 * vulgus_palette_bank),
-				TILE_FLIPYX((color & 0x60) >> 5))
-	} };*/
+				TILE_FLIPYX((color & 0x60) >> 5));
+	} };
     /**
      * *************************************************************************
      *
@@ -134,13 +136,13 @@ public class vulgus {
      */
     public static VhStartPtr vulgus_vh_start = new VhStartPtr() {
         public int handler() {
-            /*	fg_tilemap = tilemap_create(get_fg_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT_COLOR, 8, 8,32,32);
-		bg_tilemap = tilemap_create(get_bg_tile_info,tilemap_scan_cols,TILEMAP_OPAQUE           ,16,16,32,32);
-	
-		if (!fg_tilemap || !bg_tilemap)
-			return 1;
-	
-		tilemap_set_transparent_pen(fg_tilemap,47);*/
+            fg_tilemap = tilemap_create(get_fg_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT_COLOR, 8, 8,32,32);
+            bg_tilemap = tilemap_create(get_bg_tile_info,tilemap_scan_cols,TILEMAP_OPAQUE           ,16,16,32,32);
+
+            if (fg_tilemap==null || bg_tilemap==null)
+                    return 1;
+
+            tilemap_set_transparent_pen(fg_tilemap,47);
 
             return 0;
         }
@@ -156,14 +158,14 @@ public class vulgus {
     public static WriteHandlerPtr vulgus_fgvideoram_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
             vulgus_fgvideoram.write(offset, data);
-            //	tilemap_mark_tile_dirty(fg_tilemap,offset & 0x3ff);
+            tilemap_mark_tile_dirty(fg_tilemap,offset & 0x3ff);
         }
     };
 
     public static WriteHandlerPtr vulgus_bgvideoram_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
             vulgus_bgvideoram.write(offset, data);
-            //	tilemap_mark_tile_dirty(bg_tilemap,offset & 0x3ff);
+            tilemap_mark_tile_dirty(bg_tilemap,offset & 0x3ff);
         }
     };
 
@@ -182,7 +184,7 @@ public class vulgus {
         public void handler(int offset, int data) {
             if (vulgus_palette_bank != data) {
                 vulgus_palette_bank = data;
-                //tilemap_mark_all_tiles_dirty(bg_tilemap);
+                tilemap_mark_all_tiles_dirty(bg_tilemap);
             }
         }
     };
@@ -238,13 +240,13 @@ public class vulgus {
 
     public static VhUpdatePtr vulgus_vh_screenrefresh = new VhUpdatePtr() {
         public void handler(osd_bitmap bitmap, int full_refresh) {
-            //tilemap_set_scrollx(bg_tilemap, 0, vulgus_scroll_low[1] + 256 * vulgus_scroll_high[1]);
-            //tilemap_set_scrolly(bg_tilemap, 0, vulgus_scroll_low[0] + 256 * vulgus_scroll_high[0]);
+            tilemap_set_scrollx(bg_tilemap, 0, vulgus_scroll_low.read(1) + 256 * vulgus_scroll_high.read(1));
+            tilemap_set_scrolly(bg_tilemap, 0, vulgus_scroll_low.read(0) + 256 * vulgus_scroll_high.read(0));
 
-            //tilemap_update(ALL_TILEMAPS);
-            //tilemap_draw(bitmap,bg_tilemap,0,0);
+            tilemap_update(ALL_TILEMAPS);
+            tilemap_draw(bitmap,bg_tilemap,0,0);
             draw_sprites(bitmap);
-            //tilemap_draw(bitmap,fg_tilemap,0,0);
+            tilemap_draw(bitmap,fg_tilemap,0,0);
         }
     };
 }
