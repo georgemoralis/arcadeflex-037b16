@@ -1601,9 +1601,8 @@ public class m6809ops {
             int b = IMMWORD();
             d = m6809.x;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -1613,21 +1612,19 @@ public class m6809ops {
             int b = IMMWORD();
             d = m6809.y;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
     public static opcode cmps_im = new opcode() {
         public void handler() {
-            int/*UINT32*/ r, d;
+            int r, d;
             int b = IMMWORD();
             d = m6809.s;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -1740,7 +1737,7 @@ public class m6809ops {
             d = m6809.u;
             r = d - b;
             CLR_NZVC();
-            SET_FLAGS16(m6809.u, b, r);
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -1824,25 +1821,23 @@ public class m6809ops {
 
     public static opcode cmpx_di = new opcode() {
         public void handler() {
-            int/*UINT32*/ r, d;
+            int r, d;
             int b = DIRWORD();
             d = m6809.x;
-            r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            r = d - b;
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
     public static opcode cmpy_di = new opcode() {
         public void handler() {
-            int/*UINT32*/ r, d;
+            int r, d;
             int b = DIRWORD();
             d = m6809.y;
-            r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            r = d - b;
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -1852,9 +1847,8 @@ public class m6809ops {
             int b = DIRWORD();
             d = m6809.s;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -2067,9 +2061,8 @@ public class m6809ops {
             int b = RM16(ea);
             d = m6809.x;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -2080,9 +2073,8 @@ public class m6809ops {
             int b = RM16(ea);
             d = m6809.y;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -2093,9 +2085,8 @@ public class m6809ops {
             int b = RM16(ea);
             d = m6809.s;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -2295,9 +2286,8 @@ public class m6809ops {
             int b = EXTWORD();
             d = m6809.x;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -2307,9 +2297,8 @@ public class m6809ops {
             int b = EXTWORD();
             d = m6809.y;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);;
         }
     };
 
@@ -2319,9 +2308,8 @@ public class m6809ops {
             int b = EXTWORD();
             d = m6809.s;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 

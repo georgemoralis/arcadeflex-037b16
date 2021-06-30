@@ -1490,12 +1490,23 @@ public class m6809 extends cpu_interface {
                 ea = RM16(ea);
                 m6809_ICount[0] -= 4;
                 break;
-            /*TODO*///	case 0x97: EA=0;																   break; /*   ILLEGAL*/
-/*TODO*///	case 0x98: IMMBYTE(EA); 	EA=X+SIGNED(EA);	EAD=RM16(EAD);	m6809_ICount[0]-=4;   break;
-/*TODO*///	case 0x99: IMMWORD(ea); 	EA+=X;				EAD=RM16(EAD);	m6809_ICount[0]-=7;   break;
+            case 0x97:
+                ea = 0;
+                break;/*   ILLEGAL*/
+            case 0x98:
+                ea = IMMBYTE();
+                ea = (m6809.x + SIGNED(ea)) & 0xFFFF;
+                ea = RM16(ea);
+                m6809_ICount[0] -= 4;
+                break;
+            /*TODO*///	case 0x99: IMMWORD(ea); 	EA+=X;				EAD=RM16(EAD);	m6809_ICount[0]-=7;   break;
 /*TODO*///	case 0x9a: EA=0;																   break; /*   ILLEGAL*/
-/*TODO*///	case 0x9b: EA=X+D;								EAD=RM16(EAD);	m6809_ICount[0]-=7;   break;
-/*TODO*///	case 0x9c: IMMBYTE(EA); 	EA=PC+SIGNED(EA);	EAD=RM16(EAD);	m6809_ICount[0]-=4;   break;
+            case 0x9b:
+                ea = m6809.x + getDreg();
+                ea = RM16(ea);
+                m6809_ICount[0] -= 7;
+                break;
+            /*TODO*///	case 0x9c: IMMBYTE(EA); 	EA=PC+SIGNED(EA);	EAD=RM16(EAD);	m6809_ICount[0]-=4;   break;
 /*TODO*///	case 0x9d: IMMWORD(ea); 	EA+=PC; 			EAD=RM16(EAD);	m6809_ICount[0]-=8;   break;
 /*TODO*///	case 0x9e: EA=0;																   break; /*   ILLEGAL*/
 /*TODO*///	case 0x9f: IMMWORD(ea); 						EAD=RM16(EAD);	m6809_ICount[0]-=8;   break;
@@ -1549,8 +1560,11 @@ public class m6809 extends cpu_interface {
                 ea = 0;
                 break;/*   ILLEGAL*/
 
- /*TODO*///	case 0xab: EA=Y+D;												m6809_ICount[0]-=4;   break;
-/*TODO*///	case 0xac: IMMBYTE(EA); 	EA=PC+SIGNED(EA);					m6809_ICount[0]-=1;   break;
+            case 0xab:
+                ea = (m6809.y + getDreg()) & 0xFFFF;
+                m6809_ICount[0] -= 4;
+                break;
+            /*TODO*///	case 0xac: IMMBYTE(EA); 	EA=PC+SIGNED(EA);					m6809_ICount[0]-=1;   break;
 /*TODO*///	case 0xad: IMMWORD(ea); 	EA+=PC; 							m6809_ICount[0]-=5;   break;
 /*TODO*///	case 0xae: EA=0;																   break; /*   ILLEGAL*/
 /*TODO*///	case 0xaf: IMMWORD(ea); 										m6809_ICount[0]-=5;   break;
@@ -1620,8 +1634,14 @@ public class m6809 extends cpu_interface {
                 ea = (m6809.u + SIGNED(ea)) & 0xFFFF;
                 m6809_ICount[0] -= 1;
                 break;
-            /*TODO*///	case 0xc9: IMMWORD(ea); 	EA+=U;								m6809_ICount[0]-=4;   break;
-/*TODO*///	case 0xca: EA=0;																   break; /*ILLEGAL*/
+            case 0xc9:
+                ea = IMMWORD();
+                ea = (ea + m6809.u) & 0xFFFF;
+                m6809_ICount[0] -= 4;
+                break;
+            case 0xca:
+                ea = 0;
+                break;/*ILLEGAL*/
             case 0xcb:
                 ea = (m6809.u + getDreg()) & 0xFFFF;
                 m6809_ICount[0] -= 4;
@@ -1635,8 +1655,16 @@ public class m6809 extends cpu_interface {
 /*TODO*///	case 0xd1: EA=U;	U+=2;						EAD=RM16(EAD);	m6809_ICount[0]-=6;   break;
 /*TODO*///	case 0xd2: U--; 	EA=U;						EAD=RM16(EAD);	m6809_ICount[0]-=5;   break;
 /*TODO*///	case 0xd3: U-=2;	EA=U;						EAD=RM16(EAD);	m6809_ICount[0]-=6;   break;
-/*TODO*///	case 0xd4: EA=U;								EAD=RM16(EAD);	m6809_ICount[0]-=3;   break;
-/*TODO*///	case 0xd5: EA=U+SIGNED(B);						EAD=RM16(EAD);	m6809_ICount[0]-=4;   break;
+            case 0xd4:
+                ea = m6809.u & 0xFFFF;
+                ea = RM16(ea);
+                m6809_ICount[0] -= 3;
+                break;
+            case 0xd5:
+                ea = (m6809.u + SIGNED(m6809.b)) & 0xFFFF;
+                ea = RM16(ea);
+                m6809_ICount[0] -= 4;
+                break;
             case 0xd6:
                 ea = (m6809.u + SIGNED(m6809.a)) & 0xFFFF;
                 ea = RM16(ea);
