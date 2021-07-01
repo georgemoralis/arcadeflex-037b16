@@ -47,6 +47,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.mpatrol.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.yard.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.shaolins.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.pacland.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.brkthru.*;
 
 /**
  *
@@ -520,10 +521,10 @@ public class driver {
         /*TODO*///	driver_poleps2b,	/* bootleg */
         /*TODO*///	driver_poleps2c,	/* bootleg */
         /*TODO*///	/* no custom I/O in the following, HD63701 (or compatible) microcontroller instead */
-        	driver_pacland,	/* (c) 1984 */
-        	driver_pacland2,	/* (c) 1984 */
-        	driver_pacland3,	/* (c) 1984 */
-        	driver_paclandm,	/* (c) 1984 Midway */
+        driver_pacland, /* (c) 1984 */
+        driver_pacland2, /* (c) 1984 */
+        driver_pacland3, /* (c) 1984 */
+        driver_paclandm, /* (c) 1984 Midway */
         /*TODO*///	driver_drgnbstr,	/* (c) 1984 */
         /*TODO*///	driver_skykid,	/* (c) 1985 */
         /*TODO*///	driver_skykidb,	/* (c) 1985 */
@@ -2370,9 +2371,9 @@ public class driver {
 
         /*TODO*///	driver_firetrap,	/* (c) 1986 */
         /*TODO*///	driver_firetpbl,	/* bootleg */
-        /*TODO*///	driver_brkthru,	/* (c) 1986 Data East USA (US) */
-        /*TODO*///	driver_brkthruj,	/* (c) 1986 Data East Corporation (Japan) */
-        /*TODO*///	driver_darwin,	/* (c) 1986 Data East Corporation (Japan) */
+        driver_brkthru, /* (c) 1986 Data East USA (US) */
+        driver_brkthruj, /* (c) 1986 Data East Corporation (Japan) */
+        driver_darwin, /* (c) 1986 Data East Corporation (Japan) */
         /*TODO*///	driver_shootout,	/* (c) 1985 Data East USA (US) */
         /*TODO*///	driver_shootouj,	/* (c) 1985 Data East USA (Japan) */
         /*TODO*///	driver_shootoub,	/* bootleg */
