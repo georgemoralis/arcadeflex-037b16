@@ -21,7 +21,6 @@ import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static common.libc.cstring.*;
 import static mame037b7.palette.palette_init_used_colors;
-import static mame037b7.palette.palette_transparent_pen;
 
 public class speedbal {
 
