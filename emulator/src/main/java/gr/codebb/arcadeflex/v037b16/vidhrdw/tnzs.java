@@ -21,7 +21,6 @@ import static mame037b16.drawgfx.*;
 import static common.libc.expressions.*;
 import static mame037b16.mame.Machine;
 import static mame037b7.palette.palette_init_used_colors;
-import static mame037b7.palette.palette_used_colors;
 
 public class tnzs {
 

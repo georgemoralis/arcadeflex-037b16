@@ -23,7 +23,6 @@ import static mame037b16.drawgfx.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import static mame037b7.palette.palette_transparent_pen;
-import static mame037b7.palette.palette_used_colors;
 import static arcadeflex036.osdepend.*;
 
 public class wc90 {

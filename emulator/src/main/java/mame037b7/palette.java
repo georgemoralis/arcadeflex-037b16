@@ -15,24 +15,9 @@ import static mame037b16.mame.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static arcadeflex036.video.*;
-import static gr.codebb.arcadeflex.v037b16.mame.palette.colormode;
-import static gr.codebb.arcadeflex.v037b16.mame.palette.palette_change_color_8;
+import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 
 public class palette {
-
-    public static char[] game_palette;/* RGB palette as set by the driver. */
-    public static UBytePtr new_palette;/* changes to the palette are stored here before being moved to game_palette by palette_recalc() */
-    public static UBytePtr palette_dirty;
-    /* arrays which keep track of colors actually used, to help in the palette shrinking. */
-    public static UBytePtr palette_used_colors;
-    public static UBytePtr old_used_colors;
-    public static IntArray pen_visiblecount;
-    public static IntArray pen_cachedcount;
-    public static UBytePtr just_remapped;/* colors which have been remapped in this frame, returned by palette_recalc() */
-
-    public static final int NO_16BIT = 0;
-    public static final int STATIC_16BIT = 1;
-    public static final int PALETTIZED_16BIT = 2;
 
     static int total_shrinked_pens;
     public static int[] shrinked_pens;
@@ -77,11 +62,11 @@ public class palette {
                 colormode = PALETTIZED_16BIT;
             }
         } else {
-            colormode = NO_16BIT;
+            colormode = PALETTIZED_8BIT;
         }
 
         switch (colormode) {
-            case NO_16BIT:
+            case PALETTIZED_8BIT:
                 if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) != 0) {
                     total_shrinked_pens = DYNAMIC_MAX_PENS;
                 } else {
@@ -194,7 +179,7 @@ public class palette {
         }
 
         switch (colormode) {
-            case NO_16BIT: {
+            case PALETTIZED_8BIT: {
                 /* initialize shrinked palette to all black */
                 for (i = 0; i < total_shrinked_pens; i++) {
                     shrinked_palette[3 * i + 0] = 0;
@@ -434,7 +419,7 @@ public class palette {
         }
 
         switch (colormode) {
-            case NO_16BIT:
+            case PALETTIZED_8BIT:
                 palette_change_color_8(color, red & 0xFF, green & 0xFF, blue & 0xFF);
                 break;
             case STATIC_16BIT:

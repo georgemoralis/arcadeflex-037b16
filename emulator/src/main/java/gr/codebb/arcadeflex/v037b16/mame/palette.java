@@ -13,20 +13,15 @@ import static arcadeflex036.video.osd_modify_pen;
 import static common.libc.cstdio.*;
 import static common.libc.cstring.memset;
 import common.ptr.UBytePtr;
+import common.subArrays.IntArray;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapC.tilemap_dirty_palette;
 import static mame037b16.mame.Machine;
 import static mame037b7.palette.BLACK_PEN;
 import static mame037b7.palette.PALETTE_COLOR_NEEDS_REMAP;
 import static mame037b7.palette.RESERVED_PENS;
 import static mame037b7.palette.TRANSPARENT_PEN;
-import static mame037b7.palette.game_palette;
-import static mame037b7.palette.just_remapped;
-import static mame037b7.palette.new_palette;
-import static mame037b7.palette.old_used_colors;
 import static mame037b7.palette.palette_change_color;
-import static mame037b7.palette.palette_dirty;
 import static mame037b7.palette.palette_map;
-import static mame037b7.palette.palette_used_colors;
 import static mame037b7.palette.pen_usage_count;
 import static mame037b7.palette.shrinked_palette;
 import static mame037b7.palette.shrinked_pens;
@@ -37,18 +32,17 @@ public class palette {
 /*TODO*///#define VERBOSE 0
 /*TODO*///
 /*TODO*///
-/*TODO*///static UINT8 *game_palette;	/* RGB palette as set by the driver. */
-/*TODO*///static UINT8 *new_palette;	/* changes to the palette are stored here before */
-/*TODO*///							/* being moved to game_palette by palette_recalc() */
-/*TODO*///static UINT8 *palette_dirty;
-/*TODO*////* arrays which keep track of colors actually used, to help in the palette shrinking. */
-/*TODO*///UINT8 *palette_used_colors;
-/*TODO*///static UINT8 *old_used_colors;
-/*TODO*///static int *pen_visiblecount,*pen_cachedcount;
-/*TODO*///static UINT8 *just_remapped;	/* colors which have been remapped in this frame, */
-/*TODO*///								/* returned by palette_recalc() */
-/*TODO*///int has_remap = 0;
-/*TODO*///
+    public static char[] game_palette;/* RGB palette as set by the driver. */
+    public static UBytePtr new_palette;/* changes to the palette are stored here before being moved to game_palette by palette_recalc() */
+    public static UBytePtr palette_dirty;
+    /* arrays which keep track of colors actually used, to help in the palette shrinking. */
+    public static UBytePtr palette_used_colors;
+    public static UBytePtr old_used_colors;
+    public static IntArray pen_visiblecount;
+    public static IntArray pen_cachedcount;
+    public static UBytePtr just_remapped;/* colors which have been remapped in this frame, returned by palette_recalc() */
+
+    public static int has_remap = 0;
     public static int colormode;
     public static final int PALETTIZED_8BIT = 0;
     public static final int STATIC_16BIT = 1;

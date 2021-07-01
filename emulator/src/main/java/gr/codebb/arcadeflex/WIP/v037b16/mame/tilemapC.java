@@ -10,12 +10,10 @@ import static arcadeflex036.video.osd_free_bitmap;
 import static common.libc.cstring.memset;
 import common.ptr.UBytePtr;
 import common.subArrays.IntArray;
-import common.subArrays.UShortArray;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.ALL_TILEMAPS;
 import gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.GetMemoryOffsetPtr;
 import gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.GetTileInfoPtr;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_BITMASK;
-import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_BITMASK_TRANSPARENT;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_FLIPX;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_FLIPY;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_SPLIT;
@@ -33,6 +31,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.driverH.ORIENTATION_FLIP_X;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.ORIENTATION_FLIP_Y;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.ORIENTATION_SWAP_XY;
 import gr.codebb.arcadeflex.v037b16.mame.osdependH.osd_bitmap;
+import static gr.codebb.arcadeflex.v037b16.mame.palette.palette_used_colors;
 import static gr.codebb.arcadeflex.v037b16.mame.paletteH.PALETTE_COLOR_CACHED;
 import static gr.codebb.arcadeflex.v037b16.mame.paletteH.PALETTE_COLOR_VISIBLE;
 import static mame037b16.mame.Machine;
@@ -40,7 +39,6 @@ import static mame037b7.palette.palette_decrease_usage_count;
 import static mame037b7.palette.palette_decrease_usage_countx;
 import static mame037b7.palette.palette_increase_usage_count;
 import static mame037b7.palette.palette_increase_usage_countx;
-import static mame037b7.palette.palette_used_colors;
 
 public class tilemapC {
 
