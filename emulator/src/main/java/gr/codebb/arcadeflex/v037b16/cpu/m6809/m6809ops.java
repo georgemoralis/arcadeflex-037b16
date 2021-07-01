@@ -166,139 +166,220 @@ public class m6809ops {
 
     public static opcode lbra = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	IMMWORD(ea);
-/*TODO*///	PC += EA;
-/*TODO*///	CHANGE_PC;
-/*TODO*///
-/*TODO*///	if ( EA == 0xfffd )  /* EHC 980508 speed up busy loop */
-/*TODO*///		if ( m6809_ICount[0] > 0)
-/*TODO*///			m6809_ICount[0] = 0;
+            ea = IMMWORD();
+            m6809.pc = ((m6809.pc + ea) & 0xFFFF);
+            CHANGE_PC();
+
+            if (ea == 0xfffd) /* EHC 980508 speed up busy loop */ {
+                if (m6809_ICount[0] > 0) {
+                    m6809_ICount[0] = 0;
+                }
+            }
         }
     };
 
     public static opcode lbsr = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	IMMWORD(ea);
-/*TODO*///	PUSHWORD(pPC);
-/*TODO*///	PC += EA;
-/*TODO*///	CHANGE_PC;
+            ea = IMMWORD();
+            PUSHWORD(m6809.pc);
+            m6809.pc = ((m6809.pc + ea) & 0xFFFF);
+            CHANGE_PC();
         }
     };
 
     public static opcode daa = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 msn, lsn;
-/*TODO*///	UINT16 t, cf = 0;
-/*TODO*///	msn = A & 0xf0; lsn = A & 0x0f;
-/*TODO*///	if( lsn>0x09 || CC & CC_H) cf |= 0x06;
-/*TODO*///	if( msn>0x80 && lsn>0x09 ) cf |= 0x60;
-/*TODO*///	if( msn>0x90 || CC & CC_C) cf |= 0x60;
-/*TODO*///	t = cf + A;
-/*TODO*///	CLR_NZV; /* keep carry from previous operation */
-/*TODO*///	SET_NZ8((UINT8)t); SET_C8(t);
-/*TODO*///	A = t;
+            int/*UINT8*/ msn, lsn;
+            int/*UINT16*/ t, cf = 0;
+            msn = m6809.a & 0xf0;
+            lsn = m6809.a & 0x0f;
+            if (lsn > 0x09 || (m6809.cc & CC_H) != 0) {
+                cf |= 0x06;
+            }
+            if (msn > 0x80 && lsn > 0x09) {
+                cf |= 0x60;
+            }
+            if (msn > 0x90 || (m6809.cc & CC_C) != 0) {
+                cf |= 0x60;
+            }
+            t = (cf + m6809.a) & 0xFFFF;
+            CLR_NZV();/* keep carry from previous operation */
+            SET_NZ8(/*(UINT8)*/t & 0xFF);
+            SET_C8(t);
+            m6809.a = (t & 0xFF);
         }
     };
 
     public static opcode orcc = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	CC |= t;
-/*TODO*///	CHECK_IRQ_LINES;	/* HJB 990116 */
+            int t = IMMBYTE();
+            m6809.cc = (m6809.cc | t) & 0xFF;
+            CHECK_IRQ_LINES();
         }
     };
 
     public static opcode andcc = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	CC &= t;
-/*TODO*///	CHECK_IRQ_LINES;	/* HJB 990116 */
+            int t = IMMBYTE();
+            m6809.cc = (m6809.cc & t) & 0xFF;
+            CHECK_IRQ_LINES();
         }
     };
 
     public static opcode sex = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT16 t;
-/*TODO*///	t = SIGNED(B);
-/*TODO*///	D = t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(t);
+            int t = SIGNED(m6809.b) & 0xFFFF;
+            setDreg(t);
+            CLR_NZV();
+            SET_NZ16(t);
         }
     };
 
     public static opcode exg = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT16 t1,t2;
-/*TODO*///	UINT8 tb;
-/*TODO*///
-/*TODO*///	IMMBYTE(tb);
-/*TODO*///	if( (tb^(tb>>4)) & 0x08 )	/* HJB 990225: mixed 8/16 bit case? */
-/*TODO*///	{
-/*TODO*///		/* transfer $ff to both registers */
-/*TODO*///		t1 = t2 = 0xff;
-/*TODO*///	}};
-/*TODO*///	else
-/*TODO*///	{
-/*TODO*///		switch(tb>>4) {
-/*TODO*///			case  0: t1 = D;  break;
-/*TODO*///			case  1: t1 = X;  break;
-/*TODO*///			case  2: t1 = Y;  break;
-/*TODO*///			case  3: t1 = U;  break;
-/*TODO*///			case  4: t1 = S;  break;
-/*TODO*///			case  5: t1 = PC; break;
-/*TODO*///			case  8: t1 = A;  break;
-/*TODO*///			case  9: t1 = B;  break;
-/*TODO*///			case 10: t1 = CC; break;
-/*TODO*///			case 11: t1 = DP; break;
-/*TODO*///			default: t1 = 0xff;
-/*TODO*///		}};
-/*TODO*///		switch(tb&15) {
-/*TODO*///			case  0: t2 = D;  break;
-/*TODO*///			case  1: t2 = X;  break;
-/*TODO*///			case  2: t2 = Y;  break;
-/*TODO*///			case  3: t2 = U;  break;
-/*TODO*///			case  4: t2 = S;  break;
-/*TODO*///			case  5: t2 = PC; break;
-/*TODO*///			case  8: t2 = A;  break;
-/*TODO*///			case  9: t2 = B;  break;
-/*TODO*///			case 10: t2 = CC; break;
-/*TODO*///			case 11: t2 = DP; break;
-/*TODO*///			default: t2 = 0xff;
-/*TODO*///        }};
-/*TODO*///	}};
-/*TODO*///	switch(tb>>4) {
-/*TODO*///		case  0: D = t2;  break;
-/*TODO*///		case  1: X = t2;  break;
-/*TODO*///		case  2: Y = t2;  break;
-/*TODO*///		case  3: U = t2;  break;
-/*TODO*///		case  4: S = t2;  break;
-/*TODO*///		case  5: PC = t2; CHANGE_PC; break;
-/*TODO*///		case  8: A = t2;  break;
-/*TODO*///		case  9: B = t2;  break;
-/*TODO*///		case 10: CC = t2; break;
-/*TODO*///		case 11: DP = t2; break;
-/*TODO*///	}};
-/*TODO*///	switch(tb&15) {
-/*TODO*///		case  0: D = t1;  break;
-/*TODO*///		case  1: X = t1;  break;
-/*TODO*///		case  2: Y = t1;  break;
-/*TODO*///		case  3: U = t1;  break;
-/*TODO*///		case  4: S = t1;  break;
-/*TODO*///		case  5: PC = t1; CHANGE_PC; break;
-/*TODO*///		case  8: A = t1;  break;
-/*TODO*///		case  9: B = t1;  break;
-/*TODO*///		case 10: CC = t1; break;
-/*TODO*///		case 11: DP = t1; break;
-/*TODO*///	}};
+            int /*UINT16*/ t1, t2;
+            int /*UINT8*/ tb;
+
+            tb = IMMBYTE();
+            if (((tb ^ (tb >>> 4)) & 0x08) != 0) /* HJB 990225: mixed 8/16 bit case? */ {
+                /* transfer $ff to both registers */
+                t1 = t2 = 0xff;
+            } else {
+                switch (tb >>> 4) {
+                    case 0:
+                        t1 = getDreg();
+                        break;
+                    case 1:
+                        t1 = m6809.x;
+                        break;
+                    case 2:
+                        t1 = m6809.y;
+                        break;
+                    case 3:
+                        t1 = m6809.u;
+                        break;
+                    case 4:
+                        t1 = m6809.s;
+                        break;
+                    case 5:
+                        t1 = m6809.pc;
+                        break;
+                    case 8:
+                        t1 = m6809.a;
+                        break;
+                    case 9:
+                        t1 = m6809.b;
+                        break;
+                    case 10:
+                        t1 = m6809.cc;
+                        break;
+                    case 11:
+                        t1 = m6809.dp;
+                        break;
+                    default:
+                        t1 = 0xff;
+                }
+                switch (tb & 15) {
+                    case 0:
+                        t2 = getDreg();
+                        break;
+                    case 1:
+                        t2 = m6809.x;
+                        break;
+                    case 2:
+                        t2 = m6809.y;
+                        break;
+                    case 3:
+                        t2 = m6809.u;
+                        break;
+                    case 4:
+                        t2 = m6809.s;
+                        break;
+                    case 5:
+                        t2 = m6809.pc;
+                        break;
+                    case 8:
+                        t2 = m6809.a;
+                        break;
+                    case 9:
+                        t2 = m6809.b;
+                        break;
+                    case 10:
+                        t2 = m6809.cc;
+                        break;
+                    case 11:
+                        t2 = m6809.dp;
+                        break;
+                    default:
+                        t2 = 0xff;
+                }
+            }
+            switch (tb >>> 4) {
+                case 0:
+                    setDreg(t2);
+                    break;
+                case 1:
+                    m6809.x = (t2) & 0xFFFF;
+                    break;
+                case 2:
+                    m6809.y = (t2) & 0xFFFF;
+                    break;
+                case 3:
+                    m6809.u = (t2) & 0xFFFF;
+                    break;
+                case 4:
+                    m6809.s = (t2) & 0xFFFF;
+                    break;
+                case 5:
+                    m6809.pc = (t2) & 0xFFFF;
+                    CHANGE_PC();
+                    break;
+                case 8:
+                    m6809.a = (t2) & 0xFF;
+                    break;
+                case 9:
+                    m6809.b = (t2) & 0xFF;
+                    break;
+                case 10:
+                    m6809.cc = (t2) & 0xFF;
+                    break;
+                case 11:
+                    m6809.dp = (t2) & 0xFF;
+                    break;
+            }
+            switch (tb & 15) {
+                case 0:
+                    setDreg(t1);
+                    break;
+                case 1:
+                    m6809.x = (t1) & 0xFFFF;
+                    break;
+                case 2:
+                    m6809.y = (t1) & 0xFFFF;
+                    break;
+                case 3:
+                    m6809.u = (t1) & 0xFFFF;
+                    break;
+                case 4:
+                    m6809.s = (t1) & 0xFFFF;
+                    break;
+                case 5:
+                    m6809.pc = (t1) & 0xFFFF;
+                    CHANGE_PC();
+                    break;
+                case 8:
+                    m6809.a = (t1 & 0xFF);
+                    break;
+                case 9:
+                    m6809.b = (t1 & 0xFF);
+                    break;
+                case 10:
+                    m6809.cc = (t1 & 0xFF);
+                    break;
+                case 11:
+                    m6809.dp = (t1 & 0xFF);
+                    break;
+            }
         }
     };
 
@@ -386,14 +467,16 @@ public class m6809ops {
 
     public static opcode bra = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	PC += SIGNED(t);
-/*TODO*///    CHANGE_PC;
-/*TODO*///	/* JB 970823 - speed up busy loops */
-/*TODO*///	if( t == 0xfe )
-/*TODO*///		if( m6809_ICount[0] > 0 ) m6809_ICount[0] = 0;
+            int t;
+            t = IMMBYTE();
+            m6809.pc = (m6809.pc + SIGNED(t)) & 0xFFFF;
+            CHANGE_PC();
+            /* JB 970823 - speed up busy loops */
+            if (t == 0xfe) {
+                if (m6809_ICount[0] > 0) {
+                    m6809_ICount[0] = 0;
+                }
+            }
         }
     };
 
@@ -611,145 +694,233 @@ public class m6809ops {
         }
     };
 
-    /* $34 PSHS inherent ----- */
     public static opcode pshs = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	if( t&0x80 ) { PUSHWORD(pPC); m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x40 ) { PUSHWORD(pU);  m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x20 ) { PUSHWORD(pY);  m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x10 ) { PUSHWORD(pX);  m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x08 ) { PUSHBYTE(DP);  m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x04 ) { PUSHBYTE(B);   m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x02 ) { PUSHBYTE(A);   m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x01 ) { PUSHBYTE(CC);  m6809_ICount[0] -= 1; }};
+            int t = IMMBYTE();
+            if ((t & 0x80) != 0) {
+                PUSHWORD(m6809.pc);
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x40) != 0) {
+                PUSHWORD(m6809.u);
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x20) != 0) {
+                PUSHWORD(m6809.y);
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x10) != 0) {
+                PUSHWORD(m6809.x);
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x08) != 0) {
+                PUSHBYTE(m6809.dp);
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x04) != 0) {
+                PUSHBYTE(m6809.b);
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x02) != 0) {
+                PUSHBYTE(m6809.a);
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x01) != 0) {
+                PUSHBYTE(m6809.cc);
+                m6809_ICount[0] -= 1;
+            }
         }
     };
 
-    /* 35 PULS inherent ----- */
     public static opcode puls = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	if( t&0x01 ) { PULLBYTE(CC); m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x02 ) { PULLBYTE(A);  m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x04 ) { PULLBYTE(B);  m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x08 ) { PULLBYTE(DP); m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x10 ) { PULLWORD(XD); m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x20 ) { PULLWORD(YD); m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x40 ) { PULLWORD(UD); m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x80 ) { PULLWORD(PCD); CHANGE_PC; m6809_ICount[0] -= 2; }};
-/*TODO*///
-/*TODO*///	/* HJB 990225: moved check after all PULLs */
-/*TODO*///	if( t&0x01 ) { CHECK_IRQ_LINES; }};
+            int t = IMMBYTE();
+            if ((t & 0x01) != 0) {
+                m6809.cc = (PULLBYTE());
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x02) != 0) {
+                m6809.a = (PULLBYTE());
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x04) != 0) {
+                m6809.b = (PULLBYTE());
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x08) != 0) {
+                m6809.dp = (PULLBYTE());
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x10) != 0) {
+                m6809.x = (PULLWORD());
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x20) != 0) {
+                m6809.y = (PULLWORD());
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x40) != 0) {
+                m6809.u = (PULLWORD());
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x80) != 0) {
+                m6809.pc = (PULLWORD());
+                CHANGE_PC();
+                m6809_ICount[0] -= 2;
+            }
+
+            /* HJB 990225: moved check after all PULLs */
+            if ((t & 0x01) != 0) {
+                CHECK_IRQ_LINES();
+            }
         }
     };
 
     /* $36 PSHU inherent ----- */
     public static opcode pshu = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	if( t&0x80 ) { PSHUWORD(pPC); m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x40 ) { PSHUWORD(pS);  m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x20 ) { PSHUWORD(pY);  m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x10 ) { PSHUWORD(pX);  m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x08 ) { PSHUBYTE(DP);  m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x04 ) { PSHUBYTE(B);   m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x02 ) { PSHUBYTE(A);   m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x01 ) { PSHUBYTE(CC);  m6809_ICount[0] -= 1; }};
+            int t = IMMBYTE();
+            if ((t & 0x80) != 0) {
+                PSHUWORD(m6809.pc);
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x40) != 0) {
+                PSHUWORD(m6809.s);
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x20) != 0) {
+                PSHUWORD(m6809.y);
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x10) != 0) {
+                PSHUWORD(m6809.x);
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x08) != 0) {
+                PSHUBYTE(m6809.dp);
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x04) != 0) {
+                PSHUBYTE(m6809.b);
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x02) != 0) {
+                PSHUBYTE(m6809.a);
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x01) != 0) {
+                PSHUBYTE(m6809.cc);
+                m6809_ICount[0] -= 1;
+            }
         }
     };
 
-    /* 37 PULU inherent ----- */
     public static opcode pulu = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	if( t&0x01 ) { PULUBYTE(CC); m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x02 ) { PULUBYTE(A);  m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x04 ) { PULUBYTE(B);  m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x08 ) { PULUBYTE(DP); m6809_ICount[0] -= 1; }};
-/*TODO*///	if( t&0x10 ) { PULUWORD(XD); m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x20 ) { PULUWORD(YD); m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x40 ) { PULUWORD(SD); m6809_ICount[0] -= 2; }};
-/*TODO*///	if( t&0x80 ) { PULUWORD(PCD); CHANGE_PC; m6809_ICount[0] -= 2; }};
-/*TODO*///
-/*TODO*///	/* HJB 990225: moved check after all PULLs */
-/*TODO*///	if( t&0x01 ) { CHECK_IRQ_LINES; }};
+            int t = IMMBYTE();
+            if ((t & 0x01) != 0) {
+                m6809.cc = (PULUBYTE());
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x02) != 0) {
+                m6809.a = (PULUBYTE());
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x04) != 0) {
+                m6809.b = (PULUBYTE());
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x08) != 0) {
+                m6809.dp = (PULUBYTE());
+                m6809_ICount[0] -= 1;
+            }
+            if ((t & 0x10) != 0) {
+                m6809.x = (PULUWORD());
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x20) != 0) {
+                m6809.y = (PULUWORD());
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x40) != 0) {
+                m6809.s = (PULUWORD());
+                m6809_ICount[0] -= 2;
+            }
+            if ((t & 0x80) != 0) {
+                m6809.pc = (PULUWORD());
+                CHANGE_PC();
+                m6809_ICount[0] -= 2;
+            }
+
+            /* HJB 990225: moved check after all PULLs */
+            if ((t & 0x01) != 0) {
+                CHECK_IRQ_LINES();
+            }
         }
     };
 
     public static opcode rts = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	PULLWORD(PCD);
-/*TODO*///	CHANGE_PC;
+            m6809.pc = PULLWORD() & 0xFFFF;
+            CHANGE_PC();
         }
     };
-    /*TODO*///
-/*TODO*////* $3A ABX inherent ----- */
+
     public static opcode abx = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	X += B;
+            m6809.x = (m6809.x + m6809.b) & 0xFFFF;
         }
     };
 
-    /* $3B RTI inherent ##### */
     public static opcode rti = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t;
-/*TODO*///	PULLBYTE(CC);
-/*TODO*///	t = CC & CC_E;		/* HJB 990225: entire state saved? */
-/*TODO*///	if(t)
-/*TODO*///	{
-/*TODO*///        m6809_ICount[0] -= 9;
-/*TODO*///		PULLBYTE(A);
-/*TODO*///		PULLBYTE(B);
-/*TODO*///		PULLBYTE(DP);
-/*TODO*///		PULLWORD(XD);
-/*TODO*///		PULLWORD(YD);
-/*TODO*///		PULLWORD(UD);
-/*TODO*///	}};
-/*TODO*///	PULLWORD(PCD);
-/*TODO*///	CHANGE_PC;
-/*TODO*///	CHECK_IRQ_LINES;	/* HJB 990116 */
+            int t;
+            m6809.cc = (PULLBYTE());
+            t = m6809.cc & CC_E;
+            /* HJB 990225: entire state saved? */
+            if (t != 0) {
+                m6809_ICount[0] -= 9;
+                m6809.a = (PULLBYTE());
+                m6809.b = (PULLBYTE());
+                m6809.dp = (PULLBYTE());
+                m6809.x = (PULLWORD());
+                m6809.y = (PULLWORD());
+                m6809.u = (PULLWORD());
+            }
+            m6809.pc = (PULLWORD());
+            CHANGE_PC();
+            CHECK_IRQ_LINES();
         }
     };
 
-    /* $3C CWAI inherent ----1 */
     public static opcode cwai = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	CC &= t;
-/*TODO*///	/*
-/*TODO*///     * CWAI stacks the entire machine state on the hardware stack,
-/*TODO*///     * then waits for an interrupt; when the interrupt is taken
-/*TODO*///     * later, the state is *not* saved again after CWAI.
-/*TODO*///     */
-/*TODO*///	CC |= CC_E; 		/* HJB 990225: save entire state */
-/*TODO*///	PUSHWORD(pPC);
-/*TODO*///	PUSHWORD(pU);
-/*TODO*///	PUSHWORD(pY);
-/*TODO*///	PUSHWORD(pX);
-/*TODO*///	PUSHBYTE(DP);
-/*TODO*///	PUSHBYTE(B);
-/*TODO*///	PUSHBYTE(A);
-/*TODO*///	PUSHBYTE(CC);
-/*TODO*///	m6809.int_state |= M6809_CWAI;	 /* HJB 990228 */
-/*TODO*///    CHECK_IRQ_LINES;    /* HJB 990116 */
-/*TODO*///	if( m6809.int_state & M6809_CWAI )
-/*TODO*///		if( m6809_ICount[0] > 0 )
-/*TODO*///			m6809_ICount[0] = 0;
+            int t = IMMBYTE();
+            m6809.cc = (m6809.cc & t) & 0xFF;
+            /*
+         * CWAI stacks the entire machine_old state on the hardware stack,
+         * then waits for an interrupt; when the interrupt is taken
+         * later, the state is *not* saved again after CWAI.
+             */
+            m6809.cc |= CC_E;
+            /* HJB 990225: save entire state */
+            PUSHWORD(m6809.pc);
+            PUSHWORD(m6809.u);
+            PUSHWORD(m6809.y);
+            PUSHWORD(m6809.x);
+            PUSHBYTE(m6809.dp);
+            PUSHBYTE(m6809.b);
+            PUSHBYTE(m6809.a);
+            PUSHBYTE(m6809.cc);
+            m6809.int_state |= M6809_CWAI;
+            /* HJB 990228 */
+            CHECK_IRQ_LINES();
+            /* HJB 990116 */
+            if ((m6809.int_state & M6809_CWAI) != 0) {
+                if (m6809_ICount[0] > 0) {
+                    m6809_ICount[0] = 0;
+                }
+            }
         }
     };
 
@@ -768,55 +939,50 @@ public class m6809ops {
 
     public static opcode swi = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	CC |= CC_E; 			/* HJB 980225: save entire state */
-/*TODO*///	PUSHWORD(pPC);
-/*TODO*///	PUSHWORD(pU);
-/*TODO*///	PUSHWORD(pY);
-/*TODO*///	PUSHWORD(pX);
-/*TODO*///	PUSHBYTE(DP);
-/*TODO*///	PUSHBYTE(B);
-/*TODO*///	PUSHBYTE(A);
-/*TODO*///	PUSHBYTE(CC);
-/*TODO*///	CC |= CC_IF | CC_II;	/* inhibit FIRQ and IRQ */
-/*TODO*///	PCD=RM16(0xfffa);
-/*TODO*///	CHANGE_PC;
+            m6809.cc |= CC_E;
+            PUSHWORD(m6809.pc);
+            PUSHWORD(m6809.u);
+            PUSHWORD(m6809.y);
+            PUSHWORD(m6809.x);
+            PUSHBYTE(m6809.dp);
+            PUSHBYTE(m6809.b);
+            PUSHBYTE(m6809.a);
+            PUSHBYTE(m6809.cc);
+            m6809.cc |= CC_IF | CC_II;/* inhibit FIRQ and IRQ */
+            m6809.pc = RM16(0xfffa);
+            CHANGE_PC();
         }
     };
 
-    /* $103F SWI2 absolute indirect ----- */
     public static opcode swi2 = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	CC |= CC_E; 			/* HJB 980225: save entire state */
-/*TODO*///	PUSHWORD(pPC);
-/*TODO*///	PUSHWORD(pU);
-/*TODO*///	PUSHWORD(pY);
-/*TODO*///	PUSHWORD(pX);
-/*TODO*///	PUSHBYTE(DP);
-/*TODO*///	PUSHBYTE(B);
-/*TODO*///	PUSHBYTE(A);
-/*TODO*///    PUSHBYTE(CC);
-/*TODO*///	PCD = RM16(0xfff4);
-/*TODO*///	CHANGE_PC;
+            m6809.cc |= CC_E;
+            PUSHWORD(m6809.pc);
+            PUSHWORD(m6809.u);
+            PUSHWORD(m6809.y);
+            PUSHWORD(m6809.x);
+            PUSHBYTE(m6809.dp);
+            PUSHBYTE(m6809.b);
+            PUSHBYTE(m6809.a);
+            PUSHBYTE(m6809.cc);
+            m6809.pc = RM16(0xfff4);
+            CHANGE_PC();
         }
     };
-    /*TODO*///
-/*TODO*////* $113F SWI3 absolute indirect ----- */
+
     public static opcode swi3 = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	CC |= CC_E; 			/* HJB 980225: save entire state */
-/*TODO*///	PUSHWORD(pPC);
-/*TODO*///	PUSHWORD(pU);
-/*TODO*///	PUSHWORD(pY);
-/*TODO*///	PUSHWORD(pX);
-/*TODO*///	PUSHBYTE(DP);
-/*TODO*///	PUSHBYTE(B);
-/*TODO*///	PUSHBYTE(A);
-/*TODO*///    PUSHBYTE(CC);
-/*TODO*///	PCD = RM16(0xfff2);
-/*TODO*///	CHANGE_PC;
+            m6809.cc |= CC_E;
+            PUSHWORD(m6809.pc);
+            PUSHWORD(m6809.u);
+            PUSHWORD(m6809.y);
+            PUSHWORD(m6809.x);
+            PUSHBYTE(m6809.dp);
+            PUSHBYTE(m6809.b);
+            PUSHBYTE(m6809.a);
+            PUSHBYTE(m6809.cc);
+            m6809.pc = RM16(0xfff2);
+            CHANGE_PC();
         }
     };
     public static opcode nega = new opcode() {
@@ -1140,7 +1306,6 @@ public class m6809ops {
         }
     };
 
-    /* $6E JMP indexed ----- */
     public static opcode jmp_ix = new opcode() {
         public void handler() {
             fetch_effective_address();
@@ -1332,27 +1497,23 @@ public class m6809ops {
 
     public static opcode cmpd_im = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT32 r,d;
-/*TODO*///	PAIR b;
-/*TODO*///	IMMWORD(b);
-/*TODO*///	d = D;
-/*TODO*///	r = d - b.d;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS16(d,b.d,r);
+            int r, d;
+            int b = IMMWORD();
+            d = getDreg();
+            r = d - b;
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
     public static opcode cmpu_im = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT32 r, d;
-/*TODO*///	PAIR b;
-/*TODO*///	IMMWORD(b);
-/*TODO*///	d = U;
-/*TODO*///	r = d - b.d;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS16(d,b.d,r);
+            int r, d;
+            int b = IMMWORD();
+            d = m6809.u;
+            r = (d - b);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -1440,9 +1601,8 @@ public class m6809ops {
             int b = IMMWORD();
             d = m6809.x;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -1452,32 +1612,28 @@ public class m6809ops {
             int b = IMMWORD();
             d = m6809.y;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
     public static opcode cmps_im = new opcode() {
         public void handler() {
-            int/*UINT32*/ r, d;
+            int r, d;
             int b = IMMWORD();
             d = m6809.s;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
     public static opcode bsr = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	PUSHWORD(pPC);
-/*TODO*///	PC += SIGNED(t);
-/*TODO*///	CHANGE_PC;
+            int t = IMMBYTE();
+            PUSHWORD(m6809.pc);
+            m6809.pc = (m6809.pc + SIGNED(t)) & 0xFFFF;
+            CHANGE_PC();
         }
     };
 
@@ -1562,31 +1718,26 @@ public class m6809ops {
         }
     };
 
-    /* $1093 CMPD direct -**** */
     public static opcode cmpd_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT32 r,d;
-/*TODO*///	PAIR b;
-/*TODO*///	DIRWORD(b);
-/*TODO*///	d = D;
-/*TODO*///	r = d - b.d;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS16(d,b.d,r);
+            int r, d;
+            int b;
+            b = DIRWORD();
+            d = getDreg();
+            r = d - b;
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
-    /* $1193 CMPU direct -**** */
     public static opcode cmpu_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT32 r,d;
-/*TODO*///	PAIR b;
-/*TODO*///	DIRWORD(b);
-/*TODO*///	d = U;
-/*TODO*///	r = d - b.d;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS16(U,b.d,r);
+            int r, d;
+            int b = DIRWORD();
+            d = m6809.u;
+            r = d - b;
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -1670,25 +1821,23 @@ public class m6809ops {
 
     public static opcode cmpx_di = new opcode() {
         public void handler() {
-            int/*UINT32*/ r, d;
+            int r, d;
             int b = DIRWORD();
             d = m6809.x;
-            r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            r = d - b;
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
     public static opcode cmpy_di = new opcode() {
         public void handler() {
-            int/*UINT32*/ r, d;
+            int r, d;
             int b = DIRWORD();
             d = m6809.y;
-            r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            r = d - b;
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -1698,9 +1847,8 @@ public class m6809ops {
             int b = DIRWORD();
             d = m6809.s;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -1728,25 +1876,22 @@ public class m6809ops {
             SET_NZ16(m6809.y);
         }
     };
-    /* $9F STX (STY) direct -**0- */
+
     public static opcode stx_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(X);
-/*TODO*///	DIRECT;
-/*TODO*///	WM16(EAD,&pX);
+            CLR_NZV();
+            SET_NZ16(m6809.x);
+            DIRECT();
+            WM16(ea, m6809.x);
         }
     };
 
-    /* $109F STY direct -**0- */
     public static opcode sty_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(Y);
-/*TODO*///	DIRECT;
-/*TODO*///	WM16(EAD,&pY);
+            CLR_NZV();
+            SET_NZ16(m6809.y);
+            DIRECT();
+            WM16(ea, m6809.y);
         }
     };
 
@@ -1799,32 +1944,28 @@ public class m6809ops {
         }
     };
 
-    /* $10a3 CMPD indexed -**** */
     public static opcode cmpd_ix = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT32 r,d;
-/*TODO*///	PAIR b;
-/*TODO*///	fetch_effective_address();
-/*TODO*///    b.d=RM16(EAD);
-/*TODO*///	d = D;
-/*TODO*///	r = d - b.d;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS16(d,b.d,r);
+            int r, d;
+            int b;
+            fetch_effective_address();
+            b = RM16(ea);
+            d = getDreg();
+            r = (d - b);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
-    /* $11a3 CMPU indexed -**** */
     public static opcode cmpu_ix = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT32 r;
-/*TODO*///	PAIR b;
-/*TODO*///	fetch_effective_address();
-/*TODO*///    b.d=RM16(EAD);
-/*TODO*///	r = U - b.d;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS16(U,b.d,r);
+            int r;
+            int b;
+            fetch_effective_address();
+            b = RM16(ea);
+            r = m6809.u - b;
+            CLR_NZVC();
+            SET_FLAGS16(m6809.u, b, r);
         }
     };
 
@@ -1920,9 +2061,8 @@ public class m6809ops {
             int b = RM16(ea);
             d = m6809.x;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -1933,9 +2073,8 @@ public class m6809ops {
             int b = RM16(ea);
             d = m6809.y;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -1946,9 +2085,8 @@ public class m6809ops {
             int b = RM16(ea);
             d = m6809.s;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -2041,31 +2179,26 @@ public class m6809ops {
             setDreg(r);
         }
     };
-    /* $10b3 CMPD extended -**** */
+
     public static opcode cmpd_ex = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT32 r,d;
-/*TODO*///	PAIR b;
-/*TODO*///	EXTWORD(b);
-/*TODO*///	d = D;
-/*TODO*///	r = d - b.d;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS16(d,b.d,r);
+            int r, d;
+            int b = EXTWORD();
+            d = getDreg();
+            r = d - b;
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
-    /* $11b3 CMPU extended -**** */
     public static opcode cmpu_ex = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT32 r,d;
-/*TODO*///	PAIR b;
-/*TODO*///	EXTWORD(b);
-/*TODO*///	d = U;
-/*TODO*///	r = d - b.d;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS16(d,b.d,r);
+            int/*UINT32*/ r, d;
+            int b = EXTWORD();
+            d = m6809.u;
+            r = (d - b);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -2153,9 +2286,8 @@ public class m6809ops {
             int b = EXTWORD();
             d = m6809.x;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -2165,9 +2297,8 @@ public class m6809ops {
             int b = EXTWORD();
             d = m6809.y;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);;
         }
     };
 
@@ -2177,9 +2308,8 @@ public class m6809ops {
             int b = EXTWORD();
             d = m6809.s;
             r = (d - b);
-            CLR_NZV();
-            SET_NZ16(r);
-            SET_V16(d, b, r);
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -2371,13 +2501,11 @@ public class m6809ops {
         }
     };
 
-    /* $cE LDU (LDS) immediate -**0- */
     public static opcode ldu_im = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	IMMWORD(pU);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(U);
+            m6809.u = IMMWORD() & 0xFFFF;
+            CLR_NZV();
+            SET_NZ16(m6809.u);
         }
     };
 
@@ -2391,26 +2519,22 @@ public class m6809ops {
     };
 
     /* is this a legal instruction? */
- /* $cF STU (STS) immediate -**0- */
     public static opcode stu_im = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(U);
-/*TODO*///    IMM16;
-/*TODO*///	WM16(EAD,&pU);
+            CLR_NZV();
+            SET_NZ16(m6809.u);
+            IMM16();
+            WM16(ea, m6809.u);
         }
     };
 
     /* is this a legal instruction? */
- /* $10cF STS immediate -**0- */
     public static opcode sts_im = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(S);
-/*TODO*///    IMM16;
-/*TODO*///	WM16(EAD,&pS);
+            CLR_NZV();
+            SET_NZ16(m6809.s);
+            IMM16();
+            WM16(ea, m6809.s);
         }
     };
 
@@ -2556,46 +2680,39 @@ public class m6809ops {
             WM16(ea, temp);
         }
     };
-    /* $dE LDU (LDS) direct -**0- */
+
     public static opcode ldu_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	DIRWORD(pU);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(U);
+            m6809.u = DIRWORD();
+            CLR_NZV();
+            SET_NZ16(m6809.u);
         }
     };
 
-    /* $10dE LDS direct -**0- */
     public static opcode lds_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	DIRWORD(pS);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(S);
-/*TODO*///	m6809.int_state |= M6809_LDS;
+            m6809.s = DIRWORD();
+            CLR_NZV();
+            SET_NZ16(m6809.s);
+            m6809.int_state |= M6809_LDS;
         }
     };
 
-    /* $dF STU (STS) direct -**0- */
     public static opcode stu_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(U);
-/*TODO*///	DIRECT;
-/*TODO*///	WM16(EAD,&pU);
+            CLR_NZV();
+            SET_NZ16(m6809.u);
+            DIRECT();
+            WM16(ea, m6809.u);
         }
     };
 
-    /* $10dF STS direct -**0- */
     public static opcode sts_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(S);
-/*TODO*///	DIRECT;
-/*TODO*///	WM16(EAD,&pS);
+            CLR_NZV();
+            SET_NZ16(m6809.s);
+            DIRECT();
+            WM16(ea, m6809.s);
         }
     };
     public static opcode subb_ix = new opcode() {
@@ -2752,48 +2869,41 @@ public class m6809ops {
             WM16(ea, temp);
         }
     };
-    /* $eE LDU (LDS) indexed -**0- */
+
     public static opcode ldu_ix = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	fetch_effective_address();
-/*TODO*///    U=RM16(EAD);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(U);
+            fetch_effective_address();
+            m6809.u = RM16(ea);
+            CLR_NZV();
+            SET_NZ16(m6809.u);
         }
     };
 
-    /* $10eE LDS indexed -**0- */
     public static opcode lds_ix = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	fetch_effective_address();
-/*TODO*///    S=RM16(EAD);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(S);
-/*TODO*///	m6809.int_state |= M6809_LDS;
+            fetch_effective_address();
+            m6809.s = RM16(ea);
+            CLR_NZV();
+            SET_NZ16(m6809.s);
+            m6809.int_state |= M6809_LDS;
         }
     };
 
-    /* $eF STU (STS) indexed -**0- */
     public static opcode stu_ix = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	fetch_effective_address();
-/*TODO*///    CLR_NZV;
-/*TODO*///	SET_NZ16(U);
-/*TODO*///	WM16(EAD,&pU);
+            fetch_effective_address();
+            CLR_NZV();
+            SET_NZ16(m6809.u);
+            WM16(ea, m6809.u);
         }
     };
 
-    /* $10eF STS indexed -**0- */
     public static opcode sts_ix = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	fetch_effective_address();
-/*TODO*///    CLR_NZV;
-/*TODO*///	SET_NZ16(S);
-/*TODO*///	WM16(EAD,&pS);
+            fetch_effective_address();
+            CLR_NZV();
+            SET_NZ16(m6809.s);
+            WM16(ea, m6809.s);
         }
     };
     public static opcode subb_ex = new opcode() {
@@ -2939,46 +3049,38 @@ public class m6809ops {
         }
     };
 
-    /* $fE LDU (LDS) extended -**0- */
     public static opcode ldu_ex = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	EXTWORD(pU);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(U);
+            m6809.u = EXTWORD();
+            CLR_NZV();
+            SET_NZ16(m6809.u);
         }
     };
 
-    /* $10fE LDS extended -**0- */
     public static opcode lds_ex = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	EXTWORD(pS);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(S);
-/*TODO*///	m6809.int_state |= M6809_LDS;
+            m6809.s = EXTWORD();
+            CLR_NZV();
+            SET_NZ16(m6809.s);
+            m6809.int_state |= M6809_LDS;
         }
     };
 
-    /* $fF STU (STS) extended -**0- */
     public static opcode stu_ex = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(U);
-/*TODO*///	EXTENDED;
-/*TODO*///	WM16(EAD,&pU);
+            CLR_NZV();
+            SET_NZ16(m6809.u);
+            EXTENDED();
+            WM16(ea, m6809.u);
         }
     };
 
-    /* $10fF STS extended -**0- */
     public static opcode sts_ex = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(S);
-/*TODO*///	EXTENDED;
-/*TODO*///	WM16(EAD,&pS);
+            CLR_NZV();
+            SET_NZ16(m6809.s);
+            EXTENDED();
+            WM16(ea, m6809.s);
         }
     };
 

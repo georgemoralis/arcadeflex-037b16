@@ -46,6 +46,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.troangel.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.mpatrol.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.yard.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.shaolins.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.pacland.*;
 
 /**
  *
@@ -519,10 +520,10 @@ public class driver {
         /*TODO*///	driver_poleps2b,	/* bootleg */
         /*TODO*///	driver_poleps2c,	/* bootleg */
         /*TODO*///	/* no custom I/O in the following, HD63701 (or compatible) microcontroller instead */
-        /*TODO*///	driver_pacland,	/* (c) 1984 */
-        /*TODO*///	driver_pacland2,	/* (c) 1984 */
-        /*TODO*///	driver_pacland3,	/* (c) 1984 */
-        /*TODO*///	driver_paclandm,	/* (c) 1984 Midway */
+        	driver_pacland,	/* (c) 1984 */
+        	driver_pacland2,	/* (c) 1984 */
+        	driver_pacland3,	/* (c) 1984 */
+        	driver_paclandm,	/* (c) 1984 Midway */
         /*TODO*///	driver_drgnbstr,	/* (c) 1984 */
         /*TODO*///	driver_skykid,	/* (c) 1985 */
         /*TODO*///	driver_skykidb,	/* (c) 1985 */
