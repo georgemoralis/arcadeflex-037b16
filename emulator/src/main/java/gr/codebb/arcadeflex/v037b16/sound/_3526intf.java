@@ -8,8 +8,7 @@ package gr.codebb.arcadeflex.v037b16.sound;
 //generic functions
 import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
-import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
-import static mame037b7.sound.fmoplH.*;
+import static gr.codebb.arcadeflex.v037b16.sound.fmoplH.*;
 import gr.codebb.arcadeflex.v037b16.sound._3812intfH.*;
 
 public class _3526intf extends _3812intf {

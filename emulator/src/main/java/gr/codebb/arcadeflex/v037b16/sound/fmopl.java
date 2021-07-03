@@ -1,12 +1,13 @@
 /*
- *  Ported to 0.37b7
+ *  Ported to v0.37b16
+ *  Ported to v0.37b7
  */
-package mame037b7.sound;
+package gr.codebb.arcadeflex.v037b16.sound;
 
 import static common.ptr.*;
 import static common.subArrays.*;
 import static common.libc.cstdlib.*;
-import static mame037b7.sound.fmoplH.*;
+import static gr.codebb.arcadeflex.v037b16.sound.fmoplH.*;
 import static mame037b7.sound.ymdeltat.*;
 import mame037b7.sound.ymdeltatH.YM_DELTAT;
 import static mame037b7.sound.ymdeltatH.*;
@@ -85,49 +86,49 @@ public class fmopl {
         -1, -1, -1, -1, -1, -1, -1, -1
     };
     /* key scale level */
-    public static final double ML = (0.1875 * 2 / EG_STEP);
+    public static final double DV = EG_STEP / 2;
     static int /*UINT32*/ KSL_TABLE[]
             = {
                 /* OCT 0 */
-                (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML),
-                (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML),
-                (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML),
-                (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML),
+                (int) ((int) (0.000 / DV)), (int) ((int) (0.000 / DV)), (int) ((int) (0.000 / DV)), (int) ((int) (0.000 / DV)),
+                (int) (0.000 / DV), (int) (0.000 / DV), (int) (0.000 / DV), (int) (0.000 / DV),
+                (int) (0.000 / DV), (int) (0.000 / DV), (int) (0.000 / DV), (int) (0.000 / DV),
+                (int) (0.000 / DV), (int) (0.000 / DV), (int) (0.000 / DV), (int) (0.000 / DV),
                 /* OCT 1 */
-                (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML),
-                (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML),
-                (int) (0.000 * ML), (int) (0.750 * ML), (int) (1.125 * ML), (int) (1.500 * ML),
-                (int) (1.875 * ML), (int) (2.250 * ML), (int) (2.625 * ML), (int) (3.000 * ML),
+                (int) (0.000 / DV), (int) (0.000 / DV), (int) (0.000 / DV), (int) (0.000 / DV),
+                (int) (0.000 / DV), (int) (0.000 / DV), (int) (0.000 / DV), (int) (0.000 / DV),
+                (int) (0.000 / DV), (int) (0.750 / DV), (int) (1.125 / DV), (int) (1.500 / DV),
+                (int) (1.875 / DV), (int) (2.250 / DV), (int) (2.625 / DV), (int) (3.000 / DV),
                 /* OCT 2 */
-                (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML),
-                (int) (0.000 * ML), (int) (1.125 * ML), (int) (1.875 * ML), (int) (2.625 * ML),
-                (int) (3.000 * ML), (int) (3.750 * ML), (int) (4.125 * ML), (int) (4.500 * ML),
-                (int) (4.875 * ML), (int) (5.250 * ML), (int) (5.625 * ML), (int) (6.000 * ML),
+                (int) (0.000 / DV), (int) (0.000 / DV), (int) (0.000 / DV), (int) (0.000 / DV),
+                (int) (0.000 / DV), (int) (1.125 / DV), (int) (1.875 / DV), (int) (2.625 / DV),
+                (int) (3.000 / DV), (int) (3.750 / DV), (int) (4.125 / DV), (int) (4.500 / DV),
+                (int) (4.875 / DV), (int) (5.250 / DV), (int) (5.625 / DV), (int) (6.000 / DV),
                 /* OCT 3 */
-                (int) (0.000 * ML), (int) (0.000 * ML), (int) (0.000 * ML), (int) (1.875 * ML),
-                (int) (3.000 * ML), (int) (4.125 * ML), (int) (4.875 * ML), (int) (5.625 * ML),
-                (int) (6.000 * ML), (int) (6.750 * ML), (int) (7.125 * ML), (int) (7.500 * ML),
-                (int) (7.875 * ML), (int) (8.250 * ML), (int) (8.625 * ML), (int) (9.000 * ML),
+                (int) (0.000 / DV), (int) (0.000 / DV), (int) (0.000 / DV), (int) (1.875 / DV),
+                (int) (3.000 / DV), (int) (4.125 / DV), (int) (4.875 / DV), (int) (5.625 / DV),
+                (int) (6.000 / DV), (int) (6.750 / DV), (int) (7.125 / DV), (int) (7.500 / DV),
+                (int) (7.875 / DV), (int) (8.250 / DV), (int) (8.625 / DV), (int) (9.000 / DV),
                 /* OCT 4 */
-                (int) (0.000 * ML), (int) (0.000 * ML), (int) (3.000 * ML), (int) (4.875 * ML),
-                (int) (6.000 * ML), (int) (7.125 * ML), (int) (7.875 * ML), (int) (8.625 * ML),
-                (int) (9.000 * ML), (int) (9.750 * ML), (int) (10.125 * ML), (int) (10.500 * ML),
-                (int) (10.875 * ML), (int) (11.250 * ML), (int) (11.625 * ML), (int) (12.000 * ML),
+                (int) (0.000 / DV), (int) (0.000 / DV), (int) (3.000 / DV), (int) (4.875 / DV),
+                (int) (6.000 / DV), (int) (7.125 / DV), (int) (7.875 / DV), (int) (8.625 / DV),
+                (int) (9.000 / DV), (int) (9.750 / DV), (int) (10.125 / DV), (int) (10.500 / DV),
+                (int) (10.875 / DV), (int) (11.250 / DV), (int) (11.625 / DV), (int) (12.000 / DV),
                 /* OCT 5 */
-                (int) (0.000 * ML), (int) (3.000 * ML), (int) (6.000 * ML), (int) (7.875 * ML),
-                (int) (9.000 * ML), (int) (10.125 * ML), (int) (10.875 * ML), (int) (11.625 * ML),
-                (int) (12.000 * ML), (int) (12.750 * ML), (int) (13.125 * ML), (int) (13.500 * ML),
-                (int) (13.875 * ML), (int) (14.250 * ML), (int) (14.625 * ML), (int) (15.000 * ML),
+                (int) (0.000 / DV), (int) (3.000 / DV), (int) (6.000 / DV), (int) (7.875 / DV),
+                (int) (9.000 / DV), (int) (10.125 / DV), (int) (10.875 / DV), (int) (11.625 / DV),
+                (int) (12.000 / DV), (int) (12.750 / DV), (int) (13.125 / DV), (int) (13.500 / DV),
+                (int) (13.875 / DV), (int) (14.250 / DV), (int) (14.625 / DV), (int) (15.000 / DV),
                 /* OCT 6 */
-                (int) (0.000 * ML), (int) (6.000 * ML), (int) (9.000 * ML), (int) (10.875 * ML),
-                (int) (12.000 * ML), (int) (13.125 * ML), (int) (13.875 * ML), (int) (14.625 * ML),
-                (int) (15.000 * ML), (int) (15.750 * ML), (int) (16.125 * ML), (int) (16.500 * ML),
-                (int) (16.875 * ML), (int) (17.250 * ML), (int) (17.625 * ML), (int) (18.000 * ML),
+                (int) (0.000 / DV), (int) (6.000 / DV), (int) (9.000 / DV), (int) (10.875 / DV),
+                (int) (12.000 / DV), (int) (13.125 / DV), (int) (13.875 / DV), (int) (14.625 / DV),
+                (int) (15.000 / DV), (int) (15.750 / DV), (int) (16.125 / DV), (int) (16.500 / DV),
+                (int) (16.875 / DV), (int) (17.250 / DV), (int) (17.625 / DV), (int) (18.000 / DV),
                 /* OCT 7 */
-                (int) (0.000 * ML), (int) (9.000 * ML), (int) (12.000 * ML), (int) (13.875 * ML),
-                (int) (15.000 * ML), (int) (16.125 * ML), (int) (16.875 * ML), (int) (17.625 * ML),
-                (int) (18.000 * ML), (int) (18.750 * ML), (int) (19.125 * ML), (int) (19.500 * ML),
-                (int) (19.875 * ML), (int) (20.250 * ML), (int) (20.625 * ML), (int) (21.000 * ML)
+                (int) (0.000 / DV), (int) (9.000 / DV), (int) (12.000 / DV), (int) (13.875 / DV),
+                (int) (15.000 / DV), (int) (16.125 / DV), (int) (16.875 / DV), (int) (17.625 / DV),
+                (int) (18.000 / DV), (int) (18.750 / DV), (int) (19.125 / DV), (int) (19.500 / DV),
+                (int) (19.875 / DV), (int) (20.250 / DV), (int) (20.625 / DV), (int) (21.000 / DV)
             };
 
     /* sustain lebel table (3db per step) */
@@ -1132,7 +1133,7 @@ public class fmopl {
             vib = vib_table.read((int) ((vibCnt = (vibCnt + vibIncr) & 0xFFFFFFFFL) >> VIB_SHIFT));//recheck
             outd[0] = 0;
             /* deltaT ADPCM */
-            if (DELTAT.flag != 0) {
+            if (DELTAT.portstate != 0) {
                 YM_DELTAT_ADPCM_CALC(DELTAT);
             }
             /* FM part */
@@ -1152,7 +1153,7 @@ public class fmopl {
         OPL.amsCnt = (int) amsCnt;
         OPL.vibCnt = (int) vibCnt;
         /* deltaT START flag */
-        if (DELTAT.flag == 0) {
+        if (DELTAT.portstate == 0) {
             OPL.status &= 0xfe;
         }
     }
