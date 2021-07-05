@@ -219,7 +219,7 @@ public class cpuintrfH {
         public abstract void exit();
 
         public abstract int execute(int cycles);
-        public static burnPtr burn;
+        public burnPtr burn;
 
         public abstract Object init_context(); //not in mame , used specific for arcadeflex
 
