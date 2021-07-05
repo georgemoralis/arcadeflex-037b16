@@ -8,6 +8,8 @@ package gr.codebb.arcadeflex.v037b16.mame;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 //drivers imports
 import static gr.codebb.arcadeflex.v037b16.drivers.pacman.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.pengo.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.epos.*;
 
 public class driver {
 
@@ -47,20 +49,19 @@ public class driver {
         driver_vanvan, /* (c) 1983 Karateco (bootleg?) */
         driver_vanvans, /* (c) 1983 Sanritsu */
         driver_alibaba, /* (c) 1982 Sega */
-        /*TODO*///	driver_pengo,		/* 834-0386 (c) 1982 Sega */
-        /*TODO*///	driver_pengo2,	/* 834-0386 (c) 1982 Sega */
-        /*TODO*///	driver_pengo2u,	/* 834-0386 (c) 1982 Sega */
-        /*TODO*///	driver_penta,		/* bootleg */
-        /*TODO*///	driver_jrpacman,	/* (c) 1983 Midway */
+        driver_pengo, /* 834-0386 (c) 1982 Sega */
+        driver_pengo2, /* 834-0386 (c) 1982 Sega */
+        driver_pengo2u, /* 834-0386 (c) 1982 Sega */
+        driver_penta, /* bootleg */
+    /*TODO*///	driver_jrpacman,	/* (c) 1983 Midway */
         driver_jumpshot, /* (c) 1985 Bally Midway */
-        driver_shootbul, /* (c) 1985 Bally Midway */ /*TODO*///
-    /*TODO*///	/* Epos games */
-    /*TODO*///	driver_suprglob,	/* (c) 1983 */
-    /*TODO*///	driver_theglob,	/* (c) 1983 */
-    /*TODO*///	driver_theglob2,	/* (c) 1983 */
-    /*TODO*///	driver_theglob3,	/* (c) 1983 */
-    /*TODO*///	driver_igmo,		/* (c) 1984 */
-    /*TODO*///
+        driver_shootbul, /* (c) 1985 Bally Midway */
+        /* Epos games */
+        driver_suprglob, /* (c) 1983 */
+        driver_theglob, /* (c) 1983 */
+        driver_theglob2, /* (c) 1983 */
+        driver_theglob3, /* (c) 1983 */
+        driver_igmo, /* (c) 1984 */ /*TODO*///
     /*TODO*///	/* "Galaxian hardware" games */
     /*TODO*///	driver_galaxian,	/* (c) Namco */
     /*TODO*///	driver_galaxiaj,	/* (c) Namco */
@@ -3816,5 +3817,6 @@ public class driver {
     /*TODO*///	/* Nightmare in the Dark (c) 2000 Eleven / Gavaking */
     /*TODO*///	/* Sengoku Legends (c) 2001 SNK */
     /*TODO*///    
+        null
     };
 }
