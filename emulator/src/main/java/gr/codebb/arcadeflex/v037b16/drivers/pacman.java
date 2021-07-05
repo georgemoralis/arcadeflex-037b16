@@ -21,7 +21,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inputH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 //machine imports
-import static gr.codebb.arcadeflex.WIP.v037b16.machine.mspacman.*;
+import static gr.codebb.arcadeflex.v037b16.machine.mspacman.*;
 import static gr.codebb.arcadeflex.v037b16.machine.jumpshot.*;
 import static gr.codebb.arcadeflex.v037b16.machine.pacplus.*;
 import static gr.codebb.arcadeflex.v037b16.machine.shootbul.*;
