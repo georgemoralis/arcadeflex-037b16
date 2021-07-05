@@ -1,72 +1,46 @@
 /*
- * ported to v0.56
- * using automatic conversion tool v0.01
+ * ported to v0.37b16
  */
-package mame056.drivers;
+package gr.codebb.arcadeflex.v037b16.drivers;
 
+//generic functions
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
+//drivers imports
+import static gr.codebb.arcadeflex.v037b16.drivers.epos.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
-//generic functions
-import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
-import static common.ptr.*;
-import static common.libc.cstdlib.*;
-import static common.libc.cstring.*;
-import static gr.codebb.arcadeflex.WIP.v037b16.machine.mspacman.mspacman_activate_rom;
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.interrupt;
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.interrupt_enable_w;
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.interrupt_vector_w;
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.nmi_interrupt;
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.watchdog_reset_w;
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.CPU_Z80;
-import gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.MachineCPU;
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.cpu_getpreviouspc;
-import static gr.codebb.arcadeflex.v037b16.mame.memory.install_mem_read_handler;
-import static gr.codebb.arcadeflex.v037b16.mame.memory.memory_set_opcode_base;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.colorram;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.colorram_w;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.generic_vh_stop;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.spriteram;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.spriteram_2;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.spriteram_size;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.videoram;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.videoram_size;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.videoram_w;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.pengo.pacman_vh_convert_color_prom;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.pengo.pacman_vh_start;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.pengo.pengo_flipscreen_w;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.pengo.pengo_vh_screenrefresh;
-import static gr.codebb.arcadeflex.v058.sound.sn76496.SN76496_0_w;
-import static gr.codebb.arcadeflex.v058.sound.sn76496.SN76496_1_w;
-import gr.codebb.arcadeflex.v058.sound.sn76496H.SN76496interface;
-
-import static mame037b16.mame.*;
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inputH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
-
-import static gr.codebb.arcadeflex.v037b16.drivers.epos.*;
-import static gr.codebb.arcadeflex.WIP.v037b16.machine.mspacman.mspacman_deactivate_rom1;
-import static gr.codebb.arcadeflex.WIP.v037b16.machine.mspacman.mspacman_deactivate_rom2;
-import static gr.codebb.arcadeflex.WIP.v037b16.machine.mspacman.mspacman_deactivate_rom3;
-import static gr.codebb.arcadeflex.WIP.v037b16.machine.mspacman.mspacman_deactivate_rom4;
-import static gr.codebb.arcadeflex.WIP.v037b16.machine.mspacman.mspacman_deactivate_rom5;
-import static gr.codebb.arcadeflex.WIP.v037b16.machine.mspacman.mspacman_deactivate_rom6;
-import static gr.codebb.arcadeflex.WIP.v037b16.machine.mspacman.mspacman_decode;
-import static gr.codebb.arcadeflex.v037b16.machine.jumpshot.jumpshot_decode;
-import static gr.codebb.arcadeflex.v037b16.machine.pacplus.pacplus_decode;
-import static gr.codebb.arcadeflex.v037b16.machine.shootbul.shootbul_decode;
-import static gr.codebb.arcadeflex.v037b16.machine.theglobp.theglobp_decrypt_rom;
-import static gr.codebb.arcadeflex.v037b16.machine.theglobp.theglobp_init_machine;
-
-import static mame056.sound.namco.*;
-import static mame056.sound.namcoH.*;
+//machine imports
+import static gr.codebb.arcadeflex.WIP.v037b16.machine.mspacman.*;
+import static gr.codebb.arcadeflex.v037b16.machine.jumpshot.*;
+import static gr.codebb.arcadeflex.v037b16.machine.pacplus.*;
+import static gr.codebb.arcadeflex.v037b16.machine.shootbul.*;
+import static gr.codebb.arcadeflex.v037b16.machine.theglobp.*;
+//sound imports
+import static gr.codebb.arcadeflex.v058.sound.sn76496.*;
+import static gr.codebb.arcadeflex.v058.sound.sn76496H.*;
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910.*;
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
+//vidhrdw imports
+import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.v037b16.vidhrdw.pengo.*;
+//to be organized
+import static common.ptr.*;
+import static common.libc.cstdlib.*;
+import static common.libc.cstring.*;
+import static mame037b16.mame.*;
+import static mame056.sound.namco.*;
+import static mame056.sound.namcoH.*;
 
 public class pacman {
 

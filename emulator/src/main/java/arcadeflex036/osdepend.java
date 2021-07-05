@@ -5,7 +5,7 @@ import static arcadeflex036.config.parse_cmdline;
 import static arcadeflex036.fronthlp.frontend_help;
 import static common.libc.cstdio.*;
 import static arcadeflex036.ticker.init_ticker;
-import static mame037b16.driver.drivers;
+import static gr.codebb.arcadeflex.v037b16.mame.driver.drivers;
 import static mame037b16.mame.*;
 import static common.libc.cstring.*;
 /**

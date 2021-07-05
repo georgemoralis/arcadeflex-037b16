@@ -19,6 +19,12 @@ import static gr.codebb.arcadeflex.v037b16.mame.input.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inputH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.driver.*;
+import static gr.codebb.arcadeflex.v037b16.mame.common.*;
+import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.version.*;
 //to be organized
 import static arcadeflex036.video.osd_mark_dirty;
 import static arcadeflex036.video.osd_pause;
@@ -37,16 +43,10 @@ import static common.libc.cstring.strlen;
 import static common.libc.expressions.sizeof;
 import common.ptr.UBytePtr;
 import common.subArrays.IntArray;
-import static gr.codebb.arcadeflex.v037b16.mame.common.*;
-import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.cputype_name;
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.machine_reset;
-import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.CPU_AUDIO_CPU;
-import static gr.codebb.arcadeflex.v037b16.mame.version.build_version;
+
 import static mame037b16.common.*;
 import static mame037b16.drawgfx.decodegfx;
 import static mame037b16.drawgfx.set_pixel_functions;
-import static mame037b16.driver.drivers;
 import static mame037b16.mame.draw_screen;
 import static mame037b16.mame.options;
 import static mame037b7.cheat.DoCheat;
@@ -2664,7 +2664,7 @@ public class usrintrf {
         menu_action[menu_total++] = UI_STATS;
         menu_item[menu_total] = ui_getstring(UI_gameinfo);
         menu_action[menu_total++] = UI_GAMEINFO;
-/*TODO*///        menu_item[menu_total] = ui_getstring(UI_history);
+        /*TODO*///        menu_item[menu_total] = ui_getstring(UI_history);
 /*TODO*///        menu_action[menu_total++] = UI_HISTORY;
 
         if (options.cheat != 0) {
@@ -2718,8 +2718,8 @@ public class usrintrf {
                 case UI_GAMEINFO:
                     res = displaygameinfo(bitmap, sel >> SEL_BITS);
                     break;
-/*TODO*///                case UI_HISTORY:
-                    /*TODO*///                    res = displayhistory(bitmap, sel >> SEL_BITS);
+                /*TODO*///                case UI_HISTORY:
+                /*TODO*///                    res = displayhistory(bitmap, sel >> SEL_BITS);
 /*TODO*///                    break;
                 case UI_CHEAT:
                     res = cheat_menu(bitmap, sel >> SEL_BITS);
