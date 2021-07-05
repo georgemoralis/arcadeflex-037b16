@@ -14,10 +14,14 @@ import common.subArrays.UShortArray;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.ALL_TILEMAPS;
 import gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.GetMemoryOffsetPtr;
 import gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.GetTileInfoPtr;
+import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_ALPHA;
+import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_BACK;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_BITMASK;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_BITMASK_TRANSPARENT;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_FLIPX;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_FLIPY;
+import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_IGNORE_TRANSPARENCY;
+import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_OPAQUE;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_SPLIT;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_TRANSPARENT;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILEMAP_TRANSPARENT_COLOR;
@@ -25,6 +29,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILE_4BPP;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILE_FLIPX;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILE_FLIPY;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILE_IGNORE_TRANSPARENCY;
+import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILE_LINE_DISABLED;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILE_SPLIT_OFFSET;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.TILE_SWAPXY;
 import gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.struct_tile_info;
@@ -41,6 +46,7 @@ import static mame037b7.palette.palette_decrease_usage_countx;
 import static mame037b7.palette.palette_increase_usage_count;
 import static mame037b7.palette.palette_increase_usage_countx;
 import static mame037b7.palette.palette_used_colors;
+import static common.libc.cstring.memcpy;
 
 public class tilemapC {
 
@@ -158,19 +164,26 @@ public class tilemapC {
     public static final int TILE_MASKED = 1;
     public static final int TILE_OPAQUE = 2;
 
-/*TODO*////* the following parameters are constant across tilemap_draw calls */
-/*TODO*///static struct
-/*TODO*///{
-/*TODO*///	int clip_left, clip_top, clip_right, clip_bottom;
-/*TODO*///	int source_width, source_height;
-/*TODO*///	int dest_line_offset,source_line_offset,mask_line_offset;
-/*TODO*///	int dest_row_offset,source_row_offset,mask_row_offset;
-/*TODO*///	struct osd_bitmap *screen, *pixmap, *bitmask;
-/*TODO*///	UINT8 **mask_data_row;
-/*TODO*///	UINT8 **priority_data_row;
-/*TODO*///	int tile_priority;
-/*TODO*///	int tilemap_priority_code;
-/*TODO*///} blit;
+    /* the following parameters are constant across tilemap_draw calls */
+    public static class _blit
+    {
+	public int clip_left;
+        public int clip_top;
+        public int clip_right;
+        public int clip_bottom;
+	public int source_width, source_height;
+	public int dest_line_offset,source_line_offset,mask_line_offset;
+	public int dest_row_offset,source_row_offset,mask_row_offset;
+	public osd_bitmap screen;
+        public osd_bitmap pixmap;
+        public osd_bitmap bitmask;
+	public UBytePtr[] mask_data_row;
+	public UBytePtr[] priority_data_row;
+	public int tile_priority;
+	public int tilemap_priority_code;
+    };
+    
+    static _blit  blit = new _blit();
 
     public static int PenToPixel_Init( struct_tilemap tilemap )
     {
@@ -245,7 +258,8 @@ public class tilemapC {
     					if( visible[cached_indx]!=0 && dirty_pixels[cached_indx]!=0 ){
     						tilemap.draw_tile.handler( tilemap, cached_indx, col, row );
     						dirty_pixels[cached_indx] = 0;
-                                                System.out.println("check if i have to add tilemap.u8_dirty_pixels[cached_indx] = 0;");
+                                                //System.out.println("check if i have to add tilemap.u8_dirty_pixels[cached_indx] = 0;");
+                                                tilemap.u8_dirty_pixels[cached_indx] = 0;
     					}
     					cached_indx++;
     				} /* next col */
@@ -558,7 +572,7 @@ static void mappings_update( struct_tilemap tilemap )
 /*TODO*////**** DEPTH == 8 ****/
 /*TODO*///
 /*TODO*///#define DEPTH 8
-/*TODO*///#define TILE_SIZE	8
+    public static int TILE_SIZE	= 8;
 /*TODO*///#define DATA_TYPE UINT8
 /*TODO*///#define memcpybitmask memcpybitmask8
 /*TODO*///#define DECLARE(function,args,body) static void function##8x8x8BPP args body
@@ -724,26 +738,26 @@ static void mappings_update( struct_tilemap tilemap )
     	case 8:
             
     		tilemap.draw_tile = draw_tile8x8x8BPP;
-throw new UnsupportedOperationException("Not supported yet.");
-/*TODO*///    		if( tile_size==8 )
-/*TODO*///    		{
-/*TODO*///    			tilemap.draw = draw8x8x8BPP;
-/*TODO*///    			tilemap.draw_opaque = draw_opaque8x8x8BPP;
-/*TODO*///    			tilemap.draw_alpha = draw8x8x8BPP;
-/*TODO*///    		}
-/*TODO*///    		else if( tile_size==16 )
-/*TODO*///    		{
-/*TODO*///    			tilemap.draw = draw16x16x8BPP;
-/*TODO*///    			tilemap.draw_opaque = draw_opaque16x16x8BPP;
-/*TODO*///    			tilemap.draw_alpha = draw16x16x8BPP;
-/*TODO*///    		}
-/*TODO*///    		else if( tile_size==32 )
-/*TODO*///    		{
-/*TODO*///    			tilemap.draw = draw32x32x8BPP;
-/*TODO*///    			tilemap.draw_opaque = draw_opaque32x32x8BPP;
-/*TODO*///    			tilemap.draw_alpha = draw32x32x8BPP;
-/*TODO*///    		}
-/*TODO*///    		break;
+
+    		if( tile_size==8 )
+    		{                    
+    			tilemap.draw = draw8x8x8BPP;
+    			tilemap.draw_opaque = draw_opaque8x8x8BPP;
+    			tilemap.draw_alpha = draw8x8x8BPP;
+    		}
+    		else if( tile_size==16 )
+    		{                    
+    			tilemap.draw = draw16x16x8BPP;
+    			tilemap.draw_opaque = draw_opaque16x16x8BPP;
+    			tilemap.draw_alpha = draw16x16x8BPP;
+    		}
+    		else if( tile_size==32 )
+    		{                    
+    			tilemap.draw = draw32x32x8BPP;
+    			tilemap.draw_opaque = draw_opaque32x32x8BPP;
+    			tilemap.draw_alpha = draw32x32x8BPP;
+    		}
+    		break;
     	}
     }
 
@@ -1270,65 +1284,71 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
 /*TODO*///		}
 /*TODO*///	}
 /*TODO*///}
-/*TODO*///
-/*TODO*///static void draw_color_mask(
-/*TODO*///	struct tilemap *tilemap,
-/*TODO*///	struct osd_bitmap *mask,
-/*TODO*///	UINT32 x0, UINT32 y0,
-/*TODO*///	UINT32 tile_size,
-/*TODO*///	const UINT8 *pPenData,
-/*TODO*///	const UINT16 *clut,
-/*TODO*///	int transparent_color,
-/*TODO*///	UINT32 flags,
-/*TODO*///	int pitch )
-/*TODO*///{
-/*TODO*///	UINT32 *pPenToPixel = tilemap->pPenToPixel[flags&(TILE_SWAPXY|TILE_FLIPY|TILE_FLIPX)];
-/*TODO*///	int tx,ty;
-/*TODO*///	const UINT8 *pSource;
-/*TODO*///	UINT8 data;
-/*TODO*///	UINT32 yx;
-/*TODO*///
-/*TODO*///	if( flags&TILE_4BPP )
-/*TODO*///	{
-/*TODO*///		for( ty=tile_size; ty!=0; ty-- )
-/*TODO*///		{
-/*TODO*///			pSource = pPenData;
-/*TODO*///			for( tx=tile_size/2; tx!=0; tx-- )
-/*TODO*///			{
-/*TODO*///				data = *pSource++;
-/*TODO*///				yx = *pPenToPixel++;
-/*TODO*///				if( clut[data&0xf]!=transparent_color )
-/*TODO*///				{
-/*TODO*///					mask->line[y0+yx/MAX_TILESIZE][(x0+(yx%MAX_TILESIZE))/8] |= 0x80>>(yx%8);
-/*TODO*///				}
-/*TODO*///				yx = *pPenToPixel++;
-/*TODO*///				if( clut[data>>4]!=transparent_color )
-/*TODO*///				{
-/*TODO*///					mask->line[y0+yx/MAX_TILESIZE][(x0+(yx%MAX_TILESIZE))/8] |= 0x80>>(yx%8);
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///			pPenData += pitch/2;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	else
-/*TODO*///	{
-/*TODO*///		for( ty=tile_size; ty!=0; ty-- )
-/*TODO*///		{
-/*TODO*///			pSource = pPenData;
-/*TODO*///			for( tx=tile_size; tx!=0; tx-- )
-/*TODO*///			{
-/*TODO*///				data = *pSource++;
-/*TODO*///				yx = *pPenToPixel++;
-/*TODO*///				if( clut[data]!=transparent_color )
-/*TODO*///				{
-/*TODO*///					mask->line[y0+yx/MAX_TILESIZE][(x0+(yx%MAX_TILESIZE))/8] |= 0x80>>(yx%8);
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///			pPenData += pitch;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///}
-/*TODO*///
+
+    public static void draw_color_mask(
+            struct_tilemap tilemap,
+            osd_bitmap mask,
+            int /*UINT32*/ x0, int /*UINT32*/ y0,
+            int /*UINT32*/ tile_size,
+            UBytePtr pPenData,
+            UShortArray clut,
+            int transparent_color,
+            int /*UINT32*/ flags,
+            int pitch )
+    {
+        
+    	IntArray pPenToPixel = new IntArray(tilemap.pPenToPixel[flags&(TILE_SWAPXY|TILE_FLIPY|TILE_FLIPX)]);
+        pPenToPixel.offset=0;
+    	int tx,ty;
+    	UBytePtr pSource;
+    	int /*UINT8*/ data;
+    	int /*UINT32*/ yx;
+    
+    	if(( flags&TILE_4BPP ) != 0)
+    	{
+    		for( ty=tile_size; ty!=0; ty-- )
+    		{
+    			pSource = new UBytePtr(pPenData);
+    			for( tx=tile_size/2; tx!=0; tx-- )
+    			{
+    				data = pSource.readinc();
+    				yx = pPenToPixel.read(); pPenToPixel.offset++;
+    				if( clut.read(data&0xf)!=transparent_color )
+    				{
+                                        int _i=mask.line[y0+yx/MAX_TILESIZE].read((x0+(yx%MAX_TILESIZE))/8);
+    					mask.line[y0+yx/MAX_TILESIZE].write((x0+(yx%MAX_TILESIZE))/8, _i | 0x80>>(yx%8));
+    				}
+    				yx = pPenToPixel.read(); pPenToPixel.offset++;
+    				if( clut.read(data>>4)!=transparent_color )
+    				{
+                                        int _i=mask.line[y0+yx/MAX_TILESIZE].read((x0+(yx%MAX_TILESIZE))/8);
+    					mask.line[y0+yx/MAX_TILESIZE].write((x0+(yx%MAX_TILESIZE))/8, _i | 0x80>>(yx%8));
+    				}
+    			}
+    			pPenData.offset += pitch/2;
+    		}
+    	}
+    	else
+    	{
+    		for( ty=tile_size; ty!=0; ty-- )
+    		{
+    			pSource = new UBytePtr(pPenData);
+                        pSource.offset=0;
+    			for( tx=tile_size; tx!=0; tx-- )
+    			{
+    				data = pSource.readinc();
+    				yx = pPenToPixel.read(); pPenToPixel.offset++;
+    				if( clut.read(data)!=transparent_color )
+    				{
+                                        int _i=mask.line[y0+yx/MAX_TILESIZE].read((x0+(yx%MAX_TILESIZE))/8);
+    					mask.line[y0+yx/MAX_TILESIZE].write((x0+(yx%MAX_TILESIZE))/8, _i | 0x80>>(yx%8));
+    				}
+    			}
+    			pPenData.inc( pitch );
+    		}
+    	}
+    }
+    
 /*TODO*///static void draw_pen_mask(
 /*TODO*///	struct tilemap *tilemap,
 /*TODO*///	struct osd_bitmap *mask,
@@ -1615,16 +1635,15 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
     	{
     		ClearMask( tilemap.foreground.bitmask, tile_size, x0, y0 );
                 
-                throw new UnsupportedOperationException();
     
-/*TODO*///    		draw_color_mask(
-/*TODO*///    				tilemap,tilemap.foreground.bitmask,
-/*TODO*///    				x0, y0, tile_size, pen_data,
-/*TODO*///    				Machine.game_colortable + (cached_tile_info.pal_data - Machine.remapped_colortable),
-/*TODO*///    				tilemap.transparent_pen, flags, pitch );
-/*TODO*///    
-/*TODO*///    		tilemap.foreground.data_row[row].write(col,
-/*TODO*///    				InspectMask( tilemap.foreground.bitmask, tile_size, x0, y0 ));
+    		draw_color_mask(
+    				tilemap,tilemap.foreground.bitmask,
+    				x0, y0, tile_size, new UBytePtr(pen_data),
+    				new UShortArray(Machine.game_colortable, (cached_tile_info.pal_data.offset - Machine.remapped_colortable.offset)),
+    				tilemap.transparent_pen, flags, pitch );
+    
+    		tilemap.foreground.data_row[row].write(col,
+    				InspectMask( tilemap.foreground.bitmask, tile_size, x0, y0 ));
     	}
     	else
     	{
@@ -1771,244 +1790,245 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
     
     	if( tilemap.enable != 0)
     	{
-    /*TODO*///		void (*draw)( int, int );
-    /*TODO*///
-    /*TODO*///		int rows = tilemap->scroll_rows;
-    /*TODO*///		const int *rowscroll = tilemap->rowscroll;
-    /*TODO*///		int cols = tilemap->scroll_cols;
-    /*TODO*///		const int *colscroll = tilemap->colscroll;
-    /*TODO*///
-    /*TODO*///		int left = tilemap->clip_left;
-    /*TODO*///		int right = tilemap->clip_right;
-    /*TODO*///		int top = tilemap->clip_top;
-    /*TODO*///		int bottom = tilemap->clip_bottom;
-    /*TODO*///
-    /*TODO*///		int tile_size = tilemap->tile_size;
-    /*TODO*///
-    /*TODO*///		blit.screen = dest;
-    /*TODO*///		if( dest )
-    /*TODO*///		{
-    /*TODO*///			blit.pixmap = tilemap->pixmap;
-    /*TODO*///			blit.source_line_offset = tilemap->pixmap_line_offset;
-    /*TODO*///
-    /*TODO*///			blit.dest_line_offset = dest->line[1] - dest->line[0];
-    /*TODO*///
-    /*TODO*///			switch( dest->depth )
-    /*TODO*///			{
-    /*TODO*///			case 15:
-    /*TODO*///			case 16:
-    /*TODO*///				blit.dest_line_offset /= 2;
-    /*TODO*///				blit.source_line_offset /= 2;
-    /*TODO*///				break;
-    /*TODO*///			case 32:
-    /*TODO*///				blit.dest_line_offset /= 4;
-    /*TODO*///				blit.source_line_offset /= 4;
-    /*TODO*///				break;
-    /*TODO*///			}
-    /*TODO*///			blit.dest_row_offset = tile_size*blit.dest_line_offset;
-    /*TODO*///		}
-    /*TODO*///
-    /*TODO*///
-    /*TODO*///		if( tilemap->type==TILEMAP_OPAQUE || (flags&TILEMAP_IGNORE_TRANSPARENCY) )
-    /*TODO*///		{
-    /*TODO*///			draw = tilemap->draw_opaque;
-    /*TODO*///		}
-    /*TODO*///		else
-    /*TODO*///		{
-    /*TODO*///			if( flags & TILEMAP_ALPHA )
-    /*TODO*///				draw = tilemap->draw_alpha;
-    /*TODO*///			else
-    /*TODO*///				draw = tilemap->draw;
-    /*TODO*///
-    /*TODO*///			if( flags&TILEMAP_BACK )
-    /*TODO*///			{
-    /*TODO*///				blit.bitmask = tilemap->background->bitmask;
-    /*TODO*///				blit.mask_line_offset = tilemap->background->line_offset;
-    /*TODO*///				blit.mask_data_row = tilemap->background->data_row;
-    /*TODO*///			}
-    /*TODO*///			else
-    /*TODO*///			{
-    /*TODO*///				blit.bitmask = tilemap->foreground->bitmask;
-    /*TODO*///				blit.mask_line_offset = tilemap->foreground->line_offset;
-    /*TODO*///				blit.mask_data_row = tilemap->foreground->data_row;
-    /*TODO*///			}
-    /*TODO*///
-    /*TODO*///			blit.mask_row_offset = tile_size*blit.mask_line_offset;
-    /*TODO*///		}
-    /*TODO*///
-    /*TODO*///		blit.source_row_offset = tile_size*blit.source_line_offset;
-    /*TODO*///
-    /*TODO*///		blit.priority_data_row = tilemap->priority_row;
-    /*TODO*///		blit.source_width = tilemap->cached_width;
-    /*TODO*///		blit.source_height = tilemap->cached_height;
-    /*TODO*///		blit.tile_priority = flags&0xf;
-    /*TODO*///		blit.tilemap_priority_code = priority;
-    /*TODO*///
-    /*TODO*///		if( rows == 1 && cols == 1 )
-    /*TODO*///		{ /* XY scrolling playfield */
-    /*TODO*///			int scrollx = rowscroll[0];
-    /*TODO*///			int scrolly = colscroll[0];
-    /*TODO*///
-    /*TODO*///			if( scrollx < 0 )
-    /*TODO*///			{
-    /*TODO*///				scrollx = blit.source_width - (-scrollx) % blit.source_width;
-    /*TODO*///			}
-    /*TODO*///			else
-    /*TODO*///			{
-    /*TODO*///				scrollx = scrollx % blit.source_width;
-    /*TODO*///			}
-    /*TODO*///
-    /*TODO*///			if( scrolly < 0 )
-    /*TODO*///			{
-    /*TODO*///				scrolly = blit.source_height - (-scrolly) % blit.source_height;
-    /*TODO*///			}
-    /*TODO*///			else
-    /*TODO*///			{
-    /*TODO*///				scrolly = scrolly % blit.source_height;
-    /*TODO*///			}
-    /*TODO*///
-    /*TODO*///	 		blit.clip_left = left;
-    /*TODO*///	 		blit.clip_top = top;
-    /*TODO*///	 		blit.clip_right = right;
-    /*TODO*///	 		blit.clip_bottom = bottom;
-    /*TODO*///
-    /*TODO*///			for(
-    /*TODO*///				ypos = scrolly - blit.source_height;
-    /*TODO*///				ypos < blit.clip_bottom;
-    /*TODO*///				ypos += blit.source_height )
-    /*TODO*///			{
-    /*TODO*///				for(
-    /*TODO*///					xpos = scrollx - blit.source_width;
-    /*TODO*///					xpos < blit.clip_right;
-    /*TODO*///					xpos += blit.source_width )
-    /*TODO*///				{
-    /*TODO*///					draw( xpos,ypos );
-    /*TODO*///				}
-    /*TODO*///			}
-    /*TODO*///		}
-    /*TODO*///		else if( rows == 1 )
-    /*TODO*///		{ /* scrolling columns + horizontal scroll */
-    /*TODO*///			int col = 0;
-    /*TODO*///			int colwidth = blit.source_width / cols;
-    /*TODO*///			int scrollx = rowscroll[0];
-    /*TODO*///
-    /*TODO*///			if( scrollx < 0 )
-    /*TODO*///			{
-    /*TODO*///				scrollx = blit.source_width - (-scrollx) % blit.source_width;
-    /*TODO*///			}
-    /*TODO*///			else
-    /*TODO*///			{
-    /*TODO*///				scrollx = scrollx % blit.source_width;
-    /*TODO*///			}
-    /*TODO*///
-    /*TODO*///			blit.clip_top = top;
-    /*TODO*///			blit.clip_bottom = bottom;
-    /*TODO*///
-    /*TODO*///			while( col < cols )
-    /*TODO*///			{
-    /*TODO*///				int cons = 1;
-    /*TODO*///				int scrolly = colscroll[col];
-    /*TODO*///
-    /*TODO*///	 			/* count consecutive columns scrolled by the same amount */
-    /*TODO*///				if( scrolly != TILE_LINE_DISABLED )
-    /*TODO*///				{
-    /*TODO*///					while( col + cons < cols &&	colscroll[col + cons] == scrolly ) cons++;
-    /*TODO*///
-    /*TODO*///					if( scrolly < 0 )
-    /*TODO*///					{
-    /*TODO*///						scrolly = blit.source_height - (-scrolly) % blit.source_height;
-    /*TODO*///					}
-    /*TODO*///					else
-    /*TODO*///					{
-    /*TODO*///						scrolly %= blit.source_height;
-    /*TODO*///					}
-    /*TODO*///
-    /*TODO*///					blit.clip_left = col * colwidth + scrollx;
-    /*TODO*///					if (blit.clip_left < left) blit.clip_left = left;
-    /*TODO*///					blit.clip_right = (col + cons) * colwidth + scrollx;
-    /*TODO*///					if (blit.clip_right > right) blit.clip_right = right;
-    /*TODO*///
-    /*TODO*///					for(
-    /*TODO*///						ypos = scrolly - blit.source_height;
-    /*TODO*///						ypos < blit.clip_bottom;
-    /*TODO*///						ypos += blit.source_height )
-    /*TODO*///					{
-    /*TODO*///						draw( scrollx,ypos );
-    /*TODO*///					}
-    /*TODO*///
-    /*TODO*///					blit.clip_left = col * colwidth + scrollx - blit.source_width;
-    /*TODO*///					if (blit.clip_left < left) blit.clip_left = left;
-    /*TODO*///					blit.clip_right = (col + cons) * colwidth + scrollx - blit.source_width;
-    /*TODO*///					if (blit.clip_right > right) blit.clip_right = right;
-    /*TODO*///
-    /*TODO*///					for(
-    /*TODO*///						ypos = scrolly - blit.source_height;
-    /*TODO*///						ypos < blit.clip_bottom;
-    /*TODO*///						ypos += blit.source_height )
-    /*TODO*///					{
-    /*TODO*///						draw( scrollx - blit.source_width,ypos );
-    /*TODO*///					}
-    /*TODO*///				}
-    /*TODO*///				col += cons;
-    /*TODO*///			}
-    /*TODO*///		}
-    /*TODO*///		else if( cols == 1 )
-    /*TODO*///		{ /* scrolling rows + vertical scroll */
-    /*TODO*///			int row = 0;
-    /*TODO*///			int rowheight = blit.source_height / rows;
-    /*TODO*///			int scrolly = colscroll[0];
-    /*TODO*///			if( scrolly < 0 )
-    /*TODO*///			{
-    /*TODO*///				scrolly = blit.source_height - (-scrolly) % blit.source_height;
-    /*TODO*///			}
-    /*TODO*///			else
-    /*TODO*///			{
-    /*TODO*///				scrolly = scrolly % blit.source_height;
-    /*TODO*///			}
-    /*TODO*///			blit.clip_left = left;
-    /*TODO*///			blit.clip_right = right;
-    /*TODO*///			while( row < rows )
-    /*TODO*///			{
-    /*TODO*///				int cons = 1;
-    /*TODO*///				int scrollx = rowscroll[row];
-    /*TODO*///				/* count consecutive rows scrolled by the same amount */
-    /*TODO*///				if( scrollx != TILE_LINE_DISABLED )
-    /*TODO*///				{
-    /*TODO*///					while( row + cons < rows &&	rowscroll[row + cons] == scrollx ) cons++;
-    /*TODO*///					if( scrollx < 0)
-    /*TODO*///					{
-    /*TODO*///						scrollx = blit.source_width - (-scrollx) % blit.source_width;
-    /*TODO*///					}
-    /*TODO*///					else
-    /*TODO*///					{
-    /*TODO*///						scrollx %= blit.source_width;
-    /*TODO*///					}
-    /*TODO*///					blit.clip_top = row * rowheight + scrolly;
-    /*TODO*///					if (blit.clip_top < top) blit.clip_top = top;
-    /*TODO*///					blit.clip_bottom = (row + cons) * rowheight + scrolly;
-    /*TODO*///					if (blit.clip_bottom > bottom) blit.clip_bottom = bottom;
-    /*TODO*///					for(
-    /*TODO*///						xpos = scrollx - blit.source_width;
-    /*TODO*///						xpos < blit.clip_right;
-    /*TODO*///						xpos += blit.source_width )
-    /*TODO*///					{
-    /*TODO*///						draw( xpos,scrolly );
-    /*TODO*///					}
-    /*TODO*///					blit.clip_top = row * rowheight + scrolly - blit.source_height;
-    /*TODO*///					if (blit.clip_top < top) blit.clip_top = top;
-    /*TODO*///					blit.clip_bottom = (row + cons) * rowheight + scrolly - blit.source_height;
-    /*TODO*///					if (blit.clip_bottom > bottom) blit.clip_bottom = bottom;
-    /*TODO*///					for(
-    /*TODO*///						xpos = scrollx - blit.source_width;
-    /*TODO*///						xpos < blit.clip_right;
-    /*TODO*///						xpos += blit.source_width )
-    /*TODO*///					{
-    /*TODO*///						draw( xpos,scrolly - blit.source_height );
-    /*TODO*///					}
-    /*TODO*///				}
-    /*TODO*///				row += cons;
-    /*TODO*///			}
-    /*TODO*///		}
+            
+    		DrawHandlerPtr draw;
+    
+    		int rows = tilemap.scroll_rows;
+    		int[] rowscroll = tilemap.rowscroll;
+    		int cols = tilemap.scroll_cols;
+    		int[] colscroll = tilemap.colscroll;
+    
+    		int left = tilemap.clip_left;
+    		int right = tilemap.clip_right;
+    		int top = tilemap.clip_top;
+    		int bottom = tilemap.clip_bottom;
+    
+    		int tile_size = tilemap.tile_size;
+    
+    		blit.screen = dest;
+    		if( dest != null )
+    		{
+    			blit.pixmap = tilemap.pixmap;
+    			blit.source_line_offset = tilemap.pixmap_line_offset;
+    
+    			blit.dest_line_offset = dest.line[1].offset - dest.line[0].offset;
+    
+    			switch( dest.depth )
+    			{
+    			case 15:
+    			case 16:
+    				blit.dest_line_offset /= 2;
+    				blit.source_line_offset /= 2;
+    				break;
+    			case 32:
+    				blit.dest_line_offset /= 4;
+    				blit.source_line_offset /= 4;
+    				break;
+    			}
+    			blit.dest_row_offset = tile_size*blit.dest_line_offset;
+    		}
+    
+    
+    		if( tilemap.type==TILEMAP_OPAQUE || (flags&TILEMAP_IGNORE_TRANSPARENCY)!=0 )
+    		{
+    			draw = tilemap.draw_opaque;
+    		}
+    		else
+    		{
+    			if(( flags & TILEMAP_ALPHA ) != 0)
+    				draw = tilemap.draw_alpha;
+    			else
+    				draw = tilemap.draw;
+    
+    			if(( flags&TILEMAP_BACK ) != 0)
+    			{
+    				blit.bitmask = tilemap.background.bitmask;
+    				blit.mask_line_offset = tilemap.background.line_offset;
+    				blit.mask_data_row = tilemap.background.data_row;
+    			}
+    			else
+    			{
+    				blit.bitmask = tilemap.foreground.bitmask;
+    				blit.mask_line_offset = tilemap.foreground.line_offset;
+    				blit.mask_data_row = tilemap.foreground.data_row;
+    			}
+    
+    			blit.mask_row_offset = tile_size*blit.mask_line_offset;
+    		}
+    
+    		blit.source_row_offset = tile_size*blit.source_line_offset;
+    
+    		blit.priority_data_row = tilemap.priority_row;
+    		blit.source_width = tilemap.cached_width;
+    		blit.source_height = tilemap.cached_height;
+    		blit.tile_priority = flags&0xf;
+    		blit.tilemap_priority_code = priority;
+    
+    		if( rows == 1 && cols == 1 )
+    		{ /* XY scrolling playfield */
+    			int scrollx = rowscroll[0];
+    			int scrolly = colscroll[0];
+    
+    			if( scrollx < 0 )
+    			{
+    				scrollx = blit.source_width - (-scrollx) % blit.source_width;
+    			}
+    			else
+    			{
+    				scrollx = scrollx % blit.source_width;
+    			}
+    
+    			if( scrolly < 0 )
+    			{
+    				scrolly = blit.source_height - (-scrolly) % blit.source_height;
+    			}
+    			else
+    			{
+    				scrolly = scrolly % blit.source_height;
+    			}
+    
+    	 		blit.clip_left = left;
+    	 		blit.clip_top = top;
+    	 		blit.clip_right = right;
+    	 		blit.clip_bottom = bottom;
+    
+    			for(
+    				ypos = scrolly - blit.source_height;
+    				ypos < blit.clip_bottom;
+    				ypos += blit.source_height )
+    			{
+    				for(
+    					xpos = scrollx - blit.source_width;
+    					xpos < blit.clip_right;
+    					xpos += blit.source_width )
+    				{
+    					draw.handler( xpos,ypos );
+    				}
+    			}
+    		}
+    		else if( rows == 1 )
+    		{ /* scrolling columns + horizontal scroll */
+    			int col = 0;
+    			int colwidth = blit.source_width / cols;
+    			int scrollx = rowscroll[0];
+    
+    			if( scrollx < 0 )
+    			{
+    				scrollx = blit.source_width - (-scrollx) % blit.source_width;
+    			}
+    			else
+    			{
+    				scrollx = scrollx % blit.source_width;
+    			}
+    
+    			blit.clip_top = top;
+    			blit.clip_bottom = bottom;
+    
+    			while( col < cols )
+    			{
+    				int cons = 1;
+    				int scrolly = colscroll[col];
+    
+    	 			/* count consecutive columns scrolled by the same amount */
+    				if( scrolly != TILE_LINE_DISABLED )
+    				{
+    					while( col + cons < cols &&	colscroll[col + cons] == scrolly ) cons++;
+    
+    					if( scrolly < 0 )
+    					{
+    						scrolly = blit.source_height - (-scrolly) % blit.source_height;
+    					}
+    					else
+    					{
+    						scrolly %= blit.source_height;
+    					}
+    
+    					blit.clip_left = col * colwidth + scrollx;
+    					if (blit.clip_left < left) blit.clip_left = left;
+    					blit.clip_right = (col + cons) * colwidth + scrollx;
+    					if (blit.clip_right > right) blit.clip_right = right;
+    
+    					for(
+    						ypos = scrolly - blit.source_height;
+    						ypos < blit.clip_bottom;
+    						ypos += blit.source_height )
+    					{
+    						draw.handler( scrollx,ypos );
+    					}
+    
+    					blit.clip_left = col * colwidth + scrollx - blit.source_width;
+    					if (blit.clip_left < left) blit.clip_left = left;
+    					blit.clip_right = (col + cons) * colwidth + scrollx - blit.source_width;
+    					if (blit.clip_right > right) blit.clip_right = right;
+    
+    					for(
+    						ypos = scrolly - blit.source_height;
+    						ypos < blit.clip_bottom;
+    						ypos += blit.source_height )
+    					{
+    						draw.handler( scrollx - blit.source_width,ypos );
+    					}
+    				}
+    				col += cons;
+    			}
+    		}
+    		else if( cols == 1 )
+    		{ /* scrolling rows + vertical scroll */
+    			int row = 0;
+    			int rowheight = blit.source_height / rows;
+    			int scrolly = colscroll[0];
+    			if( scrolly < 0 )
+    			{
+    				scrolly = blit.source_height - (-scrolly) % blit.source_height;
+    			}
+    			else
+    			{
+    				scrolly = scrolly % blit.source_height;
+    			}
+    			blit.clip_left = left;
+    			blit.clip_right = right;
+    			while( row < rows )
+    			{
+    				int cons = 1;
+    				int scrollx = rowscroll[row];
+    				/* count consecutive rows scrolled by the same amount */
+    				if( scrollx != TILE_LINE_DISABLED )
+    				{
+    					while( row + cons < rows &&	rowscroll[row + cons] == scrollx ) cons++;
+    					if( scrollx < 0)
+    					{
+    						scrollx = blit.source_width - (-scrollx) % blit.source_width;
+    					}
+    					else
+    					{
+    						scrollx %= blit.source_width;
+    					}
+    					blit.clip_top = row * rowheight + scrolly;
+    					if (blit.clip_top < top) blit.clip_top = top;
+    					blit.clip_bottom = (row + cons) * rowheight + scrolly;
+    					if (blit.clip_bottom > bottom) blit.clip_bottom = bottom;
+    					for(
+    						xpos = scrollx - blit.source_width;
+    						xpos < blit.clip_right;
+    						xpos += blit.source_width )
+    					{
+    						draw.handler( xpos,scrolly );
+    					}
+    					blit.clip_top = row * rowheight + scrolly - blit.source_height;
+    					if (blit.clip_top < top) blit.clip_top = top;
+    					blit.clip_bottom = (row + cons) * rowheight + scrolly - blit.source_height;
+    					if (blit.clip_bottom > bottom) blit.clip_bottom = bottom;
+    					for(
+    						xpos = scrollx - blit.source_width;
+    						xpos < blit.clip_right;
+    						xpos += blit.source_width )
+    					{
+    						draw.handler( xpos,scrolly - blit.source_height );
+    					}
+    				}
+    				row += cons;
+    			}
+    		}
     	}
     /*TODO*///profiler_mark(PROFILER_END);
     }
@@ -2600,55 +2620,1134 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
     public static DrawTileHandlerPtr draw_tile8x8x8BPP = new DrawTileHandlerPtr() {
         @Override
         public void handler(struct_tilemap tilemap, int cached_indx, int col, int row) {
-            throw new UnsupportedOperationException("Not implemented!");
- 
-/*TODO*///	struct cached_tile_info *cached_tile_info = &tilemap->cached_tile_info[cached_indx];
-/*TODO*///	UINT32 tile_size = tilemap->tile_size;
-/*TODO*///	const UINT8 *pPenData = cached_tile_info->pen_data;
-/*TODO*///	int pitch = tile_size + cached_tile_info->skip;
-/*TODO*///	const UINT32 *pPalData = cached_tile_info->pal_data;
-/*TODO*///	UINT32 flags = cached_tile_info->flags;
-/*TODO*///	UINT32 y0 = tile_size*row;
-/*TODO*///	UINT32 x0 = tile_size*col;
-/*TODO*///	struct osd_bitmap *pPixmap = tilemap->pixmap;
-/*TODO*///	UINT32 *pPenToPixel = tilemap->pPenToPixel[flags&(TILE_SWAPXY|TILE_FLIPY|TILE_FLIPX)];
-/*TODO*///	int tx;
-/*TODO*///	int ty;
-/*TODO*///	const UINT8 *pSource;
-/*TODO*///	UINT8 data;
-/*TODO*///	UINT32 yx;
-/*TODO*///
-/*TODO*///	if( flags&TILE_4BPP )
-/*TODO*///	{
-/*TODO*///		for( ty=tile_size; ty!=0; ty-- )
-/*TODO*///		{
-/*TODO*///			pSource = pPenData;
-/*TODO*///			for( tx=tile_size/2; tx!=0; tx-- )
-/*TODO*///			{
-/*TODO*///				data = *pSource++;
-/*TODO*///				yx = *pPenToPixel++;
-/*TODO*///				*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap->line[y0+yx/MAX_TILESIZE]) = pPalData[data&0xf];
-/*TODO*///				yx = *pPenToPixel++;
-/*TODO*///				*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap->line[y0+yx/MAX_TILESIZE]) = pPalData[data>>4];
-/*TODO*///			}
-/*TODO*///			pPenData += pitch/2;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	else
-/*TODO*///	{
-/*TODO*///		for( ty=tile_size; ty!=0; ty-- )
-/*TODO*///		{
-/*TODO*///			pSource = pPenData;
-/*TODO*///			for( tx=tile_size; tx!=0; tx-- )
-/*TODO*///			{
-/*TODO*///				data = *pSource++;
-/*TODO*///				yx = *pPenToPixel++;
-/*TODO*///				*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap->line[y0+yx/MAX_TILESIZE]) = pPalData[data];
-/*TODO*///			}
-/*TODO*///			pPenData += pitch;
-/*TODO*///		}
-/*TODO*///	}
+            
+            cached_tile_info cached_tile_info = tilemap.cached_tile_info[cached_indx];
+            int /*UINT32*/ tile_size = tilemap.tile_size;
+            UBytePtr pPenData = new UBytePtr(cached_tile_info.pen_data);
+            int pitch = tile_size + cached_tile_info.skip;
+            IntArray pPalData = new IntArray(cached_tile_info.pal_data);
+            pPalData.offset=0;
+            int /*UINT32*/ flags = cached_tile_info.u32_flags;
+            int /*UINT32*/ y0 = tile_size*row;
+            int /*UINT32*/ x0 = tile_size*col;
+            osd_bitmap pPixmap = tilemap.pixmap;
+            IntArray pPenToPixel = new IntArray(tilemap.pPenToPixel[flags&(TILE_SWAPXY|TILE_FLIPY|TILE_FLIPX)]);
+            pPenToPixel.offset=0;
+            int tx;
+            int ty;
+            UBytePtr pSource;
+            int /*UINT8*/ data;
+            int /*UINT32*/ yx;
+
+            if(( flags&TILE_4BPP ) != 0)
+            {
+                    for( ty=tile_size; ty!=0; ty-- )
+                    {
+                            pSource = new UBytePtr(pPenData);
+                            pSource.offset = 0;
+                            
+                            for( tx=tile_size/2; tx!=0; tx-- )
+                            {
+                                    data = pSource.readinc();
+                                    yx = pPenToPixel.read(); pPenToPixel.offset++;
+                                    //*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap.line[y0+yx/MAX_TILESIZE]) = pPalData[data&0xf];
+                                    (new UBytePtr(pPixmap.line[y0+yx/MAX_TILESIZE])).write((x0+(yx%MAX_TILESIZE)), pPalData.read(data&0xf));
+                                    yx = pPenToPixel.read(); pPenToPixel.offset++;
+                                    //*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap.line[y0+yx/MAX_TILESIZE]) = pPalData[data>>4];
+                                    (new UBytePtr(pPixmap.line[y0+yx/MAX_TILESIZE])).write((x0+(yx%MAX_TILESIZE)), pPalData.read(data>>4));
+                            }
+                            pPenData.offset += pitch/2;
+                    }
+            }
+            else
+            {
+                    for( ty=tile_size; ty!=0; ty-- )
+                    {
+                            pSource = new UBytePtr(pPenData);
+                            pSource.offset=0;
+                            
+                            for( tx=tile_size; tx!=0; tx-- )
+                            {
+                                    data = pSource.readinc();
+                                    yx = pPenToPixel.read(); pPenToPixel.offset++;
+                                    //*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap.line[y0+yx/MAX_TILESIZE]) = pPalData[data];
+                                    (new UBytePtr(pPixmap.line[y0+yx/MAX_TILESIZE])).write((x0+(yx%MAX_TILESIZE)), pPalData.read(data));
+                            }
+                            pPenData.offset += pitch;
+                    }
+            }
 
         }
     };
+    
+    public static DrawHandlerPtr draw8x8x8BPP = new DrawHandlerPtr() {
+        @Override
+        public void handler(int xpos, int ypos) {      
+            throw new UnsupportedOperationException("Not supported yet.");
+/*TODO*///	struct osd_bitmap *screen = blit.screen;
+/*TODO*///	int tilemap_priority_code = blit.tilemap_priority_code;
+/*TODO*///	int x1 = xpos;
+/*TODO*///	int y1 = ypos;
+/*TODO*///	int x2 = xpos+blit.source_width;
+/*TODO*///	int y2 = ypos+blit.source_height;
+/*TODO*///	DATA_TYPE *dest_baseaddr = NULL;
+/*TODO*///	DATA_TYPE *dest_next;
+/*TODO*///	int dy;
+/*TODO*///	int count;
+/*TODO*///	const DATA_TYPE *source0;
+/*TODO*///	DATA_TYPE *dest0;
+/*TODO*///	UINT8 *pmap0;
+/*TODO*///	int i;
+/*TODO*///	int row;
+/*TODO*///	UINT8 *priority_data;
+/*TODO*///	int tile_type;
+/*TODO*///	int prev_tile_type;
+/*TODO*///	int x_start;
+/*TODO*///	int x_end;
+/*TODO*///	int column;
+/*TODO*///	int c1;
+/*TODO*///	int c2; /* leftmost and rightmost visible columns in source tilemap */
+/*TODO*///	int y; /* current screen line to render */
+/*TODO*///	int y_next;
+/*TODO*///	int num_pixels;
+/*TODO*///	int priority_bitmap_row_offset;
+/*TODO*///	UINT8 *priority_bitmap_baseaddr;
+/*TODO*///	UINT8 *priority_bitmap_next;
+/*TODO*///	int priority;
+/*TODO*///	const DATA_TYPE *source_baseaddr;
+/*TODO*///	const DATA_TYPE *source_next;
+/*TODO*///	const UINT8 *mask0;
+/*TODO*///	UINT8 *mask_data;
+/*TODO*///	const UINT8 *mask_baseaddr;
+/*TODO*///	const UINT8 *mask_next;
+/*TODO*///
+/*TODO*///	/* clip source coordinates */
+/*TODO*///	if( x1<blit.clip_left ) x1 = blit.clip_left;
+/*TODO*///	if( x2>blit.clip_right ) x2 = blit.clip_right;
+/*TODO*///	if( y1<blit.clip_top ) y1 = blit.clip_top;
+/*TODO*///	if( y2>blit.clip_bottom ) y2 = blit.clip_bottom;
+/*TODO*///
+/*TODO*///	if( x1<x2 && y1<y2 )
+/*TODO*///	{ /* do nothing if totally clipped */
+/*TODO*///		priority_bitmap_row_offset = priority_bitmap_line_offset*TILE_SIZE;
+/*TODO*///		priority_bitmap_baseaddr = xpos + (UINT8 *)priority_bitmap->line[y1];
+/*TODO*///		priority = blit.tile_priority;
+/*TODO*///		if( screen )
+/*TODO*///		{
+/*TODO*///			dest_baseaddr = xpos + (DATA_TYPE *)screen->line[y1];
+/*TODO*///		}
+/*TODO*///
+/*TODO*///		/* convert screen coordinates to source tilemap coordinates */
+/*TODO*///		x1 -= xpos;
+/*TODO*///		y1 -= ypos;
+/*TODO*///		x2 -= xpos;
+/*TODO*///		y2 -= ypos;
+/*TODO*///
+/*TODO*///		source_baseaddr = (DATA_TYPE *)blit.pixmap->line[y1];
+/*TODO*///		mask_baseaddr = blit.bitmask->line[y1];
+/*TODO*///
+/*TODO*///		c1 = x1/TILE_SIZE; /* round down */
+/*TODO*///		c2 = (x2+TILE_SIZE-1)/TILE_SIZE; /* round up */
+/*TODO*///
+/*TODO*///		y = y1;
+/*TODO*///		y_next = TILE_SIZE*(y1/TILE_SIZE) + TILE_SIZE;
+/*TODO*///		if( y_next>y2 ) y_next = y2;
+/*TODO*///
+/*TODO*///		dy = y_next-y;
+/*TODO*///		dest_next = dest_baseaddr + dy*blit.dest_line_offset;
+/*TODO*///		priority_bitmap_next = priority_bitmap_baseaddr + dy*priority_bitmap_line_offset;
+/*TODO*///		source_next = source_baseaddr + dy*blit.source_line_offset;
+/*TODO*///		mask_next = mask_baseaddr + dy*blit.mask_line_offset;
+/*TODO*///		for(;;)
+/*TODO*///		{
+/*TODO*///			row = y/TILE_SIZE;
+/*TODO*///			mask_data = blit.mask_data_row[row];
+/*TODO*///			priority_data = blit.priority_data_row[row];
+/*TODO*///			prev_tile_type = TILE_TRANSPARENT;
+/*TODO*///			x_start = x1;
+/*TODO*///
+/*TODO*///			for( column=c1; column<=c2; column++ )
+/*TODO*///			{
+/*TODO*///				if( column==c2 || priority_data[column]!=priority )
+/*TODO*///				{
+/*TODO*///					tile_type = TILE_TRANSPARENT;
+/*TODO*///				}
+/*TODO*///				else
+/*TODO*///				{
+/*TODO*///					tile_type = mask_data[column];
+/*TODO*///				}
+/*TODO*///
+/*TODO*///				if( tile_type!=prev_tile_type )
+/*TODO*///				{
+/*TODO*///					x_end = column*TILE_SIZE;
+/*TODO*///					if( x_end<x1 ) x_end = x1;
+/*TODO*///					if( x_end>x2 ) x_end = x2;
+/*TODO*///
+/*TODO*///					if( prev_tile_type != TILE_TRANSPARENT )
+/*TODO*///					{
+/*TODO*///						if( prev_tile_type == TILE_MASKED )
+/*TODO*///						{
+/*TODO*///							count = (x_end+7)/8 - x_start/8;
+/*TODO*///							mask0 = mask_baseaddr + x_start/8;
+/*TODO*///							source0 = source_baseaddr + (x_start&0xfff8);
+/*TODO*///							dest0 = dest_baseaddr + (x_start&0xfff8);
+/*TODO*///							pmap0 = priority_bitmap_baseaddr + (x_start&0xfff8);
+/*TODO*///							i = y;
+/*TODO*///							for(;;)
+/*TODO*///							{
+/*TODO*///								if( screen ) memcpybitmask( dest0, source0, mask0, count );
+/*TODO*///								memsetbitmask8( pmap0, tilemap_priority_code, mask0, count );
+/*TODO*///								if( ++i == y_next ) break;
+/*TODO*///
+/*TODO*///								dest0 += blit.dest_line_offset;
+/*TODO*///								source0 += blit.source_line_offset;
+/*TODO*///								mask0 += blit.mask_line_offset;
+/*TODO*///								pmap0 += priority_bitmap_line_offset;
+/*TODO*///							}
+/*TODO*///						}
+/*TODO*///						else
+/*TODO*///						{ /* TILE_OPAQUE */
+/*TODO*///							num_pixels = x_end - x_start;
+/*TODO*///							dest0 = dest_baseaddr+x_start;
+/*TODO*///							source0 = source_baseaddr+x_start;
+/*TODO*///							pmap0 = priority_bitmap_baseaddr + x_start;
+/*TODO*///							i = y;
+/*TODO*///							for(;;)
+/*TODO*///							{
+/*TODO*///								if( screen ) memcpy( dest0, source0, num_pixels*sizeof(DATA_TYPE) );
+/*TODO*///								memset( pmap0, tilemap_priority_code, num_pixels );
+/*TODO*///								if( ++i == y_next ) break;
+/*TODO*///
+/*TODO*///								dest0 += blit.dest_line_offset;
+/*TODO*///								source0 += blit.source_line_offset;
+/*TODO*///								pmap0 += priority_bitmap_line_offset;
+/*TODO*///							}
+/*TODO*///						}
+/*TODO*///					}
+/*TODO*///					x_start = x_end;
+/*TODO*///				}
+/*TODO*///
+/*TODO*///				prev_tile_type = tile_type;
+/*TODO*///			}
+/*TODO*///
+/*TODO*///			if( y_next==y2 ) break; /* we are done! */
+/*TODO*///
+/*TODO*///			priority_bitmap_baseaddr = priority_bitmap_next;
+/*TODO*///			dest_baseaddr = dest_next;
+/*TODO*///			source_baseaddr = source_next;
+/*TODO*///			mask_baseaddr = mask_next;
+/*TODO*///			y = y_next;
+/*TODO*///			y_next += TILE_SIZE;
+/*TODO*///
+/*TODO*///			if( y_next>=y2 )
+/*TODO*///			{
+/*TODO*///				y_next = y2;
+/*TODO*///			}
+/*TODO*///			else
+/*TODO*///			{
+/*TODO*///				dest_next += blit.dest_row_offset;
+/*TODO*///				priority_bitmap_next += priority_bitmap_row_offset;
+/*TODO*///				source_next += blit.source_row_offset;
+/*TODO*///				mask_next += blit.mask_row_offset;
+/*TODO*///			}
+/*TODO*///		} /* process next row */
+/*TODO*///	} /* not totally clipped */
+/*TODO*///})
+        }
+    };
+    
+    public static DrawHandlerPtr draw_opaque8x8x8BPP = new DrawHandlerPtr() {
+        @Override
+        public void handler(int xpos, int ypos) {
+            throw new UnsupportedOperationException("Not supported yet.");
+            /*TODO*///DECLARE( draw_opaque, (int xpos, int ypos),
+/*TODO*///{
+/*TODO*///	struct osd_bitmap *screen = blit.screen;
+/*TODO*///	int tilemap_priority_code = blit.tilemap_priority_code;
+/*TODO*///	int x1 = xpos;
+/*TODO*///	int y1 = ypos;
+/*TODO*///	int x2 = xpos+blit.source_width;
+/*TODO*///	int y2 = ypos+blit.source_height;
+/*TODO*///	DATA_TYPE *dest_baseaddr = NULL;
+/*TODO*///	DATA_TYPE *dest_next;
+/*TODO*///	int dy;
+/*TODO*/////	int count;
+/*TODO*///	const DATA_TYPE *source0;
+/*TODO*///	DATA_TYPE *dest0;
+/*TODO*///	UINT8 *pmap0;
+/*TODO*///	int i;
+/*TODO*///	int row;
+/*TODO*///	UINT8 *priority_data;
+/*TODO*///	int tile_type;
+/*TODO*///	int prev_tile_type;
+/*TODO*///	int x_start;
+/*TODO*///	int x_end;
+/*TODO*///	int column;
+/*TODO*///	int c1;
+/*TODO*///	int c2; /* leftmost and rightmost visible columns in source tilemap */
+/*TODO*///	int y; /* current screen line to render */
+/*TODO*///	int y_next;
+/*TODO*///	int num_pixels;
+/*TODO*///	int priority_bitmap_row_offset;
+/*TODO*///	UINT8 *priority_bitmap_baseaddr;
+/*TODO*///	UINT8 *priority_bitmap_next;
+/*TODO*///	int priority;
+/*TODO*///	const DATA_TYPE *source_baseaddr;
+/*TODO*///	const DATA_TYPE *source_next;
+/*TODO*///
+/*TODO*/////	const UINT8 *mask0;
+/*TODO*/////	UINT8 *mask_data;
+/*TODO*/////	const UINT8 *mask_baseaddr;
+/*TODO*/////	const UINT8 *mask_next;
+/*TODO*///
+/*TODO*///	/* clip source coordinates */
+/*TODO*///	if( x1<blit.clip_left ) x1 = blit.clip_left;
+/*TODO*///	if( x2>blit.clip_right ) x2 = blit.clip_right;
+/*TODO*///	if( y1<blit.clip_top ) y1 = blit.clip_top;
+/*TODO*///	if( y2>blit.clip_bottom ) y2 = blit.clip_bottom;
+/*TODO*///
+/*TODO*///	if( x1<x2 && y1<y2 )
+/*TODO*///	{ /* do nothing if totally clipped */
+/*TODO*///		priority_bitmap_row_offset = priority_bitmap_line_offset*TILE_SIZE;
+/*TODO*///		priority_bitmap_baseaddr = xpos + (UINT8 *)priority_bitmap->line[y1];
+/*TODO*///		priority = blit.tile_priority;
+/*TODO*///		if( screen )
+/*TODO*///		{
+/*TODO*///			dest_baseaddr = xpos + (DATA_TYPE *)screen->line[y1];
+/*TODO*///		}
+/*TODO*///
+/*TODO*///		/* convert screen coordinates to source tilemap coordinates */
+/*TODO*///		x1 -= xpos;
+/*TODO*///		y1 -= ypos;
+/*TODO*///		x2 -= xpos;
+/*TODO*///		y2 -= ypos;
+/*TODO*///
+/*TODO*///		source_baseaddr = (DATA_TYPE *)blit.pixmap->line[y1];
+/*TODO*/////		mask_baseaddr = blit.bitmask->line[y1];
+/*TODO*///
+/*TODO*///		c1 = x1/TILE_SIZE; /* round down */
+/*TODO*///		c2 = (x2+TILE_SIZE-1)/TILE_SIZE; /* round up */
+/*TODO*///
+/*TODO*///		y = y1;
+/*TODO*///		y_next = TILE_SIZE*(y1/TILE_SIZE) + TILE_SIZE;
+/*TODO*///		if( y_next>y2 ) y_next = y2;
+/*TODO*///
+/*TODO*///		dy = y_next-y;
+/*TODO*///		dest_next = dest_baseaddr + dy*blit.dest_line_offset;
+/*TODO*///		priority_bitmap_next = priority_bitmap_baseaddr + dy*priority_bitmap_line_offset;
+/*TODO*///		source_next = source_baseaddr + dy*blit.source_line_offset;
+/*TODO*/////		mask_next = mask_baseaddr + dy*blit.mask_line_offset;
+/*TODO*///		for(;;)
+/*TODO*///		{
+/*TODO*///			row = y/TILE_SIZE;
+/*TODO*/////			mask_data = blit.mask_data_row[row];
+/*TODO*///			priority_data = blit.priority_data_row[row];
+/*TODO*///			prev_tile_type = TILE_TRANSPARENT;
+/*TODO*///			x_start = x1;
+/*TODO*///
+/*TODO*///			for( column=c1; column<=c2; column++ )
+/*TODO*///			{
+/*TODO*///				if( column==c2 || priority_data[column]!=priority )
+/*TODO*///				{
+/*TODO*///					tile_type = TILE_TRANSPARENT;
+/*TODO*///				}
+/*TODO*///				else
+/*TODO*///				{
+/*TODO*/////					tile_type = mask_data[column];
+/*TODO*///					tile_type = TILE_OPAQUE;
+/*TODO*///				}
+/*TODO*///
+/*TODO*///				if( tile_type!=prev_tile_type )
+/*TODO*///				{
+/*TODO*///					x_end = column*TILE_SIZE;
+/*TODO*///					if( x_end<x1 ) x_end = x1;
+/*TODO*///					if( x_end>x2 ) x_end = x2;
+/*TODO*///
+/*TODO*///					if( prev_tile_type != TILE_TRANSPARENT )
+/*TODO*///					{
+/*TODO*/////						if( prev_tile_type == TILE_MASKED )
+/*TODO*/////						{
+/*TODO*/////							count = (x_end+7)/8 - x_start/8;
+/*TODO*/////							mask0 = mask_baseaddr + x_start/8;
+/*TODO*/////							source0 = source_baseaddr + (x_start&0xfff8);
+/*TODO*/////							dest0 = dest_baseaddr + (x_start&0xfff8);
+/*TODO*/////							pmap0 = priority_bitmap_baseaddr + (x_start&0xfff8);
+/*TODO*/////							i = y;
+/*TODO*/////							for(;;)
+/*TODO*/////							{
+/*TODO*/////								if( screen ) memcpybitmask( dest0, source0, mask0, count );
+/*TODO*/////								memsetbitmask8( pmap0, tilemap_priority_code, mask0, count );
+/*TODO*/////								if( ++i == y_next ) break;
+/*TODO*/////
+/*TODO*/////								dest0 += blit.dest_line_offset;
+/*TODO*/////								source0 += blit.source_line_offset;
+/*TODO*/////								mask0 += blit.mask_line_offset;
+/*TODO*/////								pmap0 += priority_bitmap_line_offset;
+/*TODO*/////							}
+/*TODO*/////						}
+/*TODO*/////						else
+/*TODO*///						{ /* TILE_OPAQUE */
+/*TODO*///							num_pixels = x_end - x_start;
+/*TODO*///							dest0 = dest_baseaddr+x_start;
+/*TODO*///							source0 = source_baseaddr+x_start;
+/*TODO*///							pmap0 = priority_bitmap_baseaddr + x_start;
+/*TODO*///							i = y;
+/*TODO*///							for(;;)
+/*TODO*///							{
+/*TODO*///								if( screen ) memcpy( dest0, source0, num_pixels*sizeof(DATA_TYPE) );
+/*TODO*///								memset( pmap0, tilemap_priority_code, num_pixels );
+/*TODO*///								if( ++i == y_next ) break;
+/*TODO*///
+/*TODO*///								dest0 += blit.dest_line_offset;
+/*TODO*///								source0 += blit.source_line_offset;
+/*TODO*///								pmap0 += priority_bitmap_line_offset;
+/*TODO*///							}
+/*TODO*///						}
+/*TODO*///					}
+/*TODO*///					x_start = x_end;
+/*TODO*///				}
+/*TODO*///
+/*TODO*///				prev_tile_type = tile_type;
+/*TODO*///			}
+/*TODO*///
+/*TODO*///			if( y_next==y2 ) break; /* we are done! */
+/*TODO*///
+/*TODO*///			priority_bitmap_baseaddr = priority_bitmap_next;
+/*TODO*///			dest_baseaddr = dest_next;
+/*TODO*///			source_baseaddr = source_next;
+/*TODO*/////			mask_baseaddr = mask_next;
+/*TODO*///			y = y_next;
+/*TODO*///			y_next += TILE_SIZE;
+/*TODO*///
+/*TODO*///			if( y_next>=y2 )
+/*TODO*///			{
+/*TODO*///				y_next = y2;
+/*TODO*///			}
+/*TODO*///			else
+/*TODO*///			{
+/*TODO*///				dest_next += blit.dest_row_offset;
+/*TODO*///				priority_bitmap_next += priority_bitmap_row_offset;
+/*TODO*///				source_next += blit.source_row_offset;
+/*TODO*/////				mask_next += blit.mask_row_offset;
+/*TODO*///			}
+/*TODO*///		} /* process next row */
+/*TODO*///	} /* not totally clipped */
+/*TODO*///})
+        }
+    };
+    
+    public static DrawHandlerPtr draw16x16x8BPP = new DrawHandlerPtr() {
+        @Override
+        public void handler(int xpos, int ypos) {      
+            throw new UnsupportedOperationException("Not supported yet.");
+/*TODO*///	struct osd_bitmap *screen = blit.screen;
+/*TODO*///	int tilemap_priority_code = blit.tilemap_priority_code;
+/*TODO*///	int x1 = xpos;
+/*TODO*///	int y1 = ypos;
+/*TODO*///	int x2 = xpos+blit.source_width;
+/*TODO*///	int y2 = ypos+blit.source_height;
+/*TODO*///	DATA_TYPE *dest_baseaddr = NULL;
+/*TODO*///	DATA_TYPE *dest_next;
+/*TODO*///	int dy;
+/*TODO*///	int count;
+/*TODO*///	const DATA_TYPE *source0;
+/*TODO*///	DATA_TYPE *dest0;
+/*TODO*///	UINT8 *pmap0;
+/*TODO*///	int i;
+/*TODO*///	int row;
+/*TODO*///	UINT8 *priority_data;
+/*TODO*///	int tile_type;
+/*TODO*///	int prev_tile_type;
+/*TODO*///	int x_start;
+/*TODO*///	int x_end;
+/*TODO*///	int column;
+/*TODO*///	int c1;
+/*TODO*///	int c2; /* leftmost and rightmost visible columns in source tilemap */
+/*TODO*///	int y; /* current screen line to render */
+/*TODO*///	int y_next;
+/*TODO*///	int num_pixels;
+/*TODO*///	int priority_bitmap_row_offset;
+/*TODO*///	UINT8 *priority_bitmap_baseaddr;
+/*TODO*///	UINT8 *priority_bitmap_next;
+/*TODO*///	int priority;
+/*TODO*///	const DATA_TYPE *source_baseaddr;
+/*TODO*///	const DATA_TYPE *source_next;
+/*TODO*///	const UINT8 *mask0;
+/*TODO*///	UINT8 *mask_data;
+/*TODO*///	const UINT8 *mask_baseaddr;
+/*TODO*///	const UINT8 *mask_next;
+/*TODO*///
+/*TODO*///	/* clip source coordinates */
+/*TODO*///	if( x1<blit.clip_left ) x1 = blit.clip_left;
+/*TODO*///	if( x2>blit.clip_right ) x2 = blit.clip_right;
+/*TODO*///	if( y1<blit.clip_top ) y1 = blit.clip_top;
+/*TODO*///	if( y2>blit.clip_bottom ) y2 = blit.clip_bottom;
+/*TODO*///
+/*TODO*///	if( x1<x2 && y1<y2 )
+/*TODO*///	{ /* do nothing if totally clipped */
+/*TODO*///		priority_bitmap_row_offset = priority_bitmap_line_offset*TILE_SIZE;
+/*TODO*///		priority_bitmap_baseaddr = xpos + (UINT8 *)priority_bitmap->line[y1];
+/*TODO*///		priority = blit.tile_priority;
+/*TODO*///		if( screen )
+/*TODO*///		{
+/*TODO*///			dest_baseaddr = xpos + (DATA_TYPE *)screen->line[y1];
+/*TODO*///		}
+/*TODO*///
+/*TODO*///		/* convert screen coordinates to source tilemap coordinates */
+/*TODO*///		x1 -= xpos;
+/*TODO*///		y1 -= ypos;
+/*TODO*///		x2 -= xpos;
+/*TODO*///		y2 -= ypos;
+/*TODO*///
+/*TODO*///		source_baseaddr = (DATA_TYPE *)blit.pixmap->line[y1];
+/*TODO*///		mask_baseaddr = blit.bitmask->line[y1];
+/*TODO*///
+/*TODO*///		c1 = x1/TILE_SIZE; /* round down */
+/*TODO*///		c2 = (x2+TILE_SIZE-1)/TILE_SIZE; /* round up */
+/*TODO*///
+/*TODO*///		y = y1;
+/*TODO*///		y_next = TILE_SIZE*(y1/TILE_SIZE) + TILE_SIZE;
+/*TODO*///		if( y_next>y2 ) y_next = y2;
+/*TODO*///
+/*TODO*///		dy = y_next-y;
+/*TODO*///		dest_next = dest_baseaddr + dy*blit.dest_line_offset;
+/*TODO*///		priority_bitmap_next = priority_bitmap_baseaddr + dy*priority_bitmap_line_offset;
+/*TODO*///		source_next = source_baseaddr + dy*blit.source_line_offset;
+/*TODO*///		mask_next = mask_baseaddr + dy*blit.mask_line_offset;
+/*TODO*///		for(;;)
+/*TODO*///		{
+/*TODO*///			row = y/TILE_SIZE;
+/*TODO*///			mask_data = blit.mask_data_row[row];
+/*TODO*///			priority_data = blit.priority_data_row[row];
+/*TODO*///			prev_tile_type = TILE_TRANSPARENT;
+/*TODO*///			x_start = x1;
+/*TODO*///
+/*TODO*///			for( column=c1; column<=c2; column++ )
+/*TODO*///			{
+/*TODO*///				if( column==c2 || priority_data[column]!=priority )
+/*TODO*///				{
+/*TODO*///					tile_type = TILE_TRANSPARENT;
+/*TODO*///				}
+/*TODO*///				else
+/*TODO*///				{
+/*TODO*///					tile_type = mask_data[column];
+/*TODO*///				}
+/*TODO*///
+/*TODO*///				if( tile_type!=prev_tile_type )
+/*TODO*///				{
+/*TODO*///					x_end = column*TILE_SIZE;
+/*TODO*///					if( x_end<x1 ) x_end = x1;
+/*TODO*///					if( x_end>x2 ) x_end = x2;
+/*TODO*///
+/*TODO*///					if( prev_tile_type != TILE_TRANSPARENT )
+/*TODO*///					{
+/*TODO*///						if( prev_tile_type == TILE_MASKED )
+/*TODO*///						{
+/*TODO*///							count = (x_end+7)/8 - x_start/8;
+/*TODO*///							mask0 = mask_baseaddr + x_start/8;
+/*TODO*///							source0 = source_baseaddr + (x_start&0xfff8);
+/*TODO*///							dest0 = dest_baseaddr + (x_start&0xfff8);
+/*TODO*///							pmap0 = priority_bitmap_baseaddr + (x_start&0xfff8);
+/*TODO*///							i = y;
+/*TODO*///							for(;;)
+/*TODO*///							{
+/*TODO*///								if( screen ) memcpybitmask( dest0, source0, mask0, count );
+/*TODO*///								memsetbitmask8( pmap0, tilemap_priority_code, mask0, count );
+/*TODO*///								if( ++i == y_next ) break;
+/*TODO*///
+/*TODO*///								dest0 += blit.dest_line_offset;
+/*TODO*///								source0 += blit.source_line_offset;
+/*TODO*///								mask0 += blit.mask_line_offset;
+/*TODO*///								pmap0 += priority_bitmap_line_offset;
+/*TODO*///							}
+/*TODO*///						}
+/*TODO*///						else
+/*TODO*///						{ /* TILE_OPAQUE */
+/*TODO*///							num_pixels = x_end - x_start;
+/*TODO*///							dest0 = dest_baseaddr+x_start;
+/*TODO*///							source0 = source_baseaddr+x_start;
+/*TODO*///							pmap0 = priority_bitmap_baseaddr + x_start;
+/*TODO*///							i = y;
+/*TODO*///							for(;;)
+/*TODO*///							{
+/*TODO*///								if( screen ) memcpy( dest0, source0, num_pixels*sizeof(DATA_TYPE) );
+/*TODO*///								memset( pmap0, tilemap_priority_code, num_pixels );
+/*TODO*///								if( ++i == y_next ) break;
+/*TODO*///
+/*TODO*///								dest0 += blit.dest_line_offset;
+/*TODO*///								source0 += blit.source_line_offset;
+/*TODO*///								pmap0 += priority_bitmap_line_offset;
+/*TODO*///							}
+/*TODO*///						}
+/*TODO*///					}
+/*TODO*///					x_start = x_end;
+/*TODO*///				}
+/*TODO*///
+/*TODO*///				prev_tile_type = tile_type;
+/*TODO*///			}
+/*TODO*///
+/*TODO*///			if( y_next==y2 ) break; /* we are done! */
+/*TODO*///
+/*TODO*///			priority_bitmap_baseaddr = priority_bitmap_next;
+/*TODO*///			dest_baseaddr = dest_next;
+/*TODO*///			source_baseaddr = source_next;
+/*TODO*///			mask_baseaddr = mask_next;
+/*TODO*///			y = y_next;
+/*TODO*///			y_next += TILE_SIZE;
+/*TODO*///
+/*TODO*///			if( y_next>=y2 )
+/*TODO*///			{
+/*TODO*///				y_next = y2;
+/*TODO*///			}
+/*TODO*///			else
+/*TODO*///			{
+/*TODO*///				dest_next += blit.dest_row_offset;
+/*TODO*///				priority_bitmap_next += priority_bitmap_row_offset;
+/*TODO*///				source_next += blit.source_row_offset;
+/*TODO*///				mask_next += blit.mask_row_offset;
+/*TODO*///			}
+/*TODO*///		} /* process next row */
+/*TODO*///	} /* not totally clipped */
+/*TODO*///})
+        }
+    };
+    
+    public static DrawHandlerPtr draw_opaque16x16x8BPP = new DrawHandlerPtr() {
+        @Override
+        public void handler(int xpos, int ypos) {
+            //throw new UnsupportedOperationException("Not supported yet.");
+            /*TODO*///DECLARE( draw_opaque, (int xpos, int ypos),
+/*TODO*///{
+	osd_bitmap screen = blit.screen;
+	int tilemap_priority_code = blit.tilemap_priority_code;
+	int x1 = xpos;
+	int y1 = ypos;
+	int x2 = xpos+blit.source_width;
+	int y2 = ypos+blit.source_height;
+	UBytePtr /*DATA_TYPE*/ dest_baseaddr = null;
+	UBytePtr /*DATA_TYPE*/ dest_next;
+	int dy;
+//	int count;
+	UBytePtr /*DATA_TYPE*/ source0;
+	UBytePtr /*DATA_TYPE*/ dest0;
+	UBytePtr pmap0;
+	int i;
+	int row;
+	UBytePtr priority_data;
+	int tile_type;
+	int prev_tile_type;
+	int x_start;
+	int x_end;
+	int column;
+	int c1;
+	int c2; /* leftmost and rightmost visible columns in source tilemap */
+	int y; /* current screen line to render */
+	int y_next;
+	int num_pixels;
+	int priority_bitmap_row_offset;
+	UBytePtr priority_bitmap_baseaddr;
+	UBytePtr priority_bitmap_next;
+	int priority;
+	UBytePtr /*DATA_TYPE*/ source_baseaddr;
+	UBytePtr /*DATA_TYPE*/ source_next;
+
+//	const UINT8 *mask0;
+//	UINT8 *mask_data;
+//	const UINT8 *mask_baseaddr;
+//	const UINT8 *mask_next;
+
+	/* clip source coordinates */
+	if( x1<blit.clip_left ) x1 = blit.clip_left;
+	if( x2>blit.clip_right ) x2 = blit.clip_right;
+	if( y1<blit.clip_top ) y1 = blit.clip_top;
+	if( y2>blit.clip_bottom ) y2 = blit.clip_bottom;
+
+	if( x1<x2 && y1<y2 )
+	{ /* do nothing if totally clipped */
+		priority_bitmap_row_offset = priority_bitmap_line_offset*TILE_SIZE;
+		priority_bitmap_baseaddr = new UBytePtr(priority_bitmap.line[y1], xpos);
+		priority = blit.tile_priority;
+		if( screen != null )
+		{
+			dest_baseaddr = new UBytePtr /*DATA_TYPE*/(screen.line[y1], xpos);
+		}
+
+		/* convert screen coordinates to source tilemap coordinates */
+		x1 -= xpos;
+		y1 -= ypos;
+		x2 -= xpos;
+		y2 -= ypos;
+
+		source_baseaddr = new UBytePtr /*DATA_TYPE*/(blit.pixmap.line[y1]);
+                source_baseaddr.offset=0;
+//		mask_baseaddr = blit.bitmask->line[y1];
+
+		c1 = x1/TILE_SIZE; /* round down */
+		c2 = (x2+TILE_SIZE-1)/TILE_SIZE; /* round up */
+
+		y = y1;
+		y_next = TILE_SIZE*(y1/TILE_SIZE) + TILE_SIZE;
+		if( y_next>y2 ) y_next = y2;
+
+		dy = y_next-y;
+		dest_next = new UBytePtr(dest_baseaddr, dy*blit.dest_line_offset);
+		priority_bitmap_next = new UBytePtr(priority_bitmap_baseaddr, dy*priority_bitmap_line_offset);
+		source_next = new UBytePtr(source_baseaddr, dy*blit.source_line_offset);
+//		mask_next = mask_baseaddr + dy*blit.mask_line_offset;
+		for(;;)
+		{
+			row = y/TILE_SIZE;
+//			mask_data = blit.mask_data_row[row];
+			priority_data = new UBytePtr(blit.priority_data_row[row]);
+                        priority_data.offset=0;
+			prev_tile_type = TILE_TRANSPARENT;
+			x_start = x1;
+
+			for( column=c1; column<=c2; column++ )
+			{
+				if( column==c2 || priority_data.read(column)!=priority )
+				{
+					tile_type = TILE_TRANSPARENT;
+				}
+				else
+				{
+//					tile_type = mask_data[column];
+					tile_type = TILE_OPAQUE;
+				}
+
+				if( tile_type!=prev_tile_type )
+				{
+					x_end = column*TILE_SIZE;
+					if( x_end<x1 ) x_end = x1;
+					if( x_end>x2 ) x_end = x2;
+
+					if( prev_tile_type != TILE_TRANSPARENT )
+					{
+//						if( prev_tile_type == TILE_MASKED )
+//						{
+//							count = (x_end+7)/8 - x_start/8;
+//							mask0 = mask_baseaddr + x_start/8;
+//							source0 = source_baseaddr + (x_start&0xfff8);
+//							dest0 = dest_baseaddr + (x_start&0xfff8);
+//							pmap0 = priority_bitmap_baseaddr + (x_start&0xfff8);
+//							i = y;
+//							for(;;)
+//							{
+//								if( screen ) memcpybitmask( dest0, source0, mask0, count );
+//								memsetbitmask8( pmap0, tilemap_priority_code, mask0, count );
+//								if( ++i == y_next ) break;
+//
+//								dest0 += blit.dest_line_offset;
+//								source0 += blit.source_line_offset;
+//								mask0 += blit.mask_line_offset;
+//								pmap0 += priority_bitmap_line_offset;
+//							}
+//						}
+//						else
+						{ /* TILE_OPAQUE */
+							num_pixels = x_end - x_start;
+							dest0 = new UBytePtr(dest_baseaddr, x_start);
+							source0 = new UBytePtr(source_baseaddr, x_start);
+							pmap0 = new UBytePtr(priority_bitmap_baseaddr, x_start);
+							i = y;
+							for(;;)
+							{
+								if( screen != null && (dest0.memory.length>=(dest0.offset+num_pixels)) && (source0.memory.length>=(source0.offset+num_pixels)) ) memcpy( dest0, source0, num_pixels );
+								memset( pmap0, tilemap_priority_code, num_pixels );
+								if( ++i == y_next ) break;
+
+								dest0.offset += blit.dest_line_offset;
+								source0.offset += blit.source_line_offset;
+								pmap0.offset += priority_bitmap_line_offset;
+							}
+						}
+					}
+					x_start = x_end;
+				}
+
+				prev_tile_type = tile_type;
+			}
+
+			if( y_next==y2 ) break; /* we are done! */
+
+			priority_bitmap_baseaddr = priority_bitmap_next;
+			dest_baseaddr = dest_next;
+			source_baseaddr = source_next;
+//			mask_baseaddr = mask_next;
+			y = y_next;
+			y_next += TILE_SIZE;
+
+			if( y_next>=y2 )
+			{
+				y_next = y2;
+			}
+			else
+			{
+				dest_next.offset += blit.dest_row_offset;
+				priority_bitmap_next.offset += priority_bitmap_row_offset;
+				source_next.offset += blit.source_row_offset;
+//				mask_next += blit.mask_row_offset;
+			}
+		} /* process next row */
+	} /* not totally clipped */
+/*TODO*///})
+        }
+    };
+    
+    public static DrawHandlerPtr draw32x32x8BPP = new DrawHandlerPtr() {
+        @Override
+        public void handler(int xpos, int ypos) {      
+            throw new UnsupportedOperationException("Not supported yet.");
+/*TODO*///	struct osd_bitmap *screen = blit.screen;
+/*TODO*///	int tilemap_priority_code = blit.tilemap_priority_code;
+/*TODO*///	int x1 = xpos;
+/*TODO*///	int y1 = ypos;
+/*TODO*///	int x2 = xpos+blit.source_width;
+/*TODO*///	int y2 = ypos+blit.source_height;
+/*TODO*///	DATA_TYPE *dest_baseaddr = NULL;
+/*TODO*///	DATA_TYPE *dest_next;
+/*TODO*///	int dy;
+/*TODO*///	int count;
+/*TODO*///	const DATA_TYPE *source0;
+/*TODO*///	DATA_TYPE *dest0;
+/*TODO*///	UINT8 *pmap0;
+/*TODO*///	int i;
+/*TODO*///	int row;
+/*TODO*///	UINT8 *priority_data;
+/*TODO*///	int tile_type;
+/*TODO*///	int prev_tile_type;
+/*TODO*///	int x_start;
+/*TODO*///	int x_end;
+/*TODO*///	int column;
+/*TODO*///	int c1;
+/*TODO*///	int c2; /* leftmost and rightmost visible columns in source tilemap */
+/*TODO*///	int y; /* current screen line to render */
+/*TODO*///	int y_next;
+/*TODO*///	int num_pixels;
+/*TODO*///	int priority_bitmap_row_offset;
+/*TODO*///	UINT8 *priority_bitmap_baseaddr;
+/*TODO*///	UINT8 *priority_bitmap_next;
+/*TODO*///	int priority;
+/*TODO*///	const DATA_TYPE *source_baseaddr;
+/*TODO*///	const DATA_TYPE *source_next;
+/*TODO*///	const UINT8 *mask0;
+/*TODO*///	UINT8 *mask_data;
+/*TODO*///	const UINT8 *mask_baseaddr;
+/*TODO*///	const UINT8 *mask_next;
+/*TODO*///
+/*TODO*///	/* clip source coordinates */
+/*TODO*///	if( x1<blit.clip_left ) x1 = blit.clip_left;
+/*TODO*///	if( x2>blit.clip_right ) x2 = blit.clip_right;
+/*TODO*///	if( y1<blit.clip_top ) y1 = blit.clip_top;
+/*TODO*///	if( y2>blit.clip_bottom ) y2 = blit.clip_bottom;
+/*TODO*///
+/*TODO*///	if( x1<x2 && y1<y2 )
+/*TODO*///	{ /* do nothing if totally clipped */
+/*TODO*///		priority_bitmap_row_offset = priority_bitmap_line_offset*TILE_SIZE;
+/*TODO*///		priority_bitmap_baseaddr = xpos + (UINT8 *)priority_bitmap->line[y1];
+/*TODO*///		priority = blit.tile_priority;
+/*TODO*///		if( screen )
+/*TODO*///		{
+/*TODO*///			dest_baseaddr = xpos + (DATA_TYPE *)screen->line[y1];
+/*TODO*///		}
+/*TODO*///
+/*TODO*///		/* convert screen coordinates to source tilemap coordinates */
+/*TODO*///		x1 -= xpos;
+/*TODO*///		y1 -= ypos;
+/*TODO*///		x2 -= xpos;
+/*TODO*///		y2 -= ypos;
+/*TODO*///
+/*TODO*///		source_baseaddr = (DATA_TYPE *)blit.pixmap->line[y1];
+/*TODO*///		mask_baseaddr = blit.bitmask->line[y1];
+/*TODO*///
+/*TODO*///		c1 = x1/TILE_SIZE; /* round down */
+/*TODO*///		c2 = (x2+TILE_SIZE-1)/TILE_SIZE; /* round up */
+/*TODO*///
+/*TODO*///		y = y1;
+/*TODO*///		y_next = TILE_SIZE*(y1/TILE_SIZE) + TILE_SIZE;
+/*TODO*///		if( y_next>y2 ) y_next = y2;
+/*TODO*///
+/*TODO*///		dy = y_next-y;
+/*TODO*///		dest_next = dest_baseaddr + dy*blit.dest_line_offset;
+/*TODO*///		priority_bitmap_next = priority_bitmap_baseaddr + dy*priority_bitmap_line_offset;
+/*TODO*///		source_next = source_baseaddr + dy*blit.source_line_offset;
+/*TODO*///		mask_next = mask_baseaddr + dy*blit.mask_line_offset;
+/*TODO*///		for(;;)
+/*TODO*///		{
+/*TODO*///			row = y/TILE_SIZE;
+/*TODO*///			mask_data = blit.mask_data_row[row];
+/*TODO*///			priority_data = blit.priority_data_row[row];
+/*TODO*///			prev_tile_type = TILE_TRANSPARENT;
+/*TODO*///			x_start = x1;
+/*TODO*///
+/*TODO*///			for( column=c1; column<=c2; column++ )
+/*TODO*///			{
+/*TODO*///				if( column==c2 || priority_data[column]!=priority )
+/*TODO*///				{
+/*TODO*///					tile_type = TILE_TRANSPARENT;
+/*TODO*///				}
+/*TODO*///				else
+/*TODO*///				{
+/*TODO*///					tile_type = mask_data[column];
+/*TODO*///				}
+/*TODO*///
+/*TODO*///				if( tile_type!=prev_tile_type )
+/*TODO*///				{
+/*TODO*///					x_end = column*TILE_SIZE;
+/*TODO*///					if( x_end<x1 ) x_end = x1;
+/*TODO*///					if( x_end>x2 ) x_end = x2;
+/*TODO*///
+/*TODO*///					if( prev_tile_type != TILE_TRANSPARENT )
+/*TODO*///					{
+/*TODO*///						if( prev_tile_type == TILE_MASKED )
+/*TODO*///						{
+/*TODO*///							count = (x_end+7)/8 - x_start/8;
+/*TODO*///							mask0 = mask_baseaddr + x_start/8;
+/*TODO*///							source0 = source_baseaddr + (x_start&0xfff8);
+/*TODO*///							dest0 = dest_baseaddr + (x_start&0xfff8);
+/*TODO*///							pmap0 = priority_bitmap_baseaddr + (x_start&0xfff8);
+/*TODO*///							i = y;
+/*TODO*///							for(;;)
+/*TODO*///							{
+/*TODO*///								if( screen ) memcpybitmask( dest0, source0, mask0, count );
+/*TODO*///								memsetbitmask8( pmap0, tilemap_priority_code, mask0, count );
+/*TODO*///								if( ++i == y_next ) break;
+/*TODO*///
+/*TODO*///								dest0 += blit.dest_line_offset;
+/*TODO*///								source0 += blit.source_line_offset;
+/*TODO*///								mask0 += blit.mask_line_offset;
+/*TODO*///								pmap0 += priority_bitmap_line_offset;
+/*TODO*///							}
+/*TODO*///						}
+/*TODO*///						else
+/*TODO*///						{ /* TILE_OPAQUE */
+/*TODO*///							num_pixels = x_end - x_start;
+/*TODO*///							dest0 = dest_baseaddr+x_start;
+/*TODO*///							source0 = source_baseaddr+x_start;
+/*TODO*///							pmap0 = priority_bitmap_baseaddr + x_start;
+/*TODO*///							i = y;
+/*TODO*///							for(;;)
+/*TODO*///							{
+/*TODO*///								if( screen ) memcpy( dest0, source0, num_pixels*sizeof(DATA_TYPE) );
+/*TODO*///								memset( pmap0, tilemap_priority_code, num_pixels );
+/*TODO*///								if( ++i == y_next ) break;
+/*TODO*///
+/*TODO*///								dest0 += blit.dest_line_offset;
+/*TODO*///								source0 += blit.source_line_offset;
+/*TODO*///								pmap0 += priority_bitmap_line_offset;
+/*TODO*///							}
+/*TODO*///						}
+/*TODO*///					}
+/*TODO*///					x_start = x_end;
+/*TODO*///				}
+/*TODO*///
+/*TODO*///				prev_tile_type = tile_type;
+/*TODO*///			}
+/*TODO*///
+/*TODO*///			if( y_next==y2 ) break; /* we are done! */
+/*TODO*///
+/*TODO*///			priority_bitmap_baseaddr = priority_bitmap_next;
+/*TODO*///			dest_baseaddr = dest_next;
+/*TODO*///			source_baseaddr = source_next;
+/*TODO*///			mask_baseaddr = mask_next;
+/*TODO*///			y = y_next;
+/*TODO*///			y_next += TILE_SIZE;
+/*TODO*///
+/*TODO*///			if( y_next>=y2 )
+/*TODO*///			{
+/*TODO*///				y_next = y2;
+/*TODO*///			}
+/*TODO*///			else
+/*TODO*///			{
+/*TODO*///				dest_next += blit.dest_row_offset;
+/*TODO*///				priority_bitmap_next += priority_bitmap_row_offset;
+/*TODO*///				source_next += blit.source_row_offset;
+/*TODO*///				mask_next += blit.mask_row_offset;
+/*TODO*///			}
+/*TODO*///		} /* process next row */
+/*TODO*///	} /* not totally clipped */
+/*TODO*///})
+        }
+    };
+    
+    public static DrawHandlerPtr draw_opaque32x32x8BPP = new DrawHandlerPtr() {
+        @Override
+        public void handler(int xpos, int ypos) {
+            throw new UnsupportedOperationException("Not supported yet.");
+            /*TODO*///DECLARE( draw_opaque, (int xpos, int ypos),
+/*TODO*///{
+/*TODO*///	struct osd_bitmap *screen = blit.screen;
+/*TODO*///	int tilemap_priority_code = blit.tilemap_priority_code;
+/*TODO*///	int x1 = xpos;
+/*TODO*///	int y1 = ypos;
+/*TODO*///	int x2 = xpos+blit.source_width;
+/*TODO*///	int y2 = ypos+blit.source_height;
+/*TODO*///	DATA_TYPE *dest_baseaddr = NULL;
+/*TODO*///	DATA_TYPE *dest_next;
+/*TODO*///	int dy;
+/*TODO*/////	int count;
+/*TODO*///	const DATA_TYPE *source0;
+/*TODO*///	DATA_TYPE *dest0;
+/*TODO*///	UINT8 *pmap0;
+/*TODO*///	int i;
+/*TODO*///	int row;
+/*TODO*///	UINT8 *priority_data;
+/*TODO*///	int tile_type;
+/*TODO*///	int prev_tile_type;
+/*TODO*///	int x_start;
+/*TODO*///	int x_end;
+/*TODO*///	int column;
+/*TODO*///	int c1;
+/*TODO*///	int c2; /* leftmost and rightmost visible columns in source tilemap */
+/*TODO*///	int y; /* current screen line to render */
+/*TODO*///	int y_next;
+/*TODO*///	int num_pixels;
+/*TODO*///	int priority_bitmap_row_offset;
+/*TODO*///	UINT8 *priority_bitmap_baseaddr;
+/*TODO*///	UINT8 *priority_bitmap_next;
+/*TODO*///	int priority;
+/*TODO*///	const DATA_TYPE *source_baseaddr;
+/*TODO*///	const DATA_TYPE *source_next;
+/*TODO*///
+/*TODO*/////	const UINT8 *mask0;
+/*TODO*/////	UINT8 *mask_data;
+/*TODO*/////	const UINT8 *mask_baseaddr;
+/*TODO*/////	const UINT8 *mask_next;
+/*TODO*///
+/*TODO*///	/* clip source coordinates */
+/*TODO*///	if( x1<blit.clip_left ) x1 = blit.clip_left;
+/*TODO*///	if( x2>blit.clip_right ) x2 = blit.clip_right;
+/*TODO*///	if( y1<blit.clip_top ) y1 = blit.clip_top;
+/*TODO*///	if( y2>blit.clip_bottom ) y2 = blit.clip_bottom;
+/*TODO*///
+/*TODO*///	if( x1<x2 && y1<y2 )
+/*TODO*///	{ /* do nothing if totally clipped */
+/*TODO*///		priority_bitmap_row_offset = priority_bitmap_line_offset*TILE_SIZE;
+/*TODO*///		priority_bitmap_baseaddr = xpos + (UINT8 *)priority_bitmap->line[y1];
+/*TODO*///		priority = blit.tile_priority;
+/*TODO*///		if( screen )
+/*TODO*///		{
+/*TODO*///			dest_baseaddr = xpos + (DATA_TYPE *)screen->line[y1];
+/*TODO*///		}
+/*TODO*///
+/*TODO*///		/* convert screen coordinates to source tilemap coordinates */
+/*TODO*///		x1 -= xpos;
+/*TODO*///		y1 -= ypos;
+/*TODO*///		x2 -= xpos;
+/*TODO*///		y2 -= ypos;
+/*TODO*///
+/*TODO*///		source_baseaddr = (DATA_TYPE *)blit.pixmap->line[y1];
+/*TODO*/////		mask_baseaddr = blit.bitmask->line[y1];
+/*TODO*///
+/*TODO*///		c1 = x1/TILE_SIZE; /* round down */
+/*TODO*///		c2 = (x2+TILE_SIZE-1)/TILE_SIZE; /* round up */
+/*TODO*///
+/*TODO*///		y = y1;
+/*TODO*///		y_next = TILE_SIZE*(y1/TILE_SIZE) + TILE_SIZE;
+/*TODO*///		if( y_next>y2 ) y_next = y2;
+/*TODO*///
+/*TODO*///		dy = y_next-y;
+/*TODO*///		dest_next = dest_baseaddr + dy*blit.dest_line_offset;
+/*TODO*///		priority_bitmap_next = priority_bitmap_baseaddr + dy*priority_bitmap_line_offset;
+/*TODO*///		source_next = source_baseaddr + dy*blit.source_line_offset;
+/*TODO*/////		mask_next = mask_baseaddr + dy*blit.mask_line_offset;
+/*TODO*///		for(;;)
+/*TODO*///		{
+/*TODO*///			row = y/TILE_SIZE;
+/*TODO*/////			mask_data = blit.mask_data_row[row];
+/*TODO*///			priority_data = blit.priority_data_row[row];
+/*TODO*///			prev_tile_type = TILE_TRANSPARENT;
+/*TODO*///			x_start = x1;
+/*TODO*///
+/*TODO*///			for( column=c1; column<=c2; column++ )
+/*TODO*///			{
+/*TODO*///				if( column==c2 || priority_data[column]!=priority )
+/*TODO*///				{
+/*TODO*///					tile_type = TILE_TRANSPARENT;
+/*TODO*///				}
+/*TODO*///				else
+/*TODO*///				{
+/*TODO*/////					tile_type = mask_data[column];
+/*TODO*///					tile_type = TILE_OPAQUE;
+/*TODO*///				}
+/*TODO*///
+/*TODO*///				if( tile_type!=prev_tile_type )
+/*TODO*///				{
+/*TODO*///					x_end = column*TILE_SIZE;
+/*TODO*///					if( x_end<x1 ) x_end = x1;
+/*TODO*///					if( x_end>x2 ) x_end = x2;
+/*TODO*///
+/*TODO*///					if( prev_tile_type != TILE_TRANSPARENT )
+/*TODO*///					{
+/*TODO*/////						if( prev_tile_type == TILE_MASKED )
+/*TODO*/////						{
+/*TODO*/////							count = (x_end+7)/8 - x_start/8;
+/*TODO*/////							mask0 = mask_baseaddr + x_start/8;
+/*TODO*/////							source0 = source_baseaddr + (x_start&0xfff8);
+/*TODO*/////							dest0 = dest_baseaddr + (x_start&0xfff8);
+/*TODO*/////							pmap0 = priority_bitmap_baseaddr + (x_start&0xfff8);
+/*TODO*/////							i = y;
+/*TODO*/////							for(;;)
+/*TODO*/////							{
+/*TODO*/////								if( screen ) memcpybitmask( dest0, source0, mask0, count );
+/*TODO*/////								memsetbitmask8( pmap0, tilemap_priority_code, mask0, count );
+/*TODO*/////								if( ++i == y_next ) break;
+/*TODO*/////
+/*TODO*/////								dest0 += blit.dest_line_offset;
+/*TODO*/////								source0 += blit.source_line_offset;
+/*TODO*/////								mask0 += blit.mask_line_offset;
+/*TODO*/////								pmap0 += priority_bitmap_line_offset;
+/*TODO*/////							}
+/*TODO*/////						}
+/*TODO*/////						else
+/*TODO*///						{ /* TILE_OPAQUE */
+/*TODO*///							num_pixels = x_end - x_start;
+/*TODO*///							dest0 = dest_baseaddr+x_start;
+/*TODO*///							source0 = source_baseaddr+x_start;
+/*TODO*///							pmap0 = priority_bitmap_baseaddr + x_start;
+/*TODO*///							i = y;
+/*TODO*///							for(;;)
+/*TODO*///							{
+/*TODO*///								if( screen ) memcpy( dest0, source0, num_pixels*sizeof(DATA_TYPE) );
+/*TODO*///								memset( pmap0, tilemap_priority_code, num_pixels );
+/*TODO*///								if( ++i == y_next ) break;
+/*TODO*///
+/*TODO*///								dest0 += blit.dest_line_offset;
+/*TODO*///								source0 += blit.source_line_offset;
+/*TODO*///								pmap0 += priority_bitmap_line_offset;
+/*TODO*///							}
+/*TODO*///						}
+/*TODO*///					}
+/*TODO*///					x_start = x_end;
+/*TODO*///				}
+/*TODO*///
+/*TODO*///				prev_tile_type = tile_type;
+/*TODO*///			}
+/*TODO*///
+/*TODO*///			if( y_next==y2 ) break; /* we are done! */
+/*TODO*///
+/*TODO*///			priority_bitmap_baseaddr = priority_bitmap_next;
+/*TODO*///			dest_baseaddr = dest_next;
+/*TODO*///			source_baseaddr = source_next;
+/*TODO*/////			mask_baseaddr = mask_next;
+/*TODO*///			y = y_next;
+/*TODO*///			y_next += TILE_SIZE;
+/*TODO*///
+/*TODO*///			if( y_next>=y2 )
+/*TODO*///			{
+/*TODO*///				y_next = y2;
+/*TODO*///			}
+/*TODO*///			else
+/*TODO*///			{
+/*TODO*///				dest_next += blit.dest_row_offset;
+/*TODO*///				priority_bitmap_next += priority_bitmap_row_offset;
+/*TODO*///				source_next += blit.source_row_offset;
+/*TODO*/////				mask_next += blit.mask_row_offset;
+/*TODO*///			}
+/*TODO*///		} /* process next row */
+/*TODO*///	} /* not totally clipped */
+/*TODO*///})
+        }
+    };
+    
 }
