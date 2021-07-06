@@ -24,7 +24,6 @@ import static mame037b16.drawgfx.*;
 import static mame037b16.mame.Machine;
 import static common.libc.cstring.*;
 import static mame037b7.palette.palette_change_color;
-import static mame037b7.palette.palette_used_colors;
 
 public class pacland {
 

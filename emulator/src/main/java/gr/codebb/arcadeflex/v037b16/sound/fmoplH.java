@@ -1,7 +1,8 @@
 /*
- *  Ported to 0.37b7
+ *  Ported to v0.37b16
+ *  Ported to v0.37b7
  */
-package mame037b7.sound;
+package gr.codebb.arcadeflex.v037b16.sound;
 
 import static common.subArrays.*;
 import mame037b7.sound.ymdeltatH.YM_DELTAT;

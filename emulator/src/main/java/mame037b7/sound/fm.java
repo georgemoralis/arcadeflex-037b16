@@ -12,7 +12,7 @@ import static gr.codebb.arcadeflex.v037b16.sound._2203intf.YM2203UpdateRequest;
 import static gr.codebb.arcadeflex.v037b16.sound._2608intf.YM2608UpdateRequest;
 //import static sound._2610intf.YM2610UpdateRequest;
 import static mame037b7.sound.fmH.*;
-import static mame037b7.sound.fmopl.DELTAT_MIXING_LEVEL;
+import static gr.codebb.arcadeflex.v037b16.sound.fmopl.DELTAT_MIXING_LEVEL;
 import static mame037b7.sound.ymdeltatH.*;
 import static mame037b7.sound.ymdeltat.*;
 

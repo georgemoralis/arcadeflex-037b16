@@ -19,8 +19,8 @@ import static gr.codebb.arcadeflex.v056.mame.timer.timer_remove;
 import static gr.codebb.arcadeflex.v056.mame.timer.timer_set;
 import static mame037b16.mame.Machine;
 import gr.codebb.arcadeflex.v037b16.sound._3812intfH.*;
-import static mame037b7.sound.fmopl.*;
-import static mame037b7.sound.fmoplH.*;
+import static gr.codebb.arcadeflex.v037b16.sound.fmopl.*;
+import static gr.codebb.arcadeflex.v037b16.sound.fmoplH.*;
 import static mame056.sound.streams.*;
 
 public class _3812intf extends snd_interface {

@@ -13,42 +13,30 @@ import static arcadeflex036.video.osd_modify_pen;
 import static common.libc.cstdio.*;
 import static common.libc.cstring.memset;
 import common.ptr.UBytePtr;
+import common.subArrays.IntArray;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapC.tilemap_dirty_palette;
 import static mame037b16.mame.Machine;
 import static mame037b7.palette.BLACK_PEN;
 import static mame037b7.palette.PALETTE_COLOR_NEEDS_REMAP;
 import static mame037b7.palette.RESERVED_PENS;
 import static mame037b7.palette.TRANSPARENT_PEN;
-import static mame037b7.palette.game_palette;
-import static mame037b7.palette.just_remapped;
-import static mame037b7.palette.new_palette;
-import static mame037b7.palette.old_used_colors;
 import static mame037b7.palette.palette_change_color;
-import static mame037b7.palette.palette_dirty;
-import static mame037b7.palette.palette_map;
-import static mame037b7.palette.palette_used_colors;
-import static mame037b7.palette.pen_usage_count;
-import static mame037b7.palette.shrinked_palette;
-import static mame037b7.palette.shrinked_pens;
 
 public class palette {
 
     public static final FILE palettelog = null;//fopen("palette.log", "wa");  //for debug purposes
-/*TODO*///#define VERBOSE 0
-/*TODO*///
-/*TODO*///
-/*TODO*///static UINT8 *game_palette;	/* RGB palette as set by the driver. */
-/*TODO*///static UINT8 *new_palette;	/* changes to the palette are stored here before */
-/*TODO*///							/* being moved to game_palette by palette_recalc() */
-/*TODO*///static UINT8 *palette_dirty;
-/*TODO*////* arrays which keep track of colors actually used, to help in the palette shrinking. */
-/*TODO*///UINT8 *palette_used_colors;
-/*TODO*///static UINT8 *old_used_colors;
-/*TODO*///static int *pen_visiblecount,*pen_cachedcount;
-/*TODO*///static UINT8 *just_remapped;	/* colors which have been remapped in this frame, */
-/*TODO*///								/* returned by palette_recalc() */
-/*TODO*///int has_remap = 0;
-/*TODO*///
+
+    public static char[] game_palette;/* RGB palette as set by the driver. */
+    public static UBytePtr new_palette;/* changes to the palette are stored here before being moved to game_palette by palette_recalc() */
+    public static UBytePtr palette_dirty;
+    /* arrays which keep track of colors actually used, to help in the palette shrinking. */
+    public static UBytePtr palette_used_colors;
+    public static UBytePtr old_used_colors;
+    public static IntArray pen_visiblecount;
+    public static IntArray pen_cachedcount;
+    public static UBytePtr just_remapped;/* colors which have been remapped in this frame, returned by palette_recalc() */
+
+    public static int has_remap = 0;
     public static int colormode;
     public static final int PALETTIZED_8BIT = 0;
     public static final int STATIC_16BIT = 1;
@@ -56,17 +44,16 @@ public class palette {
     public static final int DIRECT_15BIT = 3;
     public static final int DIRECT_32BIT = 4;
 
-    /*TODO*///
-/*TODO*///static int total_shrinked_pens;
-/*TODO*///UINT32 *shrinked_pens;
-/*TODO*///static UINT8 *shrinked_palette;
-/*TODO*///static UINT16 *palette_map;	/* map indexes from game_palette to shrinked_palette */
-/*TODO*///static UINT16 pen_usage_count[DYNAMIC_MAX_PENS];
-/*TODO*///
-/*TODO*///UINT16 palette_transparent_pen;
-/*TODO*///
-/*TODO*///
-/*TODO*///#define BLACK_PEN		0
+    public static int total_shrinked_pens;
+    public static int[] shrinked_pens;
+    public static /*UINT8*/ int[] u8_shrinked_palette;
+    public static /*UINT16*/ char[] palette_map;/* map indexes from game_palette to shrinked_palette */
+
+    public static /*UINT16*/ char[] pen_usage_count = new char[DYNAMIC_MAX_PENS];
+
+    public static /*UINT16*/ char palette_transparent_pen;
+
+    /*TODO*///#define BLACK_PEN		0
 /*TODO*///#define TRANSPARENT_PEN	1
 /*TODO*///#define RESERVED_PENS	2
 /*TODO*///
@@ -846,9 +833,9 @@ public class palette {
 
         for (i = 0; i < DYNAMIC_MAX_PENS; i++) {
             if (pen_usage_count[i] > 0) {
-                rr = shrinked_palette[3 * i + 0] >> 2;
-                gg = shrinked_palette[3 * i + 1] >> 2;
-                bb = shrinked_palette[3 * i + 2] >> 2;
+                rr = u8_shrinked_palette[3 * i + 0] >> 2;
+                gg = u8_shrinked_palette[3 * i + 1] >> 2;
+                bb = u8_shrinked_palette[3 * i + 2] >> 2;
 
                 if (u8_rgb6_to_pen[rr][gg][bb] == DYNAMIC_MAX_PENS) {
                     int j, max;
@@ -858,9 +845,9 @@ public class palette {
                     /* to reduce flickering during remaps, find the pen used by most colors */
                     for (j = i + 1; j < DYNAMIC_MAX_PENS; j++) {
                         if (pen_usage_count[j] > max
-                                && rr == (shrinked_palette[3 * j + 0] >> 2)
-                                && gg == (shrinked_palette[3 * j + 1] >> 2)
-                                && bb == (shrinked_palette[3 * j + 2] >> 2)) {
+                                && rr == (u8_shrinked_palette[3 * j + 0] >> 2)
+                                && gg == (u8_shrinked_palette[3 * j + 1] >> 2)
+                                && bb == (u8_shrinked_palette[3 * j + 2] >> 2)) {
                             u8_rgb6_to_pen[rr][gg][bb] = j & 0xFF;
                             max = pen_usage_count[j];
                         }
@@ -1057,9 +1044,9 @@ public class palette {
                     game_palette[3 * rec_color + 1] = (char) (g & 0xFF);
                     game_palette[3 * rec_color + 2] = (char) (b & 0xFF);
 
-                    shrinked_palette[3 * pen + 0] = (char) (r & 0xFF);
-                    shrinked_palette[3 * pen + 1] = (char) (g & 0xFF);
-                    shrinked_palette[3 * pen + 2] = (char) (b & 0xFF);
+                    u8_shrinked_palette[3 * pen + 0] = (r & 0xFF);
+                    u8_shrinked_palette[3 * pen + 1] = (g & 0xFF);
+                    u8_shrinked_palette[3 * pen + 2] = (b & 0xFF);
                     osd_modify_pen(Machine.pens[rec_color], r, g, b);
                 } else {
                     if (pen < RESERVED_PENS) {
@@ -1090,9 +1077,9 @@ public class palette {
                         if (i == Machine.drv.total_colors) {
                             /* all colors sharing this pen still are the same, so we */
  /* just change the palette. */
-                            shrinked_palette[3 * pen + 0] = (char) (r & 0xFF);
-                            shrinked_palette[3 * pen + 1] = (char) (g & 0xFF);
-                            shrinked_palette[3 * pen + 2] = (char) (b & 0xFF);
+                            u8_shrinked_palette[3 * pen + 0] = (r & 0xFF);
+                            u8_shrinked_palette[3 * pen + 1] = (g & 0xFF);
+                            u8_shrinked_palette[3 * pen + 2] = (b & 0xFF);
                             osd_modify_pen(Machine.pens[rec_color], r, g, b);
 
                             for (i = rec_color; i < Machine.drv.total_colors; i++) {
@@ -1210,16 +1197,16 @@ public class palette {
                             int rr, gg, bb;
 
                             i = palette_map[rec_color];
-                            rr = shrinked_palette[3 * i + 0] >> 2;
-                            gg = shrinked_palette[3 * i + 1] >> 2;
-                            bb = shrinked_palette[3 * i + 2] >> 2;
+                            rr = u8_shrinked_palette[3 * i + 0] >> 2;
+                            gg = u8_shrinked_palette[3 * i + 1] >> 2;
+                            bb = u8_shrinked_palette[3 * i + 2] >> 2;
                             if (u8_rgb6_to_pen[rr][gg][bb] == i) {
                                 u8_rgb6_to_pen[rr][gg][bb] = DYNAMIC_MAX_PENS;
                             }
 
-                            shrinked_palette[3 * i + 0] = (char) (r & 0xFF);
-                            shrinked_palette[3 * i + 1] = (char) (g & 0xFF);
-                            shrinked_palette[3 * i + 2] = (char) (b & 0xFF);
+                            u8_shrinked_palette[3 * i + 0] = (r & 0xFF);
+                            u8_shrinked_palette[3 * i + 1] = (g & 0xFF);
+                            u8_shrinked_palette[3 * i + 2] = (b & 0xFF);
                             osd_modify_pen(Machine.pens[rec_color], r, g, b);
 
                             r >>= 2;

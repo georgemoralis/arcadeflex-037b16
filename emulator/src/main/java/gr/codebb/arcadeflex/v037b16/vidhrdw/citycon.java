@@ -24,8 +24,6 @@ import common.ptr.UBytePtr;
 import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;
 import static mame037b7.palette.palette_init_used_colors;
-import static mame037b7.palette.palette_transparent_pen;
-import static mame037b7.palette.palette_used_colors;
 import static arcadeflex036.osdepend.logerror;
 import static arcadeflex036.video.osd_free_bitmap;
 public class citycon {

@@ -1429,7 +1429,7 @@ public class video {
 /*TODO*///
 /*TODO*///
 /*TODO*///
-    public static int osd_allocate_colors(int totalcolors, /*unsigned*/ char[] palette, int[] pens, int modifiable) {
+    public static int osd_allocate_colors(int totalcolors, /*unsigned*/ int[] u8_palette, int[] pens, int modifiable) {
 
         /*TODO*///TEMPHACK*/
         video_depth = Machine.scrbitmap.depth;
@@ -1486,9 +1486,9 @@ public class video {
                 for (i = 0; i < totalcolors; i++) {
                     int r, g, b, score;
 
-                    r = palette[3 * i + 0];
-                    g = palette[3 * i + 1];
-                    b = palette[3 * i + 2];
+                    r = u8_palette[3 * i + 0];
+                    g = u8_palette[3 * i + 1];
+                    b = u8_palette[3 * i + 2];
                     score = r * r + g * g + b * b;
 
                     if (score < bestblackscore) {
@@ -1530,9 +1530,9 @@ public class video {
             }
 
             for (i = 0; i < totalcolors; i++) {
-                current_palette.write(3 * pens[i] + 0, palette[3 * i]);
-                current_palette.write(3 * pens[i] + 1, palette[3 * i + 1]);
-                current_palette.write(3 * pens[i] + 2, palette[3 * i + 2]);
+                current_palette.write(3 * pens[i] + 0, u8_palette[3 * i]);
+                current_palette.write(3 * pens[i] + 1, u8_palette[3 * i + 1]);
+                current_palette.write(3 * pens[i] + 2, u8_palette[3 * i + 2]);
             }
         }
         /*TODO*///	if (use_vesa == 0)

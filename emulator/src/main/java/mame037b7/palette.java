@@ -15,34 +15,10 @@ import static mame037b16.mame.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static arcadeflex036.video.*;
-import static gr.codebb.arcadeflex.v037b16.mame.palette.colormode;
-import static gr.codebb.arcadeflex.v037b16.mame.palette.palette_change_color_8;
+import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 
 public class palette {
 
-    public static char[] game_palette;/* RGB palette as set by the driver. */
-    public static UBytePtr new_palette;/* changes to the palette are stored here before being moved to game_palette by palette_recalc() */
-    public static UBytePtr palette_dirty;
-    /* arrays which keep track of colors actually used, to help in the palette shrinking. */
-    public static UBytePtr palette_used_colors;
-    public static UBytePtr old_used_colors;
-    public static IntArray pen_visiblecount;
-    public static IntArray pen_cachedcount;
-    public static UBytePtr just_remapped;/* colors which have been remapped in this frame, returned by palette_recalc() */
-
-    public static final int NO_16BIT = 0;
-    public static final int STATIC_16BIT = 1;
-    public static final int PALETTIZED_16BIT = 2;
-
-    static int total_shrinked_pens;
-    public static int[] shrinked_pens;
-    public static /*UINT16*/ char[] shrinked_palette;
-    public static /*UINT16*/ char[] palette_map;/* map indexes from game_palette to shrinked_palette */
-
-    public static /*UINT16*/ char[] pen_usage_count = new char[DYNAMIC_MAX_PENS];
-
-    public static /*UINT16*/ char palette_transparent_pen;
-    public static int palette_transparent_color;
 
     public static final int BLACK_PEN = 0;
     public static final int TRANSPARENT_PEN = 1;
@@ -77,11 +53,11 @@ public class palette {
                 colormode = PALETTIZED_16BIT;
             }
         } else {
-            colormode = NO_16BIT;
+            colormode = PALETTIZED_8BIT;
         }
 
         switch (colormode) {
-            case NO_16BIT:
+            case PALETTIZED_8BIT:
                 if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) != 0) {
                     total_shrinked_pens = DYNAMIC_MAX_PENS;
                 } else {
@@ -97,7 +73,7 @@ public class palette {
         }
 
         shrinked_pens = new int[total_shrinked_pens * 4];
-        shrinked_palette = new char[3 * total_shrinked_pens];
+        u8_shrinked_palette = new int[3 * total_shrinked_pens];
 
         Machine.pens = new int[Machine.drv.total_colors * 2];
 
@@ -148,7 +124,7 @@ public class palette {
 
         if ((Machine.drv.color_table_len != 0 && (Machine.game_colortable == null || Machine.remapped_colortable == null))
                 || game_palette == null || palette_map == null
-                || shrinked_pens == null || shrinked_palette == null || Machine.pens == null) {
+                || shrinked_pens == null || u8_shrinked_palette == null || Machine.pens == null) {
             palette_stop();
             return 1;
         }
@@ -164,7 +140,7 @@ public class palette {
         Machine.game_colortable = null;
         Machine.remapped_colortable = null;
         shrinked_pens = null;
-        shrinked_palette = null;
+        u8_shrinked_palette = null;
         Machine.pens = null;
         palette_shadow_table = null;
     }
@@ -184,9 +160,6 @@ public class palette {
             Machine.game_colortable[i] = (char) (i % Machine.drv.total_colors);
         }
 
-        /* by default we use -1 to identify the transparent color, the driver */
- /* can modify this. */
-        palette_transparent_color = -1;
 
         /* now the driver can modify the default values if it wants to. */
         if (Machine.drv.vh_init_palette != null) {
@@ -194,12 +167,12 @@ public class palette {
         }
 
         switch (colormode) {
-            case NO_16BIT: {
+            case PALETTIZED_8BIT: {
                 /* initialize shrinked palette to all black */
                 for (i = 0; i < total_shrinked_pens; i++) {
-                    shrinked_palette[3 * i + 0] = 0;
-                    shrinked_palette[3 * i + 1] = 0;
-                    shrinked_palette[3 * i + 2] = 0;
+                    u8_shrinked_palette[3 * i + 0] = 0;
+                    u8_shrinked_palette[3 * i + 1] = 0;
+                    u8_shrinked_palette[3 * i + 2] = 0;
                 }
 
                 if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) != 0) {
@@ -222,7 +195,7 @@ public class palette {
                         palette_map[i] = (char) ((i & 7) + 8);
                     }
 
-                    if (osd_allocate_colors(total_shrinked_pens, shrinked_palette, shrinked_pens, 1) != 0) {
+                    if (osd_allocate_colors(total_shrinked_pens, u8_shrinked_palette, shrinked_pens, 1) != 0) {
                         return 1;
                     }
                 } else {
@@ -235,9 +208,9 @@ public class palette {
 
                     for (i = 0; i < Machine.drv.total_colors; i++) {
                         for (j = 0; j < used; j++) {
-                            if (shrinked_palette[3 * j + 0] == game_palette[3 * i + 0]
-                                    && shrinked_palette[3 * j + 1] == game_palette[3 * i + 1]
-                                    && shrinked_palette[3 * j + 2] == game_palette[3 * i + 2]) {
+                            if (u8_shrinked_palette[3 * j + 0] == game_palette[3 * i + 0]
+                                    && u8_shrinked_palette[3 * j + 1] == game_palette[3 * i + 1]
+                                    && u8_shrinked_palette[3 * j + 2] == game_palette[3 * i + 2]) {
                                 break;
                             }
                         }
@@ -252,16 +225,16 @@ public class palette {
                                 usrintf_showmessage("cannot shrink static palette");
                                 logerror("error: ran out of free pens to shrink the palette.\n");
                             } else {
-                                shrinked_palette[3 * j + 0] = game_palette[3 * i + 0];
-                                shrinked_palette[3 * j + 1] = game_palette[3 * i + 1];
-                                shrinked_palette[3 * j + 2] = game_palette[3 * i + 2];
+                                u8_shrinked_palette[3 * j + 0] = game_palette[3 * i + 0];
+                                u8_shrinked_palette[3 * j + 1] = game_palette[3 * i + 1];
+                                u8_shrinked_palette[3 * j + 2] = game_palette[3 * i + 2];
                             }
                         }
                     }
 
                     logerror("shrinked palette uses %d colors\n", used);
 
-                    if (osd_allocate_colors(used, shrinked_palette, shrinked_pens, 0) != 0) {
+                    if (osd_allocate_colors(used, u8_shrinked_palette, shrinked_pens, 0) != 0) {
                         return 1;
                     }
                 }
@@ -276,7 +249,7 @@ public class palette {
             break;
 
             case STATIC_16BIT: {
-                char[] p = shrinked_palette;
+                int[] p = u8_shrinked_palette;
                 int r, g, b;
                 int p_ptr = 0;
                 if (Machine.scrbitmap.depth == 16) {
@@ -290,7 +263,7 @@ public class palette {
                         }
                     }
 
-                    if (osd_allocate_colors(32768, shrinked_palette, shrinked_pens, 0) != 0) {
+                    if (osd_allocate_colors(32768, u8_shrinked_palette, shrinked_pens, 0) != 0) {
                         return 1;
                     }
                 } else {
@@ -304,7 +277,7 @@ public class palette {
                         }
                     }
 
-                    if (osd_allocate_colors(256, shrinked_palette, shrinked_pens, 0) != 0) {
+                    if (osd_allocate_colors(256, u8_shrinked_palette, shrinked_pens, 0) != 0) {
                         return 1;
                     }
                 }
@@ -324,18 +297,18 @@ public class palette {
 
             case PALETTIZED_16BIT: {
                 for (i = 0; i < RESERVED_PENS; i++) {
-                    shrinked_palette[3 * i + 0]
-                            = shrinked_palette[3 * i + 1]
-                            = shrinked_palette[3 * i + 2] = 0;
+                    u8_shrinked_palette[3 * i + 0]
+                            = u8_shrinked_palette[3 * i + 1]
+                            = u8_shrinked_palette[3 * i + 2] = 0;
                 }
 
                 for (i = 0; i < Machine.drv.total_colors; i++) {
-                    shrinked_palette[3 * (i + RESERVED_PENS) + 0] = game_palette[3 * i + 0];
-                    shrinked_palette[3 * (i + RESERVED_PENS) + 1] = game_palette[3 * i + 1];
-                    shrinked_palette[3 * (i + RESERVED_PENS) + 2] = game_palette[3 * i + 2];
+                    u8_shrinked_palette[3 * (i + RESERVED_PENS) + 0] = game_palette[3 * i + 0];
+                    u8_shrinked_palette[3 * (i + RESERVED_PENS) + 1] = game_palette[3 * i + 1];
+                    u8_shrinked_palette[3 * (i + RESERVED_PENS) + 2] = game_palette[3 * i + 2];
                 }
 
-                if (osd_allocate_colors(total_shrinked_pens, shrinked_palette, shrinked_pens, (Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE)) != 0) {
+                if (osd_allocate_colors(total_shrinked_pens, u8_shrinked_palette, shrinked_pens, (Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE)) != 0) {
                     return 1;
                 }
 
@@ -363,65 +336,6 @@ public class palette {
         return 0;
     }
 
-    public static void palette_change_color_16_static(int color, int red, int green, int blue) {
-        if (color == palette_transparent_color) {
-            int i;
-
-            palette_transparent_pen = (char)shrinked_pens[rgbpenindex(red, green, blue)];
-
-            if (color == -1) {
-                return;
-                /* by default, palette_transparent_color is -1 */
-            }
-
-            for (i = 0; i < Machine.drv.total_colors; i++) {
-                if ((old_used_colors.read(i) & (PALETTE_COLOR_VISIBLE | PALETTE_COLOR_TRANSPARENT_FLAG))
-                        == (PALETTE_COLOR_VISIBLE | PALETTE_COLOR_TRANSPARENT_FLAG)) {
-                    old_used_colors.write(i, old_used_colors.read(i) | PALETTE_COLOR_NEEDS_REMAP);
-                }
-            }
-        }
-        if (game_palette[3 * color + 0] == red
-                && game_palette[3 * color + 1] == green
-                && game_palette[3 * color + 2] == blue) {
-            return;
-        }
-
-        game_palette[3 * color + 0] = (char) (red & 0xFF);
-        game_palette[3 * color + 1] = (char) (green & 0xFF);
-        game_palette[3 * color + 2] = (char) (blue & 0xFF);
-
-        if ((old_used_colors.read(color) & PALETTE_COLOR_VISIBLE) != 0) /* we'll have to reassign the color in palette_recalc() */ {
-            old_used_colors.write(color, old_used_colors.read(color) | PALETTE_COLOR_NEEDS_REMAP);
-        }
-
-    }
-
-    public static void palette_change_color_16_palettized(int color, int red, int green, int blue) {
-        if (color == palette_transparent_color) {
-            osd_modify_pen(palette_transparent_pen, red, green, blue);
-
-            if (color == -1) {
-                return;
-                /* by default, palette_transparent_color is -1 */
-            }
-        }
-
-        if (game_palette[3 * color + 0] == red
-                && game_palette[3 * color + 1] == green
-                && game_palette[3 * color + 2] == blue) {
-            return;
-        }
-
-        /* Machine.pens[color] might have been remapped to transparent_pen, so I */
- /* use shrinked_pens[] directly */
-        osd_modify_pen(shrinked_pens[color + RESERVED_PENS], red, green, blue);
-        game_palette[3 * color + 0] = (char) (red & 0xFF);
-        game_palette[3 * color + 1] = (char) (green & 0xFF);
-        game_palette[3 * color + 2] = (char) (blue & 0xFF);
-    }
-
-
     public static void palette_change_color(int color, int red, int green, int blue) {
         if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) == 0) {
             logerror("Error: palette_change_color() called, but VIDEO_MODIFIES_PALETTE not set.\n");
@@ -434,15 +348,15 @@ public class palette {
         }
 
         switch (colormode) {
-            case NO_16BIT:
+            case PALETTIZED_8BIT:
                 palette_change_color_8(color, red & 0xFF, green & 0xFF, blue & 0xFF);
                 break;
-            case STATIC_16BIT:
+            /*case STATIC_16BIT:
                 palette_change_color_16_static(color, red & 0xFF, green & 0xFF, blue & 0xFF);
                 break;
             case PALETTIZED_16BIT:
                 palette_change_color_16_palettized(color, red & 0xFF, green & 0xFF, blue & 0xFF);
-                break;
+                break;*/
         }
     }
 
