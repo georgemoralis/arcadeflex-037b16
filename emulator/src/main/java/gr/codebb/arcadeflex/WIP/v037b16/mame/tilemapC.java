@@ -2662,6 +2662,7 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
             int pitch = tile_size + cached_tile_info.skip;
             IntArray pPalData = new IntArray(cached_tile_info.pal_data);
             pPalData.offset=0;
+            
             int /*UINT32*/ flags = cached_tile_info.u32_flags;
             int /*UINT32*/ y0 = tile_size*row;
             int /*UINT32*/ x0 = tile_size*col;
@@ -2678,8 +2679,8 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
             {
                     for( ty=tile_size; ty!=0; ty-- )
                     {
-                            pSource = new UBytePtr(pPenData);
-                            pSource.offset = 0;
+                            pSource = pPenData;
+                            //pSource.offset = 0;
                             
                             for( tx=tile_size/2; tx!=0; tx-- )
                             {
@@ -2699,7 +2700,7 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
                     for( ty=tile_size; ty!=0; ty-- )
                     {
                             pSource = new UBytePtr(pPenData);
-                            pSource.offset=0;
+                            //pSource.offset=0;
                             
                             for( tx=tile_size; tx!=0; tx-- )
                             {
@@ -2708,7 +2709,7 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
                                     //*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap.line[y0+yx/MAX_TILESIZE]) = pPalData[data];
                                     (new UBytePtr(pPixmap.line[y0+yx/MAX_TILESIZE])).write((x0+(yx%MAX_TILESIZE)), pPalData.read(data));
                             }
-                            pPenData.offset += pitch;
+                            pPenData.inc( pitch );
                     }
             }
 
