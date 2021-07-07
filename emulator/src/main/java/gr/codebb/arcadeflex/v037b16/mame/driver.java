@@ -18,6 +18,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.brkthru.*;
 import static gr.codebb.arcadeflex.v037b16.drivers._1943.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.bosco.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.champbas.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.vulgus.*;
 
 public class driver {
 
@@ -1519,9 +1520,9 @@ public class driver {
         /*TODO*///	/* their web site. The list is sorted by production date.                       */
         /*TODO*///	/* A comprehensive list of Capcom games with board info can be found here:      */
         /*TODO*///	/* http://www.emugaming.com/strider/capcom_list.shtml                           */
-        /*TODO*///	driver_vulgus,	/*  5/1984 (c) 1984 */
-        /*TODO*///	driver_vulgus2,	/*  5/1984 (c) 1984 */
-        /*TODO*///	driver_vulgusj,	/*  5/1984 (c) 1984 */
+        	driver_vulgus,	/*  5/1984 (c) 1984 */
+        	driver_vulgus2,	/*  5/1984 (c) 1984 */
+        	driver_vulgusj,	/*  5/1984 (c) 1984 */
         /*TODO*///	driver_sonson,	/*  7/1984 (c) 1984 */
         /*TODO*///	driver_sonsonj,	/*  7/1984 (c) 1984 (Japan) */
         /*TODO*///	driver_higemaru,	/*  9/1984 (c) 1984 */
