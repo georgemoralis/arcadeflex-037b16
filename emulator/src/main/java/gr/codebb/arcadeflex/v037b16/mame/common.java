@@ -553,6 +553,14 @@ public class common {
         }
     }
 
+    public static void set_vh_global_attribute(int[] addr, int offset, int data) {
+        if (addr[offset] != data) {
+            schedule_full_refresh();
+            addr[offset] = data;
+        }
+    }
+
+
     /*TODO*///
 /*TODO*///
 /*TODO*///void set_visible_area(int min_x,int max_x,int min_y,int max_y)
