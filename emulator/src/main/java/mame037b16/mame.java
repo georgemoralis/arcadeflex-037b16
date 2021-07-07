@@ -33,7 +33,7 @@ import static arcadeflex036.video.osd_mark_dirty;
 import static arcadeflex036.video.osd_skip_this_frame;
 import static arcadeflex036.video_old.osd_close_display;
 import static arcadeflex036.video_old.osd_update_video_and_audio;
-import static mame037b16.driver.*;
+import static gr.codebb.arcadeflex.v037b16.mame.driver.*;
 import static mame037b16.drawgfx.*;
 import static arcadeflex056.fileio.*;
 import common.subArrays.IntArray;

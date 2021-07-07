@@ -9,11 +9,10 @@ import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.pacman.*;
 //to be organized
 import static arcadeflex036.osdepend.*;
 import static common.ptr.*;
-
-import static mame056.drivers.pacman.*;
 
 public class theglobp {
 

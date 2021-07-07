@@ -25,7 +25,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.CPU_AUDIO_CPU;
 import gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.MachineCPU;
 import static mame037b16.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
-import static mame037b16.driver.drivers;
+import static gr.codebb.arcadeflex.v037b16.mame.driver.drivers;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.version.build_version;
