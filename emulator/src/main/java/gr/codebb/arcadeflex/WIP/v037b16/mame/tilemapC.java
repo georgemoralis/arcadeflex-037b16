@@ -2661,7 +2661,7 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
             UBytePtr pPenData = new UBytePtr(cached_tile_info.pen_data);
             int pitch = tile_size + cached_tile_info.skip;
             IntArray pPalData = new IntArray(cached_tile_info.pal_data);
-            pPalData.offset=0;
+            //pPalData.offset=0;
             
             int /*UINT32*/ flags = cached_tile_info.u32_flags;
             int /*UINT32*/ y0 = tile_size*row;
@@ -2677,6 +2677,7 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
 
             if(( flags&TILE_4BPP ) != 0)
             {
+                System.out.println("1");
                     for( ty=tile_size; ty!=0; ty-- )
                     {
                             pSource = pPenData;
@@ -2697,17 +2698,22 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
             }
             else
             {
+               
                     for( ty=tile_size; ty!=0; ty-- )
                     {
                             pSource = new UBytePtr(pPenData);
-                            //pSource.offset=0;
                             
                             for( tx=tile_size; tx!=0; tx-- )
                             {
                                     data = pSource.readinc();
-                                    yx = pPenToPixel.read(); pPenToPixel.offset++;
+                                    yx = pPenToPixel.read();
+                                    pPenToPixel.offset++;
+                                    int _x = x0+(yx%MAX_TILESIZE);
+                                    int _y = y0+(yx/MAX_TILESIZE);
                                     //*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap.line[y0+yx/MAX_TILESIZE]) = pPalData[data];
-                                    (new UBytePtr(pPixmap.line[y0+yx/MAX_TILESIZE])).write((x0+(yx%MAX_TILESIZE)), pPalData.read(data));
+                                    //(new UBytePtr(pPixmap.line[y0+yx/MAX_TILESIZE])).write((x0+(yx%MAX_TILESIZE)), pPalData.read(data));
+                                    if ((data + pPalData.offset) < (pPalData.buffer.length))
+                                        (new UBytePtr(pPixmap.line[_y])).write(_x, pPalData.read(data));
                             }
                             pPenData.inc( pitch );
                     }
