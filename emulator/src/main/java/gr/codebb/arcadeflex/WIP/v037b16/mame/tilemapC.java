@@ -1452,6 +1452,7 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
     	int pitch )
     {
     	IntArray pPenToPixel = new IntArray(tilemap.pPenToPixel[flags&(TILE_SWAPXY|TILE_FLIPY|TILE_FLIPX)]);
+        pPenToPixel.offset=0;
     	int tx,ty;
     	UBytePtr pSource;
     	int /*UINT8*/ data;

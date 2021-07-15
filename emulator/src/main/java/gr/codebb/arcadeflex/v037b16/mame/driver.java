@@ -19,6 +19,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers._1943.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.bosco.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.champbas.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.vulgus.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.commando.*;
 
 public class driver {
 
@@ -1531,10 +1532,10 @@ public class driver {
         /*TODO*///	driver_1942b,		/* 12/1984 (c) 1984 */
         /*TODO*///	driver_exedexes,	/*  2/1985 (c) 1985 */
         /*TODO*///	driver_savgbees,	/*  2/1985 (c) 1985 + Memetron license */
-        /*TODO*///	driver_commando,	/*  5/1985 (c) 1985 (World) */
-        /*TODO*///	driver_commandu,	/*  5/1985 (c) 1985 + Data East license (US) */
-        /*TODO*///	driver_commandj,	/*  5/1985 (c) 1985 (Japan) */
-        /*TODO*///	driver_spaceinv,	/* bootleg */
+        	driver_commando,	/*  5/1985 (c) 1985 (World) */
+        	driver_commandu,	/*  5/1985 (c) 1985 + Data East license (US) */
+        	driver_commandj,	/*  5/1985 (c) 1985 (Japan) */
+        	driver_spaceinv,	/* bootleg */
         /*TODO*///	driver_gng,		/*  9/1985 (c) 1985 */
         /*TODO*///	driver_gnga,		/*  9/1985 (c) 1985 */
         /*TODO*///	driver_gngt,		/*  9/1985 (c) 1985 */
