@@ -410,16 +410,16 @@ static void mappings_update( struct_tilemap tilemap )
 		if(( tilemap.attributes&TILEMAP_FLIPX ) != 0) cached_flip ^= TILE_FLIPX;
 		if(( tilemap.attributes&TILEMAP_FLIPY ) != 0) cached_flip ^= TILE_FLIPY;
 /*TODO*///#ifndef PREROTATE_GFX
-/*TODO*///		if( Machine->orientation & ORIENTATION_SWAP_XY )
-/*TODO*///		{
-/*TODO*///			if( Machine->orientation & ORIENTATION_FLIP_X ) cached_flip ^= TILE_FLIPY;
-/*TODO*///			if( Machine->orientation & ORIENTATION_FLIP_Y ) cached_flip ^= TILE_FLIPX;
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			if( Machine->orientation & ORIENTATION_FLIP_X ) cached_flip ^= TILE_FLIPX;
-/*TODO*///			if( Machine->orientation & ORIENTATION_FLIP_Y ) cached_flip ^= TILE_FLIPY;
-/*TODO*///		}
+		if(( Machine.orientation & ORIENTATION_SWAP_XY ) != 0)
+		{
+			if(( Machine.orientation & ORIENTATION_FLIP_X ) != 0) cached_flip ^= TILE_FLIPY;
+			if(( Machine.orientation & ORIENTATION_FLIP_Y ) != 0) cached_flip ^= TILE_FLIPX;
+		}
+		else
+		{
+			if(( Machine.orientation & ORIENTATION_FLIP_X ) != 0) cached_flip ^= TILE_FLIPX;
+			if(( Machine.orientation & ORIENTATION_FLIP_Y ) != 0) cached_flip ^= TILE_FLIPY;
+		}
 /*TODO*///#endif
 		if(( tilemap.orientation & ORIENTATION_SWAP_XY ) != 0)
 		{
