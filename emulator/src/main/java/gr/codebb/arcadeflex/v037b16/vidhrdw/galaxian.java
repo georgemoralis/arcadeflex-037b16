@@ -4,8 +4,14 @@
  */
 package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
+//generic imports
+import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
+//mame imports
+import static gr.codebb.arcadeflex.v037b16.mame.common.*;
+import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
+//to be organized
 import common.ptr.UBytePtr;
-import gr.codebb.arcadeflex.v037b16.mame.drawgfxH.rectangle;
+import gr.codebb.arcadeflex.v037b16.mame.osdependH.osd_bitmap;
 
 public class galaxian {
 
@@ -34,7 +40,7 @@ public class galaxian {
     public static int[] galaxian_bulletsram_size = new int[1];
 
     static int mooncrst_gfxextend;
-    static int pisces_gfxbank;
+    static int[] pisces_gfxbank = new int[1];
     static int[] jumpbug_gfxbank = new int[5];
 
     public static abstract interface modify_charcodePtr {
@@ -75,16 +81,15 @@ public class galaxian {
     }
     static int galaxian_stars_on;
     static int stars_blink_state;
-    
-	
-	/* bullets circuit */
-	static int darkplnt_bullet_color;
-/*TODO*///	static void (*draw_bullets)(struct osd_bitmap *,int,int,int);	/* function to call to draw a bullet */
+
+    /* bullets circuit */
+    static int darkplnt_bullet_color;
+    /*TODO*///	static void (*draw_bullets)(struct osd_bitmap *,int,int,int);	/* function to call to draw a bullet */
 /*TODO*///	
-	/* background circuit */
-	static int background_red, background_green, background_blue;
-	static int background_start_pen;
-/*TODO*///	static void (*draw_background)(struct osd_bitmap *);	/* function to call to draw the background */
+    /* background circuit */
+    static int background_red, background_green, background_blue;
+    static int background_start_pen;
+    /*TODO*///	static void (*draw_background)(struct osd_bitmap *);	/* function to call to draw the background */
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	/***************************************************************************
@@ -119,9 +124,9 @@ public class galaxian {
 /*TODO*///	  The RGB outputs have a 470 ohm pull-down each.
 /*TODO*///	
 /*TODO*///	***************************************************************************/
-/*TODO*///	public static VhConvertColorPromPtr galaxian_vh_convert_color_prom = new VhConvertColorPromPtr() { public void handler(char []palette, char []colortable, UBytePtr color_prom) 
-/*TODO*///	{
-/*TODO*///		int i;
+    public static VhConvertColorPromPtr galaxian_vh_convert_color_prom = new VhConvertColorPromPtr() {
+        public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
+            /*TODO*///		int i;
 /*TODO*///	
 /*TODO*///	
 /*TODO*///		/* first, the character/sprite palette */
@@ -170,11 +175,12 @@ public class galaxian {
 /*TODO*///		*(palette++) = 0;
 /*TODO*///		*(palette++) = 0;
 /*TODO*///		*(palette++) = 0;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhConvertColorPromPtr scramble_vh_convert_color_prom = new VhConvertColorPromPtr() { public void handler(char []palette, char []colortable, UBytePtr color_prom) 
-/*TODO*///	{
-/*TODO*///		galaxian_vh_convert_color_prom(palette, colortable, color_prom);
+        }
+    };
+
+    public static VhConvertColorPromPtr scramble_vh_convert_color_prom = new VhConvertColorPromPtr() {
+        public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
+            /*TODO*///		galaxian_vh_convert_color_prom(palette, colortable, color_prom);
 /*TODO*///	
 /*TODO*///	
 /*TODO*///		/* blue background - 390 ohm resistor */
@@ -182,21 +188,23 @@ public class galaxian {
 /*TODO*///		palette[(background_start_pen + 1) * 3 + 0] = 0;
 /*TODO*///		palette[(background_start_pen + 1) * 3 + 1] = 0;
 /*TODO*///		palette[(background_start_pen + 1) * 3 + 2] = 0x56;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhConvertColorPromPtr moonwar_vh_convert_color_prom = new VhConvertColorPromPtr() { public void handler(char []palette, char []colortable, UBytePtr color_prom) 
-/*TODO*///	{
-/*TODO*///		scramble_vh_convert_color_prom(palette, colortable, color_prom);
+        }
+    };
+
+    public static VhConvertColorPromPtr moonwar_vh_convert_color_prom = new VhConvertColorPromPtr() {
+        public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
+            /*TODO*///		scramble_vh_convert_color_prom(palette, colortable, color_prom);
 /*TODO*///	
 /*TODO*///	
 /*TODO*///		/* wire mod to connect the bullet blue output to the 220 ohm resistor */
 /*TODO*///	
 /*TODO*///		palette[BULLETS_COLOR_BASE * 3 + 2] = 0x97;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhConvertColorPromPtr turtles_vh_convert_color_prom = new VhConvertColorPromPtr() { public void handler(char []palette, char []colortable, UBytePtr color_prom) 
-/*TODO*///	{
-/*TODO*///		int i;
+        }
+    };
+
+    public static VhConvertColorPromPtr turtles_vh_convert_color_prom = new VhConvertColorPromPtr() {
+        public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
+            /*TODO*///		int i;
 /*TODO*///	
 /*TODO*///	
 /*TODO*///		galaxian_vh_convert_color_prom(palette, colortable, color_prom);
@@ -214,11 +222,12 @@ public class galaxian {
 /*TODO*///			palette[(background_start_pen + i) * 3 + 1] = (i & 0x02) ? 0x47 : 0x00;
 /*TODO*///			palette[(background_start_pen + i) * 3 + 2] = (i & 0x04) ? 0x55 : 0x00;
 /*TODO*///		}
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhConvertColorPromPtr stratgyx_vh_convert_color_prom = new VhConvertColorPromPtr() { public void handler(char []palette, char []colortable, UBytePtr color_prom) 
-/*TODO*///	{
-/*TODO*///		int i;
+        }
+    };
+
+    public static VhConvertColorPromPtr stratgyx_vh_convert_color_prom = new VhConvertColorPromPtr() {
+        public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
+            /*TODO*///		int i;
 /*TODO*///	
 /*TODO*///	
 /*TODO*///		galaxian_vh_convert_color_prom(palette, colortable, color_prom);
@@ -236,11 +245,12 @@ public class galaxian {
 /*TODO*///			palette[(background_start_pen + i) * 3 + 1] = (i & 0x02) ? 0x3c : 0x00;
 /*TODO*///			palette[(background_start_pen + i) * 3 + 2] = (i & 0x04) ? 0x47 : 0x00;
 /*TODO*///		}
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhConvertColorPromPtr frogger_vh_convert_color_prom = new VhConvertColorPromPtr() { public void handler(char []palette, char []colortable, UBytePtr color_prom) 
-/*TODO*///	{
-/*TODO*///		galaxian_vh_convert_color_prom(palette, colortable, color_prom);
+        }
+    };
+
+    public static VhConvertColorPromPtr frogger_vh_convert_color_prom = new VhConvertColorPromPtr() {
+        public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
+            /*TODO*///		galaxian_vh_convert_color_prom(palette, colortable, color_prom);
 /*TODO*///	
 /*TODO*///	
 /*TODO*///		/* blue background - 470 ohm resistor */
@@ -248,30 +258,30 @@ public class galaxian {
 /*TODO*///		palette[(background_start_pen + 1) * 3 + 0] = 0;
 /*TODO*///		palette[(background_start_pen + 1) * 3 + 1] = 0;
 /*TODO*///		palette[(background_start_pen + 1) * 3 + 2] = 0x47;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/***************************************************************************
-/*TODO*///	
-/*TODO*///	  Convert the color PROMs into a more useable format.
-/*TODO*///	
-/*TODO*///	  Dark Planet has one 32 bytes palette PROM, connected to the RGB output this way:
-/*TODO*///	
-/*TODO*///	  bit 5 -- 220 ohm resistor  -- BLUE
-/*TODO*///	        -- 470 ohm resistor  -- BLUE
-/*TODO*///	        -- 1  kohm resistor  -- BLUE
-/*TODO*///	        -- 220 ohm resistor  -- RED
-/*TODO*///	        -- 470 ohm resistor  -- RED
-/*TODO*///	  bit 0 -- 1  kohm resistor  -- RED
-/*TODO*///	
-/*TODO*///	  The bullet RGB outputs go through 100 ohm resistors.
-/*TODO*///	
-/*TODO*///	  The RGB outputs have a 470 ohm pull-down each.
-/*TODO*///	
-/*TODO*///	***************************************************************************/
-/*TODO*///	public static VhConvertColorPromPtr darkplnt_vh_convert_color_prom = new VhConvertColorPromPtr() { public void handler(char []palette, char []colortable, UBytePtr color_prom) 
-/*TODO*///	{
-/*TODO*///		int i;
+        }
+    };
+
+    /**
+     * *************************************************************************
+     *
+     * Convert the color PROMs into a more useable format.
+     *
+     * Dark Planet has one 32 bytes palette PROM, connected to the RGB output
+     * this way:
+     *
+     * bit 5 -- 220 ohm resistor -- BLUE -- 470 ohm resistor -- BLUE -- 1 kohm
+     * resistor -- BLUE -- 220 ohm resistor -- RED -- 470 ohm resistor -- RED
+     * bit 0 -- 1 kohm resistor -- RED
+     *
+     * The bullet RGB outputs go through 100 ohm resistors.
+     *
+     * The RGB outputs have a 470 ohm pull-down each.
+     *
+     **************************************************************************
+     */
+    public static VhConvertColorPromPtr darkplnt_vh_convert_color_prom = new VhConvertColorPromPtr() {
+        public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
+            /*TODO*///		int i;
 /*TODO*///	
 /*TODO*///	
 /*TODO*///		/* first, the character/sprite palette */
@@ -315,11 +325,12 @@ public class galaxian {
 /*TODO*///		*(palette++) = 0;
 /*TODO*///		*(palette++) = 0;
 /*TODO*///		*(palette++) = 0;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhConvertColorPromPtr minefld_vh_convert_color_prom = new VhConvertColorPromPtr() { public void handler(char []palette, char []colortable, UBytePtr color_prom) 
-/*TODO*///	{
-/*TODO*///		int i;
+        }
+    };
+
+    public static VhConvertColorPromPtr minefld_vh_convert_color_prom = new VhConvertColorPromPtr() {
+        public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
+            /*TODO*///		int i;
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	    galaxian_vh_convert_color_prom(palette, colortable, color_prom);
@@ -344,11 +355,12 @@ public class galaxian {
 /*TODO*///	       	palette[(background_start_pen + 64 + i) * 3 + 1] = i * 1.5;
 /*TODO*///	       	palette[(background_start_pen + 64 + i) * 3 + 2] = i;
 /*TODO*///	    }
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhConvertColorPromPtr rescue_vh_convert_color_prom = new VhConvertColorPromPtr() { public void handler(char []palette, char []colortable, UBytePtr color_prom) 
-/*TODO*///	{
-/*TODO*///		int i;
+        }
+    };
+
+    public static VhConvertColorPromPtr rescue_vh_convert_color_prom = new VhConvertColorPromPtr() {
+        public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
+            /*TODO*///		int i;
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	    galaxian_vh_convert_color_prom(palette, colortable, color_prom);
@@ -364,11 +376,12 @@ public class galaxian {
 /*TODO*///	       	palette[(background_start_pen + i) * 3 + 1] = i * 2;
 /*TODO*///	       	palette[(background_start_pen + i) * 3 + 2] = i * 4;
 /*TODO*///	    }
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhConvertColorPromPtr mariner_vh_convert_color_prom = new VhConvertColorPromPtr() { public void handler(char []palette, char []colortable, UBytePtr color_prom) 
-/*TODO*///	{
-/*TODO*///		int i;
+        }
+    };
+
+    public static VhConvertColorPromPtr mariner_vh_convert_color_prom = new VhConvertColorPromPtr() {
+        public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
+            /*TODO*///		int i;
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	    galaxian_vh_convert_color_prom(palette, colortable, color_prom);
@@ -396,8 +409,9 @@ public class galaxian {
 /*TODO*///	       	palette[(background_start_pen + i) * 3 + 1] = 0;
 /*TODO*///	       	palette[(background_start_pen + i) * 3 + 2] = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 /*TODO*///	    }
-/*TODO*///	} };
-/*TODO*///	
+        }
+    };
+    /*TODO*///	
 /*TODO*///	
 /*TODO*///	/***************************************************************************
 /*TODO*///	
@@ -405,9 +419,9 @@ public class galaxian {
 /*TODO*///	
 /*TODO*///	***************************************************************************/
 /*TODO*///	
-/*TODO*///	public static VhStartPtr galaxian_plain_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		extern struct GameDriver driver_newsin7;
+    public static VhStartPtr galaxian_plain_vh_start = new VhStartPtr() {
+        public int handler() {
+            /*TODO*///		extern struct GameDriver driver_newsin7;
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	    modify_charcode = 0;
@@ -441,92 +455,101 @@ public class galaxian {
 /*TODO*///	        spritevisibleareaflipx = &_spritevisibleareaflipx;
 /*TODO*///		}
 /*TODO*///	
-/*TODO*///	
-/*TODO*///		return 0;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr galaxian_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = galaxian_plain_vh_start();
-/*TODO*///	
+
+            return 0;
+        }
+    };
+
+    public static VhStartPtr galaxian_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = galaxian_plain_vh_start.handler();
+            /*TODO*///	
 /*TODO*///		draw_stars = galaxian_draw_stars;
 /*TODO*///	
 /*TODO*///		draw_bullets = galaxian_draw_bullets;
 /*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr mooncrst_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = galaxian_vh_start();
-/*TODO*///	
+            return ret;
+        }
+    };
+    /*TODO*///	
+    public static VhStartPtr mooncrst_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = galaxian_vh_start.handler();
+            /*TODO*///	
 /*TODO*///		modify_charcode   = mooncrst_modify_charcode;
 /*TODO*///		modify_spritecode = mooncrst_modify_spritecode;
 /*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr moonqsr_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = galaxian_vh_start.handler();
-/*TODO*///	
+            return ret;
+        }
+    };
+
+    public static VhStartPtr moonqsr_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = galaxian_vh_start.handler();
+            /*TODO*///	
 /*TODO*///		modify_charcode   = moonqsr_modify_charcode;
 /*TODO*///		modify_spritecode = moonqsr_modify_spritecode;
 /*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr pisces_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = galaxian_vh_start.handler();
-/*TODO*///	
-/*TODO*///		modify_charcode   = pisces_modify_charcode;
+            return ret;
+        }
+    };
+
+    public static VhStartPtr pisces_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = galaxian_vh_start.handler();
+
+            /*TODO*///		modify_charcode   = pisces_modify_charcode;
 /*TODO*///		modify_spritecode = pisces_modify_spritecode;
 /*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr batman2_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = galaxian_vh_start.handler();
-/*TODO*///	
+            return ret;
+        }
+    };
+
+    public static VhStartPtr batman2_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = galaxian_vh_start.handler();
+            /*TODO*///	
 /*TODO*///		modify_charcode   = batman2_modify_charcode;
 /*TODO*///		modify_spritecode = batman2_modify_spritecode;
 /*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr scramble_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = galaxian_plain_vh_start.handler();
-/*TODO*///	
+            return ret;
+        }
+    };
+
+    public static VhStartPtr scramble_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = galaxian_plain_vh_start.handler();
+            /*TODO*///	
 /*TODO*///		draw_stars = scramble_draw_stars;
 /*TODO*///	
 /*TODO*///		draw_bullets = scramble_draw_bullets;
 /*TODO*///	
 /*TODO*///		draw_background = scramble_draw_background;
 /*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr turtles_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = scramble_vh_start.handler();
-/*TODO*///	
+            return ret;
+        }
+    };
+
+    public static VhStartPtr turtles_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = scramble_vh_start.handler();
+            /*TODO*///	
 /*TODO*///		draw_background = turtles_draw_background;
 /*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr theend_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = scramble_vh_start.handler();
-/*TODO*///	
+            return ret;
+        }
+    };
+
+    public static VhStartPtr theend_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = scramble_vh_start.handler();
+            /*TODO*///	
 /*TODO*///		draw_bullets = theend_draw_bullets;
 /*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
+            return ret;
+        }
+    };
+    /*TODO*///	
 /*TODO*///	public static VhStartPtr darkplnt_vh_start = new VhStartPtr() { public int handler() 
 /*TODO*///	{
 /*TODO*///		int ret = galaxian_plain_vh_start.handler();
@@ -631,99 +654,110 @@ public class galaxian {
 /*TODO*///	
 /*TODO*///		return ret;
 /*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr jumpbug_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = scramble_vh_start();
-/*TODO*///	
+
+    public static VhStartPtr jumpbug_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = scramble_vh_start.handler();
+            /*TODO*///	
 /*TODO*///		draw_stars = jumpbug_draw_stars;
 /*TODO*///	
 /*TODO*///		modify_charcode   = jumpbug_modify_charcode;
 /*TODO*///		modify_spritecode = jumpbug_modify_spritecode;
-/*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr galaxian_videoram_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		galaxian_videoram[offset] = data;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr galaxian_videoram_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return galaxian_videoram[offset];
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr galaxian_flip_screen_x_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		flip_screen_x_set(data);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr galaxian_flip_screen_y_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		flip_screen_y_set(data);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr scramble_background_red_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		background_red = data & 1;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr scramble_background_green_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		background_green = data & 1;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr scramble_background_blue_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		background_blue = data & 1;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr galaxian_stars_enable_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		galaxian_stars_on = data & 1;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr darkplnt_bullet_color_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		darkplnt_bullet_color = data & 1;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr mooncrst_gfxextend_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		if (data != 0)
-/*TODO*///			mooncrst_gfxextend |= (1 << offset);
-/*TODO*///		else
-/*TODO*///			mooncrst_gfxextend &= ~(1 << offset);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr mooncrgx_gfxextend_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///	  /* for the Moon Cresta bootleg on Galaxian H/W the gfx_extend is
-/*TODO*///	     located at 0x6000-0x6002.  Also, 0x6000 and 0x6001 are reversed. */
-/*TODO*///	     if (offset == 1)
-/*TODO*///	       offset = 0;
-/*TODO*///	     else if(offset == 0)
-/*TODO*///	       offset = 1;    /* switch 0x6000 and 0x6001 */
-/*TODO*///		mooncrst_gfxextend_w(offset, data);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr pisces_gfxbank_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		set_vh_global_attribute( &pisces_gfxbank, data & 1 );
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr jumpbug_gfxbank_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		set_vh_global_attribute( &jumpbug_gfxbank[offset], data & 1 );
-/*TODO*///	} };
-/*TODO*///	
+
+            return ret;
+        }
+    };
+
+    public static WriteHandlerPtr galaxian_videoram_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            galaxian_videoram.write(offset, data);
+        }
+    };
+
+    public static ReadHandlerPtr galaxian_videoram_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return galaxian_videoram.read(offset);
+        }
+    };
+
+    public static WriteHandlerPtr galaxian_flip_screen_x_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            flip_screen_x_set(data);
+        }
+    };
+
+    public static WriteHandlerPtr galaxian_flip_screen_y_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            flip_screen_y_set(data);
+        }
+    };
+
+    public static WriteHandlerPtr scramble_background_red_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            background_red = data & 1;
+        }
+    };
+
+    public static WriteHandlerPtr scramble_background_green_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            background_green = data & 1;
+        }
+    };
+
+    public static WriteHandlerPtr scramble_background_blue_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            background_blue = data & 1;
+        }
+    };
+
+    public static WriteHandlerPtr galaxian_stars_enable_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            galaxian_stars_on = data & 1;
+        }
+    };
+
+    public static WriteHandlerPtr darkplnt_bullet_color_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            darkplnt_bullet_color = data & 1;
+        }
+    };
+
+    public static WriteHandlerPtr mooncrst_gfxextend_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            if (data != 0) {
+                mooncrst_gfxextend |= (1 << offset);
+            } else {
+                mooncrst_gfxextend &= ~(1 << offset);
+            }
+        }
+    };
+
+    public static WriteHandlerPtr mooncrgx_gfxextend_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            /* for the Moon Cresta bootleg on Galaxian H/W the gfx_extend is
+	     located at 0x6000-0x6002.  Also, 0x6000 and 0x6001 are reversed. */
+            if (offset == 1) {
+                offset = 0;
+            } else if (offset == 0) {
+                offset = 1;
+                /* switch 0x6000 and 0x6001 */
+            }
+            mooncrst_gfxextend_w.handler(offset, data);
+        }
+    };
+
+    public static WriteHandlerPtr pisces_gfxbank_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            set_vh_global_attribute(pisces_gfxbank, data & 1);
+        }
+    };
+
+    public static WriteHandlerPtr jumpbug_gfxbank_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            set_vh_global_attribute(jumpbug_gfxbank, offset, data & 1);
+        }
+    };
+    /*TODO*///	
 /*TODO*///	
 /*TODO*///	/* character banking functions */
 /*TODO*///	
@@ -1393,16 +1427,18 @@ public class galaxian {
 /*TODO*///	}
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	/***************************************************************************
-/*TODO*///	
-/*TODO*///	  Draw the game screen in the given osd_bitmap.
-/*TODO*///	  Do NOT call osd_update_display() from this function, it will be called by
-/*TODO*///	  the main emulation engine.
-/*TODO*///	
-/*TODO*///	***************************************************************************/
-/*TODO*///	public static VhUpdatePtr galaxian_vh_screenrefresh = new VhUpdatePtr() { public void handler(osd_bitmap bitmap,int full_refresh) 
-/*TODO*///	{
-/*TODO*///		int x,y;
+    /**
+     * *************************************************************************
+     *
+     * Draw the game screen in the given osd_bitmap. Do NOT call
+     * osd_update_display() from this function, it will be called by the main
+     * emulation engine.
+     *
+     **************************************************************************
+     */
+    public static VhUpdatePtr galaxian_vh_screenrefresh = new VhUpdatePtr() {
+        public void handler(osd_bitmap bitmap, int full_refresh) {
+            /*TODO*///		int x,y;
 /*TODO*///		int offs,color_mask;
 /*TODO*///		int transparency;
 /*TODO*///	
@@ -1584,9 +1620,10 @@ public class galaxian {
 /*TODO*///					sx,sy,
 /*TODO*///					flip_screen_x ? spritevisibleareaflipx : spritevisiblearea,TRANSPARENCY_PEN,0);
 /*TODO*///		}
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
+        }
+    };
+
+    /*TODO*///	
 /*TODO*///	public static InterruptPtr hunchbks_vh_interrupt = new InterruptPtr() { public int handler() 
 /*TODO*///	{
 /*TODO*///		cpu_irq_line_vector_w(0,0,0x03);
