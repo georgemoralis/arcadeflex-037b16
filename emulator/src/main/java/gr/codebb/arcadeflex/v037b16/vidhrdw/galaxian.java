@@ -9,9 +9,11 @@ import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 //to be organized
 import common.ptr.UBytePtr;
-import gr.codebb.arcadeflex.v037b16.mame.osdependH.osd_bitmap;
 
 public class galaxian {
 
@@ -90,71 +92,35 @@ public class galaxian {
     static int background_red, background_green, background_blue;
     static int background_start_pen;
     /*TODO*///	static void (*draw_background)(struct osd_bitmap *);	/* function to call to draw the background */
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/***************************************************************************
-/*TODO*///	
-/*TODO*///	  Convert the color PROMs into a more useable format.
-/*TODO*///	
-/*TODO*///	  Galaxian has one 32 bytes palette PROM, connected to the RGB output this way:
-/*TODO*///	
-/*TODO*///	  bit 7 -- 220 ohm resistor  -- BLUE
-/*TODO*///	        -- 470 ohm resistor  -- BLUE
-/*TODO*///	        -- 220 ohm resistor  -- GREEN
-/*TODO*///	        -- 470 ohm resistor  -- GREEN
-/*TODO*///	        -- 1  kohm resistor  -- GREEN
-/*TODO*///	        -- 220 ohm resistor  -- RED
-/*TODO*///	        -- 470 ohm resistor  -- RED
-/*TODO*///	  bit 0 -- 1  kohm resistor  -- RED
-/*TODO*///	
-/*TODO*///	  The output of the background star generator is connected this way:
-/*TODO*///	
-/*TODO*///	  bit 5 -- 100 ohm resistor  -- BLUE
-/*TODO*///	        -- 150 ohm resistor  -- BLUE
-/*TODO*///	        -- 100 ohm resistor  -- GREEN
-/*TODO*///	        -- 150 ohm resistor  -- GREEN
-/*TODO*///	        -- 100 ohm resistor  -- RED
-/*TODO*///	  bit 0 -- 150 ohm resistor  -- RED
-/*TODO*///	
-/*TODO*///	  The blue background in Scramble and other games goes through a 390 ohm
-/*TODO*///	  resistor.
-/*TODO*///	
-/*TODO*///	  The bullet RGB outputs go through 100 ohm resistors.
-/*TODO*///	
-/*TODO*///	  The RGB outputs have a 470 ohm pull-down each.
-/*TODO*///	
-/*TODO*///	***************************************************************************/
+
     public static VhConvertColorPromPtr galaxian_vh_convert_color_prom = new VhConvertColorPromPtr() {
         public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
-            /*TODO*///		int i;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* first, the character/sprite palette */
-/*TODO*///                int p_ptr=0;
-/*TODO*///		for (i = 0;i < 32;i++)
-/*TODO*///		{
-/*TODO*///			int bit0,bit1,bit2;
-/*TODO*///	
-/*TODO*///			/* red component */
-/*TODO*///			bit0 = (color_prom.read() >> 0) & 0x01;
-/*TODO*///			bit1 = (color_prom.read() >> 1) & 0x01;
-/*TODO*///			bit2 = (color_prom.read() >> 2) & 0x01;
-/*TODO*///			palette[p_ptr++] = (char)(0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
-/*TODO*///			/* green component */
-/*TODO*///			bit0 = (color_prom.read() >> 3) & 0x01;
-/*TODO*///			bit1 = (color_prom.read() >> 4) & 0x01;
-/*TODO*///			bit2 = (color_prom.read() >> 5) & 0x01;
-/*TODO*///			palette[p_ptr++] = (char)(0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
-/*TODO*///			/* blue component */
-/*TODO*///			bit0 = (color_prom.read() >> 6) & 0x01;
-/*TODO*///			bit1 = (color_prom.read() >> 7) & 0x01;
-/*TODO*///			palette[p_ptr++] = (char)(0x4f * bit0 + 0xa8 * bit1);
-/*TODO*///	
-/*TODO*///			color_prom.inc();
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		galaxian_init_stars(&palette);
+            int i;
+
+            /* first, the character/sprite palette */
+            int p_ptr = 0;
+            for (i = 0; i < 32; i++) {
+                int bit0, bit1, bit2;
+
+                /* red component */
+                bit0 = (color_prom.read() >> 0) & 0x01;
+                bit1 = (color_prom.read() >> 1) & 0x01;
+                bit2 = (color_prom.read() >> 2) & 0x01;
+                palette[p_ptr++] = (char) (0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
+                /* green component */
+                bit0 = (color_prom.read() >> 3) & 0x01;
+                bit1 = (color_prom.read() >> 4) & 0x01;
+                bit2 = (color_prom.read() >> 5) & 0x01;
+                palette[p_ptr++] = (char) (0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
+                /* blue component */
+                bit0 = (color_prom.read() >> 6) & 0x01;
+                bit1 = (color_prom.read() >> 7) & 0x01;
+                palette[p_ptr++] = (char) (0x4f * bit0 + 0xa8 * bit1);
+
+                color_prom.inc();
+            }
+
+            /*TODO*///		galaxian_init_stars(&palette);
 /*TODO*///	
 /*TODO*///	
 /*TODO*///		/* bullets - yellow and white */
@@ -180,84 +146,70 @@ public class galaxian {
 
     public static VhConvertColorPromPtr scramble_vh_convert_color_prom = new VhConvertColorPromPtr() {
         public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
-            /*TODO*///		galaxian_vh_convert_color_prom(palette, colortable, color_prom);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* blue background - 390 ohm resistor */
-/*TODO*///	
-/*TODO*///		palette[(background_start_pen + 1) * 3 + 0] = 0;
-/*TODO*///		palette[(background_start_pen + 1) * 3 + 1] = 0;
-/*TODO*///		palette[(background_start_pen + 1) * 3 + 2] = 0x56;
+            galaxian_vh_convert_color_prom.handler(palette, colortable, color_prom);
+
+            /* blue background - 390 ohm resistor */
+            palette[(background_start_pen + 1) * 3 + 0] = (char) 0;
+            palette[(background_start_pen + 1) * 3 + 1] = (char) 0;
+            palette[(background_start_pen + 1) * 3 + 2] = (char) 0x56;
         }
     };
 
     public static VhConvertColorPromPtr moonwar_vh_convert_color_prom = new VhConvertColorPromPtr() {
         public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
-            /*TODO*///		scramble_vh_convert_color_prom(palette, colortable, color_prom);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* wire mod to connect the bullet blue output to the 220 ohm resistor */
-/*TODO*///	
-/*TODO*///		palette[BULLETS_COLOR_BASE * 3 + 2] = 0x97;
+            scramble_vh_convert_color_prom.handler(palette, colortable, color_prom);
+
+            /* wire mod to connect the bullet blue output to the 220 ohm resistor */
+            palette[BULLETS_COLOR_BASE * 3 + 2] = (char) 0x97;
         }
     };
 
     public static VhConvertColorPromPtr turtles_vh_convert_color_prom = new VhConvertColorPromPtr() {
         public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
-            /*TODO*///		int i;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		galaxian_vh_convert_color_prom(palette, colortable, color_prom);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/*  The background color generator is connected this way:
-/*TODO*///	
-/*TODO*///			RED   - 390 ohm resistor
-/*TODO*///			GREEN - 470 ohm resistor
-/*TODO*///			BLUE  - 390 ohm resistor */
-/*TODO*///	
-/*TODO*///		for (i = 0; i < 8; i++)
-/*TODO*///		{
-/*TODO*///			palette[(background_start_pen + i) * 3 + 0] = (i & 0x01) ? 0x55 : 0x00;
-/*TODO*///			palette[(background_start_pen + i) * 3 + 1] = (i & 0x02) ? 0x47 : 0x00;
-/*TODO*///			palette[(background_start_pen + i) * 3 + 2] = (i & 0x04) ? 0x55 : 0x00;
-/*TODO*///		}
+            int i;
+
+            galaxian_vh_convert_color_prom.handler(palette, colortable, color_prom);
+
+            /*  The background color generator is connected this way:
+	
+			RED   - 390 ohm resistor
+			GREEN - 470 ohm resistor
+			BLUE  - 390 ohm resistor */
+            for (i = 0; i < 8; i++) {
+                palette[(background_start_pen + i) * 3 + 0] = (i & 0x01) != 0 ? (char) 0x55 : (char) 0x00;
+                palette[(background_start_pen + i) * 3 + 1] = (i & 0x02) != 0 ? (char) 0x47 : (char) 0x00;
+                palette[(background_start_pen + i) * 3 + 2] = (i & 0x04) != 0 ? (char) 0x55 : (char) 0x00;
+            }
         }
     };
 
     public static VhConvertColorPromPtr stratgyx_vh_convert_color_prom = new VhConvertColorPromPtr() {
         public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
-            /*TODO*///		int i;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		galaxian_vh_convert_color_prom(palette, colortable, color_prom);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/*  The background color generator is connected this way:
-/*TODO*///	
-/*TODO*///			RED   - 270 ohm resistor
-/*TODO*///			GREEN - 560 ohm resistor
-/*TODO*///			BLUE  - 470 ohm resistor */
-/*TODO*///	
-/*TODO*///		for (i = 0; i < 8; i++)
-/*TODO*///		{
-/*TODO*///			palette[(background_start_pen + i) * 3 + 0] = (i & 0x01) ? 0x7c : 0x00;
-/*TODO*///			palette[(background_start_pen + i) * 3 + 1] = (i & 0x02) ? 0x3c : 0x00;
-/*TODO*///			palette[(background_start_pen + i) * 3 + 2] = (i & 0x04) ? 0x47 : 0x00;
-/*TODO*///		}
+            int i;
+
+            galaxian_vh_convert_color_prom.handler(palette, colortable, color_prom);
+
+            /*  The background color generator is connected this way:
+	
+			RED   - 270 ohm resistor
+			GREEN - 560 ohm resistor
+			BLUE  - 470 ohm resistor */
+            for (i = 0; i < 8; i++) {
+                palette[(background_start_pen + i) * 3 + 0] = (i & 0x01) != 0 ? (char) 0x7c : (char) 0x00;
+                palette[(background_start_pen + i) * 3 + 1] = (i & 0x02) != 0 ? (char) 0x3c : (char) 0x00;
+                palette[(background_start_pen + i) * 3 + 2] = (i & 0x04) != 0 ? (char) 0x47 : (char) 0x00;
+            }
         }
     };
 
     public static VhConvertColorPromPtr frogger_vh_convert_color_prom = new VhConvertColorPromPtr() {
         public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
-            /*TODO*///		galaxian_vh_convert_color_prom(palette, colortable, color_prom);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* blue background - 470 ohm resistor */
-/*TODO*///	
-/*TODO*///		palette[(background_start_pen + 1) * 3 + 0] = 0;
-/*TODO*///		palette[(background_start_pen + 1) * 3 + 1] = 0;
-/*TODO*///		palette[(background_start_pen + 1) * 3 + 2] = 0x47;
+            galaxian_vh_convert_color_prom.handler(palette, colortable, color_prom);
+
+            /* blue background - 470 ohm resistor */
+            palette[(background_start_pen + 1) * 3 + 0] = (char) 0;
+            palette[(background_start_pen + 1) * 3 + 1] = (char) 0;
+            palette[(background_start_pen + 1) * 3 + 2] = (char) 0x47;
         }
     };
 
@@ -330,52 +282,40 @@ public class galaxian {
 
     public static VhConvertColorPromPtr minefld_vh_convert_color_prom = new VhConvertColorPromPtr() {
         public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
-            /*TODO*///		int i;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	    galaxian_vh_convert_color_prom(palette, colortable, color_prom);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* set up background colors */
-/*TODO*///	
-/*TODO*///	   	/* graduated blue */
-/*TODO*///	
-/*TODO*///	   	for (i = 0; i < 64; i++)
-/*TODO*///	    {
-/*TODO*///			palette[(background_start_pen + i) * 3 + 0] = 0;
-/*TODO*///	       	palette[(background_start_pen + i) * 3 + 1] = i * 2;
-/*TODO*///	       	palette[(background_start_pen + i) * 3 + 2] = i * 4;
-/*TODO*///	    }
-/*TODO*///	
-/*TODO*///	    /* graduated brown */
-/*TODO*///	
-/*TODO*///	   	for (i = 0; i < 64; i++)
-/*TODO*///	    {
-/*TODO*///	       	palette[(background_start_pen + 64 + i) * 3 + 0] = i * 3;
-/*TODO*///	       	palette[(background_start_pen + 64 + i) * 3 + 1] = i * 1.5;
-/*TODO*///	       	palette[(background_start_pen + 64 + i) * 3 + 2] = i;
-/*TODO*///	    }
+            int i;
+
+            galaxian_vh_convert_color_prom.handler(palette, colortable, color_prom);
+
+            /* set up background colors */
+ /* graduated blue */
+            for (i = 0; i < 64; i++) {
+                palette[(background_start_pen + i) * 3 + 0] = (char) 0;
+                palette[(background_start_pen + i) * 3 + 1] = (char) (i * 2);
+                palette[(background_start_pen + i) * 3 + 2] = (char) (i * 4);
+            }
+
+            /* graduated brown */
+            for (i = 0; i < 64; i++) {
+                palette[(background_start_pen + 64 + i) * 3 + 0] = (char) (i * 3);
+                palette[(background_start_pen + 64 + i) * 3 + 1] = (char) (i * 1.5);
+                palette[(background_start_pen + 64 + i) * 3 + 2] = (char) (i);
+            }
         }
     };
 
     public static VhConvertColorPromPtr rescue_vh_convert_color_prom = new VhConvertColorPromPtr() {
         public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
-            /*TODO*///		int i;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	    galaxian_vh_convert_color_prom(palette, colortable, color_prom);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* set up background colors */
-/*TODO*///	
-/*TODO*///	   	/* graduated blue */
-/*TODO*///	
-/*TODO*///	   	for (i = 0; i < 64; i++)
-/*TODO*///	    {
-/*TODO*///			palette[(background_start_pen + i) * 3 + 0] = 0;
-/*TODO*///	       	palette[(background_start_pen + i) * 3 + 1] = i * 2;
-/*TODO*///	       	palette[(background_start_pen + i) * 3 + 2] = i * 4;
-/*TODO*///	    }
+            int i;
+
+            galaxian_vh_convert_color_prom.handler(palette, colortable, color_prom);
+
+            /* set up background colors */
+ /* graduated blue */
+            for (i = 0; i < 64; i++) {
+                palette[(background_start_pen + i) * 3 + 0] = (char) 0;
+                palette[(background_start_pen + i) * 3 + 1] = (char) (i * 2);
+                palette[(background_start_pen + i) * 3 + 2] = (char) (i * 4);
+            }
         }
     };
 
@@ -1623,12 +1563,12 @@ public class galaxian {
         }
     };
 
-    /*TODO*///	
-/*TODO*///	public static InterruptPtr hunchbks_vh_interrupt = new InterruptPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		cpu_irq_line_vector_w(0,0,0x03);
-/*TODO*///		cpu_set_irq_line(0,0,PULSE_LINE);
-/*TODO*///	
-/*TODO*///		return ignore_interrupt();
-/*TODO*///	} };
+    public static InterruptPtr hunchbks_vh_interrupt = new InterruptPtr() {
+        public int handler() {
+            cpu_irq_line_vector_w(0, 0, 0x03);
+            cpu_set_irq_line(0, 0, PULSE_LINE);
+
+            return ignore_interrupt.handler();
+        }
+    };
 }
