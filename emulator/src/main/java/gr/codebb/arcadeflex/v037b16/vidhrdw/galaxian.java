@@ -5,6 +5,7 @@
 package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
 //generic imports
+import static common.libc.expressions.NOT;
 import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
@@ -14,6 +15,9 @@ import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 //to be organized
 import common.ptr.UBytePtr;
+import static gr.codebb.arcadeflex.v037b16.mame.commonH.REGION_USER2;
+import static mame037b16.drawgfx.drawgfx;
+import static mame037b16.mame.Machine;
 
 public class galaxian {
 
@@ -84,6 +88,7 @@ public class galaxian {
     static int galaxian_stars_on;
     static int stars_blink_state;
 
+    /*TODO*///static void (*draw_stars)(struct osd_bitmap *);		/* function to call to draw the star layer */
     /* bullets circuit */
     static int darkplnt_bullet_color;
     /*TODO*///	static void (*draw_bullets)(struct osd_bitmap *,int,int,int);	/* function to call to draw a bullet */
@@ -363,26 +368,25 @@ public class galaxian {
         public int handler() {
             /*TODO*///		extern struct GameDriver driver_newsin7;
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	    modify_charcode = 0;
-/*TODO*///	    modify_spritecode = 0;
-/*TODO*///	    modify_color = 0;
+
+            modify_charcode = null;
+            modify_spritecode = null;
+            /*TODO*///	    modify_color = 0;
 /*TODO*///	    modify_ypos = 0;
 /*TODO*///	
-/*TODO*///		mooncrst_gfxextend = 0;
-/*TODO*///	
+            mooncrst_gfxextend = 0;
+            /*TODO*///	
 /*TODO*///		draw_bullets = 0;
 /*TODO*///	
 /*TODO*///		draw_background = 0;
-/*TODO*///		background_red = 0;
-/*TODO*///		background_green = 0;
-/*TODO*///		background_blue = 0;
-/*TODO*///	
-/*TODO*///		flip_screen_x_set(0);
-/*TODO*///		flip_screen_y_set(0);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* all the games except New Sinbad 7 clip the sprites at the top of the screen,
+            background_red = 0;
+            background_green = 0;
+            background_blue = 0;
+
+            flip_screen_x_set(0);
+            flip_screen_y_set(0);
+
+            /*TODO*///		/* all the games except New Sinbad 7 clip the sprites at the top of the screen,
 /*TODO*///		   New Sinbad 7 does it at the bottom */
 /*TODO*///		if (Machine.gamedrv == &driver_newsin7)
 /*TODO*///		{
@@ -395,7 +399,6 @@ public class galaxian {
 /*TODO*///	        spritevisibleareaflipx = &_spritevisibleareaflipx;
 /*TODO*///		}
 /*TODO*///	
-
             return 0;
         }
     };
@@ -415,10 +418,10 @@ public class galaxian {
     public static VhStartPtr mooncrst_vh_start = new VhStartPtr() {
         public int handler() {
             int ret = galaxian_vh_start.handler();
-            /*TODO*///	
-/*TODO*///		modify_charcode   = mooncrst_modify_charcode;
-/*TODO*///		modify_spritecode = mooncrst_modify_spritecode;
-/*TODO*///	
+
+            modify_charcode = mooncrst_modify_charcode;
+            modify_spritecode = mooncrst_modify_spritecode;
+
             return ret;
         }
     };
@@ -426,10 +429,10 @@ public class galaxian {
     public static VhStartPtr moonqsr_vh_start = new VhStartPtr() {
         public int handler() {
             int ret = galaxian_vh_start.handler();
-            /*TODO*///	
-/*TODO*///		modify_charcode   = moonqsr_modify_charcode;
-/*TODO*///		modify_spritecode = moonqsr_modify_spritecode;
-/*TODO*///	
+
+            modify_charcode = moonqsr_modify_charcode;
+            modify_spritecode = moonqsr_modify_spritecode;
+
             return ret;
         }
     };
@@ -438,9 +441,9 @@ public class galaxian {
         public int handler() {
             int ret = galaxian_vh_start.handler();
 
-            /*TODO*///		modify_charcode   = pisces_modify_charcode;
-/*TODO*///		modify_spritecode = pisces_modify_spritecode;
-/*TODO*///	
+            modify_charcode = pisces_modify_charcode;
+            modify_spritecode = pisces_modify_spritecode;
+
             return ret;
         }
     };
@@ -448,10 +451,10 @@ public class galaxian {
     public static VhStartPtr batman2_vh_start = new VhStartPtr() {
         public int handler() {
             int ret = galaxian_vh_start.handler();
-            /*TODO*///	
-/*TODO*///		modify_charcode   = batman2_modify_charcode;
-/*TODO*///		modify_spritecode = batman2_modify_spritecode;
-/*TODO*///	
+
+            modify_charcode = batman2_modify_charcode;
+            modify_spritecode = batman2_modify_spritecode;
+
             return ret;
         }
     };
@@ -600,9 +603,9 @@ public class galaxian {
             int ret = scramble_vh_start.handler();
             /*TODO*///	
 /*TODO*///		draw_stars = jumpbug_draw_stars;
-/*TODO*///	
-/*TODO*///		modify_charcode   = jumpbug_modify_charcode;
-/*TODO*///		modify_spritecode = jumpbug_modify_spritecode;
+
+            modify_charcode = jumpbug_modify_charcode;
+            modify_spritecode = jumpbug_modify_spritecode;
 
             return ret;
         }
@@ -697,134 +700,127 @@ public class galaxian {
             set_vh_global_attribute(jumpbug_gfxbank, offset, data & 1);
         }
     };
+
+    /* Character banking routines */
+    public static modify_charcodePtr mooncrst_modify_charcode = new modify_charcodePtr() {
+        public void handler(int[] charcode, int offs) {
+            if ((mooncrst_gfxextend & 4) != 0 && (charcode[0] & 0xc0) == 0x80) {
+                charcode[0] = (charcode[0] & 0x3f) | (mooncrst_gfxextend << 6);
+            }
+        }
+    };
+    public static modify_charcodePtr moonqsr_modify_charcode = new modify_charcodePtr() {
+        public void handler(int[] code, int x) {
+            if ((galaxian_attributesram.read((x << 1) | 1) & 0x20) != 0) {
+                code[0] += 256;
+            }
+
+            mooncrst_modify_charcode.handler(code, x);
+        }
+    };
+
+    public static modify_charcodePtr pisces_modify_charcode = new modify_charcodePtr() {
+        public void handler(int[] charcode, int offs) {
+            if (pisces_gfxbank[0] != 0) {
+                charcode[0] += 256;
+            }
+        }
+    };
+
+    public static modify_charcodePtr batman2_modify_charcode = new modify_charcodePtr() {
+        public void handler(int[] charcode, int offs) {
+            if ((charcode[0] & 0x80) != 0 && pisces_gfxbank[0] != 0) {
+                charcode[0] += 256;
+            }
+        }
+    };
+
+    public static modify_charcodePtr mariner_modify_charcode = new modify_charcodePtr() {
+        public void handler(int[] code, int x) {
+            UBytePtr prom;
+            /* bit 0 of the PROM controls character banking */
+            prom = memory_region(REGION_USER2);
+
+            if ((prom.read(x) & 0x01) != 0) {
+                code[0] += 256;
+            }
+        }
+    };
+
+    public static modify_charcodePtr jumpbug_modify_charcode = new modify_charcodePtr() {
+        public void handler(int[] charcode, int offs) {
+            if (((charcode[0] & 0xc0) == 0x80)
+                    && (jumpbug_gfxbank[2] & 1) != 0) {
+                charcode[0] += 128 + ((jumpbug_gfxbank[0] & 1) << 6)
+                        + ((jumpbug_gfxbank[1] & 1) << 7)
+                        + ((~jumpbug_gfxbank[4] & 1) << 8);
+            }
+        }
+    };
+
+    /* Sprite banking routines */
+    public static modify_spritecodePtr mooncrst_modify_spritecode = new modify_spritecodePtr() {
+        public void handler(int[] spritecode, int[] flipx, int[] flipy, int offs) {
+            if ((mooncrst_gfxextend & 4) != 0 && (spritecode[0] & 0x30) == 0x20) {
+                spritecode[0] = (spritecode[0] & 0x0f) | (mooncrst_gfxextend << 4);
+            }
+        }
+    };
+
+    public static modify_spritecodePtr moonqsr_modify_spritecode = new modify_spritecodePtr() {
+        public void handler(int[] spritecode, int[] flipx, int[] flipy, int offs) {
+            if ((galaxian_spriteram.read(offs + 2) & 0x20) != 0) {
+                spritecode[0] += 64;
+            }
+
+            mooncrst_modify_spritecode.handler(spritecode, flipx, flipy, offs);
+        }
+    };
+
+    public static modify_spritecodePtr ckongs_modify_spritecode = new modify_spritecodePtr() {
+        public void handler(int[] spritecode, int[] flipx, int[] flipy, int offs) {
+            if ((galaxian_spriteram.read(offs + 2) & 0x10) != 0) {
+                spritecode[0] += 64;
+            }
+        }
+    };
+
+    public static modify_spritecodePtr calipso_modify_spritecode = new modify_spritecodePtr() {
+        public void handler(int[] spritecode, int[] flipx, int[] flipy, int offs) {
+            /* No flips */
+            spritecode[0] = galaxian_spriteram.read(offs + 1);
+            flipx[0] = 0;
+            flipy[0] = 0;
+        }
+    };
+
+    public static modify_spritecodePtr pisces_modify_spritecode = new modify_spritecodePtr() {
+        public void handler(int[] spritecode, int[] flipx, int[] flipy, int offs) {
+            if (pisces_gfxbank[0] != 0) {
+                spritecode[0] += 64;
+            }
+
+        }
+    };
+
+    public static modify_spritecodePtr batman2_modify_spritecode = new modify_spritecodePtr() {
+        public void handler(int[] spritecode, int[] flipx, int[] flipy, int offs) {
+            /* only the upper 64 sprites are used */
+            spritecode[0] += 64;
+        }
+    };
+    public static modify_spritecodePtr jumpbug_modify_spritecode = new modify_spritecodePtr() {
+        public void handler(int[] spritecode, int[] flipx, int[] flipy, int offs) {
+            if (((spritecode[0] & 0x30) == 0x20)
+                    && (jumpbug_gfxbank[2] & 1) != 0) {
+                spritecode[0] += 32 + ((jumpbug_gfxbank[0] & 1) << 4)
+                        + ((jumpbug_gfxbank[1] & 1) << 5)
+                        + ((~jumpbug_gfxbank[4] & 1) << 6);
+            }
+        }
+    };
+
     /*TODO*///	
-/*TODO*///	
-/*TODO*///	/* character banking functions */
-/*TODO*///	
-/*TODO*///	static void mooncrst_modify_charcode(int *code,int x)
-/*TODO*///	{
-/*TODO*///		if ((mooncrst_gfxextend & 4) && (*code & 0xc0) == 0x80)
-/*TODO*///		{
-/*TODO*///			*code = (*code & 0x3f) | (mooncrst_gfxextend << 6);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void moonqsr_modify_charcode(int *code,int x)
-/*TODO*///	{
-/*TODO*///		if (galaxian_attributesram[(x << 1) | 1] & 0x20)
-/*TODO*///		{
-/*TODO*///			*code += 256;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///	    mooncrst_modify_charcode(code,x);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void pisces_modify_charcode(int *code,int x)
-/*TODO*///	{
-/*TODO*///		if (pisces_gfxbank != 0)
-/*TODO*///		{
-/*TODO*///			*code += 256;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void batman2_modify_charcode(int *code,int x)
-/*TODO*///	{
-/*TODO*///		if ((*code & 0x80) && pisces_gfxbank)
-/*TODO*///		{
-/*TODO*///			*code += 256;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void mariner_modify_charcode(int *code,int x)
-/*TODO*///	{
-/*TODO*///		UINT8 *prom;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* bit 0 of the PROM controls character banking */
-/*TODO*///	
-/*TODO*///		prom = memory_region(REGION_USER2);
-/*TODO*///	
-/*TODO*///		if (prom[x] & 0x01)
-/*TODO*///		{
-/*TODO*///			*code += 256;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void jumpbug_modify_charcode(int *code,int offs)
-/*TODO*///	{
-/*TODO*///		if (((*code & 0xc0) == 0x80) &&
-/*TODO*///			 (jumpbug_gfxbank[2] & 1) != 0)
-/*TODO*///		{
-/*TODO*///			*code += 128 + (( jumpbug_gfxbank[0] & 1) << 6) +
-/*TODO*///						   (( jumpbug_gfxbank[1] & 1) << 7) +
-/*TODO*///						   ((~jumpbug_gfxbank[4] & 1) << 8);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/* sprite banking functions */
-/*TODO*///	
-/*TODO*///	static void mooncrst_modify_spritecode(int *code,int *flipx,int *flipy,int offs)
-/*TODO*///	{
-/*TODO*///		if ((mooncrst_gfxextend & 4) && (*code & 0x30) == 0x20)
-/*TODO*///		{
-/*TODO*///			*code = (*code & 0x0f) | (mooncrst_gfxextend << 4);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void moonqsr_modify_spritecode(int *code,int *flipx,int *flipy,int offs)
-/*TODO*///	{
-/*TODO*///		if (galaxian_spriteram[offs + 2] & 0x20)
-/*TODO*///		{
-/*TODO*///			*code += 64;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///	    mooncrst_modify_spritecode(code, flipx, flipy, offs);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void ckongs_modify_spritecode(int *code,int *flipx,int *flipy,int offs)
-/*TODO*///	{
-/*TODO*///		if (galaxian_spriteram[offs + 2] & 0x10)
-/*TODO*///		{
-/*TODO*///			*code += 64;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void calipso_modify_spritecode(int *code,int *flipx,int *flipy,int offs)
-/*TODO*///	{
-/*TODO*///		/* No flips */
-/*TODO*///		*code = galaxian_spriteram[offs + 1];
-/*TODO*///		*flipx = 0;
-/*TODO*///		*flipy = 0;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void pisces_modify_spritecode(int *code,int *flipx,int *flipy,int offs)
-/*TODO*///	{
-/*TODO*///		if (pisces_gfxbank != 0)
-/*TODO*///		{
-/*TODO*///			*code += 64;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void batman2_modify_spritecode(int *code,int *flipx,int *flipy,int offs)
-/*TODO*///	{
-/*TODO*///		/* only the upper 64 sprites are used */
-/*TODO*///	
-/*TODO*///		*code += 64;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void jumpbug_modify_spritecode(int *code,int *flipx,int *flipy,int offs)
-/*TODO*///	{
-/*TODO*///		if (((*code & 0x30) == 0x20) &&
-/*TODO*///			 (jumpbug_gfxbank[2] & 1) != 0)
-/*TODO*///		{
-/*TODO*///			*code += 32 + (( jumpbug_gfxbank[0] & 1) << 4) +
-/*TODO*///						  (( jumpbug_gfxbank[1] & 1) << 5) +
-/*TODO*///						  ((~jumpbug_gfxbank[4] & 1) << 6);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
 /*TODO*///	/* color PROM mapping functions */
 /*TODO*///	
 /*TODO*///	static void frogger_modify_color(int *color)
@@ -1378,15 +1374,13 @@ public class galaxian {
      */
     public static VhUpdatePtr galaxian_vh_screenrefresh = new VhUpdatePtr() {
         public void handler(osd_bitmap bitmap, int full_refresh) {
-            /*TODO*///		int x,y;
-/*TODO*///		int offs,color_mask;
-/*TODO*///		int transparency;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		color_mask = (Machine.gfx[0].color_granularity == 4) ? 7 : 3;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* draw the bacground */
+            int x, y;
+            int offs, color_mask;
+            int transparency;
+
+            color_mask = (Machine.gfx[0].color_granularity == 4) ? 7 : 3;
+
+            /*TODO*///		/* draw the bacground */
 /*TODO*///		if (draw_background != 0)
 /*TODO*///		{
 /*TODO*///			draw_background(bitmap);
@@ -1409,17 +1403,18 @@ public class galaxian {
 /*TODO*///	
 /*TODO*///	
 /*TODO*///		/* draw the character layer */
-/*TODO*///		transparency = (draw_background || draw_stars) ? TRANSPARENCY_PEN : TRANSPARENCY_NONE;
+            /*TO BE REMOVED*/ transparency = TRANSPARENCY_NONE;
+            /*TODO*///		transparency = (draw_background || draw_stars) ? TRANSPARENCY_PEN : TRANSPARENCY_NONE;
 /*TODO*///	
-/*TODO*///		for (x = 0; x < 32; x++)
-/*TODO*///		{
-/*TODO*///			UINT8 sx,scroll;
-/*TODO*///			int color;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			scroll = galaxian_attributesram[ x << 1];
-/*TODO*///			color  = galaxian_attributesram[(x << 1) | 1] & color_mask;
-/*TODO*///	
+            for (x = 0; x < 32; x++) {
+                /*UINT8*/
+                int sx;
+                int[] scroll = new int[1];
+                int[] color = new int[1];
+
+                scroll[0] = galaxian_attributesram.read(x << 1);
+                color[0] = galaxian_attributesram.read((x << 1) | 1) & color_mask;
+                /*TODO*///	
 /*TODO*///			if (modify_color != 0)
 /*TODO*///			{
 /*TODO*///				modify_color(&color);
@@ -1430,44 +1425,37 @@ public class galaxian {
 /*TODO*///				modify_ypos(&scroll);
 /*TODO*///			}
 /*TODO*///	
-/*TODO*///	
-/*TODO*///			sx = 8 * x;
-/*TODO*///	
-/*TODO*///			if (flip_screen_x != 0)
-/*TODO*///			{
-/*TODO*///				sx = 248 - sx;
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			for (y = 0; y < 32; y++)
-/*TODO*///			{
-/*TODO*///				UINT8 sy;
-/*TODO*///				int code;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///				sy = (8 * y) - scroll;
-/*TODO*///	
-/*TODO*///				if (flip_screen_y != 0)
-/*TODO*///				{
-/*TODO*///					sy = 248 - sy;
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///				code = galaxian_videoram[(y << 5) | x];
-/*TODO*///	
-/*TODO*///				if (modify_charcode != 0)
-/*TODO*///				{
-/*TODO*///					modify_charcode(&code, x);
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///				drawgfx(bitmap,Machine.gfx[0],
-/*TODO*///						code,color,
-/*TODO*///						flip_screen_x,flip_screen_y,
-/*TODO*///						sx,sy,
-/*TODO*///						0, transparency, 0);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	
+
+                sx = 8 * x;
+
+                if (flip_screen_x[0] != 0) {
+                    sx = 248 - sx;
+                }
+
+                for (y = 0; y < 32; y++) {
+                    int/*UINT8*/ sy;
+                    int[] code = new int[1];
+
+                    sy = (8 * y) - scroll[0];
+
+                    if (flip_screen_y[0] != 0) {
+                        sy = 248 - sy;
+                    }
+
+                    code[0] = galaxian_videoram.read((y << 5) | x);
+
+                    if (modify_charcode != null) {
+                        modify_charcode.handler(code, x);
+                    }
+
+                    drawgfx(bitmap, Machine.gfx[0],
+                            code[0], color[0],
+                            flip_screen_x[0], flip_screen_y[0],
+                            sx, sy,
+                            null, transparency, 0);
+                }
+            }
+            /*TODO*///	
 /*TODO*///	
 /*TODO*///		/* draw the bullets */
 /*TODO*///		if (draw_bullets != 0)
@@ -1487,28 +1475,29 @@ public class galaxian {
 /*TODO*///			}
 /*TODO*///		}
 /*TODO*///	
-/*TODO*///	
-/*TODO*///		/* draw the sprites */
-/*TODO*///		for (offs = galaxian_spriteram_size - 4;offs >= 0;offs -= 4)
-/*TODO*///		{
-/*TODO*///			UINT8 sx,sy;
-/*TODO*///			int flipx,flipy,code,color;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			sx = galaxian_spriteram[offs + 3]; /* This is definately correct in Mariner. Look at
-/*TODO*///													  the 'gate' moving up/down. It stops at the
-/*TODO*///	  												  right spots */
-/*TODO*///			sy = galaxian_spriteram[offs];
-/*TODO*///			flipx = galaxian_spriteram[offs + 1] & 0x40;
-/*TODO*///			flipy = galaxian_spriteram[offs + 1] & 0x80;
-/*TODO*///			code = galaxian_spriteram[offs + 1] & 0x3f;
-/*TODO*///			color = galaxian_spriteram[offs + 2] & color_mask;
-/*TODO*///	
-/*TODO*///			if (modify_spritecode != 0)
-/*TODO*///			{
-/*TODO*///				modify_spritecode(&code, &flipx, &flipy, offs);
-/*TODO*///			}
-/*TODO*///	
+
+            /* draw the sprites */
+            for (offs = galaxian_spriteram_size[0] - 4; offs >= 0; offs -= 4) {
+                int /*UINT8*/ sx, sy;
+                int[] flipx = new int[1];
+                int[] flipy = new int[1];
+                int[] code = new int[1];
+                int[] color = new int[1];
+
+                sx = galaxian_spriteram.read(offs + 3);
+                /* This is definately correct in Mariner. Look at
+													  the 'gate' moving up/down. It stops at the
+	  												  right spots */
+                sy = galaxian_spriteram.read(offs);
+                flipx[0] = galaxian_spriteram.read(offs + 1) & 0x40;
+                flipy[0] = galaxian_spriteram.read(offs + 1) & 0x80;
+                code[0] = galaxian_spriteram.read(offs + 1) & 0x3f;
+                color[0] = galaxian_spriteram.read(offs + 2) & color_mask;
+
+                if (modify_spritecode != null) {
+                    modify_spritecode.handler(code, flipx, flipy, offs);
+                }
+                /*TODO*///	
 /*TODO*///			if (modify_color != 0)
 /*TODO*///			{
 /*TODO*///				modify_color(&color);
@@ -1519,47 +1508,44 @@ public class galaxian {
 /*TODO*///				modify_ypos(&sy);
 /*TODO*///			}
 /*TODO*///	
-/*TODO*///			if (flip_screen_x != 0)
-/*TODO*///			{
-/*TODO*///				sx = 240 - sx;	/* I checked a bunch of games including Scramble
-/*TODO*///								   (# of pixels the ship is from the top of the mountain),
-/*TODO*///				                   Mariner and Checkman. This is correct for them */
-/*TODO*///				flipx = !flipx;
-/*TODO*///			}
-/*TODO*///			else
-/*TODO*///			{
-/*TODO*///				sx += 2;
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			if (flip_screen_y != 0)
-/*TODO*///			{
-/*TODO*///				flipy = !flipy;
-/*TODO*///				if (offs >= 3*4)
-/*TODO*///					sy++;
-/*TODO*///				else
-/*TODO*///					sy += 2;
-/*TODO*///			}
-/*TODO*///			else
-/*TODO*///			{
-/*TODO*///				sy = 240 - sy;
-/*TODO*///				if (offs >= 3*4) sy++;
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			/* In Amidar, */
-/*TODO*///			/* Sprites #0, #1 and #2 need to be offset one pixel to be correctly */
-/*TODO*///			/* centered on the ladders in Turtles (we move them down, but since this */
-/*TODO*///			/* is a rotated game, we actually move them left). */
-/*TODO*///			/* Note that the adjustment must be done AFTER handling flipscreen, thus */
-/*TODO*///			/* proving that this is a hardware related "feature" */
-/*TODO*///			/* This is not Amidar, it is Galaxian/Scramble/hundreds of clones, and I'm */
-/*TODO*///			/* not sure it should be the same. A good game to test alignment is Armored Car */
-/*TODO*///	
-/*TODO*///			drawgfx(bitmap,Machine.gfx[1],
-/*TODO*///					code,color,
-/*TODO*///					flipx,flipy,
-/*TODO*///					sx,sy,
-/*TODO*///					flip_screen_x ? spritevisibleareaflipx : spritevisiblearea,TRANSPARENCY_PEN,0);
-/*TODO*///		}
+                if (flip_screen_x[0] != 0) {
+                    sx = 240 - sx;
+                    /* I checked a bunch of games including Scramble
+								   (# of pixels the ship is from the top of the mountain),
+				                   Mariner and Checkman. This is correct for them */
+                    flipx[0] = NOT(flipx[0]);
+                } else {
+                    sx += 2;
+                }
+
+                if (flip_screen_y[0] != 0) {
+                    flipy[0] = NOT(flipy[0]);
+                    if (offs >= 3 * 4) {
+                        sy++;
+                    } else {
+                        sy += 2;
+                    }
+                } else {
+                    sy = 240 - sy;
+                    if (offs >= 3 * 4) {
+                        sy++;
+                    }
+                }
+
+                /* In Amidar, */
+ /* Sprites #0, #1 and #2 need to be offset one pixel to be correctly */
+ /* centered on the ladders in Turtles (we move them down, but since this */
+ /* is a rotated game, we actually move them left). */
+ /* Note that the adjustment must be done AFTER handling flipscreen, thus */
+ /* proving that this is a hardware related "feature" */
+ /* This is not Amidar, it is Galaxian/Scramble/hundreds of clones, and I'm */
+ /* not sure it should be the same. A good game to test alignment is Armored Car */
+                drawgfx(bitmap, Machine.gfx[1],
+                        code[0], color[0],
+                        flipx[0], flipy[0],
+                        sx, sy,
+                        flip_screen_x[0] != 0 ? spritevisibleareaflipx : spritevisiblearea, TRANSPARENCY_PEN, 0);
+            }
         }
     };
 
