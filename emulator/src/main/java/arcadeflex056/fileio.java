@@ -5,6 +5,7 @@ package arcadeflex056;
 
 import arcadeflex036.osdepend;
 import static arcadeflex036.osdepend.*;
+import arcadeflex037b16.settings;
 import static common.ptr.*;
 import static common.util.*;
 import static common.libc.cstdio.*;
@@ -13,6 +14,10 @@ import java.io.File;
 import static mame037b16.mame.mame_highscore_enabled;
 
 import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
+import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
 
 public class fileio {
 
@@ -410,6 +415,24 @@ public class fileio {
 /*TODO*///	return 0;
 /*TODO*///}
 /*TODO*///
+    
+    public static void downloadFile(String _rom, String _dstDir) {
+        String _url_ROM = settings.romUrl+_rom+".zip";
+        System.out.println("Downloading "+_url_ROM);
+        try (BufferedInputStream inputStream = new BufferedInputStream(new URL(_url_ROM).openStream());
+            FileOutputStream fileOS = new FileOutputStream(_dstDir+"/"+_rom+".zip")) {
+              byte data[] = new byte[1024];
+              int byteContent;
+              while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
+                  fileOS.write(data, 0, byteContent);
+              }
+              fileOS.close();
+              
+        } catch (IOException e) {
+              e.printStackTrace(System.out);
+        }
+    }
+    
 /*TODO*////* JB 980920 update */
 /*TODO*////* AM 980919 update */
     public static Object osd_fopen(String game, String filename, int filetype, int openforwrite) {
@@ -467,6 +490,11 @@ public class fileio {
 /*HACK*/ pathc = 1;
                     /*HACK*/ pathv = new String[1];
                     /*HACK*/ pathv[0] = "roms";
+                    if (!(new File(pathv[0] + File.separator + gamename + ".zip").exists())){
+                        //found=1;
+                        System.out.println(gamename+" not FOUND! Trying to download it");
+                        downloadFile(gamename, pathv[0]);
+                    }
                 }
                 for (indx = 0; indx < pathc && found == 0; ++indx) {
                     String dir_name = pathv[indx];
