@@ -16,7 +16,10 @@ import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 //to be organized
 import common.ptr.UBytePtr;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.REGION_USER2;
+import static gr.codebb.arcadeflex.v056.mame.timer.timer_remove;
 import static mame037b16.drawgfx.drawgfx;
+import static mame037b16.drawgfx.fillbitmap;
+import static mame037b16.drawgfx.plot_pixel;
 import static mame037b16.mame.Machine;
 
 public class galaxian {
@@ -87,16 +90,35 @@ public class galaxian {
     }
     static int galaxian_stars_on;
     static int stars_blink_state;
+    static Object stars_blink_timer = null;
 
-    /*TODO*///static void (*draw_stars)(struct osd_bitmap *);		/* function to call to draw the star layer */
-    /* bullets circuit */
+    public static abstract interface draw_starsPtr {
+
+        public abstract void handler(osd_bitmap bitmap);
+    }
+
+    public static draw_starsPtr draw_stars;/* function to call to draw the star layer */
+
+ /* bullets circuit */
     static int darkplnt_bullet_color;
-    /*TODO*///	static void (*draw_bullets)(struct osd_bitmap *,int,int,int);	/* function to call to draw a bullet */
-/*TODO*///	
-    /* background circuit */
+
+    public static abstract interface draw_bulletsPtr {
+
+        public abstract void handler(osd_bitmap bitmap, int offs, int x, int y);
+    }
+
+    public static draw_bulletsPtr draw_bullets;/* function to call to draw a bullet */
+
+ /* background circuit */
     static int background_red, background_green, background_blue;
     static int background_start_pen;
-    /*TODO*///	static void (*draw_background)(struct osd_bitmap *);	/* function to call to draw the background */
+
+    public static abstract interface draw_backgroundPtr {
+
+        public abstract void handler(osd_bitmap bitmap);
+    }
+
+    public static draw_backgroundPtr draw_background;/* function to call to draw the background */
 
     public static VhConvertColorPromPtr galaxian_vh_convert_color_prom = new VhConvertColorPromPtr() {
         public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
@@ -124,28 +146,26 @@ public class galaxian {
 
                 color_prom.inc();
             }
+            int[] p_pt = new int[1];
+            p_pt[0] = p_ptr;
+            galaxian_init_stars(palette, p_pt);
+            p_ptr = p_pt[0];
 
-            /*TODO*///		galaxian_init_stars(&palette);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* bullets - yellow and white */
-/*TODO*///	
-/*TODO*///		*(palette++) = 0xef;
-/*TODO*///		*(palette++) = 0xef;
-/*TODO*///		*(palette++) = 0x00;
-/*TODO*///	
-/*TODO*///		*(palette++) = 0xef;
-/*TODO*///		*(palette++) = 0xef;
-/*TODO*///		*(palette++) = 0xef;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* black background */
-/*TODO*///	
-/*TODO*///		background_start_pen = BACKGROUND_COLOR_BASE;
-/*TODO*///	
-/*TODO*///		*(palette++) = 0;
-/*TODO*///		*(palette++) = 0;
-/*TODO*///		*(palette++) = 0;
+            /* bullets - yellow and white */
+            palette[p_ptr++] = (char) (0xef);
+            palette[p_ptr++] = (char) (0xef);
+            palette[p_ptr++] = (char) (0x00);
+
+            palette[p_ptr++] = (char) (0xef);
+            palette[p_ptr++] = (char) (0xef);
+            palette[p_ptr++] = (char) (0xef);
+
+            /* black background */
+            background_start_pen = BACKGROUND_COLOR_BASE;
+
+            palette[p_ptr++] = (char) (0);
+            palette[p_ptr++] = (char) (0);
+            palette[p_ptr++] = (char) (0);
         }
     };
 
@@ -375,10 +395,10 @@ public class galaxian {
 /*TODO*///	    modify_ypos = 0;
 /*TODO*///	
             mooncrst_gfxextend = 0;
-            /*TODO*///	
-/*TODO*///		draw_bullets = 0;
-/*TODO*///	
-/*TODO*///		draw_background = 0;
+
+            draw_bullets = null;
+
+            draw_background = null;
             background_red = 0;
             background_green = 0;
             background_blue = 0;
@@ -395,10 +415,10 @@ public class galaxian {
 /*TODO*///		}
 /*TODO*///		else
 /*TODO*///		{
-/*TODO*///			spritevisiblearea      = &_spritevisiblearea;
-/*TODO*///	        spritevisibleareaflipx = &_spritevisibleareaflipx;
-/*TODO*///		}
-/*TODO*///	
+            spritevisiblearea = _spritevisiblearea;
+            spritevisibleareaflipx = _spritevisibleareaflipx;
+            /*TODO*///		}
+
             return 0;
         }
     };
@@ -406,15 +426,14 @@ public class galaxian {
     public static VhStartPtr galaxian_vh_start = new VhStartPtr() {
         public int handler() {
             int ret = galaxian_plain_vh_start.handler();
-            /*TODO*///	
-/*TODO*///		draw_stars = galaxian_draw_stars;
-/*TODO*///	
-/*TODO*///		draw_bullets = galaxian_draw_bullets;
-/*TODO*///	
+
+            /*TODO*///		draw_stars = galaxian_draw_stars;
+            draw_bullets = galaxian_draw_bullets;
+
             return ret;
         }
     };
-    /*TODO*///	
+
     public static VhStartPtr mooncrst_vh_start = new VhStartPtr() {
         public int handler() {
             int ret = galaxian_vh_start.handler();
@@ -462,13 +481,12 @@ public class galaxian {
     public static VhStartPtr scramble_vh_start = new VhStartPtr() {
         public int handler() {
             int ret = galaxian_plain_vh_start.handler();
-            /*TODO*///	
-/*TODO*///		draw_stars = scramble_draw_stars;
-/*TODO*///	
-/*TODO*///		draw_bullets = scramble_draw_bullets;
-/*TODO*///	
-/*TODO*///		draw_background = scramble_draw_background;
-/*TODO*///	
+
+            /*TODO*///		draw_stars = scramble_draw_stars;
+            draw_bullets = scramble_draw_bullets;
+
+            draw_background = scramble_draw_background;
+
             return ret;
         }
     };
@@ -476,9 +494,9 @@ public class galaxian {
     public static VhStartPtr turtles_vh_start = new VhStartPtr() {
         public int handler() {
             int ret = scramble_vh_start.handler();
-            /*TODO*///	
-/*TODO*///		draw_background = turtles_draw_background;
-/*TODO*///	
+
+            draw_background = turtles_draw_background;
+
             return ret;
         }
     };
@@ -486,22 +504,23 @@ public class galaxian {
     public static VhStartPtr theend_vh_start = new VhStartPtr() {
         public int handler() {
             int ret = scramble_vh_start.handler();
-            /*TODO*///	
-/*TODO*///		draw_bullets = theend_draw_bullets;
-/*TODO*///	
+
+            draw_bullets = theend_draw_bullets;
+
+            return ret;
+        }
+    };
+
+    public static VhStartPtr darkplnt_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = galaxian_plain_vh_start.handler();
+
+            draw_bullets = darkplnt_draw_bullets;
+
             return ret;
         }
     };
     /*TODO*///	
-/*TODO*///	public static VhStartPtr darkplnt_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = galaxian_plain_vh_start.handler();
-/*TODO*///	
-/*TODO*///		draw_bullets = darkplnt_draw_bullets;
-/*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
 /*TODO*///	public static VhStartPtr rescue_vh_start = new VhStartPtr() { public int handler() 
 /*TODO*///	{
 /*TODO*///		int ret = scramble_vh_start();
@@ -836,90 +855,81 @@ public class galaxian {
 /*TODO*///		*sy = (*sy << 4) | (*sy >> 4);
 /*TODO*///	}
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	/* bullet drawing functions */
-/*TODO*///	
-/*TODO*///	static void galaxian_draw_bullets(struct osd_bitmap *bitmap, int offs, int x, int y)
-/*TODO*///	{
-/*TODO*///		int i;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		for (i = 0; i < 3; i++)
-/*TODO*///		{
-/*TODO*///			x--;
-/*TODO*///	
-/*TODO*///			if (x >= Machine.visible_area.min_x &&
-/*TODO*///				x <= Machine.visible_area.max_x)
-/*TODO*///			{
-/*TODO*///				int color;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///				/* yellow missile, white shells (this is the terminology on the schematics) */
-/*TODO*///				color = ((offs == 7*4) ? BULLETS_COLOR_BASE : BULLETS_COLOR_BASE + 1);
-/*TODO*///	
-/*TODO*///				plot_pixel(bitmap, x, y, Machine.pens[color]);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void scramble_draw_bullets(struct osd_bitmap *bitmap, int offs, int x, int y)
-/*TODO*///	{
-/*TODO*///		x = x - 7;
-/*TODO*///	
-/*TODO*///		if (x >= Machine.visible_area.min_x &&
-/*TODO*///			x <= Machine.visible_area.max_x)
-/*TODO*///		{
-/*TODO*///			/* yellow bullets */
-/*TODO*///			plot_pixel(bitmap, x, y, Machine.pens[BULLETS_COLOR_BASE]);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void darkplnt_draw_bullets(struct osd_bitmap *bitmap, int offs, int x, int y)
-/*TODO*///	{
-/*TODO*///		x = x - 7;
-/*TODO*///	
-/*TODO*///		if (x >= Machine.visible_area.min_x &&
-/*TODO*///			x <= Machine.visible_area.max_x)
-/*TODO*///		{
-/*TODO*///			plot_pixel(bitmap, x, y, Machine.pens[32 + darkplnt_bullet_color]);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void theend_draw_bullets(struct osd_bitmap *bitmap, int offs, int x, int y)
-/*TODO*///	{
-/*TODO*///		int i;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		x = x - 3;
-/*TODO*///	
-/*TODO*///		for (i = 0; i < 4; i++)
-/*TODO*///		{
-/*TODO*///			x--;
-/*TODO*///	
-/*TODO*///			if (x >= Machine.visible_area.min_x &&
-/*TODO*///				x <= Machine.visible_area.max_x)
-/*TODO*///			{
-/*TODO*///				plot_pixel(bitmap, x, y, Machine.pens[BULLETS_COLOR_BASE]);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/* background drawing functions */
-/*TODO*///	
-/*TODO*///	static void scramble_draw_background(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		fillbitmap(bitmap,Machine.pens[background_start_pen + background_blue],&Machine.visible_area);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void turtles_draw_background(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		int color = (background_blue << 2) | (background_green << 1) | background_red;
-/*TODO*///	
-/*TODO*///		fillbitmap(bitmap,Machine.pens[background_start_pen + color],&Machine.visible_area);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void frogger_draw_background(struct osd_bitmap *bitmap)
+    /* bullet drawing functions */
+    public static draw_bulletsPtr galaxian_draw_bullets = new draw_bulletsPtr() {
+        public void handler(osd_bitmap bitmap, int offs, int x, int y) {
+            int i;
+
+            for (i = 0; i < 3; i++) {
+                x--;
+
+                if (x >= Machine.visible_area.min_x
+                        && x <= Machine.visible_area.max_x) {
+                    int color;
+
+                    /* yellow missile, white shells (this is the terminology on the schematics) */
+                    color = ((offs == 7 * 4) ? BULLETS_COLOR_BASE : BULLETS_COLOR_BASE + 1);
+
+                    plot_pixel.handler(bitmap, x, y, Machine.pens[color]);
+                }
+            }
+        }
+    };
+    public static draw_bulletsPtr scramble_draw_bullets = new draw_bulletsPtr() {
+        public void handler(osd_bitmap bitmap, int offs, int x, int y) {
+            x = x - 7;
+
+            if (x >= Machine.visible_area.min_x
+                    && x <= Machine.visible_area.max_x) {
+                /* yellow bullets */
+                plot_pixel.handler(bitmap, x, y, Machine.pens[BULLETS_COLOR_BASE]);
+            }
+        }
+    };
+
+    public static draw_bulletsPtr darkplnt_draw_bullets = new draw_bulletsPtr() {
+        public void handler(osd_bitmap bitmap, int offs, int x, int y) {
+            x = x - 7;
+
+            if (x >= Machine.visible_area.min_x
+                    && x <= Machine.visible_area.max_x) {
+                plot_pixel.handler(bitmap, x, y, Machine.pens[32 + darkplnt_bullet_color]);
+            }
+        }
+    };
+
+    public static draw_bulletsPtr theend_draw_bullets = new draw_bulletsPtr() {
+        public void handler(osd_bitmap bitmap, int offs, int x, int y) {
+            int i;
+
+            x = x - 3;
+
+            for (i = 0; i < 4; i++) {
+                x--;
+
+                if (x >= Machine.visible_area.min_x
+                        && x <= Machine.visible_area.max_x) {
+                    plot_pixel.handler(bitmap, x, y, Machine.pens[BULLETS_COLOR_BASE]);
+                }
+            }
+        }
+    };
+
+    /* background drawing functions */
+    public static draw_backgroundPtr scramble_draw_background = new draw_backgroundPtr() {
+        public void handler(osd_bitmap bitmap) {
+            fillbitmap(bitmap, Machine.pens[background_start_pen + background_blue], Machine.visible_area);
+        }
+    };
+    public static draw_backgroundPtr turtles_draw_background = new draw_backgroundPtr() {
+        public void handler(osd_bitmap bitmap) {
+            int color = (background_blue << 2) | (background_green << 1) | background_red;
+
+            fillbitmap(bitmap, Machine.pens[background_start_pen + color], Machine.visible_area);
+        }
+    };
+
+    /*TODO*///	static void frogger_draw_background(struct osd_bitmap *bitmap)
 /*TODO*///	{
 /*TODO*///		if (flip_screen_x != 0)
 /*TODO*///		{
@@ -1066,72 +1076,60 @@ public class galaxian {
 /*TODO*///		}
 /*TODO*///	}
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	/* star drawing functions */
-/*TODO*///	
-/*TODO*///	void galaxian_init_stars(UBytePtr *palette)
-/*TODO*///	{
-/*TODO*///		int i;
-/*TODO*///		int total_stars;
-/*TODO*///		UINT32 generator;
-/*TODO*///		int x,y;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		draw_stars = 0;
-/*TODO*///		galaxian_stars_on = 0;
-/*TODO*///		stars_blink_state = 0;
-/*TODO*///		if (stars_blink_timer != 0)  timer_remove(stars_blink_timer);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		for (i = 0;i < 64;i++)
-/*TODO*///		{
-/*TODO*///			int bits;
-/*TODO*///			int map[4] = { 0x00, 0x88, 0xcc, 0xff };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			bits = (i >> 0) & 0x03;
-/*TODO*///			*((*palette)++) = map[bits];
-/*TODO*///			bits = (i >> 2) & 0x03;
-/*TODO*///			*((*palette)++) = map[bits];
-/*TODO*///			bits = (i >> 4) & 0x03;
-/*TODO*///			*((*palette)++) = map[bits];
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* precalculate the star background */
-/*TODO*///	
-/*TODO*///		total_stars = 0;
-/*TODO*///		generator = 0;
-/*TODO*///	
-/*TODO*///		for (y = 255;y >= 0;y--)
-/*TODO*///		{
-/*TODO*///			for (x = 511;x >= 0;x--)
-/*TODO*///			{
-/*TODO*///				UINT32 bit0;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///				bit0 = ((~generator >> 16) & 1) ^ ((generator >> 4) & 1);
-/*TODO*///	
-/*TODO*///				generator = (generator << 1) | bit0;
-/*TODO*///	
-/*TODO*///				if (((~generator >> 16) & 1) && (generator & 0xff) == 0xff)
-/*TODO*///				{
-/*TODO*///					int color;
-/*TODO*///	
-/*TODO*///					color = (~(generator >> 8)) & 0x3f;
-/*TODO*///					if (color != 0)
-/*TODO*///					{
-/*TODO*///						stars[total_stars].x = x;
-/*TODO*///						stars[total_stars].y = y;
-/*TODO*///						stars[total_stars].color = color;
-/*TODO*///	
-/*TODO*///						total_stars++;
-/*TODO*///					}
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
+    /* star drawing functions */
+    public static void galaxian_init_stars(char[] palette, int[] p_inc) {
+        int i;
+        int total_stars;
+        int/*UINT32*/ generator;
+        int x, y;
+
+        draw_stars = null;
+        galaxian_stars_on = 0;
+        stars_blink_state = 0;
+        if (stars_blink_timer != null) {
+            timer_remove(stars_blink_timer);
+        }
+
+        for (i = 0; i < 64; i++) {
+            int bits;
+            int map[] = {0x00, 0x88, 0xcc, 0xff};
+
+            bits = (i >> 0) & 0x03;
+            palette[p_inc[0]++] = (char) (map[bits]);
+            bits = (i >> 2) & 0x03;
+            palette[p_inc[0]++] = (char) (map[bits]);
+            bits = (i >> 4) & 0x03;
+            palette[p_inc[0]++] = (char) (map[bits]);
+        }
+
+        /* precalculate the star background */
+        total_stars = 0;
+        generator = 0;
+
+        for (y = 255; y >= 0; y--) {
+            for (x = 511; x >= 0; x--) {
+                int/*UINT32*/ bit0;
+
+                bit0 = ((~generator >> 16) & 1) ^ ((generator >> 4) & 1);
+
+                generator = (generator << 1) | bit0;
+
+                if (((~generator >> 16) & 1) != 0 && (generator & 0xff) == 0xff) {
+                    int color;
+
+                    color = (~(generator >> 8)) & 0x3f;
+                    if (color != 0 && total_stars < MAX_STARS) {
+                        stars[total_stars].x = x;
+                        stars[total_stars].y = y;
+                        stars[total_stars].color = color;
+
+                        total_stars++;
+                    }
+                }
+            }
+        }
+    }
+    /*TODO*///	
 /*TODO*///	static void plot_star(struct osd_bitmap *bitmap, int x, int y, int color)
 /*TODO*///	{
 /*TODO*///		if (y < Machine.visible_area.min_y ||
@@ -1380,20 +1378,16 @@ public class galaxian {
 
             color_mask = (Machine.gfx[0].color_granularity == 4) ? 7 : 3;
 
-            /*TODO*///		/* draw the bacground */
-/*TODO*///		if (draw_background != 0)
-/*TODO*///		{
-/*TODO*///			draw_background(bitmap);
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			if (draw_stars != 0)
-/*TODO*///			{
-/*TODO*///				/* black base for stars */
-/*TODO*///				fillbitmap(bitmap,Machine.pens[background_start_pen],&Machine.visible_area);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	
+            /* draw the bacground */
+            if (draw_background != null) {
+                draw_background.handler(bitmap);
+            } else {
+                if (draw_stars != null) {
+                    /* black base for stars */
+                    fillbitmap(bitmap, Machine.pens[background_start_pen], Machine.visible_area);
+                }
+            }
+            /*TODO*///	
 /*TODO*///	
 /*TODO*///		/* draw the stars */
 /*TODO*///		if (draw_stars && galaxian_stars_on)
@@ -1403,9 +1397,8 @@ public class galaxian {
 /*TODO*///	
 /*TODO*///	
 /*TODO*///		/* draw the character layer */
-            /*TO BE REMOVED*/ transparency = TRANSPARENCY_NONE;
-            /*TODO*///		transparency = (draw_background || draw_stars) ? TRANSPARENCY_PEN : TRANSPARENCY_NONE;
-/*TODO*///	
+            transparency = (draw_background != null || draw_stars != null) ? TRANSPARENCY_PEN : TRANSPARENCY_NONE;
+
             for (x = 0; x < 32; x++) {
                 /*UINT8*/
                 int sx;
@@ -1455,30 +1448,31 @@ public class galaxian {
                             null, transparency, 0);
                 }
             }
-            /*TODO*///	
-/*TODO*///	
-/*TODO*///		/* draw the bullets */
-/*TODO*///		if (draw_bullets != 0)
-/*TODO*///		{
-/*TODO*///			for (offs = 0;offs < galaxian_bulletsram_size;offs += 4)
-/*TODO*///			{
-/*TODO*///				y = 255 - galaxian_bulletsram[offs + 1];
-/*TODO*///				x = 255 - galaxian_bulletsram[offs + 3];
-/*TODO*///	
-/*TODO*///				if (y < Machine.visible_area.min_y ||
-/*TODO*///					y > Machine.visible_area.max_y)
-/*TODO*///					continue;
-/*TODO*///	
-/*TODO*///				if (flip_screen_y != 0)  y = 255 - y;
-/*TODO*///	
-/*TODO*///				draw_bullets(bitmap, offs, x, y);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	
+
+            /* draw the bullets */
+            if (draw_bullets != null) {
+                for (offs = 0; offs < galaxian_bulletsram_size[0]; offs += 4) {
+                    y = 255 - galaxian_bulletsram.read(offs + 1);
+                    x = 255 - galaxian_bulletsram.read(offs + 3);
+
+                    if (y < Machine.visible_area.min_y
+                            || y > Machine.visible_area.max_y) {
+                        continue;
+                    }
+
+                    if (flip_screen_y[0] != 0) {
+                        y = 255 - y;
+                    }
+
+                    draw_bullets.handler(bitmap, offs, x, y);
+                }
+            }
+
 
             /* draw the sprites */
             for (offs = galaxian_spriteram_size[0] - 4; offs >= 0; offs -= 4) {
-                int /*UINT8*/ sx, sy;
+                int /*UINT8*/ sx;
+                int[] sy = new int[1];
                 int[] flipx = new int[1];
                 int[] flipy = new int[1];
                 int[] code = new int[1];
@@ -1488,7 +1482,7 @@ public class galaxian {
                 /* This is definately correct in Mariner. Look at
 													  the 'gate' moving up/down. It stops at the
 	  												  right spots */
-                sy = galaxian_spriteram.read(offs);
+                sy[0] = galaxian_spriteram.read(offs);
                 flipx[0] = galaxian_spriteram.read(offs + 1) & 0x40;
                 flipy[0] = galaxian_spriteram.read(offs + 1) & 0x80;
                 code[0] = galaxian_spriteram.read(offs + 1) & 0x3f;
@@ -1521,14 +1515,14 @@ public class galaxian {
                 if (flip_screen_y[0] != 0) {
                     flipy[0] = NOT(flipy[0]);
                     if (offs >= 3 * 4) {
-                        sy++;
+                        sy[0]++;
                     } else {
-                        sy += 2;
+                        sy[0] += 2;
                     }
                 } else {
-                    sy = 240 - sy;
+                    sy[0] = 240 - sy[0];
                     if (offs >= 3 * 4) {
-                        sy++;
+                        sy[0]++;
                     }
                 }
 
@@ -1543,7 +1537,7 @@ public class galaxian {
                 drawgfx(bitmap, Machine.gfx[1],
                         code[0], color[0],
                         flipx[0], flipy[0],
-                        sx, sy,
+                        sx, sy[0],
                         flip_screen_x[0] != 0 ? spritevisibleareaflipx : spritevisiblearea, TRANSPARENCY_PEN, 0);
             }
         }
