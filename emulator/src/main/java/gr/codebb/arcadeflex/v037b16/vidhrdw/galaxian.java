@@ -123,9 +123,7 @@ public class galaxian {
     public static VhConvertColorPromPtr galaxian_vh_convert_color_prom = new VhConvertColorPromPtr() {
         public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
             int i;
-
-            /* first, the character/sprite palette */
-            int p_ptr = 0;
+            int[] p_ptr = new int[1];
             for (i = 0; i < 32; i++) {
                 int bit0, bit1, bit2;
 
@@ -133,39 +131,37 @@ public class galaxian {
                 bit0 = (color_prom.read() >> 0) & 0x01;
                 bit1 = (color_prom.read() >> 1) & 0x01;
                 bit2 = (color_prom.read() >> 2) & 0x01;
-                palette[p_ptr++] = (char) (0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
+                palette[p_ptr[0]++] = (char) (0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
                 /* green component */
                 bit0 = (color_prom.read() >> 3) & 0x01;
                 bit1 = (color_prom.read() >> 4) & 0x01;
                 bit2 = (color_prom.read() >> 5) & 0x01;
-                palette[p_ptr++] = (char) (0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
+                palette[p_ptr[0]++] = (char) (0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
                 /* blue component */
                 bit0 = (color_prom.read() >> 6) & 0x01;
                 bit1 = (color_prom.read() >> 7) & 0x01;
-                palette[p_ptr++] = (char) (0x4f * bit0 + 0xa8 * bit1);
+                palette[p_ptr[0]++] = (char) (0x4f * bit0 + 0xa8 * bit1);
 
                 color_prom.inc();
             }
-            int[] p_pt = new int[1];
-            p_pt[0] = p_ptr;
-            galaxian_init_stars(palette, p_pt);
-            p_ptr = p_pt[0];
+
+            galaxian_init_stars(palette, p_ptr);
 
             /* bullets - yellow and white */
-            palette[p_ptr++] = (char) (0xef);
-            palette[p_ptr++] = (char) (0xef);
-            palette[p_ptr++] = (char) (0x00);
+            palette[p_ptr[0]++] = (char) (0xef);
+            palette[p_ptr[0]++] = (char) (0xef);
+            palette[p_ptr[0]++] = (char) (0x00);
 
-            palette[p_ptr++] = (char) (0xef);
-            palette[p_ptr++] = (char) (0xef);
-            palette[p_ptr++] = (char) (0xef);
+            palette[p_ptr[0]++] = (char) (0xef);
+            palette[p_ptr[0]++] = (char) (0xef);
+            palette[p_ptr[0]++] = (char) (0xef);
 
             /* black background */
             background_start_pen = BACKGROUND_COLOR_BASE;
 
-            palette[p_ptr++] = (char) (0);
-            palette[p_ptr++] = (char) (0);
-            palette[p_ptr++] = (char) (0);
+            palette[p_ptr[0]++] = (char) (0);
+            palette[p_ptr[0]++] = (char) (0);
+            palette[p_ptr[0]++] = (char) (0);
         }
     };
 
@@ -1401,7 +1397,7 @@ public class galaxian {
 
             for (x = 0; x < 32; x++) {
                 /*UINT8*/
-                int sx;
+                int u8_sx;
                 int[] scroll = new int[1];
                 int[] color = new int[1];
 
@@ -1419,20 +1415,20 @@ public class galaxian {
 /*TODO*///			}
 /*TODO*///	
 
-                sx = 8 * x;
+                u8_sx = (8 * x) & 0xFF;
 
                 if (flip_screen_x[0] != 0) {
-                    sx = 248 - sx;
+                    u8_sx = (248 - u8_sx) & 0xFF;
                 }
 
                 for (y = 0; y < 32; y++) {
-                    int/*UINT8*/ sy;
+                    int/*UINT8*/ u8_sy;
                     int[] code = new int[1];
 
-                    sy = (8 * y) - scroll[0];
+                    u8_sy = ((8 * y) - scroll[0]) & 0xFF;
 
                     if (flip_screen_y[0] != 0) {
-                        sy = 248 - sy;
+                        u8_sy = (248 - u8_sy) & 0xFF;
                     }
 
                     code[0] = galaxian_videoram.read((y << 5) | x);
@@ -1444,7 +1440,7 @@ public class galaxian {
                     drawgfx(bitmap, Machine.gfx[0],
                             code[0], color[0],
                             flip_screen_x[0], flip_screen_y[0],
-                            sx, sy,
+                            u8_sx, u8_sy,
                             null, transparency, 0);
                 }
             }
@@ -1471,18 +1467,18 @@ public class galaxian {
 
             /* draw the sprites */
             for (offs = galaxian_spriteram_size[0] - 4; offs >= 0; offs -= 4) {
-                int /*UINT8*/ sx;
-                int[] sy = new int[1];
+                int /*UINT8*/ u8_sx;
+                int[] u8_sy = new int[1];
                 int[] flipx = new int[1];
                 int[] flipy = new int[1];
                 int[] code = new int[1];
                 int[] color = new int[1];
 
-                sx = galaxian_spriteram.read(offs + 3);
+                u8_sx = galaxian_spriteram.read(offs + 3) & 0xFF;
                 /* This is definately correct in Mariner. Look at
 													  the 'gate' moving up/down. It stops at the
 	  												  right spots */
-                sy[0] = galaxian_spriteram.read(offs);
+                u8_sy[0] = galaxian_spriteram.read(offs) & 0xFF;
                 flipx[0] = galaxian_spriteram.read(offs + 1) & 0x40;
                 flipy[0] = galaxian_spriteram.read(offs + 1) & 0x80;
                 code[0] = galaxian_spriteram.read(offs + 1) & 0x3f;
@@ -1503,26 +1499,26 @@ public class galaxian {
 /*TODO*///			}
 /*TODO*///	
                 if (flip_screen_x[0] != 0) {
-                    sx = 240 - sx;
+                    u8_sx = (240 - u8_sx) & 0xFF;
                     /* I checked a bunch of games including Scramble
 								   (# of pixels the ship is from the top of the mountain),
 				                   Mariner and Checkman. This is correct for them */
                     flipx[0] = NOT(flipx[0]);
                 } else {
-                    sx += 2;
+                    u8_sx = (u8_sx + 2) & 0xFF;
                 }
 
                 if (flip_screen_y[0] != 0) {
                     flipy[0] = NOT(flipy[0]);
                     if (offs >= 3 * 4) {
-                        sy[0]++;
+                        u8_sy[0] = (u8_sy[0] + 1) & 0xFF;//sy++;
                     } else {
-                        sy[0] += 2;
+                        u8_sy[0] = (u8_sy[0] + 2) & 0xFF;
                     }
                 } else {
-                    sy[0] = 240 - sy[0];
+                    u8_sy[0] = (240 - u8_sy[0]) & 0xFF;
                     if (offs >= 3 * 4) {
-                        sy[0]++;
+                        u8_sy[0] = (u8_sy[0] + 1) & 0xFF;//sy++;
                     }
                 }
 
@@ -1537,7 +1533,7 @@ public class galaxian {
                 drawgfx(bitmap, Machine.gfx[1],
                         code[0], color[0],
                         flipx[0], flipy[0],
-                        sx, sy[0],
+                        u8_sx, u8_sy[0],
                         flip_screen_x[0] != 0 ? spritevisibleareaflipx : spritevisiblearea, TRANSPARENCY_PEN, 0);
             }
         }
