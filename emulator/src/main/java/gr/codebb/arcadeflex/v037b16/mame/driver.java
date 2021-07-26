@@ -18,6 +18,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.brkthru.*;
 import static gr.codebb.arcadeflex.v037b16.drivers._1943.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.bosco.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.champbas.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.galaxian.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.vulgus.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.commando.*;
 
@@ -71,56 +72,55 @@ public class driver {
         driver_theglob, /* (c) 1983 */
         driver_theglob2, /* (c) 1983 */
         driver_theglob3, /* (c) 1983 */
-        driver_igmo, /* (c) 1984 */ /*TODO*///
-        /*TODO*///	/* "Galaxian hardware" games */
-        /*TODO*///	driver_galaxian,	/* (c) Namco */
-        /*TODO*///	driver_galaxiaj,	/* (c) Namco */
-        /*TODO*///	driver_galmidw,	/* (c) Midway */
-        /*TODO*///	driver_superg,	/* hack */
-        /*TODO*///	driver_galapx,	/* hack */
-        /*TODO*///	driver_galap1,	/* hack */
-        /*TODO*///	driver_galap4,	/* hack */
-        /*TODO*///	driver_galturbo,	/* hack */
-        /*TODO*///	driver_swarm,		/* hack */
-        /*TODO*///	driver_zerotime,	/* hack */
-        /*TODO*///	driver_pisces,	/* ? */
-        /*TODO*///	driver_uniwars,	/* (c) Irem */
-        /*TODO*///	driver_gteikoku,	/* (c) Irem */
-        /*TODO*///	driver_gteikokb,	/* bootleg */
-        /*TODO*///	driver_spacbatt,	/* bootleg */
-        /*TODO*///	driver_batman2,	/* bootleg */
-        /*TODO*///	driver_warofbug,	/* (c) 1981 Armenia */
-        /*TODO*///	driver_redufo,	/* bootleg - original should be (c) Artic */
-        /*TODO*///	driver_exodus,	/* Subelectro - bootleg? */
-        /*TODO*///	driver_streakng,	/* [1980] Shoei */
-        /*TODO*///	driver_pacmanbl,	/* bootleg */
-        /*TODO*///	driver_ghostmun,	/* bootleg */
-        /*TODO*///	driver_devilfsg,	/* (c) 1984 Vision / Artic (bootleg?) */
-        /*TODO*///	driver_zigzag,	/* (c) 1982 LAX */
-        /*TODO*///	driver_zigzag2,	/* (c) 1982 LAX */
-        /*TODO*///	driver_jumpbug,	/* (c) 1981 Rock-ola */
-        /*TODO*///	driver_jumpbugb,	/* (c) 1981 Sega */
-        /*TODO*///	driver_levers,	/* (c) 1983 Rock-ola */
-        /*TODO*///	driver_azurian,	/* (c) 1982 Rait Electronics Ltd */
-        /*TODO*///	driver_orbitron,	/* Signatron USA */
-        /*TODO*///	driver_mooncrgx,	/* bootleg */
-        /*TODO*///	driver_mooncrst,	/* (c) 1980 Nichibutsu */
-        /*TODO*///	driver_mooncrsg,	/* (c) 1980 Gremlin */
-        /*TODO*///	driver_smooncrs,	/* Gremlin */
-        /*TODO*///	driver_mooncrsb,	/* bootleg */
-        /*TODO*///	driver_mooncrs2,	/* bootleg */
-        /*TODO*///	driver_fantazia,	/* bootleg */
-        /*TODO*///	driver_eagle,		/* (c) Centuri */
-        /*TODO*///	driver_eagle2,	/* (c) Centuri */
-        /*TODO*///	driver_moonqsr,	/* (c) 1980 Nichibutsu */
-        /*TODO*///	driver_checkman,	/* (c) 1982 Zilec-Zenitone */
-        /*TODO*///	driver_checkmaj,	/* (c) 1982 Jaleco (Zenitone/Zilec in ROM CM4, and the programmer names) */
-        /*TODO*///	driver_blkhole,	/* TDS (Tokyo Denshi Sekkei) */
-        /*TODO*///	driver_moonal2,	/* Nichibutsu */
-        /*TODO*///	driver_moonal2b,	/* Nichibutsu */
-        /*TODO*///	driver_kingball,	/* (c) 1980 Namco */
-        /*TODO*///	driver_kingbalj,	/* (c) 1980 Namco */
-        /*TODO*///
+        driver_igmo, /* (c) 1984 */ 
+        /* "Galaxian hardware" games */
+        driver_galaxian, /* (c) Namco */
+        driver_galaxiaj, /* (c) Namco */
+        driver_galmidw, /* (c) Midway */
+        driver_superg, /* hack */
+        driver_galapx, /* hack */
+        driver_galap1, /* hack */
+        driver_galap4, /* hack */
+        driver_galturbo, /* hack */
+        driver_swarm, /* hack */
+        driver_zerotime, /* hack */
+        driver_pisces, /* ? */
+        driver_uniwars, /* (c) Irem */
+        driver_gteikoku, /* (c) Irem */
+        driver_gteikokb, /* bootleg */
+        driver_spacbatt, /* bootleg */
+        /*TODO*///driver_batman2,	/* bootleg */
+        driver_warofbug, /* (c) 1981 Armenia */
+        driver_redufo, /* bootleg - original should be (c) Artic */
+        driver_exodus, /* Subelectro - bootleg? */
+        driver_streakng, /* [1980] Shoei */
+        driver_pacmanbl, /* bootleg */
+        driver_ghostmun, /* bootleg */
+        /*TODO*///driver_devilfsg,	/* (c) 1984 Vision / Artic (bootleg?) */
+        driver_zigzag, /* (c) 1982 LAX */
+        driver_zigzag2, /* (c) 1982 LAX */
+        driver_jumpbug, /* (c) 1981 Rock-ola */
+        driver_jumpbugb, /* (c) 1981 Sega */
+        driver_levers, /* (c) 1983 Rock-ola */
+        driver_azurian, /* (c) 1982 Rait Electronics Ltd */
+        driver_orbitron, /* Signatron USA */
+        driver_mooncrgx, /* bootleg */
+        driver_mooncrst, /* (c) 1980 Nichibutsu */
+        driver_mooncrsg, /* (c) 1980 Gremlin */
+        driver_smooncrs, /* Gremlin */
+        driver_mooncrsb, /* bootleg */
+        driver_mooncrs2, /* bootleg */
+        driver_fantazia, /* bootleg */
+        driver_eagle, /* (c) Centuri */
+        driver_eagle2, /* (c) Centuri */
+        driver_moonqsr, /* (c) 1980 Nichibutsu */
+        driver_checkman, /* (c) 1982 Zilec-Zenitone */
+        driver_checkmaj, /* (c) 1982 Jaleco (Zenitone/Zilec in ROM CM4, and the programmer names) */
+        driver_blkhole, /* TDS (Tokyo Denshi Sekkei) */
+        driver_moonal2, /* Nichibutsu */
+        driver_moonal2b, /* Nichibutsu */
+        driver_kingball, /* (c) 1980 Namco */
+        driver_kingbalj, /* (c) 1980 Namco */
         /*TODO*///	/* "Scramble hardware" (and variations) games */
         /*TODO*///	driver_scramble,	/* GX387 (c) 1981 Konami */
         /*TODO*///	driver_scrambls,	/* GX387 (c) 1981 Stern */
@@ -1521,9 +1521,9 @@ public class driver {
         /*TODO*///	/* their web site. The list is sorted by production date.                       */
         /*TODO*///	/* A comprehensive list of Capcom games with board info can be found here:      */
         /*TODO*///	/* http://www.emugaming.com/strider/capcom_list.shtml                           */
-        	driver_vulgus,	/*  5/1984 (c) 1984 */
-        	driver_vulgus2,	/*  5/1984 (c) 1984 */
-        	driver_vulgusj,	/*  5/1984 (c) 1984 */
+        driver_vulgus, /*  5/1984 (c) 1984 */
+        driver_vulgus2, /*  5/1984 (c) 1984 */
+        driver_vulgusj, /*  5/1984 (c) 1984 */
         /*TODO*///	driver_sonson,	/*  7/1984 (c) 1984 */
         /*TODO*///	driver_sonsonj,	/*  7/1984 (c) 1984 (Japan) */
         /*TODO*///	driver_higemaru,	/*  9/1984 (c) 1984 */
@@ -1532,10 +1532,10 @@ public class driver {
         /*TODO*///	driver_1942b,		/* 12/1984 (c) 1984 */
         /*TODO*///	driver_exedexes,	/*  2/1985 (c) 1985 */
         /*TODO*///	driver_savgbees,	/*  2/1985 (c) 1985 + Memetron license */
-        	driver_commando,	/*  5/1985 (c) 1985 (World) */
-        	driver_commandu,	/*  5/1985 (c) 1985 + Data East license (US) */
-        	driver_commandj,	/*  5/1985 (c) 1985 (Japan) */
-        	driver_spaceinv,	/* bootleg */
+        driver_commando, /*  5/1985 (c) 1985 (World) */
+        driver_commandu, /*  5/1985 (c) 1985 + Data East license (US) */
+        driver_commandj, /*  5/1985 (c) 1985 (Japan) */
+        driver_spaceinv, /* bootleg */
         /*TODO*///	driver_gng,		/*  9/1985 (c) 1985 */
         /*TODO*///	driver_gnga,		/*  9/1985 (c) 1985 */
         /*TODO*///	driver_gngt,		/*  9/1985 (c) 1985 */
