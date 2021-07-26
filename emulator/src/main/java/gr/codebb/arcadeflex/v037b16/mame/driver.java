@@ -21,6 +21,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.champbas.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.galaxian.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.vulgus.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.commando.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gberet.*;
 
 public class driver {
 
@@ -2485,10 +2486,10 @@ public class driver {
         /*TODO*///	driver_kicker,	/* GX477 (c) 1985 */
         /*TODO*///	driver_shaolins,	/* GX477 (c) 1985 */
         /*TODO*///	driver_pingpong,	/* GX555 (c) 1985 */
-        /*TODO*///	driver_gberet,	/* GX577 (c) 1985 */
-        /*TODO*///	driver_rushatck,	/* GX577 (c) 1985 */
-        /*TODO*///	driver_gberetb,	/* bootleg on different hardware */
-        /*TODO*///	driver_mrgoemon,	/* GX621 (c) 1986 (Japan) */
+        	driver_gberet,	/* GX577 (c) 1985 */
+        	driver_rushatck,	/* GX577 (c) 1985 */
+        	driver_gberetb,	/* bootleg on different hardware */
+        	driver_mrgoemon,	/* GX621 (c) 1986 (Japan) */
         /*TODO*///	driver_jailbrek,	/* GX507 (c) 1986 */
         /*TODO*///	driver_manhatan,	/* GX507 (c) 1986 (Japan) */
         /*TODO*///	driver_finalizr,	/* GX523 (c) 1985 */

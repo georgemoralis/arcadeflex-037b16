@@ -282,12 +282,12 @@ public class tilemapC {
             tilemap.transparent_pen = pen;
     }
 
-/*TODO*///void tilemap_set_transmask( struct tilemap *tilemap, int which, UINT32 fgmask, UINT32 bgmask )
-/*TODO*///{
-/*TODO*///	tilemap->fgmask[which] = fgmask;
-/*TODO*///	tilemap->bgmask[which] = bgmask;
-/*TODO*///}
-/*TODO*///
+    public static void tilemap_set_transmask( struct_tilemap tilemap, int which, int fgmask, int bgmask )
+    {
+            tilemap.fgmask[which] = fgmask;
+            tilemap.bgmask[which] = bgmask;
+    }
+
 /*TODO*///void tilemap_set_depth( struct tilemap *tilemap, int tile_depth, int tile_granularity )
 /*TODO*///{
 /*TODO*///	if( tilemap->tile_dirty_map )
@@ -1128,24 +1128,24 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
 /*TODO*///		}
 /*TODO*///	}
 /*TODO*///}
-/*TODO*///
-/*TODO*///void tilemap_set_scroll_rows( struct tilemap *tilemap, int n )
-/*TODO*///{
-/*TODO*///	if( tilemap->orientation & ORIENTATION_SWAP_XY )
-/*TODO*///	{
-/*TODO*///		if (tilemap->scroll_cols != n)
-/*TODO*///		{
-/*TODO*///			tilemap->scroll_cols = n;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	else
-/*TODO*///	{
-/*TODO*///		if (tilemap->scroll_rows != n)
-/*TODO*///		{
-/*TODO*///			tilemap->scroll_rows = n;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///}
+
+    public static void tilemap_set_scroll_rows( struct_tilemap tilemap, int n )
+    {
+            if(( tilemap.orientation & ORIENTATION_SWAP_XY ) != 0)
+            {
+                    if (tilemap.scroll_cols != n)
+                    {
+                            tilemap.scroll_cols = n;
+                    }
+            }
+            else
+            {
+                    if (tilemap.scroll_rows != n)
+                    {
+                            tilemap.scroll_rows = n;
+                    }
+            }
+    }
 
     /***********************************************************************************/
 
