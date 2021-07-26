@@ -15,10 +15,15 @@ import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 //to be organized
 import common.ptr.UBytePtr;
+import static gr.codebb.arcadeflex.v037b16.mame.commonH.REGION_USER1;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.REGION_USER2;
+import gr.codebb.arcadeflex.v056.mame.timer.timer_callback;
+import static gr.codebb.arcadeflex.v056.mame.timer.timer_pulse;
 import static gr.codebb.arcadeflex.v056.mame.timer.timer_remove;
+import static gr.codebb.arcadeflex.v056.mame.timerH.TIME_IN_SEC;
 import static mame037b16.drawgfx.drawgfx;
 import static mame037b16.drawgfx.fillbitmap;
+import static mame037b16.drawgfx.plot_box;
 import static mame037b16.drawgfx.plot_pixel;
 import static mame037b16.mame.Machine;
 
@@ -65,15 +70,23 @@ public class galaxian {
     }
 
     public static modify_charcodePtr modify_charcode;
-    /*TODO*///	
-/*TODO*///	static void (*modify_color)(int*);	/* function to call to do modify how the color codes map to the PROM */
-/*TODO*///	static void frogger_modify_color(int *code);
-/*TODO*///	
-/*TODO*///	static void (*modify_ypos)(UINT8*);	/* function to call to do modify how vertical positioning bits are connected */
-/*TODO*///	static void frogger_modify_ypos(UINT8 *sy);
-/*TODO*///	
+
+    public static abstract interface modify_colorPtr {
+
+        public abstract void handler(int[] code);
+    }
+
+    public static modify_colorPtr modify_color;
+
+    public static abstract interface modify_yposPtr {
+
+        public abstract void handler(int[] u8_sy);
+    }
+
+    public static modify_yposPtr modify_ypos;
+
     /* star circuit */
-    static final int MAX_STARS = 250;
+    static final int STAR_COUNT = 250;
 
     static class star {
 
@@ -81,10 +94,10 @@ public class galaxian {
         }
         public int x, y, color;
     };
-    static star stars[] = new star[MAX_STARS];
+    static star stars[] = new star[STAR_COUNT];
 
     static {
-        for (int k = 0; k < MAX_STARS; k++) {
+        for (int k = 0; k < STAR_COUNT; k++) {
             stars[k] = new star();
         }
     }
@@ -254,50 +267,44 @@ public class galaxian {
      */
     public static VhConvertColorPromPtr darkplnt_vh_convert_color_prom = new VhConvertColorPromPtr() {
         public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
-            /*TODO*///		int i;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* first, the character/sprite palette */
-/*TODO*///                int p_ptr=0;
-/*TODO*///		for (i = 0;i < 32;i++)
-/*TODO*///		{
-/*TODO*///			int bit0,bit1,bit2;
-/*TODO*///	
-/*TODO*///			/* red component */
-/*TODO*///			bit0 = (color_prom.read() >> 0) & 0x01;
-/*TODO*///			bit1 = (color_prom.read() >> 1) & 0x01;
-/*TODO*///			bit2 = (color_prom.read() >> 2) & 0x01;
-/*TODO*///			palette[p_ptr++] = (char)(0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
-/*TODO*///			/* green component */
-/*TODO*///			palette[p_ptr++] = (char)(0x00);
-/*TODO*///			/* blue component */
-/*TODO*///			bit0 = (color_prom.read() >> 3) & 0x01;
-/*TODO*///			bit1 = (color_prom.read() >> 4) & 0x01;
-/*TODO*///			bit2 = (color_prom.read() >> 5) & 0x01;
-/*TODO*///			palette[p_ptr++] = (char)(0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
-/*TODO*///	
-/*TODO*///			color_prom++;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* bullets - red and blue */
-/*TODO*///	
-/*TODO*///		*(palette++) = 0xef;
-/*TODO*///		*(palette++) = 0x00;
-/*TODO*///		*(palette++) = 0x00;
-/*TODO*///	
-/*TODO*///		*(palette++) = 0x00;
-/*TODO*///		*(palette++) = 0x00;
-/*TODO*///		*(palette++) = 0xef;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* black background */
-/*TODO*///	
-/*TODO*///		background_start_pen = 34;
-/*TODO*///	
-/*TODO*///		*(palette++) = 0;
-/*TODO*///		*(palette++) = 0;
-/*TODO*///		*(palette++) = 0;
+            int i;
+
+            /* first, the character/sprite palette */
+            int p_ptr = 0;
+            for (i = 0; i < 32; i++) {
+                int bit0, bit1, bit2;
+
+                /* red component */
+                bit0 = (color_prom.read() >> 0) & 0x01;
+                bit1 = (color_prom.read() >> 1) & 0x01;
+                bit2 = (color_prom.read() >> 2) & 0x01;
+                palette[p_ptr++] = (char) (0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
+                /* green component */
+                palette[p_ptr++] = (char) (0x00);
+                /* blue component */
+                bit0 = (color_prom.read() >> 3) & 0x01;
+                bit1 = (color_prom.read() >> 4) & 0x01;
+                bit2 = (color_prom.read() >> 5) & 0x01;
+                palette[p_ptr++] = (char) (0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2);
+
+                color_prom.inc();
+            }
+
+            /* bullets - red and blue */
+            palette[p_ptr++] = (char) (0xef);
+            palette[p_ptr++] = (char) (0x00);
+            palette[p_ptr++] = (char) (0x00);
+
+            palette[p_ptr++] = (char) (0x00);
+            palette[p_ptr++] = (char) (0x00);
+            palette[p_ptr++] = (char) (0xef);
+
+            /* black background */
+            background_start_pen = 34;
+
+            palette[p_ptr++] = (char) (0);
+            palette[p_ptr++] = (char) (0);
+            palette[p_ptr++] = (char) (0);
         }
     };
 
@@ -342,54 +349,48 @@ public class galaxian {
 
     public static VhConvertColorPromPtr mariner_vh_convert_color_prom = new VhConvertColorPromPtr() {
         public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
-            /*TODO*///		int i;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	    galaxian_vh_convert_color_prom(palette, colortable, color_prom);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* set up background colors */
-/*TODO*///	
-/*TODO*///	   	/* 16 shades of blue - the 4 bits are connected to the following resistors
-/*TODO*///	
-/*TODO*///	  		bit 0 -- 4.7 kohm resistor
-/*TODO*///	        	  -- 2.2 kohm resistor
-/*TODO*///	        	  -- 1   kohm resistor
-/*TODO*///	  		bit 0 -- .47 kohm resistor */
-/*TODO*///	
-/*TODO*///	   	for (i = 0; i < 16; i++)
-/*TODO*///	    {
-/*TODO*///			int bit0,bit1,bit2,bit3;
-/*TODO*///	
-/*TODO*///			bit0 = (i >> 0) & 0x01;
-/*TODO*///			bit1 = (i >> 1) & 0x01;
-/*TODO*///			bit2 = (i >> 2) & 0x01;
-/*TODO*///			bit3 = (i >> 3) & 0x01;
-/*TODO*///	
-/*TODO*///			palette[(background_start_pen + i) * 3 + 0] = 0;
-/*TODO*///	       	palette[(background_start_pen + i) * 3 + 1] = 0;
-/*TODO*///	       	palette[(background_start_pen + i) * 3 + 2] = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
-/*TODO*///	    }
+            int i;
+
+            galaxian_vh_convert_color_prom.handler(palette, colortable, color_prom);
+
+            /* set up background colors */
+ /* 16 shades of blue - the 4 bits are connected to the following resistors
+	
+	  		bit 0 -- 4.7 kohm resistor
+	        	  -- 2.2 kohm resistor
+	        	  -- 1   kohm resistor
+	  		bit 0 -- .47 kohm resistor */
+            for (i = 0; i < 16; i++) {
+                int bit0, bit1, bit2, bit3;
+
+                bit0 = (i >> 0) & 0x01;
+                bit1 = (i >> 1) & 0x01;
+                bit2 = (i >> 2) & 0x01;
+                bit3 = (i >> 3) & 0x01;
+
+                palette[(background_start_pen + i) * 3 + 0] = 0;
+                palette[(background_start_pen + i) * 3 + 1] = 0;
+                palette[(background_start_pen + i) * 3 + 2] = (char) (0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3);
+            }
         }
     };
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	/***************************************************************************
-/*TODO*///	
-/*TODO*///	  Start the video hardware emulation.
-/*TODO*///	
-/*TODO*///	***************************************************************************/
-/*TODO*///	
+
+    /**
+     * *************************************************************************
+     *
+     * Start the video hardware emulation.
+     *
+     **************************************************************************
+     */
     public static VhStartPtr galaxian_plain_vh_start = new VhStartPtr() {
         public int handler() {
             /*TODO*///		extern struct GameDriver driver_newsin7;
-/*TODO*///	
 
             modify_charcode = null;
             modify_spritecode = null;
-            /*TODO*///	    modify_color = 0;
-/*TODO*///	    modify_ypos = 0;
-/*TODO*///	
+            modify_color = null;
+            modify_ypos = null;
+
             mooncrst_gfxextend = 0;
 
             draw_bullets = null;
@@ -423,7 +424,7 @@ public class galaxian {
         public int handler() {
             int ret = galaxian_plain_vh_start.handler();
 
-            /*TODO*///		draw_stars = galaxian_draw_stars;
+            draw_stars = galaxian_draw_stars;
             draw_bullets = galaxian_draw_bullets;
 
             return ret;
@@ -478,7 +479,7 @@ public class galaxian {
         public int handler() {
             int ret = galaxian_plain_vh_start.handler();
 
-            /*TODO*///		draw_stars = scramble_draw_stars;
+            draw_stars = scramble_draw_stars;
             draw_bullets = scramble_draw_bullets;
 
             draw_background = scramble_draw_background;
@@ -516,108 +517,116 @@ public class galaxian {
             return ret;
         }
     };
-    /*TODO*///	
-/*TODO*///	public static VhStartPtr rescue_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = scramble_vh_start();
-/*TODO*///	
-/*TODO*///		draw_stars = rescue_draw_stars;
-/*TODO*///	
-/*TODO*///		draw_background = rescue_draw_background;
-/*TODO*///	
-/*TODO*///	    return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr minefld_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = scramble_vh_start.handler();
-/*TODO*///	
-/*TODO*///		draw_stars = rescue_draw_stars;
-/*TODO*///	
-/*TODO*///		draw_background = minefld_draw_background;
-/*TODO*///	
-/*TODO*///	    return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr stratgyx_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = galaxian_plain_vh_start();
-/*TODO*///	
-/*TODO*///		draw_background = stratgyx_draw_background;
-/*TODO*///	
-/*TODO*///	    return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr ckongs_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = scramble_vh_start.handler();
-/*TODO*///	
-/*TODO*///		modify_spritecode = ckongs_modify_spritecode;
-/*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr calipso_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = galaxian_plain_vh_start.handler();
-/*TODO*///	
-/*TODO*///		draw_bullets = scramble_draw_bullets;
-/*TODO*///	
-/*TODO*///		draw_background = scramble_draw_background;
-/*TODO*///	
-/*TODO*///		modify_spritecode = calipso_modify_spritecode;
-/*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr mariner_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = galaxian_plain_vh_start.handler();
-/*TODO*///	
-/*TODO*///		draw_stars = mariner_draw_stars;
-/*TODO*///	
-/*TODO*///		draw_bullets = scramble_draw_bullets;
-/*TODO*///	
-/*TODO*///		draw_background = mariner_draw_background;
-/*TODO*///	
-/*TODO*///		modify_charcode = mariner_modify_charcode;
-/*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr froggers_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = galaxian_plain_vh_start.handler();
-/*TODO*///	
-/*TODO*///		draw_background = frogger_draw_background;
-/*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr frogger_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = froggers_vh_start.handler();
-/*TODO*///	
-/*TODO*///		modify_color = frogger_modify_color;
-/*TODO*///		modify_ypos = frogger_modify_ypos;
-/*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStartPtr froggrmc_vh_start = new VhStartPtr() { public int handler() 
-/*TODO*///	{
-/*TODO*///		int ret = froggers_vh_start.handler();
-/*TODO*///	
-/*TODO*///		modify_color = frogger_modify_color;
-/*TODO*///	
-/*TODO*///		return ret;
-/*TODO*///	} };
 
+    public static VhStartPtr rescue_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = scramble_vh_start.handler();
+
+            draw_stars = rescue_draw_stars;
+
+            draw_background = rescue_draw_background;
+
+            return ret;
+        }
+    };
+
+    public static VhStartPtr minefld_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = scramble_vh_start.handler();
+
+            draw_stars = rescue_draw_stars;
+
+            draw_background = minefld_draw_background;
+
+            return ret;
+        }
+    };
+
+    public static VhStartPtr stratgyx_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = galaxian_plain_vh_start.handler();
+
+            draw_background = stratgyx_draw_background;
+
+            return ret;
+        }
+    };
+
+    public static VhStartPtr ckongs_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = scramble_vh_start.handler();
+
+            modify_spritecode = ckongs_modify_spritecode;
+
+            return ret;
+        }
+    };
+
+    public static VhStartPtr calipso_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = galaxian_plain_vh_start.handler();
+
+            draw_bullets = scramble_draw_bullets;
+
+            draw_background = scramble_draw_background;
+
+            modify_spritecode = calipso_modify_spritecode;
+
+            return ret;
+        }
+    };
+
+    public static VhStartPtr mariner_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = galaxian_plain_vh_start.handler();
+
+            draw_stars = mariner_draw_stars;
+
+            draw_bullets = scramble_draw_bullets;
+
+            draw_background = mariner_draw_background;
+
+            modify_charcode = mariner_modify_charcode;
+
+            return ret;
+        }
+    };
+
+    public static VhStartPtr froggers_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = galaxian_plain_vh_start.handler();
+
+            draw_background = frogger_draw_background;
+
+            return ret;
+        }
+    };
+
+    public static VhStartPtr frogger_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = froggers_vh_start.handler();
+
+            modify_color = frogger_modify_color;
+            modify_ypos = frogger_modify_ypos;
+
+            return ret;
+        }
+    };
+
+    public static VhStartPtr froggrmc_vh_start = new VhStartPtr() {
+        public int handler() {
+            int ret = froggers_vh_start.handler();
+
+            modify_color = frogger_modify_color;
+
+            return ret;
+        }
+    };
     public static VhStartPtr jumpbug_vh_start = new VhStartPtr() {
         public int handler() {
             int ret = scramble_vh_start.handler();
-            /*TODO*///	
-/*TODO*///		draw_stars = jumpbug_draw_stars;
+
+            draw_stars = jumpbug_draw_stars;
 
             modify_charcode = jumpbug_modify_charcode;
             modify_spritecode = jumpbug_modify_spritecode;
@@ -835,22 +844,19 @@ public class galaxian {
         }
     };
 
-    /*TODO*///	
-/*TODO*///	/* color PROM mapping functions */
-/*TODO*///	
-/*TODO*///	static void frogger_modify_color(int *color)
-/*TODO*///	{
-/*TODO*///		*color = ((*color >> 1) & 0x03) | ((*color << 2) & 0x04);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/* y position mapping functions */
-/*TODO*///	
-/*TODO*///	static void frogger_modify_ypos(UINT8 *sy)
-/*TODO*///	{
-/*TODO*///		*sy = (*sy << 4) | (*sy >> 4);
-/*TODO*///	}
-/*TODO*///	
+    public static modify_colorPtr frogger_modify_color = new modify_colorPtr() {
+        public void handler(int[] color) {
+            color[0] = ((color[0] >> 1) & 0x03) | ((color[0] << 2) & 0x04);
+        }
+    };
+
+    /* y position mapping functions */
+    public static modify_yposPtr frogger_modify_ypos = new modify_yposPtr() {
+        public void handler(int[] sy) {
+            sy[0] = ((sy[0] << 4) | (sy[0] >> 4)) & 0xFF;
+        }
+    };
+
     /* bullet drawing functions */
     public static draw_bulletsPtr galaxian_draw_bullets = new draw_bulletsPtr() {
         public void handler(osd_bitmap bitmap, int offs, int x, int y) {
@@ -925,153 +931,135 @@ public class galaxian {
         }
     };
 
-    /*TODO*///	static void frogger_draw_background(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		if (flip_screen_x != 0)
-/*TODO*///		{
-/*TODO*///			plot_box(bitmap,   0, 0, 120, 256, Machine.pens[background_start_pen]);
-/*TODO*///			plot_box(bitmap, 120, 0, 136, 256, Machine.pens[background_start_pen + 1]);
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			plot_box(bitmap,   0, 0, 136, 256, Machine.pens[background_start_pen + 1]);
-/*TODO*///			plot_box(bitmap, 136, 0, 120, 256, Machine.pens[background_start_pen]);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void stratgyx_draw_background(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		UINT8 x;
-/*TODO*///		UINT8 *prom;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	    /* the background PROM is connected the following way:
-/*TODO*///	
-/*TODO*///	       bit 0 = 0 enables the blue gun if BCB is asserted
-/*TODO*///	       bit 1 = 0 enables the red gun if BCR is asserted and
-/*TODO*///	                 the green gun if BCG is asserted
-/*TODO*///	       bits 2-7 are unconnected */
-/*TODO*///	
-/*TODO*///		prom = memory_region(REGION_USER1);
-/*TODO*///	
-/*TODO*///		for (x = 0; x < 32; x++)
-/*TODO*///		{
-/*TODO*///			int sx,color;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			color = 0;
-/*TODO*///	
-/*TODO*///			if ((~prom[x] & 0x02) && background_red)   color |= 0x01;
-/*TODO*///			if ((~prom[x] & 0x02) && background_green) color |= 0x02;
-/*TODO*///			if ((~prom[x] & 0x01) && background_blue)  color |= 0x04;
-/*TODO*///	
-/*TODO*///			if (flip_screen_x != 0)
-/*TODO*///			{
-/*TODO*///				sx = 8 * (31 - x);
-/*TODO*///			}
-/*TODO*///			else
-/*TODO*///			{
-/*TODO*///				sx = 8 * x;
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			plot_box(bitmap, sx, 0, 8, 256, Machine.pens[background_start_pen + color]);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void minefld_draw_background(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		if (background_blue != 0)
-/*TODO*///		{
-/*TODO*///			int x;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			for (x = 0; x < 64; x++)
-/*TODO*///			{
-/*TODO*///				plot_box(bitmap, x * 2,        0, 2, 256, Machine.pens[background_start_pen + x]);
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			for (x = 0; x < 60; x++)
-/*TODO*///			{
-/*TODO*///				plot_box(bitmap, (x + 64) * 2, 0, 2, 256, Machine.pens[background_start_pen + x + 64]);
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			plot_box(bitmap, 248, 0, 16, 256, Machine.pens[background_start_pen]);
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			fillbitmap(bitmap,Machine.pens[background_start_pen],&Machine.visible_area);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void rescue_draw_background(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		if (background_blue != 0)
-/*TODO*///		{
-/*TODO*///			int x;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			for (x = 0; x < 64; x++)
-/*TODO*///			{
-/*TODO*///				plot_box(bitmap, x * 2,        0, 2, 256, Machine.pens[background_start_pen + x]);
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			for (x = 0; x < 60; x++)
-/*TODO*///			{
-/*TODO*///				plot_box(bitmap, (x + 64) * 2, 0, 2, 256, Machine.pens[background_start_pen + x + 4]);
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			plot_box(bitmap, 248, 0, 16, 256, Machine.pens[background_start_pen]);
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			fillbitmap(bitmap,Machine.pens[background_start_pen],&Machine.visible_area);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void mariner_draw_background(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		UINT8 x;
-/*TODO*///		UINT8 *prom;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	    /* the background PROM contains the color codes for each 8 pixel
-/*TODO*///	       line (column) of the screen.  The first 0x20 bytes for unflipped,
-/*TODO*///	       and the 2nd 0x20 bytes for flipped screen. */
-/*TODO*///	
-/*TODO*///		prom = memory_region(REGION_USER1);
-/*TODO*///	
-/*TODO*///		if (flip_screen_x != 0)
-/*TODO*///		{
-/*TODO*///			for (x = 0; x < 32; x++)
-/*TODO*///			{
-/*TODO*///				int color;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///				if (x == 0)
-/*TODO*///					color = 0;
-/*TODO*///				else
-/*TODO*///					color = prom[0x20 + x - 1];
-/*TODO*///	
-/*TODO*///				plot_box(bitmap, 8 * (31 - x), 0, 8, 256, Machine.pens[background_start_pen + color]);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			for (x = 0; x < 32; x++)
-/*TODO*///			{
-/*TODO*///				int color;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///				if (x == 31)
-/*TODO*///					color = 0;
-/*TODO*///				else
-/*TODO*///					color = prom[x + 1];
-/*TODO*///	
-/*TODO*///				plot_box(bitmap, 8 * x, 0, 8, 256, Machine.pens[background_start_pen + color]);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
+    public static draw_backgroundPtr frogger_draw_background = new draw_backgroundPtr() {
+        public void handler(osd_bitmap bitmap) {
+            if (flip_screen_x[0] != 0) {
+                plot_box.handler(bitmap, 0, 0, 120, 256, Machine.pens[background_start_pen]);
+                plot_box.handler(bitmap, 120, 0, 136, 256, Machine.pens[background_start_pen + 1]);
+            } else {
+                plot_box.handler(bitmap, 0, 0, 136, 256, Machine.pens[background_start_pen + 1]);
+                plot_box.handler(bitmap, 136, 0, 120, 256, Machine.pens[background_start_pen]);
+            }
+        }
+    };
+
+    public static draw_backgroundPtr stratgyx_draw_background = new draw_backgroundPtr() {
+        public void handler(osd_bitmap bitmap) {
+            int/*UINT8*/ x;
+            UBytePtr prom;
+
+            /* the background PROM is connected the following way:
+	
+	       bit 0 = 0 enables the blue gun if BCB is asserted
+	       bit 1 = 0 enables the red gun if BCR is asserted and
+	                 the green gun if BCG is asserted
+	       bits 2-7 are unconnected */
+            prom = memory_region(REGION_USER1);
+
+            for (x = 0; x < 32; x++) {
+                int sx, color;
+
+                color = 0;
+
+                if ((~prom.read(x) & 0x02) != 0 && background_red != 0) {
+                    color |= 0x01;
+                }
+                if ((~prom.read(x) & 0x02) != 0 && background_green != 0) {
+                    color |= 0x02;
+                }
+                if ((~prom.read(x) & 0x01) != 0 && background_blue != 0) {
+                    color |= 0x04;
+                }
+
+                if (flip_screen_x[0] != 0) {
+                    sx = 8 * (31 - x);
+                } else {
+                    sx = 8 * x;
+                }
+
+                plot_box.handler(bitmap, sx, 0, 8, 256, Machine.pens[background_start_pen + color]);
+            }
+        }
+    };
+
+    public static draw_backgroundPtr minefld_draw_background = new draw_backgroundPtr() {
+        public void handler(osd_bitmap bitmap) {
+            if (background_blue != 0) {
+                int x;
+
+                for (x = 0; x < 64; x++) {
+                    plot_box.handler(bitmap, x * 2, 0, 2, 256, Machine.pens[background_start_pen + x]);
+                }
+
+                for (x = 0; x < 60; x++) {
+                    plot_box.handler(bitmap, (x + 64) * 2, 0, 2, 256, Machine.pens[background_start_pen + x + 64]);
+                }
+
+                plot_box.handler(bitmap, 248, 0, 16, 256, Machine.pens[background_start_pen]);
+            } else {
+                fillbitmap(bitmap, Machine.pens[background_start_pen], Machine.visible_area);
+            }
+        }
+    };
+
+    public static draw_backgroundPtr rescue_draw_background = new draw_backgroundPtr() {
+        public void handler(osd_bitmap bitmap) {
+            if (background_blue != 0) {
+                int x;
+
+                for (x = 0; x < 64; x++) {
+                    plot_box.handler(bitmap, x * 2, 0, 2, 256, Machine.pens[background_start_pen + x]);
+                }
+
+                for (x = 0; x < 60; x++) {
+                    plot_box.handler(bitmap, (x + 64) * 2, 0, 2, 256, Machine.pens[background_start_pen + x + 4]);
+                }
+
+                plot_box.handler(bitmap, 248, 0, 16, 256, Machine.pens[background_start_pen]);
+            } else {
+                fillbitmap(bitmap, Machine.pens[background_start_pen], Machine.visible_area);
+            }
+        }
+    };
+
+    public static draw_backgroundPtr mariner_draw_background = new draw_backgroundPtr() {
+        public void handler(osd_bitmap bitmap) {
+            int/*UINT8*/ x;
+            UBytePtr prom;
+
+            /* the background PROM contains the color codes for each 8 pixel
+	       line (column) of the screen.  The first 0x20 bytes for unflipped,
+	       and the 2nd 0x20 bytes for flipped screen. */
+            prom = memory_region(REGION_USER1);
+
+            if (flip_screen_x[0] != 0) {
+                for (x = 0; x < 32; x++) {
+                    int color;
+
+                    if (x == 0) {
+                        color = 0;
+                    } else {
+                        color = prom.read(0x20 + x - 1);
+                    }
+
+                    plot_box.handler(bitmap, 8 * (31 - x), 0, 8, 256, Machine.pens[background_start_pen + color]);
+                }
+            } else {
+                for (x = 0; x < 32; x++) {
+                    int color;
+
+                    if (x == 31) {
+                        color = 0;
+                    } else {
+                        color = prom.read(x + 1);
+                    }
+
+                    plot_box.handler(bitmap, 8 * x, 0, 8, 256, Machine.pens[background_start_pen + color]);
+                }
+            }
+        }
+    };
+
     /* star drawing functions */
     public static void galaxian_init_stars(char[] palette, int[] p_inc) {
         int i;
@@ -1114,7 +1102,7 @@ public class galaxian {
                     int color;
 
                     color = (~(generator >> 8)) & 0x3f;
-                    if (color != 0 && total_stars < MAX_STARS) {
+                    if (color != 0 && total_stars < STAR_COUNT) {
                         stars[total_stars].x = x;
                         stars[total_stars].y = y;
                         stars[total_stars].color = color;
@@ -1125,238 +1113,226 @@ public class galaxian {
             }
         }
     }
-    /*TODO*///	
-/*TODO*///	static void plot_star(struct osd_bitmap *bitmap, int x, int y, int color)
-/*TODO*///	{
-/*TODO*///		if (y < Machine.visible_area.min_y ||
-/*TODO*///			y > Machine.visible_area.max_y ||
-/*TODO*///		    x < Machine.visible_area.min_x ||
-/*TODO*///			x > Machine.visible_area.max_x)
-/*TODO*///			return;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		if (flip_screen_x != 0)
-/*TODO*///		{
-/*TODO*///			x = 255 - x;
-/*TODO*///		}
-/*TODO*///		if (flip_screen_y != 0)
-/*TODO*///		{
-/*TODO*///			y = 255 - y;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		plot_pixel(bitmap, x, y, Machine.pens[STARS_COLOR_BASE + color]);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void galaxian_draw_stars(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		int offs;
-/*TODO*///		int currentframe;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		currentframe = cpu_getcurrentframe();
-/*TODO*///	
-/*TODO*///		for (offs = 0;offs < STAR_COUNT;offs++)
-/*TODO*///		{
-/*TODO*///			int x,y;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			x = ((stars[offs].x +   currentframe) & 0x01ff) >> 1;
-/*TODO*///			y = ( stars[offs].y + ((currentframe + stars[offs].x) >> 9)) & 0xff;
-/*TODO*///	
-/*TODO*///			if ((y & 1) ^ ((x >> 3) & 1))
-/*TODO*///			{
-/*TODO*///				plot_star(bitmap, x, y, stars[offs].color);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	void scramble_draw_stars(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		int offs;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		if (stars_blink_timer == 0)
-/*TODO*///		{
-/*TODO*///			start_stars_blink_timer(100000, 10000, 0.00001);
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		for (offs = 0;offs < STAR_COUNT;offs++)
-/*TODO*///		{
-/*TODO*///			int x,y;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			x = stars[offs].x >> 1;
-/*TODO*///			y = stars[offs].y;
-/*TODO*///	
-/*TODO*///			if ((y & 1) ^ ((x >> 3) & 1))
-/*TODO*///			{
-/*TODO*///				/* determine when to skip plotting */
-/*TODO*///				switch (stars_blink_state & 0x03)
-/*TODO*///				{
-/*TODO*///				case 0:
-/*TODO*///					if (!(stars[offs].color & 1))  continue;
-/*TODO*///					break;
-/*TODO*///				case 1:
-/*TODO*///					if (!(stars[offs].color & 4))  continue;
-/*TODO*///					break;
-/*TODO*///				case 2:
-/*TODO*///					if (!(stars[offs].y & 2))  continue;
-/*TODO*///					break;
-/*TODO*///				case 3:
-/*TODO*///					/* always plot */
-/*TODO*///					break;
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///				plot_star(bitmap, x, y, stars[offs].color);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void rescue_draw_stars(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		int offs;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* same as Scramble, but only top (left) half of screen */
-/*TODO*///	
-/*TODO*///		if (stars_blink_timer == 0)
-/*TODO*///		{
-/*TODO*///			start_stars_blink_timer(100000, 10000, 0.00001);
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		for (offs = 0;offs < STAR_COUNT;offs++)
-/*TODO*///		{
-/*TODO*///			int x,y;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			x = stars[offs].x >> 1;
-/*TODO*///			y = stars[offs].y;
-/*TODO*///	
-/*TODO*///			if ((x < 128) && ((y & 1) ^ ((x >> 3) & 1)))
-/*TODO*///			{
-/*TODO*///				/* determine when to skip plotting */
-/*TODO*///				switch (stars_blink_state & 0x03)
-/*TODO*///				{
-/*TODO*///				case 0:
-/*TODO*///					if (!(stars[offs].color & 1))  continue;
-/*TODO*///					break;
-/*TODO*///				case 1:
-/*TODO*///					if (!(stars[offs].color & 4))  continue;
-/*TODO*///					break;
-/*TODO*///				case 2:
-/*TODO*///					if (!(stars[offs].y & 2))  continue;
-/*TODO*///					break;
-/*TODO*///				case 3:
-/*TODO*///					/* always plot */
-/*TODO*///					break;
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///				plot_star(bitmap, x, y, stars[offs].color);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void mariner_draw_stars(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		int offs;
-/*TODO*///		UINT8 *prom;
-/*TODO*///		int currentframe;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* bit 2 of the PROM controls star visibility */
-/*TODO*///	
-/*TODO*///		prom = memory_region(REGION_USER2);
-/*TODO*///	
-/*TODO*///		currentframe = cpu_getcurrentframe();
-/*TODO*///	
-/*TODO*///		for (offs = 0;offs < STAR_COUNT;offs++)
-/*TODO*///		{
-/*TODO*///			int x,y;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			x = ((stars[offs].x +   -currentframe) & 0x01ff) >> 1;
-/*TODO*///			y = ( stars[offs].y + ((-currentframe + stars[offs].x) >> 9)) & 0xff;
-/*TODO*///	
-/*TODO*///			if ((y & 1) ^ ((x >> 3) & 1))
-/*TODO*///			{
-/*TODO*///				if (prom[(x/8 + 1) & 0x1f] & 0x04)
-/*TODO*///				{
-/*TODO*///					plot_star(bitmap, x, y, stars[offs].color);
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void jumpbug_draw_stars(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		int offs;
-/*TODO*///		int currentframe;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		if (stars_blink_timer == 0)
-/*TODO*///		{
-/*TODO*///			start_stars_blink_timer(100000, 10000, 0.00001);
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		currentframe = cpu_getcurrentframe();
-/*TODO*///	
-/*TODO*///		for (offs = 0;offs < STAR_COUNT;offs++)
-/*TODO*///		{
-/*TODO*///			int x,y;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			x = stars[offs].x >> 1;
-/*TODO*///			y = stars[offs].y;
-/*TODO*///	
-/*TODO*///			/* determine when to skip plotting */
-/*TODO*///			if ((y & 1) ^ ((x >> 3) & 1))
-/*TODO*///			{
-/*TODO*///				switch (stars_blink_state & 0x03)
-/*TODO*///				{
-/*TODO*///				case 0:
-/*TODO*///					if (!(stars[offs].color & 1))  continue;
-/*TODO*///					break;
-/*TODO*///				case 1:
-/*TODO*///					if (!(stars[offs].color & 4))  continue;
-/*TODO*///					break;
-/*TODO*///				case 2:
-/*TODO*///					if (!(stars[offs].y & 2))  continue;
-/*TODO*///					break;
-/*TODO*///				case 3:
-/*TODO*///					/* always plot */
-/*TODO*///					break;
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///				x = ((stars[offs].x +   currentframe) & 0x01ff) >> 1;
-/*TODO*///				y = ( stars[offs].y + ((currentframe + stars[offs].x) >> 9)) & 0xff;
-/*TODO*///	
-/*TODO*///				/* no stars in the status area */
-/*TODO*///				if (x >= 240)  continue;
-/*TODO*///	
-/*TODO*///				plot_star(bitmap, x, y, stars[offs].color);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static timer_callback stars_blink_callback = new timer_callback() { public void handler(int param) 
-/*TODO*///	{
-/*TODO*///		stars_blink_state++;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	static void start_stars_blink_timer(double ra, double rb, double c)
-/*TODO*///	{
-/*TODO*///		/* calculate the period using the formula given in the 555 datasheet */
-/*TODO*///	
-/*TODO*///		double period = 0.693 * (ra + 2.0 * rb) * c;
-/*TODO*///	
-/*TODO*///		stars_blink_timer = timer_pulse(TIME_IN_SEC(period), 0, stars_blink_callback);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
+
+    static void plot_star(osd_bitmap bitmap, int x, int y, int color) {
+        if (y < Machine.visible_area.min_y
+                || y > Machine.visible_area.max_y
+                || x < Machine.visible_area.min_x
+                || x > Machine.visible_area.max_x) {
+            return;
+        }
+
+        if (flip_screen_x[0] != 0) {
+            x = 255 - x;
+        }
+        if (flip_screen_y[0] != 0) {
+            y = 255 - y;
+        }
+
+        plot_pixel.handler(bitmap, x, y, Machine.pens[STARS_COLOR_BASE + color]);
+    }
+
+    public static draw_starsPtr galaxian_draw_stars = new draw_starsPtr() {
+        public void handler(osd_bitmap bitmap) {
+            int offs;
+            int currentframe;
+
+            currentframe = cpu_getcurrentframe();
+
+            for (offs = 0; offs < STAR_COUNT; offs++) {
+                int x, y;
+
+                x = ((stars[offs].x + currentframe) & 0x01ff) >> 1;
+                y = (stars[offs].y + ((currentframe + stars[offs].x) >> 9)) & 0xff;
+
+                if (((y & 1) ^ ((x >> 3) & 1)) != 0) {
+                    plot_star(bitmap, x, y, stars[offs].color);
+                }
+            }
+        }
+    };
+
+    public static draw_starsPtr scramble_draw_stars = new draw_starsPtr() {
+        public void handler(osd_bitmap bitmap) {
+            int offs;
+
+            if (stars_blink_timer == null) {
+                start_stars_blink_timer(100000, 10000, 0.00001);
+            }
+
+            for (offs = 0; offs < STAR_COUNT; offs++) {
+                int x, y;
+
+                x = stars[offs].x >> 1;
+                y = stars[offs].y;
+
+                if (((y & 1) ^ ((x >> 3) & 1)) != 0) {
+                    /* determine when to skip plotting */
+                    switch (stars_blink_state & 0x03) {
+                        case 0:
+                            if ((stars[offs].color & 1) == 0) {
+                                continue;
+                            }
+                            break;
+                        case 1:
+                            if ((stars[offs].color & 4) == 0) {
+                                continue;
+                            }
+                            break;
+                        case 2:
+                            if ((stars[offs].y & 2) == 0) {
+                                continue;
+                            }
+                            break;
+                        case 3:
+                            /* always plot */
+                            break;
+                    }
+
+                    plot_star(bitmap, x, y, stars[offs].color);
+                }
+            }
+        }
+    };
+
+    public static draw_starsPtr rescue_draw_stars = new draw_starsPtr() {
+        public void handler(osd_bitmap bitmap) {
+            int offs;
+
+            /* same as Scramble, but only top (left) half of screen */
+            if (stars_blink_timer == null) {
+                start_stars_blink_timer(100000, 10000, 0.00001);
+            }
+
+            for (offs = 0; offs < STAR_COUNT; offs++) {
+                int x, y;
+
+                x = stars[offs].x >> 1;
+                y = stars[offs].y;
+
+                if ((x < 128) && ((y & 1) ^ ((x >> 3) & 1)) != 0) {
+                    /* determine when to skip plotting */
+                    switch (stars_blink_state & 0x03) {
+                        case 0:
+                            if ((stars[offs].color & 1) == 0) {
+                                continue;
+                            }
+                            break;
+                        case 1:
+                            if ((stars[offs].color & 4) == 0) {
+                                continue;
+                            }
+                            break;
+                        case 2:
+                            if ((stars[offs].y & 2) == 0) {
+                                continue;
+                            }
+                            break;
+                        case 3:
+                            /* always plot */
+                            break;
+                    }
+
+                    plot_star(bitmap, x, y, stars[offs].color);
+                }
+            }
+        }
+    };
+
+    public static draw_starsPtr mariner_draw_stars = new draw_starsPtr() {
+        public void handler(osd_bitmap bitmap) {
+            int offs;
+            UBytePtr prom;
+            int currentframe;
+
+            /* bit 2 of the PROM controls star visibility */
+            prom = memory_region(REGION_USER2);
+
+            currentframe = cpu_getcurrentframe();
+
+            for (offs = 0; offs < STAR_COUNT; offs++) {
+                int x, y;
+
+                x = ((stars[offs].x + -currentframe) & 0x01ff) >> 1;
+                y = (stars[offs].y + ((-currentframe + stars[offs].x) >> 9)) & 0xff;
+
+                if (((y & 1) ^ ((x >> 3) & 1)) != 0) {
+                    if ((prom.read((x / 8 + 1) & 0x1f) & 0x04) != 0) {
+                        plot_star(bitmap, x, y, stars[offs].color);
+                    }
+                }
+            }
+        }
+    };
+
+    public static draw_starsPtr jumpbug_draw_stars = new draw_starsPtr() {
+        public void handler(osd_bitmap bitmap) {
+            int offs;
+            int currentframe;
+
+            if (stars_blink_timer == null) {
+                start_stars_blink_timer(100000, 10000, 0.00001);
+            }
+
+            currentframe = cpu_getcurrentframe();
+
+            for (offs = 0; offs < STAR_COUNT; offs++) {
+                int x, y;
+
+                x = stars[offs].x >> 1;
+                y = stars[offs].y;
+
+                /* determine when to skip plotting */
+                if (((y & 1) ^ ((x >> 3) & 1)) != 0) {
+                    switch (stars_blink_state & 0x03) {
+                        case 0:
+                            if ((stars[offs].color & 1) == 0) {
+                                continue;
+                            }
+                            break;
+                        case 1:
+                            if ((stars[offs].color & 4) == 0) {
+                                continue;
+                            }
+                            break;
+                        case 2:
+                            if ((stars[offs].y & 2) == 0) {
+                                continue;
+                            }
+                            break;
+                        case 3:
+                            /* always plot */
+                            break;
+                    }
+
+                    x = ((stars[offs].x + currentframe) & 0x01ff) >> 1;
+                    y = (stars[offs].y + ((currentframe + stars[offs].x) >> 9)) & 0xff;
+
+                    /* no stars in the status area */
+                    if (x >= 240) {
+                        continue;
+                    }
+
+                    plot_star(bitmap, x, y, stars[offs].color);
+                }
+            }
+        }
+    };
+
+    public static timer_callback stars_blink_callback = new timer_callback() {
+        public void handler(int i) {
+            stars_blink_state++;
+        }
+    };
+
+    static void start_stars_blink_timer(double ra, double rb, double c) {
+        /* calculate the period using the formula given in the 555 datasheet */
+
+        double period = 0.693 * (ra + 2.0 * rb) * c;
+
+        stars_blink_timer = timer_pulse(TIME_IN_SEC(period), 0, stars_blink_callback);
+    }
+
     /**
      * *************************************************************************
      *
@@ -1383,16 +1359,13 @@ public class galaxian {
                     fillbitmap(bitmap, Machine.pens[background_start_pen], Machine.visible_area);
                 }
             }
-            /*TODO*///	
-/*TODO*///	
-/*TODO*///		/* draw the stars */
-/*TODO*///		if (draw_stars && galaxian_stars_on)
-/*TODO*///		{
-/*TODO*///			draw_stars(bitmap);
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* draw the character layer */
+
+            /* draw the stars */
+            if (draw_stars != null && galaxian_stars_on != 0) {
+                draw_stars.handler(bitmap);
+            }
+
+            /* draw the character layer */
             transparency = (draw_background != null || draw_stars != null) ? TRANSPARENCY_PEN : TRANSPARENCY_NONE;
 
             for (x = 0; x < 32; x++) {
@@ -1403,17 +1376,14 @@ public class galaxian {
 
                 scroll[0] = galaxian_attributesram.read(x << 1);
                 color[0] = galaxian_attributesram.read((x << 1) | 1) & color_mask;
-                /*TODO*///	
-/*TODO*///			if (modify_color != 0)
-/*TODO*///			{
-/*TODO*///				modify_color(&color);
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			if (modify_ypos != 0)
-/*TODO*///			{
-/*TODO*///				modify_ypos(&scroll);
-/*TODO*///			}
-/*TODO*///	
+
+                if (modify_color != null) {
+                    modify_color.handler(color);
+                }
+
+                if (modify_ypos != null) {
+                    modify_ypos.handler(scroll);
+                }
 
                 u8_sx = (8 * x) & 0xFF;
 
@@ -1487,17 +1457,15 @@ public class galaxian {
                 if (modify_spritecode != null) {
                     modify_spritecode.handler(code, flipx, flipy, offs);
                 }
-                /*TODO*///	
-/*TODO*///			if (modify_color != 0)
-/*TODO*///			{
-/*TODO*///				modify_color(&color);
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			if (modify_ypos != 0)
-/*TODO*///			{
-/*TODO*///				modify_ypos(&sy);
-/*TODO*///			}
-/*TODO*///	
+
+                if (modify_color != null) {
+                    modify_color.handler(color);
+                }
+
+                if (modify_ypos != null) {
+                    modify_ypos.handler(u8_sy);
+                }
+
                 if (flip_screen_x[0] != 0) {
                     u8_sx = (240 - u8_sx) & 0xFF;
                     /* I checked a bunch of games including Scramble
