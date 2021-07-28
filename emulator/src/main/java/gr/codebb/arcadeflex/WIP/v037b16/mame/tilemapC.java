@@ -2687,10 +2687,10 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
 					data = pSource.readinc();
 					yx = pPenToPixel.read(); pPenToPixel.offset++;
 					//*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap.line[y0+yx/MAX_TILESIZE]) = pPalData[data&0xf];
-                                        pPixmap.line[y0+yx/MAX_TILESIZE].write(x0+(yx%MAX_TILESIZE), pPalData.read(data&0xf));
+                                        new UBytePtr(pPixmap.line[y0+yx/MAX_TILESIZE]).write(x0+(yx%MAX_TILESIZE), pPalData.read(data&0xf));
 					yx = pPenToPixel.read(); pPenToPixel.offset++;
 					//*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap.line[y0+yx/MAX_TILESIZE]) = pPalData[data>>4];
-                                        pPixmap.line[y0+yx/MAX_TILESIZE].write(x0+(yx%MAX_TILESIZE) , pPalData.read(data>>4));
+                                        new UBytePtr(pPixmap.line[y0+yx/MAX_TILESIZE]).write(x0+(yx%MAX_TILESIZE) , pPalData.read(data>>4));
 				}
 				pPenData.offset += pitch/2;
 			}
@@ -2705,82 +2705,15 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
 					data = pSource.readinc();
 					yx = pPenToPixel.read(); pPenToPixel.offset++;
 					//*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap.line[y0+yx/MAX_TILESIZE]) = pPalData[data];
-                                        pPixmap.line[y0+yx/MAX_TILESIZE].write(x0+(yx%MAX_TILESIZE), pPalData.read(data));
+                                        UBytePtr _aux = new UBytePtr(pPixmap.line[y0+yx/MAX_TILESIZE]);
+                                        //_aux.offset=0;
+                                        _aux.write(x0+(yx%MAX_TILESIZE), pPalData.read(data));
 				}
 				pPenData.offset += pitch;
 			}
 		}
     }};
 
-    public static DrawTileHandlerPtr old_draw_tile8x8x8BPP = new DrawTileHandlerPtr() {
-        @Override
-        public void handler(struct_tilemap tilemap, int cached_indx, int col, int row) {
-            //System.out.println("draw_tile8x8x8BPP");
-            cached_tile_info cached_tile_info = tilemap.cached_tile_info[cached_indx];
-            int /*UINT32*/ tile_size = tilemap.tile_size;
-            UBytePtr pPenData = new UBytePtr(cached_tile_info.pen_data);
-            int pitch = tile_size + cached_tile_info.skip;
-            IntArray pPalData = new IntArray(cached_tile_info.pal_data);
-            //pPalData.offset=0;
-            
-            int /*UINT32*/ flags = cached_tile_info.u32_flags;
-            int /*UINT32*/ y0 = tile_size*row;
-            int /*UINT32*/ x0 = tile_size*col;
-            osd_bitmap pPixmap = tilemap.pixmap;
-            IntArray pPenToPixel = new IntArray(tilemap.pPenToPixel[flags&(TILE_SWAPXY|TILE_FLIPY|TILE_FLIPX)]);
-            pPenToPixel.offset=0;
-            int tx;
-            int ty;
-            UBytePtr pSource;
-            int /*UINT8*/ data;
-            int /*UINT32*/ yx;
-
-            if(( flags&TILE_4BPP ) != 0)
-            {
-                //System.out.println("1");
-                    for( ty=tile_size; ty!=0; ty-- )
-                    {
-                            pSource = pPenData;
-                            //pSource.offset = 0;
-                            
-                            for( tx=tile_size/2; tx!=0; tx-- )
-                            {
-                                    data = pSource.readinc();
-                                    yx = pPenToPixel.read(); pPenToPixel.offset++;
-                                    //*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap.line[y0+yx/MAX_TILESIZE]) = pPalData[data&0xf];
-                                    (new UBytePtr(pPixmap.line[y0+yx/MAX_TILESIZE])).write((x0+(yx%MAX_TILESIZE)), pPalData.read(data&0xf));
-                                    yx = pPenToPixel.read(); pPenToPixel.offset++;
-                                    //*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap.line[y0+yx/MAX_TILESIZE]) = pPalData[data>>4];
-                                    (new UBytePtr(pPixmap.line[y0+yx/MAX_TILESIZE])).write((x0+(yx%MAX_TILESIZE)), pPalData.read(data>>4));
-                            }
-                            pPenData.offset += pitch/2;
-                    }
-            }
-            else
-            {
-               
-                    for( ty=tile_size; ty!=0; ty-- )
-                    {
-                            pSource = new UBytePtr(pPenData);
-                            
-                            for( tx=tile_size; tx!=0; tx-- )
-                            {
-                                    data = pSource.readinc();
-                                    yx = pPenToPixel.read();
-                                    pPenToPixel.offset++;
-                                    int _x = x0+(yx%MAX_TILESIZE);
-                                    int _y = y0+(yx/MAX_TILESIZE);
-                                    //*(x0+(yx%MAX_TILESIZE)+(DATA_TYPE *)pPixmap.line[y0+yx/MAX_TILESIZE]) = pPalData[data];
-                                    //(new UBytePtr(pPixmap.line[y0+yx/MAX_TILESIZE])).write((x0+(yx%MAX_TILESIZE)), pPalData.read(data));
-                                    if ((data + pPalData.offset) < (pPalData.buffer.length))
-                                        (new UBytePtr(pPixmap.line[_y])).write(_x, pPalData.read(data));
-                            }
-                            pPenData.inc( pitch );
-                    }
-            }
-
-        }
-    };
     
     public static void generic8draw(int xpos, int ypos, int TILE_WIDTH, int TILE_HEIGHT) {
         int tilemap_priority_code = blit.tilemap_priority_code;
