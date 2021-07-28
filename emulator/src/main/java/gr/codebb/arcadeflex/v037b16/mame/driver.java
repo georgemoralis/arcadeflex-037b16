@@ -22,6 +22,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.galaxian.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.vulgus.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.commando.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gberet.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gng.*;
 
 public class driver {
 
@@ -1537,13 +1538,13 @@ public class driver {
         driver_commandu, /*  5/1985 (c) 1985 + Data East license (US) */
         driver_commandj, /*  5/1985 (c) 1985 (Japan) */
         driver_spaceinv, /* bootleg */
-        /*TODO*///	driver_gng,		/*  9/1985 (c) 1985 */
-        /*TODO*///	driver_gnga,		/*  9/1985 (c) 1985 */
-        /*TODO*///	driver_gngt,		/*  9/1985 (c) 1985 */
-        /*TODO*///	driver_makaimur,	/*  9/1985 (c) 1985 */
-        /*TODO*///	driver_makaimuc,	/*  9/1985 (c) 1985 */
-        /*TODO*///	driver_makaimug,	/*  9/1985 (c) 1985 */
-        /*TODO*///	driver_diamond,	/* (c) 1989 KH Video (NOT A CAPCOM GAME but runs on GnG hardware) */
+        driver_gng,		/*  9/1985 (c) 1985 */
+        driver_gnga,		/*  9/1985 (c) 1985 */
+        driver_gngt,		/*  9/1985 (c) 1985 */
+        driver_makaimur,	/*  9/1985 (c) 1985 */
+        driver_makaimuc,	/*  9/1985 (c) 1985 */
+        driver_makaimug,	/*  9/1985 (c) 1985 */
+        driver_diamond,	/* (c) 1989 KH Video (NOT A CAPCOM GAME but runs on GnG hardware) */
         /*TODO*///	driver_gunsmoke,	/* 11/1985 (c) 1985 (World) */
         /*TODO*///	driver_gunsmrom,	/* 11/1985 (c) 1985 + Romstar (US) */
         /*TODO*///	driver_gunsmoka,	/* 11/1985 (c) 1985 (US) */

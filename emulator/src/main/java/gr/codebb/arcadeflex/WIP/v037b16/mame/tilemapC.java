@@ -970,7 +970,7 @@ static void memsetbitmask8(UBytePtr dest, int value, UBytePtr bitmask, int count
     {
     	if( palette_used_colors != null )
     	{
-    		IntArray pal_data = new IntArray(cached_tile_info.pal_data);
+    		IntArray pal_data = cached_tile_info.pal_data;
     		if( pal_data != null )
     		{
     			int pen_usage = cached_tile_info.u32_pen_usage;
@@ -3146,7 +3146,8 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
     public static DrawHandlerPtr draw16x16x8BPP = new DrawHandlerPtr() {
         @Override
         public void handler(int xpos, int ypos) {      
-            throw new UnsupportedOperationException("Not supported yet.");
+            //throw new UnsupportedOperationException("Not supported yet.");
+            generic8draw(xpos, ypos, 16, 16);
 /*TODO*///	struct osd_bitmap *screen = blit.screen;
 /*TODO*///	int tilemap_priority_code = blit.tilemap_priority_code;
 /*TODO*///	int x1 = xpos;
