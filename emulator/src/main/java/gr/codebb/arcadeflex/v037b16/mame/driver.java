@@ -24,6 +24,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.commando.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gberet.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gng.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gunsmoke.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.tecmo.*;
 
 public class driver {
 
@@ -2424,12 +2425,12 @@ public class driver {
         /*TODO*///	driver_gridiron,	/* (c) 1985 Tehkan */
         /*TODO*///	driver_teedoff,	/* 6102 - (c) 1986 Tecmo */
         /*TODO*///	driver_solomon,	/* (c) 1986 Tecmo */
-        /*TODO*///	driver_rygar,		/* 6002 - (c) 1986 Tecmo */
-        /*TODO*///	driver_rygar2,	/* 6002 - (c) 1986 Tecmo */
-        /*TODO*///	driver_rygarj,	/* 6002 - (c) 1986 Tecmo */
-        /*TODO*///	driver_gemini,	/* (c) 1987 Tecmo */
-        /*TODO*///	driver_silkworm,	/* 6217 - (c) 1988 Tecmo */
-        /*TODO*///	driver_silkwrm2,	/* 6217 - (c) 1988 Tecmo */
+        driver_rygar,		/* 6002 - (c) 1986 Tecmo */
+        driver_rygar2,	/* 6002 - (c) 1986 Tecmo */
+        driver_rygarj,	/* 6002 - (c) 1986 Tecmo */
+        driver_gemini,	/* (c) 1987 Tecmo */
+        driver_silkworm,	/* 6217 - (c) 1988 Tecmo */
+        driver_silkwrm2,	/* 6217 - (c) 1988 Tecmo */
         /*TODO*///	driver_gaiden,	/* 6215 - (c) 1988 Tecmo (World) */
         /*TODO*///	driver_shadoww,	/* 6215 - (c) 1988 Tecmo (US) */
         /*TODO*///	driver_ryukendn,	/* 6215 - (c) 1989 Tecmo (Japan) */

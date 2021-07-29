@@ -1754,15 +1754,15 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
     /*TODO*///profiler_mark(PROFILER_END);
     }
 
-/*TODO*////***********************************************************************************/
-/*TODO*///
-/*TODO*///void tilemap_set_scrolldx( struct tilemap *tilemap, int dx, int dx_if_flipped )
-/*TODO*///{
-/*TODO*///	tilemap->dx = dx;
-/*TODO*///	tilemap->dx_if_flipped = dx_if_flipped;
-/*TODO*///	tilemap->scrollx_delta = ( tilemap->attributes & TILEMAP_FLIPX )?dx_if_flipped:dx;
-/*TODO*///}
-/*TODO*///
+    /***********************************************************************************/
+
+    public static void tilemap_set_scrolldx( struct_tilemap tilemap, int dx, int dx_if_flipped )
+    {
+            tilemap.dx = dx;
+            tilemap.dx_if_flipped = dx_if_flipped;
+            tilemap.scrollx_delta = ( tilemap.attributes & TILEMAP_FLIPX )!=0?dx_if_flipped:dx;
+    }
+
 /*TODO*///void tilemap_set_scrolldy( struct tilemap *tilemap, int dy, int dy_if_flipped )
 /*TODO*///{
 /*TODO*///	tilemap->dy = dy;

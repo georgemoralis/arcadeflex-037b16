@@ -11,6 +11,7 @@ import static common.libc.expressions.*;
 import static common.ptr.*;
 import common.subArrays.IntArray;
 import common.subArrays.UShortArray;
+import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapC.priority_bitmap;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.cpu_getcurrentframe;
 import java.util.Arrays;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
@@ -1092,16 +1093,16 @@ public class drawgfx {
         common_drawgfx(dest, gfx, code, color, flipx, flipy, sx, sy, clip, transparency, transparent_color, null, 0);
     }
 
-    /*TODO*///
-/*TODO*///void pdrawgfx(struct osd_bitmap *dest,const struct GfxElement *gfx,
-/*TODO*///		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
-/*TODO*///		const struct rectangle *clip,int transparency,int transparent_color,UINT32 priority_mask)
-/*TODO*///{
-/*TODO*///	profiler_mark(PROFILER_DRAWGFX);
-/*TODO*///	common_drawgfx(dest,gfx,code,color,flipx,flipy,sx,sy,clip,transparency,transparent_color,priority_bitmap,priority_mask | (1<<31));
-/*TODO*///	profiler_mark(PROFILER_END);
-/*TODO*///}
-/*TODO*///
+    
+    public static void pdrawgfx(osd_bitmap dest, GfxElement gfx,
+                    int code, int color,int flipx,int flipy,int sx,int sy,
+                    rectangle clip,int transparency,int transparent_color,int priority_mask)
+    {
+    /*TODO*///	profiler_mark(PROFILER_DRAWGFX);
+        common_drawgfx(dest,gfx,code,color,flipx,flipy,sx,sy,clip,transparency,transparent_color,priority_bitmap,priority_mask | (1<<31));
+    /*TODO*///	profiler_mark(PROFILER_END);
+    }
+
 /*TODO*///void mdrawgfx(struct osd_bitmap *dest,const struct GfxElement *gfx,
 /*TODO*///		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
 /*TODO*///		const struct rectangle *clip,int transparency,int transparent_color,UINT32 priority_mask)
