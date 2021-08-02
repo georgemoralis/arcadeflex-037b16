@@ -25,6 +25,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gberet.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gng.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gunsmoke.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.tecmo.*;
+import static gr.codebb.arcadeflex.v037b16.drivers._1942.*;
 
 public class driver {
 
@@ -76,7 +77,7 @@ public class driver {
         driver_theglob, /* (c) 1983 */
         driver_theglob2, /* (c) 1983 */
         driver_theglob3, /* (c) 1983 */
-        driver_igmo, /* (c) 1984 */ 
+        driver_igmo, /* (c) 1984 */
         /* "Galaxian hardware" games */
         driver_galaxian, /* (c) Namco */
         driver_galaxiaj, /* (c) Namco */
@@ -1531,26 +1532,26 @@ public class driver {
         /*TODO*///	driver_sonson,	/*  7/1984 (c) 1984 */
         /*TODO*///	driver_sonsonj,	/*  7/1984 (c) 1984 (Japan) */
         /*TODO*///	driver_higemaru,	/*  9/1984 (c) 1984 */
-        /*TODO*///	driver_1942,		/* 12/1984 (c) 1984 */
-        /*TODO*///	driver_1942a,		/* 12/1984 (c) 1984 */
-        /*TODO*///	driver_1942b,		/* 12/1984 (c) 1984 */
+        driver_1942, /* 12/1984 (c) 1984 */
+        driver_1942a, /* 12/1984 (c) 1984 */
+        driver_1942b, /* 12/1984 (c) 1984 */
         /*TODO*///	driver_exedexes,	/*  2/1985 (c) 1985 */
         /*TODO*///	driver_savgbees,	/*  2/1985 (c) 1985 + Memetron license */
         driver_commando, /*  5/1985 (c) 1985 (World) */
         driver_commandu, /*  5/1985 (c) 1985 + Data East license (US) */
         driver_commandj, /*  5/1985 (c) 1985 (Japan) */
         driver_spaceinv, /* bootleg */
-        driver_gng,		/*  9/1985 (c) 1985 */
-        driver_gnga,		/*  9/1985 (c) 1985 */
-        driver_gngt,		/*  9/1985 (c) 1985 */
-        driver_makaimur,	/*  9/1985 (c) 1985 */
-        driver_makaimuc,	/*  9/1985 (c) 1985 */
-        driver_makaimug,	/*  9/1985 (c) 1985 */
-        driver_diamond,	/* (c) 1989 KH Video (NOT A CAPCOM GAME but runs on GnG hardware) */
-        driver_gunsmoke,	/* 11/1985 (c) 1985 (World) */
-        driver_gunsmrom,	/* 11/1985 (c) 1985 + Romstar (US) */
-        driver_gunsmoka,	/* 11/1985 (c) 1985 (US) */
-        driver_gunsmokj,	/* 11/1985 (c) 1985 (Japan) */
+        driver_gng, /*  9/1985 (c) 1985 */
+        driver_gnga, /*  9/1985 (c) 1985 */
+        driver_gngt, /*  9/1985 (c) 1985 */
+        driver_makaimur, /*  9/1985 (c) 1985 */
+        driver_makaimuc, /*  9/1985 (c) 1985 */
+        driver_makaimug, /*  9/1985 (c) 1985 */
+        driver_diamond, /* (c) 1989 KH Video (NOT A CAPCOM GAME but runs on GnG hardware) */
+        driver_gunsmoke, /* 11/1985 (c) 1985 (World) */
+        driver_gunsmrom, /* 11/1985 (c) 1985 + Romstar (US) */
+        driver_gunsmoka, /* 11/1985 (c) 1985 (US) */
+        driver_gunsmokj, /* 11/1985 (c) 1985 (Japan) */
         /*TODO*///	driver_sectionz,	/* 12/1985 (c) 1985 */
         /*TODO*///	driver_sctionza,	/* 12/1985 (c) 1985 */
         /*TODO*///	driver_trojan,	/*  4/1986 (c) 1986 (US) */
@@ -2425,12 +2426,12 @@ public class driver {
         /*TODO*///	driver_gridiron,	/* (c) 1985 Tehkan */
         /*TODO*///	driver_teedoff,	/* 6102 - (c) 1986 Tecmo */
         /*TODO*///	driver_solomon,	/* (c) 1986 Tecmo */
-        driver_rygar,		/* 6002 - (c) 1986 Tecmo */
-        driver_rygar2,	/* 6002 - (c) 1986 Tecmo */
-        driver_rygarj,	/* 6002 - (c) 1986 Tecmo */
-        driver_gemini,	/* (c) 1987 Tecmo */
-        driver_silkworm,	/* 6217 - (c) 1988 Tecmo */
-        driver_silkwrm2,	/* 6217 - (c) 1988 Tecmo */
+        driver_rygar, /* 6002 - (c) 1986 Tecmo */
+        driver_rygar2, /* 6002 - (c) 1986 Tecmo */
+        driver_rygarj, /* 6002 - (c) 1986 Tecmo */
+        driver_gemini, /* (c) 1987 Tecmo */
+        driver_silkworm, /* 6217 - (c) 1988 Tecmo */
+        driver_silkwrm2, /* 6217 - (c) 1988 Tecmo */
         /*TODO*///	driver_gaiden,	/* 6215 - (c) 1988 Tecmo (World) */
         /*TODO*///	driver_shadoww,	/* 6215 - (c) 1988 Tecmo (US) */
         /*TODO*///	driver_ryukendn,	/* 6215 - (c) 1989 Tecmo (Japan) */
@@ -2489,10 +2490,10 @@ public class driver {
         /*TODO*///	driver_kicker,	/* GX477 (c) 1985 */
         /*TODO*///	driver_shaolins,	/* GX477 (c) 1985 */
         /*TODO*///	driver_pingpong,	/* GX555 (c) 1985 */
-        	driver_gberet,	/* GX577 (c) 1985 */
-        	driver_rushatck,	/* GX577 (c) 1985 */
-        	driver_gberetb,	/* bootleg on different hardware */
-        	driver_mrgoemon,	/* GX621 (c) 1986 (Japan) */
+        driver_gberet, /* GX577 (c) 1985 */
+        driver_rushatck, /* GX577 (c) 1985 */
+        driver_gberetb, /* bootleg on different hardware */
+        driver_mrgoemon, /* GX621 (c) 1986 (Japan) */
         /*TODO*///	driver_jailbrek,	/* GX507 (c) 1986 */
         /*TODO*///	driver_manhatan,	/* GX507 (c) 1986 (Japan) */
         /*TODO*///	driver_finalizr,	/* GX523 (c) 1985 */
