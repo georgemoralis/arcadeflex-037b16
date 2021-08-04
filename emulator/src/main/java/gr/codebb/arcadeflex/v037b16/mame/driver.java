@@ -26,6 +26,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gng.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gunsmoke.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.tecmo.*;
 import static gr.codebb.arcadeflex.v037b16.drivers._1942.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.jrpacman.*;
 
 public class driver {
 
@@ -69,7 +70,7 @@ public class driver {
         driver_pengo2, /* 834-0386 (c) 1982 Sega */
         driver_pengo2u, /* 834-0386 (c) 1982 Sega */
         driver_penta, /* bootleg */
-        /*TODO*///	driver_jrpacman,	/* (c) 1983 Midway */
+        driver_jrpacman, /* (c) 1983 Midway */
         driver_jumpshot, /* (c) 1985 Bally Midway */
         driver_shootbul, /* (c) 1985 Bally Midway */
         /* Epos games */
