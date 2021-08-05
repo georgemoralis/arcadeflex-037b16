@@ -77,28 +77,28 @@ public class exzisus
 	  Memory handlers
 	***************************************************************************/
 	
-	READ_HANDLER ( exzisus_videoram_0_r )
+	public static ReadHandlerPtr exzisus_videoram_0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return exzisus_videoram0[offset];
-	}
+	} };
 	
 	
-	READ_HANDLER ( exzisus_videoram_1_r )
+	public static ReadHandlerPtr exzisus_videoram_1_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return exzisus_videoram1[offset];
-	}
+	} };
 	
 	
-	READ_HANDLER ( exzisus_objectram_0_r )
+	public static ReadHandlerPtr exzisus_objectram_0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return exzisus_objectram0[offset];
-	}
+	} };
 	
 	
-	READ_HANDLER ( exzisus_objectram_1_r )
+	public static ReadHandlerPtr exzisus_objectram_1_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return exzisus_objectram1[offset];
-	}
+	} };
 	
 	
 	public static WriteHandlerPtr exzisus_videoram_0_w = new WriteHandlerPtr() {public void handler(int offset, int data)

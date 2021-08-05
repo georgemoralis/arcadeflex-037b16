@@ -553,8 +553,8 @@ enum {
 /************************************************************************/
 
 
-WRITE_HANDLER(discrete_sound_w);
-READ_HANDLER(discrete_sound_r);
+public static WriteHandlerPtr discrete_sound_w = new WriteHandlerPtr() {public void handler(int offset, int data);
+public static ReadHandlerPtr discrete_sound_r  = new ReadHandlerPtr() { public int handler(int offset);
 
 
 #endif

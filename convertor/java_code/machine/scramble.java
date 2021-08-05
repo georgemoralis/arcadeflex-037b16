@@ -242,109 +242,109 @@ public class scramble
 	} };
 	
 	
-	READ_HANDLER(frogger_ppi8255_0_r)
+	public static ReadHandlerPtr frogger_ppi8255_0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return ppi8255_0_r(offset >> 1);
-	}
+	} };
 	
-	READ_HANDLER(frogger_ppi8255_1_r)
+	public static ReadHandlerPtr frogger_ppi8255_1_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return ppi8255_1_r(offset >> 1);
-	}
+	} };
 	
-	WRITE_HANDLER(frogger_ppi8255_0_w)
+	public static WriteHandlerPtr frogger_ppi8255_0_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		ppi8255_0_w(offset >> 1, data);
-	}
+	} };
 	
-	WRITE_HANDLER(frogger_ppi8255_1_w)
+	public static WriteHandlerPtr frogger_ppi8255_1_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		ppi8255_1_w(offset >> 1, data);
-	}
+	} };
 	
 	
-	READ_HANDLER(scobra_type2_ppi8255_0_r)
+	public static ReadHandlerPtr scobra_type2_ppi8255_0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return ppi8255_0_r(offset >> 2);
-	}
+	} };
 	
-	READ_HANDLER(scobra_type2_ppi8255_1_r)
+	public static ReadHandlerPtr scobra_type2_ppi8255_1_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return ppi8255_1_r(offset >> 2);
-	}
+	} };
 	
-	WRITE_HANDLER(scobra_type2_ppi8255_0_w)
+	public static WriteHandlerPtr scobra_type2_ppi8255_0_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		ppi8255_0_w(offset >> 2, data);
-	}
+	} };
 	
-	WRITE_HANDLER(scobra_type2_ppi8255_1_w)
+	public static WriteHandlerPtr scobra_type2_ppi8255_1_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		ppi8255_1_w(offset >> 2, data);
-	}
+	} };
 	
 	
-	READ_HANDLER(hustler_ppi8255_0_r)
+	public static ReadHandlerPtr hustler_ppi8255_0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return ppi8255_0_r(offset >> 3);
-	}
+	} };
 	
-	READ_HANDLER(hustler_ppi8255_1_r)
+	public static ReadHandlerPtr hustler_ppi8255_1_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return ppi8255_1_r(offset >> 3);
-	}
+	} };
 	
-	WRITE_HANDLER(hustler_ppi8255_0_w)
+	public static WriteHandlerPtr hustler_ppi8255_0_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		ppi8255_0_w(offset >> 3, data);
-	}
+	} };
 	
-	WRITE_HANDLER(hustler_ppi8255_1_w)
+	public static WriteHandlerPtr hustler_ppi8255_1_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		ppi8255_1_w(offset >> 3, data);
-	}
+	} };
 	
 	
-	READ_HANDLER(amidar_ppi8255_0_r)
+	public static ReadHandlerPtr amidar_ppi8255_0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return ppi8255_0_r(offset >> 4);
-	}
+	} };
 	
-	READ_HANDLER(amidar_ppi8255_1_r)
+	public static ReadHandlerPtr amidar_ppi8255_1_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return ppi8255_1_r(offset >> 4);
-	}
+	} };
 	
-	WRITE_HANDLER(amidar_ppi8255_0_w)
+	public static WriteHandlerPtr amidar_ppi8255_0_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		ppi8255_0_w(offset >> 4, data);
-	}
+	} };
 	
-	WRITE_HANDLER(amidar_ppi8255_1_w)
+	public static WriteHandlerPtr amidar_ppi8255_1_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		ppi8255_1_w(offset >> 4, data);
-	}
+	} };
 	
 	
-	READ_HANDLER(mars_ppi8255_0_r)
+	public static ReadHandlerPtr mars_ppi8255_0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return ppi8255_0_r(((offset >> 2) & 0x02) | ((offset >> 1) & 0x01));
-	}
+	} };
 	
-	READ_HANDLER(mars_ppi8255_1_r)
+	public static ReadHandlerPtr mars_ppi8255_1_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return ppi8255_1_r(((offset >> 2) & 0x02) | ((offset >> 1) & 0x01));
-	}
+	} };
 	
-	WRITE_HANDLER(mars_ppi8255_0_w)
+	public static WriteHandlerPtr mars_ppi8255_0_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		ppi8255_0_w(((offset >> 2) & 0x02) | ((offset >> 1) & 0x01), data);
-	}
+	} };
 	
-	WRITE_HANDLER(mars_ppi8255_1_w)
+	public static WriteHandlerPtr mars_ppi8255_1_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		ppi8255_1_w(((offset >> 2) & 0x02) | ((offset >> 1) & 0x01), data);
-	}
+	} };
 	
 	
 	static ppi8255_interface ppi8255_intf =

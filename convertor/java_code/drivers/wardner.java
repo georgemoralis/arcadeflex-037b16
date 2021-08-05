@@ -149,7 +149,6 @@ public class wardner
 	
 	
 	/******************** Video stuff **********************/
-	READ_HANDLER ( wardner_videoram_r );
 	
 	
 	extern int twincobr_display_on;

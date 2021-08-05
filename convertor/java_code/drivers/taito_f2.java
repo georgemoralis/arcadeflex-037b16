@@ -1597,14 +1597,14 @@ public class taito_f2
 		OKIM6295_set_bank_base(0, oki_bank*0x40000);
 	}
 	
-	static WRITE_HANDLER (oki_bank_w)
+	static public static WriteHandlerPtr oki_bank_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if ((data&4) && (oki_bank!=(data&3)) )
 		{
 			oki_bank = (data&3);
 		}
 		reset_driveout_sound_region();
-	}
+	} };
 	
 	public static Memory_ReadAddress driveout_sound_readmem[]={
 		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_ReadAddress( 0x0000, 0x7fff, MRA_ROM ),

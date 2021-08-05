@@ -661,7 +661,7 @@ public class cinemat
 		}
 	}
 	
-	static READ_HANDLER(demon_sound_r)
+	static public static ReadHandlerPtr demon_sound_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int ret;
 	
@@ -675,7 +675,7 @@ public class cinemat
 		//logerror("Reading Sound Latch %04X = %02X\n", cpu_get_pc(), ret);
 	
 		return ret;
-	}
+	} };
 	
 	
 	static AY8910interface demon_ay8910_interface = new AY8910interface

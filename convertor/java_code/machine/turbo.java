@@ -66,39 +66,39 @@ public class turbo
 		3 = IC6 - CPU Board, Sheet 5, D7
 	*/
 	
-	static WRITE_HANDLER(chip0_portA_w)
+	static public static WriteHandlerPtr chip0_portA_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		turbo_opa = data;	/* signals 0PA0 to 0PA7 */
-	}
+	} };
 	
-	static WRITE_HANDLER(chip0_portB_w)
+	static public static WriteHandlerPtr chip0_portB_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		turbo_opb = data;	/* signals 0PB0 to 0PB7 */
-	}
+	} };
 	
-	static WRITE_HANDLER(chip0_portC_w)
+	static public static WriteHandlerPtr chip0_portC_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		turbo_opc = data;	/* signals 0PC0 to 0PC7 */
-	}
+	} };
 	
 	
-	static WRITE_HANDLER(chip1_portA_w)
+	static public static WriteHandlerPtr chip1_portA_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		turbo_ipa = data;	/* signals 1PA0 to 1PA7 */
-	}
+	} };
 	
-	static WRITE_HANDLER(chip1_portB_w)
+	static public static WriteHandlerPtr chip1_portB_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		turbo_ipb = data;	/* signals 1PB0 to 1PB7 */
-	}
+	} };
 	
-	static WRITE_HANDLER(chip1_portC_w)
+	static public static WriteHandlerPtr chip1_portC_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		turbo_ipc = data;	/* signals 1PC0 to 1PC7 */
-	}
+	} };
 	
 	
-	static WRITE_HANDLER(chip2_portA_w)
+	static public static WriteHandlerPtr chip2_portA_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/*
 			2PA0 = /CRASH
@@ -119,9 +119,9 @@ public class turbo
 		if (!(data & 0x80)) sample_start(2, 5, 0);
 		osel = (osel & 6) | ((data >> 5) & 1);
 		update_samples();
-	}
+	} };
 	
-	static WRITE_HANDLER(chip2_portB_w)
+	static public static WriteHandlerPtr chip2_portB_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/*
 			2PB0 = ACC0
@@ -145,9 +145,9 @@ public class turbo
 		else
 			sample_stop(7);
 		if (!(data & 0x80)) sample_start(3, 6, 0);
-	}
+	} };
 	
-	static WRITE_HANDLER(chip2_portC_w)
+	static public static WriteHandlerPtr chip2_portC_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/*
 			2PC0 = OSEL1
@@ -163,17 +163,17 @@ public class turbo
 		bsel = (data >> 2) & 3;
 		osel = (osel & 1) | ((data & 3) << 1);
 		update_samples();
-	}
+	} };
 	
 	
-	static WRITE_HANDLER(chip3_portC_w)
+	static public static WriteHandlerPtr chip3_portC_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/* bit 0-3 = signals PLA0 to PLA3 */
 		/* bit 4-6 = signals COL0 to COL2 */
 		/* bit 7 = unused */
 		turbo_fbpla = data & 0x0f;
 		turbo_fbcol = (data & 0x70) >> 4;
-	}
+	} };
 	
 	
 	static ppi8255_interface intf =

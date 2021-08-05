@@ -793,10 +793,10 @@ public class _6502dasm
 	};
 	#endif
 	#if (HAS_M4510)
-	static READ_HANDLER(m4510_readmem)
+	static public static ReadHandlerPtr m4510_readmem  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return cpu_readmem20( m4510_get_reg(M4510_MEM0+(offset>>13))+offset );
-	}
+	} };
 	
 	static CPU_TYPE type_m4510 = {
 		(const UINT8*)op4510, m4510_get_reg, m4510_readmem, m6509_get_argword

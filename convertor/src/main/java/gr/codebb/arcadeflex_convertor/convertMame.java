@@ -1592,7 +1592,12 @@ public class convertMame {
                             Convertor.inpos = i;
                         }
                     }
-                    if (sUtil.getToken("READ_HANDLER(")) {
+                    if (sUtil.getToken("READ_HANDLER")) {
+                        sUtil.skipSpace();
+                        if (sUtil.parseChar() != '(') {
+                            Convertor.inpos = i;
+                            break;
+                        }
                         sUtil.skipSpace();
                         Convertor.token[0] = sUtil.parseToken();
                         sUtil.skipSpace();
@@ -1776,7 +1781,12 @@ public class convertMame {
                     break;
                 case 'W': {
                     i = Convertor.inpos;
-                    if (sUtil.getToken("WRITE_HANDLER(")) {
+                    if (sUtil.getToken("WRITE_HANDLER")) {
+                        sUtil.skipSpace();
+                        if (sUtil.parseChar() != '(') {
+                            Convertor.inpos = i;
+                            break;
+                        }
                         sUtil.skipSpace();
                         Convertor.token[0] = sUtil.parseToken();
                         sUtil.skipSpace();

@@ -115,7 +115,6 @@ public class scobra
 	
 	
 	
-	READ_HANDLER ( galaxian_videoram_r );
 	
 	extern struct GfxDecodeInfo galaxian_gfxdecodeinfo[];
 	
@@ -126,17 +125,17 @@ public class scobra
 	extern const struct IO_WritePort frogger_sound_writeport[];
 	
 	
-	READ_HANDLER(scobra_type2_ppi8255_0_r);
-	READ_HANDLER(scobra_type2_ppi8255_1_r);
-	WRITE_HANDLER(scobra_type2_ppi8255_0_w);
-	WRITE_HANDLER(scobra_type2_ppi8255_1_w);
-	READ_HANDLER(hustler_ppi8255_0_r);
-	READ_HANDLER(hustler_ppi8255_1_r);
-	WRITE_HANDLER(hustler_ppi8255_0_w);
-	WRITE_HANDLER(hustler_ppi8255_1_w);
+	public static ReadHandlerPtr scobra_type2_ppi8255_0_r  = new ReadHandlerPtr() { public int handler(int offset);
+	public static ReadHandlerPtr scobra_type2_ppi8255_1_r  = new ReadHandlerPtr() { public int handler(int offset);
+	public static WriteHandlerPtr scobra_type2_ppi8255_0_w = new WriteHandlerPtr() {public void handler(int offset, int data);
+	public static WriteHandlerPtr scobra_type2_ppi8255_1_w = new WriteHandlerPtr() {public void handler(int offset, int data);
+	public static ReadHandlerPtr hustler_ppi8255_0_r  = new ReadHandlerPtr() { public int handler(int offset);
+	public static ReadHandlerPtr hustler_ppi8255_1_r  = new ReadHandlerPtr() { public int handler(int offset);
+	public static WriteHandlerPtr hustler_ppi8255_0_w = new WriteHandlerPtr() {public void handler(int offset, int data);
+	public static WriteHandlerPtr hustler_ppi8255_1_w = new WriteHandlerPtr() {public void handler(int offset, int data);
 	
 	
-	public static WriteHandlerPtr type1_coin_counter_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	static public static WriteHandlerPtr type1_coin_counter_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		coin_counter_w.handler(offset,data);
 	} };
@@ -262,15 +261,15 @@ public class scobra
 	
 	static UINT8 *scobra_soundram;
 	
-	static READ_HANDLER(scobra_soundram_r)
+	static public static ReadHandlerPtr scobra_soundram_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return scobra_soundram[offset & 0x03ff];
-	}
+	} };
 	
-	static WRITE_HANDLER(scobra_soundram_w)
+	static public static WriteHandlerPtr scobra_soundram_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		scobra_soundram[offset & 0x03ff] = data;
-	}
+	} };
 	
 	public static Memory_ReadAddress scobra_sound_readmem[]={
 		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_ReadAddress( 0x0000, 0x1fff, MRA_ROM ),

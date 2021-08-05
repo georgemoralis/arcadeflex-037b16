@@ -135,14 +135,14 @@ public class tubep
 	/****************************** Main CPU ************************************/
 	
 	
-	static WRITE_HANDLER ( sharedram_w )
+	static public static WriteHandlerPtr sharedram_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		sharedram[offset] = data;
-	}
-	static READ_HANDLER ( sharedram_r )
+	} };
+	static public static ReadHandlerPtr sharedram_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return sharedram[offset];
-	}
+	} };
 	
 	
 	public static Memory_ReadAddress tubep_readmem[]={

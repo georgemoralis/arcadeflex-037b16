@@ -391,12 +391,12 @@ public class m97
 	} };
 	
 	/* Bomberman World executes encrypted code from RAM! */
-	static WRITE_HANDLER (bbmanw_ram_write)
+	static public static WriteHandlerPtr bbmanw_ram_write = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		UBytePtr RAM = memory_region(REGION_CPU1);
 		RAM[0x0a0c00+offset]=data;
 		RAM[0x1a0c00+offset]=dynablaster_decryption_table[data];
-	}
+	} };
 	
 	static public static InitDriverPtr init_bbmanw = new InitDriverPtr() { public void handler() 
 	{

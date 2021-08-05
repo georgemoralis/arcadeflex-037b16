@@ -48,7 +48,7 @@ public class clshroad
 	
 	/* Shared RAM with the sound CPU */
 	
-	READ_HANDLER ( clshroad_sharedram_r )	{	return clshroad_sharedram[offset];	}
+	public static ReadHandlerPtr clshroad_sharedram_r  = new ReadHandlerPtr() { public int handler(int offset)	{	return clshroad_sharedram[offset];	} };
 	public static WriteHandlerPtr clshroad_sharedram_w = new WriteHandlerPtr() {public void handler(int offset, int data)	{	clshroad_sharedram[offset] = data;	} };
 	
 	public static ReadHandlerPtr clshroad_input_r  = new ReadHandlerPtr() { public int handler(int offset)

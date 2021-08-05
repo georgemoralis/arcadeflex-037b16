@@ -87,12 +87,12 @@ public class superpac
 	
 	
 	
-	READ_HANDLER(superpac_flipscreen_r)
+	public static ReadHandlerPtr superpac_flipscreen_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		flip_screen_set(1);
 	
 		return flip_screen;	/* return value not used */
-	}
+	} };
 	
 	
 	

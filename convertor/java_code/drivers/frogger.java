@@ -100,13 +100,13 @@ public class frogger
 	
 	
 	
-	READ_HANDLER(frogger_ppi8255_0_r);
-	READ_HANDLER(frogger_ppi8255_1_r);
-	WRITE_HANDLER(frogger_ppi8255_0_w);
-	WRITE_HANDLER(frogger_ppi8255_1_w);
+	public static ReadHandlerPtr frogger_ppi8255_0_r  = new ReadHandlerPtr() { public int handler(int offset);
+	public static ReadHandlerPtr frogger_ppi8255_1_r  = new ReadHandlerPtr() { public int handler(int offset);
+	public static WriteHandlerPtr frogger_ppi8255_0_w = new WriteHandlerPtr() {public void handler(int offset, int data);
+	public static WriteHandlerPtr frogger_ppi8255_1_w = new WriteHandlerPtr() {public void handler(int offset, int data);
 	
 	
-	public static WriteHandlerPtr frogger_coin_counter_0_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	static public static WriteHandlerPtr frogger_coin_counter_0_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		coin_counter_w.handler (0, data);
 	} };

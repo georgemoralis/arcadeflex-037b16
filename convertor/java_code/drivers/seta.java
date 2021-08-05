@@ -104,7 +104,6 @@ public class seta
 	
 	/* Variables and functions defined in sndhrdw */
 	
-	READ_HANDLER ( seta_sound_r );
 	
 	READ16_HANDLER ( seta_sound_word_r );
 	WRITE16_HANDLER( seta_sound_word_w );

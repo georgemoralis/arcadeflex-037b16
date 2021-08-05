@@ -32,35 +32,35 @@ public class momoko
 	
 	/****************************************************************************/
 	
-	WRITE_HANDLER ( momoko_fg_scrollx_w )
+	public static WriteHandlerPtr momoko_fg_scrollx_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		momoko_fg_scrollx = data;
-	}
-	WRITE_HANDLER ( momoko_fg_scrolly_w )
+	} };
+	public static WriteHandlerPtr momoko_fg_scrolly_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		momoko_fg_scrolly = data;
-	}
-	WRITE_HANDLER ( momoko_fg_select_w )
+	} };
+	public static WriteHandlerPtr momoko_fg_select_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		momoko_fg_select = data & 0x0f;
 		momoko_fg_mask = data & 0x10;
-	}
-	WRITE_HANDLER ( momoko_text_scrolly_w )
+	} };
+	public static WriteHandlerPtr momoko_text_scrolly_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		momoko_text_scrolly = data;
-	}
-	WRITE_HANDLER ( momoko_text_mode_w )
+	} };
+	public static WriteHandlerPtr momoko_text_mode_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		momoko_text_mode = data;
-	}
-	WRITE_HANDLER ( momoko_bg_scrollx_w )
+	} };
+	public static WriteHandlerPtr momoko_bg_scrollx_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		momoko_bg_scrollx[ offset ] = data;
-	}
-	WRITE_HANDLER ( momoko_bg_scrolly_w )
+	} };
+	public static WriteHandlerPtr momoko_bg_scrolly_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		momoko_bg_scrolly[ offset ] = data;
-	}
+	} };
 	public static WriteHandlerPtr momoko_bg_select_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		momoko_bg_select = data & 0x0f;

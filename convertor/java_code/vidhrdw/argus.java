@@ -568,13 +568,13 @@ public class argus
 		}
 	} };
 	
-	WRITE_HANDLER ( argus_bg0_scrollx_w )
+	public static WriteHandlerPtr argus_bg0_scrollx_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (argus_bg0_scrollx[ offset ] != data)
 		{
 			argus_bg0_scrollx[ offset ] = data;
 		}
-	}
+	} };
 	
 	public static WriteHandlerPtr argus_bg0_scrolly_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{

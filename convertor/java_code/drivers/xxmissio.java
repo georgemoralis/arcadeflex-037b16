@@ -52,7 +52,7 @@ public class xxmissio
 		return xxmissio_status;
 	} };
 	
-	WRITE_HANDLER ( xxmissio_status_m_w )
+	public static WriteHandlerPtr xxmissio_status_m_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (data)
 		{
@@ -69,9 +69,9 @@ public class xxmissio
 				xxmissio_status |= 0x04;
 				break;
 		}
-	}
+	} };
 	
-	WRITE_HANDLER ( xxmissio_status_s_w )
+	public static WriteHandlerPtr xxmissio_status_s_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (data)
 		{
@@ -88,7 +88,7 @@ public class xxmissio
 				cpu_cause_interrupt(0,0x10);
 				break;
 		}
-	}
+	} };
 	
 	public static InterruptPtr xxmissio_interrupt_m = new InterruptPtr() { public int handler() 
 	{

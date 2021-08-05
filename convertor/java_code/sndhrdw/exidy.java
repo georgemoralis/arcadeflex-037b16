@@ -65,9 +65,9 @@ public class exidy
 	***************************************************************************/
 	
 	
-	WRITE_HANDLER(victory_sound_response_w);
-	WRITE_HANDLER(victory_sound_irq_clear_w);
-	WRITE_HANDLER(victory_main_ack_w);
+	public static WriteHandlerPtr victory_sound_response_w = new WriteHandlerPtr() {public void handler(int offset, int data);
+	public static WriteHandlerPtr victory_sound_irq_clear_w = new WriteHandlerPtr() {public void handler(int offset, int data);
+	public static WriteHandlerPtr victory_main_ack_w = new WriteHandlerPtr() {public void handler(int offset, int data);
 	
 	/* PIA 0 */
 	static struct pia6821_interface pia_0_intf =
@@ -75,7 +75,7 @@ public class exidy
 		/*inputs : A/B,CA/B1,CA/B2 */ 0, 0, 0, 0, 0, 0,
 		/*outputs: A/B,CA/B2       */ pia_1_portb_w, pia_1_porta_w, pia_1_cb1_w, pia_1_ca1_w,
 		/*irqs   : A/B             */ 0, 0
-	};
+	} };;
 	
 	/* PIA 1 */
 	static struct pia6821_interface pia_1_intf =

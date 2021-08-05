@@ -17,7 +17,7 @@
 
 static struct node_description **dss_input_map=NULL;
 
-WRITE_HANDLER(discrete_sound_w)
+public static WriteHandlerPtr discrete_sound_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 {
 	/* Bring the system upto now */
 	discrete_sh_update();
@@ -28,9 +28,9 @@ WRITE_HANDLER(discrete_sound_w)
 	{
 		dss_input_map[offset].input0=data;
 	}
-}
+} };
 
-READ_HANDLER(discrete_sound_r)
+public static ReadHandlerPtr discrete_sound_r  = new ReadHandlerPtr() { public int handler(int offset)
 {
 	int data=0;
 
@@ -43,7 +43,7 @@ READ_HANDLER(discrete_sound_r)
 		data=dss_input_map[offset].input0;
 	}
     return data;
-}
+} };
 
 
 /************************************************************************/

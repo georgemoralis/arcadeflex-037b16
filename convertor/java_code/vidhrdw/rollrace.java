@@ -35,19 +35,19 @@ public class rollrace
 		ra_bkgpen = data;
 	} };
 	
-	WRITE_HANDLER(rollrace_spritebank_w)
+	public static WriteHandlerPtr rollrace_spritebank_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		ra_spritebank = data;
-	}
+	} };
 	
-	WRITE_HANDLER(rollrace_backgroundpage_w)
+	public static WriteHandlerPtr rollrace_backgroundpage_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	
 		ra_bkgpage = data & 0x1f;
 		ra_bkgflip = ( data & 0x80 ) >> 7;
 	
 		/* 0x80 flip vertical */
-	}
+	} };
 	
 	public static WriteHandlerPtr rollrace_backgroundcolor_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{

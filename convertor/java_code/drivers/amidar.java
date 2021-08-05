@@ -34,13 +34,13 @@ public class amidar
 	
 	
 	
-	READ_HANDLER(amidar_ppi8255_0_r);
-	READ_HANDLER(amidar_ppi8255_1_r);
-	WRITE_HANDLER(amidar_ppi8255_0_w);
-	WRITE_HANDLER(amidar_ppi8255_1_w);
+	public static ReadHandlerPtr amidar_ppi8255_0_r  = new ReadHandlerPtr() { public int handler(int offset);
+	public static ReadHandlerPtr amidar_ppi8255_1_r  = new ReadHandlerPtr() { public int handler(int offset);
+	public static WriteHandlerPtr amidar_ppi8255_0_w = new WriteHandlerPtr() {public void handler(int offset, int data);
+	public static WriteHandlerPtr amidar_ppi8255_1_w = new WriteHandlerPtr() {public void handler(int offset, int data);
 	
 	
-	public static WriteHandlerPtr amidar_coina_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	static public static WriteHandlerPtr amidar_coina_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		coin_counter_w.handler (0, data);
 		coin_counter_w.handler (0, 0);

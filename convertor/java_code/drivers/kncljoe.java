@@ -28,13 +28,13 @@ public class kncljoe
 	
 	/* from vidhrdw */
 	void kncljoe_vh_convert_color_prom(UBytePtr palette,unsigned short *colortable,const UBytePtr color_prom);
-	WRITE_HANDLER(kncljoe_videoram_w);
-	WRITE_HANDLER(kncljoe_control_w);
-	WRITE_HANDLER(kncljoe_scroll_w);
+	public static WriteHandlerPtr kncljoe_videoram_w = new WriteHandlerPtr() {public void handler(int offset, int data);
+	public static WriteHandlerPtr kncljoe_control_w = new WriteHandlerPtr() {public void handler(int offset, int data);
+	public static WriteHandlerPtr kncljoe_scroll_w = new WriteHandlerPtr() {public void handler(int offset, int data);
 	
 	
 	
-	public static Memory_ReadAddress readmem[]={
+	static public static Memory_ReadAddress readmem[]={
 		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_ReadAddress( 0x0000, 0xbfff, MRA_ROM ),
 		new Memory_ReadAddress( 0xc000, 0xcfff, videoram_r ),		/* videoram */
 		new Memory_ReadAddress( 0xd800, 0xd800, input_port_0_r ), /* IN 0 */
