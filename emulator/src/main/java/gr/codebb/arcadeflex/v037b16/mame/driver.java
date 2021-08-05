@@ -28,6 +28,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.tecmo.*;
 import static gr.codebb.arcadeflex.v037b16.drivers._1942.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.jrpacman.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.pbaction.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.sonson.*;
 
 public class driver {
 
@@ -1531,8 +1532,8 @@ public class driver {
         driver_vulgus, /*  5/1984 (c) 1984 */
         driver_vulgus2, /*  5/1984 (c) 1984 */
         driver_vulgusj, /*  5/1984 (c) 1984 */
-        /*TODO*///	driver_sonson,	/*  7/1984 (c) 1984 */
-        /*TODO*///	driver_sonsonj,	/*  7/1984 (c) 1984 (Japan) */
+        driver_sonson, /*  7/1984 (c) 1984 */
+        driver_sonsonj, /*  7/1984 (c) 1984 (Japan) */
         /*TODO*///	driver_higemaru,	/*  9/1984 (c) 1984 */
         driver_1942, /* 12/1984 (c) 1984 */
         driver_1942a, /* 12/1984 (c) 1984 */
