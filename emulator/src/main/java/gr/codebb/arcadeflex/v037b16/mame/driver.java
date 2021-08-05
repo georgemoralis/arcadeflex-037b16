@@ -29,6 +29,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers._1942.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.jrpacman.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.pbaction.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.sonson.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.mappy.*;
 
 public class driver {
 
@@ -387,13 +388,13 @@ public class driver {
         /*TODO*///	driver_pacnpal2,	/* (c) 1983 */
         /*TODO*///	driver_pacnchmp,	/* (c) 1983 */
         /*TODO*///	driver_phozon,	/* (c) 1983 */
-        /*TODO*///	driver_mappy,		/* (c) 1983 */
-        /*TODO*///	driver_mappyjp,	/* (c) 1983 */
-        /*TODO*///	driver_digdug2,	/* (c) 1985 */
-        /*TODO*///	driver_digdug2a,	/* (c) 1985 */
-        /*TODO*///	driver_todruaga,	/* (c) 1984 */
-        /*TODO*///	driver_todruagb,	/* (c) 1984 */
-        /*TODO*///	driver_motos,		/* (c) 1985 */
+        driver_mappy, /* (c) 1983 */
+        driver_mappyjp, /* (c) 1983 */
+        driver_digdug2, /* (c) 1985 */
+        driver_digdug2a, /* (c) 1985 */
+        driver_todruaga, /* (c) 1984 */
+        driver_todruagb, /* (c) 1984 */
+        driver_motos, /* (c) 1985 */
         /*TODO*///	driver_grobda,	/* (c) 1984 */
         /*TODO*///	driver_grobda2,	/* (c) 1984 */
         /*TODO*///	driver_grobda3,	/* (c) 1984 */
