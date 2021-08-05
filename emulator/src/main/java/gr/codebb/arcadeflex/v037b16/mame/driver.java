@@ -27,6 +27,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gunsmoke.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.tecmo.*;
 import static gr.codebb.arcadeflex.v037b16.drivers._1942.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.jrpacman.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.pbaction.*;
 
 public class driver {
 
@@ -2419,8 +2420,8 @@ public class driver {
         /*TODO*///	driver_baluba,	/* (c) 1986 Able Corp. */
         /*TODO*///	driver_bombjack,	/* (c) 1984 Tehkan */
         /*TODO*///	driver_bombjac2,	/* (c) 1984 Tehkan */
-        /*TODO*///	driver_pbaction,	/* (c) 1985 Tehkan */
-        /*TODO*///	driver_pbactio2,	/* (c) 1985 Tehkan */
+        driver_pbaction, /* (c) 1985 Tehkan */
+        driver_pbactio2, /* (c) 1985 Tehkan */
         /*TODO*///	/* 6009 Tank Busters */
         /*TODO*///	/* 6011 Pontoon (c) 1985 Tehkan is a gambling game - removed */
         /*TODO*///	driver_tehkanwc,	/* (c) 1985 Tehkan */
