@@ -32,6 +32,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.sonson.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.mappy.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.atetris.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.frogger.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.scobra.*;
 
 public class driver {
 
@@ -153,29 +154,29 @@ public class driver {
         /*TODO*///	driver_hotshock,	/* (c) 1982 E.G. Felaco */
         /*TODO*///	driver_hunchbks,	/* (c) 1983 Century */
         /*TODO*///	driver_cavelon,	/* (c) 1983 Jetsoft */
-        /*TODO*///	driver_scobra,	/* GX316 (c) 1981 Konami */
-        /*TODO*///	driver_scobras,	/* GX316 (c) 1981 Stern */
-        /*TODO*///	driver_scobrab,	/* GX316 (c) 1981 Karateco (bootleg?) */
-        /*TODO*///	driver_stratgyx,	/* GX306 (c) 1981 Konami */
-        /*TODO*///	driver_stratgys,	/* GX306 (c) 1981 Stern */
-        /*TODO*///	driver_armorcar,	/* (c) 1981 Stern */
-        /*TODO*///	driver_armorca2,	/* (c) 1981 Stern */
-        /*TODO*///	driver_moonwar,	/* (c) 1981 Stern */
-        /*TODO*///	driver_moonwara,	/* (c) 1981 Stern */
-        /*TODO*///	driver_spdcoin,	/* (c) 1984 Stern */
-        /*TODO*///	driver_darkplnt,	/* (c) 1982 Stern */
-        /*TODO*///	driver_tazmania,	/* (c) 1982 Stern */
-        /*TODO*///	driver_tazmani2,	/* (c) 1982 Stern */
-        /*TODO*///	driver_calipso,	/* (c) 1982 Tago */
-        /*TODO*///	driver_anteater,	/* (c) 1982 Tago */
-        /*TODO*///	driver_rescue,	/* (c) 1982 Stern */
-        /*TODO*///	driver_minefld,	/* (c) 1983 Stern */
-        /*TODO*///	driver_losttomb,	/* (c) 1982 Stern */
-        /*TODO*///	driver_losttmbh,	/* (c) 1982 Stern */
-        /*TODO*///	driver_superbon,	/* bootleg */
-        /*TODO*///	driver_hustler,	/* GX343 (c) 1981 Konami */
-        /*TODO*///	driver_billiard,	/* bootleg */
-        /*TODO*///	driver_hustlerb,	/* bootleg */
+        driver_scobra, /* GX316 (c) 1981 Konami */
+        driver_scobras, /* GX316 (c) 1981 Stern */
+        driver_scobrab, /* GX316 (c) 1981 Karateco (bootleg?) */
+        driver_stratgyx, /* GX306 (c) 1981 Konami */
+        driver_stratgys, /* GX306 (c) 1981 Stern */
+        driver_armorcar, /* (c) 1981 Stern */
+        driver_armorca2, /* (c) 1981 Stern */
+        driver_moonwar, /* (c) 1981 Stern */
+        driver_moonwara, /* (c) 1981 Stern */
+        driver_spdcoin, /* (c) 1984 Stern */
+        driver_darkplnt, /* (c) 1982 Stern */
+        driver_tazmania, /* (c) 1982 Stern */
+        driver_tazmani2, /* (c) 1982 Stern */
+        driver_calipso, /* (c) 1982 Tago */
+        driver_anteater, /* (c) 1982 Tago */
+        driver_rescue, /* (c) 1982 Stern */
+        driver_minefld, /* (c) 1983 Stern */
+        driver_losttomb, /* (c) 1982 Stern */
+        driver_losttmbh, /* (c) 1982 Stern */
+        driver_superbon, /* bootleg */
+        driver_hustler, /* GX343 (c) 1981 Konami */
+        driver_billiard, /* bootleg */
+        driver_hustlerb, /* bootleg */
         driver_frogger, /* GX392 (c) 1981 Konami */
         driver_frogseg1, /* (c) 1981 Sega */
         driver_frogseg2, /* 834-0068 (c) 1981 Sega */
