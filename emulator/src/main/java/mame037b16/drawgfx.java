@@ -1093,17 +1093,15 @@ public class drawgfx {
         common_drawgfx(dest, gfx, code, color, flipx, flipy, sx, sy, clip, transparency, transparent_color, null, 0);
     }
 
-    
     public static void pdrawgfx(osd_bitmap dest, GfxElement gfx,
-                    int code, int color,int flipx,int flipy,int sx,int sy,
-                    rectangle clip,int transparency,int transparent_color,int priority_mask)
-    {
-    /*TODO*///	profiler_mark(PROFILER_DRAWGFX);
-        common_drawgfx(dest,gfx,code,color,flipx,flipy,sx,sy,clip,transparency,transparent_color,priority_bitmap,priority_mask | (1<<31));
-    /*TODO*///	profiler_mark(PROFILER_END);
+            int code, int color, int flipx, int flipy, int sx, int sy,
+            rectangle clip, int transparency, int transparent_color, int priority_mask) {
+        /*TODO*///	profiler_mark(PROFILER_DRAWGFX);
+        common_drawgfx(dest, gfx, code, color, flipx, flipy, sx, sy, clip, transparency, transparent_color, priority_bitmap, priority_mask | (1 << 31));
+        /*TODO*///	profiler_mark(PROFILER_END);
     }
 
-/*TODO*///void mdrawgfx(struct osd_bitmap *dest,const struct GfxElement *gfx,
+    /*TODO*///void mdrawgfx(struct osd_bitmap *dest,const struct GfxElement *gfx,
 /*TODO*///		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
 /*TODO*///		const struct rectangle *clip,int transparency,int transparent_color,UINT32 priority_mask)
 /*TODO*///{
@@ -3695,7 +3693,17 @@ public class drawgfx {
     };
     public static plot_box_procPtr pb_8_nd_fx_s = new plot_box_procPtr() {
         public void handler(osd_bitmap b, int x, int y, int w, int h, /*UINT32*/ int p) {
-            throw new UnsupportedOperationException("unsupported");//int t=x; y = b->width-1-y; while(h-->0){ int c=w; x=t; while(c-->0){ ((UINT8 *)b->line[x])[y] = p; x++; } y--; } 
+            int t = x;
+            y = b.width - 1 - y;
+            while (h-- > 0) {
+                int c = w;
+                x = t;
+                while (c-- > 0) {
+                    b.line[x].write(y, p);
+                    x++;
+                }
+                y--;
+            }
         }
     };
     public static plot_box_procPtr pb_8_nd_fy_s = new plot_box_procPtr() {

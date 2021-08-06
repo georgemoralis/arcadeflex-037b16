@@ -447,7 +447,7 @@ public class cpuintrf {
             /* reset sound chips */
             sound_reset();
 
-            /* enable all CPUs (except for audio CPUs if the sound_old is off) */
+            /* enable all CPUs (except for audio CPUs if the sound is off) */
             for (int i = 0; i < totalcpu; i++) {
                 if (CPU_AUDIO(i) == 0 || Machine.sample_rate != 0) {
                     timer_suspendcpu(i, 0, SUSPEND_ANY_REASON);
@@ -716,18 +716,17 @@ public class cpuintrf {
         timer_set(TIME_NOW, (cpunum & 7) | (state << 3), cpu_haltcallback);
     }
 
-    /*TODO*///
-/*TODO*////***************************************************************************
-/*TODO*///
-/*TODO*///  Use this function to install a callback for IRQ acknowledge
-/*TODO*///
-/*TODO*///***************************************************************************/
-/*TODO*///void cpu_set_irq_callback(int cpunum, int (*callback)(int))
-/*TODO*///{
-/*TODO*///	drv_irq_callbacks[cpunum] = callback;
-/*TODO*///}
-/*TODO*///
-/*TODO*///
+    /**
+     * *************************************************************************
+     *
+     * Use this function to install a callback for IRQ acknowledge
+     *
+     **************************************************************************
+     */
+    public static void cpu_set_irq_callback(int cpunum, irqcallbacksPtr callback) {
+        drv_irq_callbacks[cpunum] = callback;
+    }
+
     /**
      * *************************************************************************
      * This function returns CPUNUM current status (running or halted)

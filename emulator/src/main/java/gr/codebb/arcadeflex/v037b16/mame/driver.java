@@ -30,6 +30,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.jrpacman.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.pbaction.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.sonson.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.mappy.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.frogger.*;
 
 public class driver {
 
@@ -174,10 +175,10 @@ public class driver {
         /*TODO*///	driver_hustler,	/* GX343 (c) 1981 Konami */
         /*TODO*///	driver_billiard,	/* bootleg */
         /*TODO*///	driver_hustlerb,	/* bootleg */
-        /*TODO*///	driver_frogger,	/* GX392 (c) 1981 Konami */
-        /*TODO*///	driver_frogseg1,	/* (c) 1981 Sega */
-        /*TODO*///	driver_frogseg2,	/* 834-0068 (c) 1981 Sega */
-        /*TODO*///	driver_froggrmc,	/* 800-3110 (c) 1981 Sega */
+        driver_frogger, /* GX392 (c) 1981 Konami */
+        driver_frogseg1, /* (c) 1981 Sega */
+        driver_frogseg2, /* 834-0068 (c) 1981 Sega */
+        driver_froggrmc, /* 800-3110 (c) 1981 Sega */
         /*TODO*///	driver_amidar,	/* GX337 (c) 1981 Konami */
         /*TODO*///	driver_amidaru,	/* GX337 (c) 1982 Konami + Stern license */
         /*TODO*///	driver_amidaro,	/* GX337 (c) 1982 Konami + Olympia license */
