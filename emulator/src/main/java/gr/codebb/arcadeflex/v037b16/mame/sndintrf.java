@@ -36,6 +36,7 @@ import static arcadeflex036.osdepend.*;
 import static mame037b5.sound.mixer.*;
 import static mame037b16.mame.Machine;
 import mame056.sound.namco;
+import gr.codebb.arcadeflex.v037b16.sound.pokey;
 
 public class sndintrf {
 
@@ -484,7 +485,7 @@ public class sndintrf {
                 /*TODO*///		0,
                 /*TODO*///		0
                 /*TODO*///	},
-                new Dummy_snd(),
+                new pokey(),
                 /*TODO*///#endif
                 /*TODO*///#if (HAS_NES)
                 /*TODO*///    {
