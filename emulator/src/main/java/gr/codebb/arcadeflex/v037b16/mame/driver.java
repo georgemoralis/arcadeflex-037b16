@@ -31,6 +31,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.pbaction.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.sonson.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.mappy.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.atetris.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.frogger.*;
 
 public class driver {
 
@@ -2874,11 +2875,11 @@ public class driver {
         /*TODO*///	driver_toobinp,	/* (proto)			(c) 1988 */
         /*TODO*///	driver_cyberbal,	/* 136064			(c) 1989 */
         /*TODO*///	driver_cyberba2,	/* 136064			(c) 1989 */
-        driver_atetcktl,	/* 136066			(c) 1989 */
-        driver_atetckt2,	/* 136066			(c) 1989 */
-        driver_atetris,	/* 136066			(c) 1988 */
-        driver_atetrisa,	/* 136066			(c) 1988 */
-        driver_atetrisb,	/* (bootleg) */
+        driver_atetcktl, /* 136066			(c) 1989 */
+        driver_atetckt2, /* 136066			(c) 1989 */
+        driver_atetris, /* 136066			(c) 1988 */
+        driver_atetrisa, /* 136066			(c) 1988 */
+        driver_atetrisb, /* (bootleg) */
         /*TODO*///	driver_eprom,		/* 136069			(c) 1989 */
         /*TODO*///	driver_eprom2,	/* 136069			(c) 1989 */
         /*TODO*///	driver_skullxbo,	/* 136072			(c) 1989 */
