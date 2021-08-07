@@ -37,6 +37,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.scramble.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.amidar.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.tehkanwc.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.mnight.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.mikie.*;
 
 public class driver {
 
@@ -2491,9 +2492,9 @@ public class driver {
         /*TODO*///	driver_hpolym84,	/* GX330 (c) 1984 */
         /*TODO*///	driver_sbasketb,	/* GX405 (c) 1984 */
         /*TODO*///	driver_sbasketu,	/* GX405 (c) 1984 */
-        /*TODO*///	driver_mikie,		/* GX469 (c) 1984 */
-        /*TODO*///	driver_mikiej,	/* GX469 (c) 1984 */
-        /*TODO*///	driver_mikiehs,	/* GX469 (c) 1984 */
+        driver_mikie, /* GX469 (c) 1984 */
+        driver_mikiej, /* GX469 (c) 1984 */
+        driver_mikiehs, /* GX469 (c) 1984 */
         /*TODO*///	driver_roadf,		/* GX461 (c) 1984 */
         /*TODO*///	driver_roadf2,	/* GX461 (c) 1984 */
         /*TODO*///	driver_yiear,		/* GX407 (c) 1985 */
