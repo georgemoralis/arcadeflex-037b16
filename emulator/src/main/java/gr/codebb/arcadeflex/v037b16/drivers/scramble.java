@@ -9,6 +9,7 @@ import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //drivers imports
 import static gr.codebb.arcadeflex.v037b16.drivers.frogger.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.galaxian.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.amidar.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
@@ -1894,7 +1895,7 @@ public class scramble {
     public static GameDriver driver_theend = new GameDriver("1980", "theend", "scramble.java", rom_theend, null, machine_driver_theend, input_ports_theend, init_theend, ROT90, "Konami", "The End");
     public static GameDriver driver_theends = new GameDriver("1980", "theends", "scramble.java", rom_theends, driver_theend, machine_driver_theend, input_ports_theend, init_theend, ROT90, "[Konami] (Stern license)", "The End (Stern)");
     public static GameDriver driver_froggers = new GameDriver("1981", "froggers", "scramble.java", rom_froggers, driver_frogger, machine_driver_froggers, input_ports_froggers, init_froggers, ROT90, "bootleg", "Frog");
-    /*TODO*///public static GameDriver driver_amidars = new GameDriver("1982", "amidars", "scramble.java", rom_amidars, driver_amidar, machine_driver_scramble, input_ports_amidars, init_scobra, ROT90, "Konami", "Amidar (Scramble hardware)");
+    public static GameDriver driver_amidars = new GameDriver("1982", "amidars", "scramble.java", rom_amidars, driver_amidar, machine_driver_scramble, input_ports_amidars, init_scobra, ROT90, "Konami", "Amidar (Scramble hardware)");
     public static GameDriver driver_triplep = new GameDriver("1982", "triplep", "scramble.java", rom_triplep, null, machine_driver_triplep, input_ports_triplep, init_scobra, ROT90, "KKI", "Triple Punch");
     public static GameDriver driver_knockout = new GameDriver("1982", "knockout", "scramble.java", rom_knockout, driver_triplep, machine_driver_triplep, input_ports_triplep, init_scobra, ROT90, "KKK", "Knock Out!!");
     public static GameDriver driver_mariner = new GameDriver("1981", "mariner", "scramble.java", rom_mariner, null, machine_driver_mariner, input_ports_scramble, init_mariner, ROT90, "Amenip", "Mariner");

@@ -34,6 +34,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.atetris.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.frogger.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.scobra.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.scramble.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.amidar.*;
 
 public class driver {
 
@@ -109,7 +110,7 @@ public class driver {
         driver_streakng, /* [1980] Shoei */
         driver_pacmanbl, /* bootleg */
         driver_ghostmun, /* bootleg */
-        driver_devilfsg,	/* (c) 1984 Vision / Artic (bootleg?) */
+        driver_devilfsg, /* (c) 1984 Vision / Artic (bootleg?) */
         driver_zigzag, /* (c) 1982 LAX */
         driver_zigzag2, /* (c) 1982 LAX */
         driver_jumpbug, /* (c) 1981 Rock-ola */
@@ -144,7 +145,7 @@ public class driver {
         driver_theends, /* (c) 1980 Stern */
         /*TODO*///	driver_ckongs,	/* bootleg */
         driver_froggers, /* bootleg */
-        /*TODO*///	driver_amidars,	/* (c) 1982 Konami */
+        driver_amidars, /* (c) 1982 Konami */
         driver_triplep, /* (c) 1982 KKI */
         driver_knockout, /* (c) 1982 KKK */
         driver_mariner, /* (c) 1981 Amenip */
@@ -182,13 +183,13 @@ public class driver {
         driver_frogseg1, /* (c) 1981 Sega */
         driver_frogseg2, /* 834-0068 (c) 1981 Sega */
         driver_froggrmc, /* 800-3110 (c) 1981 Sega */
-        /*TODO*///	driver_amidar,	/* GX337 (c) 1981 Konami */
-        /*TODO*///	driver_amidaru,	/* GX337 (c) 1982 Konami + Stern license */
-        /*TODO*///	driver_amidaro,	/* GX337 (c) 1982 Konami + Olympia license */
-        /*TODO*///	driver_amigo,		/* bootleg */
-        /*TODO*///	driver_turtles,	/* (c) 1981 Stern */
-        /*TODO*///	driver_turpin,	/* (c) 1981 Sega */
-        /*TODO*///	driver_600,		/* GX353 (c) 1981 Konami */
+        driver_amidar, /* GX337 (c) 1981 Konami */
+        driver_amidaru, /* GX337 (c) 1982 Konami + Stern license */
+        driver_amidaro, /* GX337 (c) 1982 Konami + Olympia license */
+        driver_amigo, /* bootleg */
+        driver_turtles, /* (c) 1981 Stern */
+        driver_turpin, /* (c) 1981 Sega */
+        driver_600, /* GX353 (c) 1981 Konami */
         /*TODO*///	driver_flyboy,	/* (c) 1982 Kaneko */
         /*TODO*///	driver_flyboyb,	/* bootleg */
         /*TODO*///	driver_fastfred,	/* (c) 1982 Atari */
