@@ -5,8 +5,9 @@
 package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
 //generic imports
-import static common.libc.expressions.NOT;
 import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
+//drivers imports
+import static gr.codebb.arcadeflex.v037b16.drivers.scramble.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
@@ -26,6 +27,7 @@ import static mame037b16.drawgfx.fillbitmap;
 import static mame037b16.drawgfx.plot_box;
 import static mame037b16.drawgfx.plot_pixel;
 import static mame037b16.mame.Machine;
+import static common.libc.expressions.NOT;
 
 public class galaxian {
 
@@ -384,8 +386,6 @@ public class galaxian {
      */
     public static VhStartPtr galaxian_plain_vh_start = new VhStartPtr() {
         public int handler() {
-            /*TODO*///		extern struct GameDriver driver_newsin7;
-
             modify_charcode = null;
             modify_spritecode = null;
             modify_color = null;
@@ -403,18 +403,15 @@ public class galaxian {
             flip_screen_x_set(0);
             flip_screen_y_set(0);
 
-            /*TODO*///		/* all the games except New Sinbad 7 clip the sprites at the top of the screen,
-/*TODO*///		   New Sinbad 7 does it at the bottom */
-/*TODO*///		if (Machine.gamedrv == &driver_newsin7)
-/*TODO*///		{
-/*TODO*///			spritevisiblearea      = &_spritevisibleareaflipx;
-/*TODO*///	        spritevisibleareaflipx = &_spritevisiblearea;
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-            spritevisiblearea = _spritevisiblearea;
-            spritevisibleareaflipx = _spritevisibleareaflipx;
-            /*TODO*///		}
+            /* all the games except New Sinbad 7 clip the sprites at the top of the screen,
+		   New Sinbad 7 does it at the bottom */
+            if (Machine.gamedrv == driver_newsin7) {
+                spritevisiblearea = _spritevisibleareaflipx;
+                spritevisibleareaflipx = _spritevisiblearea;
+            } else {
+                spritevisiblearea = _spritevisiblearea;
+                spritevisibleareaflipx = _spritevisibleareaflipx;
+            }
 
             return 0;
         }

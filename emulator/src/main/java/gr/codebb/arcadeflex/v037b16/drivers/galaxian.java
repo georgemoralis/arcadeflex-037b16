@@ -10,6 +10,7 @@ import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b16.cpu.z80.z80H.*;
 //drivers imports
 import static gr.codebb.arcadeflex.v037b16.drivers.pacman.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.scramble.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
@@ -3586,10 +3587,10 @@ public class galaxian {
     public static GameDriver driver_streakng = new GameDriver("1980", "streakng", "galaxian.java", rom_streakng, null, machine_driver_pacmanbl, input_ports_streakng, null, ROT90, "Shoei", "Streaking", GAME_IMPERFECT_COLORS);
     public static GameDriver driver_ghostmun = new GameDriver("1981", "ghostmun", "galaxian.java", rom_ghostmun, driver_pacman, machine_driver_pacmanbl, input_ports_streakng, null, ROT90, "bootleg", "Ghost Muncher", GAME_IMPERFECT_COLORS);
     public static GameDriver driver_pacmanbl = new GameDriver("1981", "pacmanbl", "galaxian.java", rom_pacmanbl, driver_pacman, machine_driver_pacmanbl, input_ports_pacmanbl, init_pisces, ROT270, "bootleg", "Pac-Man (bootleg on Galaxian hardware)");
-    /*TODO*///      public static GameDriver driver_devilfsg = new GameDriver("1984", "devilfsg", "galaxian.java", rom_devilfsg, driver_devilfsh, machine_driver_devilfsg, input_ports_devilfsg, null, ROT270, "Vision / Artic", "Devil Fish (Galaxian hardware, bootleg?)");
+    public static GameDriver driver_devilfsg = new GameDriver("1984", "devilfsg", "galaxian.java", rom_devilfsg, driver_devilfsh, machine_driver_devilfsg, input_ports_devilfsg, null, ROT270, "Vision / Artic", "Devil Fish (Galaxian hardware, bootleg?)");
     public static GameDriver driver_zigzag = new GameDriver("1982", "zigzag", "galaxian.java", rom_zigzag, null, machine_driver_zigzag, input_ports_zigzag, null, ROT90, "LAX", "Zig Zag (Galaxian hardware, set 1)");
     public static GameDriver driver_zigzag2 = new GameDriver("1982", "zigzag2", "galaxian.java", rom_zigzag2, driver_zigzag, machine_driver_zigzag, input_ports_zigzag, null, ROT90, "LAX", "Zig Zag (Galaxian hardware, set 2)");
-    /*TODO*///      public static GameDriver driver_scramblb = new GameDriver("1981", "scramblb", "galaxian.java", rom_scramblb, driver_scramble, machine_driver_scramblb, input_ports_scramblb, null, ROT90, "bootleg", "Scramble (bootleg on Galaxian hardware)");
+    public static GameDriver driver_scramblb = new GameDriver("1981", "scramblb", "galaxian.java", rom_scramblb, driver_scramble, machine_driver_scramblb, input_ports_scramblb, null, ROT90, "bootleg", "Scramble (bootleg on Galaxian hardware)");
     public static GameDriver driver_jumpbug = new GameDriver("1981", "jumpbug", "galaxian.java", rom_jumpbug, null, machine_driver_jumpbug, input_ports_jumpbug, null, ROT90, "Rock-ola", "Jump Bug");
     public static GameDriver driver_jumpbugb = new GameDriver("1981", "jumpbugb", "galaxian.java", rom_jumpbugb, driver_jumpbug, machine_driver_jumpbug, input_ports_jumpbug, null, ROT90, "bootleg", "Jump Bug (bootleg)");
     public static GameDriver driver_levers = new GameDriver("1983", "levers", "galaxian.java", rom_levers, null, machine_driver_jumpbug, input_ports_levers, null, ROT90, "Rock-ola", "Levers");

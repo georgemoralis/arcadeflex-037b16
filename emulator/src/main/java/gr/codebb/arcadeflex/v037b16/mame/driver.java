@@ -33,6 +33,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.mappy.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.atetris.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.frogger.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.scobra.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.scramble.*;
 
 public class driver {
 
@@ -108,7 +109,7 @@ public class driver {
         driver_streakng, /* [1980] Shoei */
         driver_pacmanbl, /* bootleg */
         driver_ghostmun, /* bootleg */
-        /*TODO*///driver_devilfsg,	/* (c) 1984 Vision / Artic (bootleg?) */
+        driver_devilfsg,	/* (c) 1984 Vision / Artic (bootleg?) */
         driver_zigzag, /* (c) 1982 LAX */
         driver_zigzag2, /* (c) 1982 LAX */
         driver_jumpbug, /* (c) 1981 Rock-ola */
@@ -133,27 +134,27 @@ public class driver {
         driver_moonal2b, /* Nichibutsu */
         driver_kingball, /* (c) 1980 Namco */
         driver_kingbalj, /* (c) 1980 Namco */
-        /*TODO*///	/* "Scramble hardware" (and variations) games */
-        /*TODO*///	driver_scramble,	/* GX387 (c) 1981 Konami */
-        /*TODO*///	driver_scrambls,	/* GX387 (c) 1981 Stern */
-        /*TODO*///	driver_scramblb,	/* bootleg */
-        /*TODO*///	driver_atlantis,	/* (c) 1981 Comsoft */
-        /*TODO*///	driver_atlants2,	/* (c) 1981 Comsoft */
-        /*TODO*///	driver_theend,	/* (c) 1980 Konami */
-        /*TODO*///	driver_theends,	/* (c) 1980 Stern */
+        /* "Scramble hardware" (and variations) games */
+        driver_scramble, /* GX387 (c) 1981 Konami */
+        driver_scrambls, /* GX387 (c) 1981 Stern */
+        driver_scramblb, /* bootleg */
+        driver_atlantis, /* (c) 1981 Comsoft */
+        driver_atlants2, /* (c) 1981 Comsoft */
+        driver_theend, /* (c) 1980 Konami */
+        driver_theends, /* (c) 1980 Stern */
         /*TODO*///	driver_ckongs,	/* bootleg */
-        /*TODO*///	driver_froggers,	/* bootleg */
+        driver_froggers, /* bootleg */
         /*TODO*///	driver_amidars,	/* (c) 1982 Konami */
-        /*TODO*///	driver_triplep,	/* (c) 1982 KKI */
-        /*TODO*///	driver_knockout,	/* (c) 1982 KKK */
-        /*TODO*///	driver_mariner,	/* (c) 1981 Amenip */
-        /*TODO*///	driver_800fath,	/* (c) 1981 Amenip + U.S. Billiards license */
-        /*TODO*///	driver_mars,		/* (c) 1981 Artic */
-        /*TODO*///	driver_devilfsh,	/* (c) 1982 Artic */
-        /*TODO*///	driver_newsin7,	/* (c) 1983 ATW USA, Inc. */
-        /*TODO*///	driver_hotshock,	/* (c) 1982 E.G. Felaco */
+        driver_triplep, /* (c) 1982 KKI */
+        driver_knockout, /* (c) 1982 KKK */
+        driver_mariner, /* (c) 1981 Amenip */
+        driver_800fath, /* (c) 1981 Amenip + U.S. Billiards license */
+        driver_mars, /* (c) 1981 Artic */
+        driver_devilfsh, /* (c) 1982 Artic */
+        driver_newsin7, /* (c) 1983 ATW USA, Inc. */
+        driver_hotshock, /* (c) 1982 E.G. Felaco */
         /*TODO*///	driver_hunchbks,	/* (c) 1983 Century */
-        /*TODO*///	driver_cavelon,	/* (c) 1983 Jetsoft */
+        driver_cavelon, /* (c) 1983 Jetsoft */
         driver_scobra, /* GX316 (c) 1981 Konami */
         driver_scobras, /* GX316 (c) 1981 Stern */
         driver_scobrab, /* GX316 (c) 1981 Karateco (bootleg?) */
