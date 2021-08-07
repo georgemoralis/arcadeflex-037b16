@@ -36,6 +36,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.scobra.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.scramble.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.amidar.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.tehkanwc.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.mnight.*;
 
 public class driver {
 
@@ -3100,8 +3101,8 @@ public class driver {
         /*TODO*///	driver_ninjak2a,	/* UPL-????? (c) 1987 */
         /*TODO*///	driver_ninjak2b,	/* UPL-????? (c) 1987 */
         /*TODO*///	driver_rdaction,	/* UPL-87003?(c) 1987 + World Games license */
-        /*TODO*///	driver_mnight,	/* UPL-????? (c) 1987 distributed by Kawakus */
-        /*TODO*///	driver_arkarea,	/* UPL-87007 (c) [1988?] */
+        driver_mnight, /* UPL-????? (c) 1987 distributed by Kawakus */
+        driver_arkarea, /* UPL-87007 (c) [1988?] */
         /*TODO*///	driver_robokid,	/* UPL-88013 (c) 1988 */
         /*TODO*///	driver_robokidj,	/* UPL-88013 (c) 1988 */
         /*TODO*///	driver_omegaf,	/* UPL-89016 (c) 1989 */
