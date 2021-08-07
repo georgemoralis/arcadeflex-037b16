@@ -35,6 +35,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.frogger.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.scobra.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.scramble.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.amidar.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.tehkanwc.*;
 
 public class driver {
 
@@ -2429,11 +2430,11 @@ public class driver {
         /*TODO*///	driver_bombjac2,	/* (c) 1984 Tehkan */
         driver_pbaction, /* (c) 1985 Tehkan */
         driver_pbactio2, /* (c) 1985 Tehkan */
-        /*TODO*///	/* 6009 Tank Busters */
-        /*TODO*///	/* 6011 Pontoon (c) 1985 Tehkan is a gambling game - removed */
-        /*TODO*///	driver_tehkanwc,	/* (c) 1985 Tehkan */
-        /*TODO*///	driver_gridiron,	/* (c) 1985 Tehkan */
-        /*TODO*///	driver_teedoff,	/* 6102 - (c) 1986 Tecmo */
+        /* 6009 Tank Busters */
+        /* 6011 Pontoon (c) 1985 Tehkan is a gambling game - removed */
+        driver_tehkanwc, /* (c) 1985 Tehkan */
+        driver_gridiron, /* (c) 1985 Tehkan */
+        driver_teedoff, /* 6102 - (c) 1986 Tecmo */
         /*TODO*///	driver_solomon,	/* (c) 1986 Tecmo */
         driver_rygar, /* 6002 - (c) 1986 Tecmo */
         driver_rygar2, /* 6002 - (c) 1986 Tecmo */
