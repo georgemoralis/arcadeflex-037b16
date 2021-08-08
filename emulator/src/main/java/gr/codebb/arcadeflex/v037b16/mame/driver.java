@@ -38,6 +38,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.amidar.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.tehkanwc.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.mnight.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.mikie.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.citycon.*;
 
 public class driver {
 
@@ -3278,9 +3279,9 @@ public class driver {
         /*TODO*///	driver_exerionb,	/* bootleg */
         /*TODO*///	driver_formatz,	/* (c) 1984 Jaleco */
         /*TODO*///	driver_aeroboto,	/* (c) 1984 Williams */
-        /*TODO*///	driver_citycon,	/* (c) 1985 Jaleco */
-        /*TODO*///	driver_citycona,	/* (c) 1985 Jaleco */
-        /*TODO*///	driver_cruisin,	/* (c) 1985 Jaleco/Kitkorp */
+        driver_citycon, /* (c) 1985 Jaleco */
+        driver_citycona, /* (c) 1985 Jaleco */
+        driver_cruisin, /* (c) 1985 Jaleco/Kitkorp */
         /*TODO*///	driver_pinbo,		/* (c) 1984 Jaleco */
         /*TODO*///	driver_pinbos,	/* (c) 1985 Strike */
         /*TODO*///	driver_momoko,	/* (c) 1986 Jaleco */
