@@ -39,6 +39,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.tehkanwc.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.mnight.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.mikie.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.citycon.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.bking2.*;
 
 public class driver {
 
@@ -1060,7 +1061,7 @@ public class driver {
         /*TODO*///	driver_crbaloon,	/* CL  (c) 1980 Taito Corporation */
         /*TODO*///	driver_crbalon2,	/* CL  (c) 1980 Taito Corporation */
         /*TODO*///	driver_grchamp,	/* GM  (c) 1981 Taito Corporation */
-        /*TODO*///	driver_bking2,	/* AD6 (c) 1983 Taito Corporation */
+        driver_bking2, /* AD6 (c) 1983 Taito Corporation */
         /*TODO*///TESTdriver_josvolly,	/* ??? (c) 1983 Taito Corporation */
         /*TODO*///	driver_gsword,	/* ??? (c) 1984 Taito Corporation */
         /*TODO*///	driver_lkage,		/* A54 (c) 1984 Taito Corporation */
