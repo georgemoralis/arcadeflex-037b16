@@ -40,6 +40,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.mnight.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.mikie.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.citycon.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.bking2.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.dotrikun.*;
 
 public class driver {
 
@@ -2087,9 +2088,9 @@ public class driver {
         /*TODO*///	driver_suprloco,	/* (c) 1982 Sega */
         /*TODO*///	driver_appoooh,	/* (c) 1984 Sega */
         driver_bankp, /* (c) 1984 Sega */
-        /*TODO*///	driver_dotrikun,	/* cabinet test board */
-        /*TODO*///	driver_dotriku2,	/* cabinet test board */
-        /*TODO*///
+        driver_dotrikun, /* cabinet test board */
+        driver_dotriku2, /* cabinet test board */
+        
         /*TODO*///	/* Sega System 16 games */
         /*TODO*///	// Not working
         /*TODO*///	driver_alexkidd,	/* (c) 1986 (protected) */
