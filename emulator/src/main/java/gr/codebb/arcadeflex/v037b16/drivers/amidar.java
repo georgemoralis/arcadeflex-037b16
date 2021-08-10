@@ -6,8 +6,6 @@ package gr.codebb.arcadeflex.v037b16.drivers;
 
 //generic imports
 import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
-//cpu imports
-import static gr.codebb.arcadeflex.v037b16.cpu.z80.z80H.*;
 //drivers imports
 import static gr.codebb.arcadeflex.v037b16.drivers.galaxian.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.scobra.*;
@@ -20,26 +18,12 @@ import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
-import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
-import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
-import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 //machine imports
 import static gr.codebb.arcadeflex.v037b16.machine.scramble.*;
-//sndhrdw imports
-import static gr.codebb.arcadeflex.v037b16.sndhrdw.galaxian.*;
-//sound imports
-import static gr.codebb.arcadeflex.v037b16.sound.ay8910.*;
-import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
-import static gr.codebb.arcadeflex.v037b16.sound.dac.*;
-import static gr.codebb.arcadeflex.v037b16.sound.dacH.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.galaxian.*;
 //to be organized
-import static mame037b16.mame.*;
-import static arcadeflex036.osdepend.logerror;
-import static common.libc.cstdlib.rand;
-import common.ptr.UBytePtr;
 
 public class amidar {
 

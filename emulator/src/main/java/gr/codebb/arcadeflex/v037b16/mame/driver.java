@@ -41,6 +41,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.mikie.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.citycon.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.bking2.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.dotrikun.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.balsente.*;
 
 public class driver {
 
@@ -871,32 +872,32 @@ public class driver {
         /*TODO*///MotorDome
         /*TODO*///Six Flags (?)
         /*TODO*///*/
-        /*TODO*///
-        /*TODO*///	/* Bally / Sente games */
-        /*TODO*///	driver_sentetst,
-        /*TODO*///	driver_cshift,	/* (c) 1984 */
-        /*TODO*///	driver_gghost,	/* (c) 1984 */
-        /*TODO*///	driver_hattrick,	/* (c) 1984 */
-        /*TODO*///	driver_otwalls,	/* (c) 1984 */
-        /*TODO*///	driver_snakepit,	/* (c) 1984 */
-        /*TODO*///	driver_snakjack,	/* (c) 1984 */
-        /*TODO*///	driver_stocker,	/* (c) 1984 */
-        /*TODO*///	driver_triviag1,	/* (c) 1984 */
-        /*TODO*///	driver_triviag2,	/* (c) 1984 */
-        /*TODO*///	driver_triviasp,	/* (c) 1984 */
-        /*TODO*///	driver_triviayp,	/* (c) 1984 */
-        /*TODO*///	driver_triviabb,	/* (c) 1984 */
-        /*TODO*///	driver_gimeabrk,	/* (c) 1985 */
-        /*TODO*///	driver_minigolf,	/* (c) 1985 */
-        /*TODO*///	driver_minigol2,	/* (c) 1985 */
-        /*TODO*///	driver_toggle,	/* (c) 1985 */
-        /*TODO*///	driver_nametune,	/* (c) 1986 */
-        /*TODO*///	driver_nstocker,	/* (c) 1986 */
-        /*TODO*///	driver_sfootbal,	/* (c) 1986 */
-        /*TODO*///	driver_spiker,	/* (c) 1986 */
-        /*TODO*///	driver_stompin,	/* (c) 1986 */
-        /*TODO*///	driver_rescraid,	/* (c) 1987 */
-        /*TODO*///	driver_rescrdsa,	/* (c) 1987 */
+
+        /* Bally / Sente games */
+        driver_sentetst,
+        driver_cshift, /* (c) 1984 */
+        driver_gghost, /* (c) 1984 */
+        driver_hattrick, /* (c) 1984 */
+        driver_otwalls, /* (c) 1984 */
+        driver_snakepit, /* (c) 1984 */
+        driver_snakjack, /* (c) 1984 */
+        driver_stocker, /* (c) 1984 */
+        driver_triviag1, /* (c) 1984 */
+        driver_triviag2, /* (c) 1984 */
+        driver_triviasp, /* (c) 1984 */
+        driver_triviayp, /* (c) 1984 */
+        driver_triviabb, /* (c) 1984 */
+        driver_gimeabrk, /* (c) 1985 */
+        driver_minigolf, /* (c) 1985 */
+        driver_minigol2, /* (c) 1985 */
+        driver_toggle, /* (c) 1985 */
+        driver_nametune, /* (c) 1986 */
+        driver_nstocker, /* (c) 1986 */
+        driver_sfootbal, /* (c) 1986 */
+        driver_spiker, /* (c) 1986 */
+        driver_stompin, /* (c) 1986 */
+        driver_rescraid, /* (c) 1987 */
+        driver_rescrdsa, /* (c) 1987 */
         /*TODO*///	driver_gridlee,	/* [1983 Videa] prototype - no copyright notice */
         /*TODO*///
         /*TODO*///	/* Irem games */
@@ -2090,7 +2091,6 @@ public class driver {
         driver_bankp, /* (c) 1984 Sega */
         driver_dotrikun, /* cabinet test board */
         driver_dotriku2, /* cabinet test board */
-        
         /*TODO*///	/* Sega System 16 games */
         /*TODO*///	// Not working
         /*TODO*///	driver_alexkidd,	/* (c) 1986 (protected) */

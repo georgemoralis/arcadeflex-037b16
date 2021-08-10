@@ -4,14 +4,22 @@
  */
 package gr.codebb.arcadeflex.v037b16.mame;
 
+import static common.libc.expressions.sizeof;
 import common.ptr.IntPtr;
 import common.ptr.UBytePtr;
 import common.subArrays.IntArray;
 import common.subArrays.UShortArray;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.ORIENTATION_FLIP_X;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.ORIENTATION_FLIP_Y;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.ORIENTATION_SWAP_XY;
+import gr.codebb.arcadeflex.v037b16.mame.osdependH.osd_bitmap;
+import static javax.swing.Spring.height;
+import static javax.swing.Spring.width;
 import static mame037b16.drawgfx.SHIFT0;
 import static mame037b16.drawgfx.SHIFT1;
 import static mame037b16.drawgfx.SHIFT2;
 import static mame037b16.drawgfx.SHIFT3;
+import static mame037b16.mame.Machine;
 
 public class drawgfx_modes8 {
 
@@ -937,6 +945,7 @@ public class drawgfx_modes8 {
             }
         }
     }
+
     /*TODO*///
 /*TODO*///DECLARE_SWAP_RAW_PRI(blockmove_4toN_transcolor,(COMMON_ARGS,
 /*TODO*///		COLOR_ARG,const UINT16 *colortable,int transcolor),
@@ -2281,60 +2290,72 @@ public class drawgfx_modes8 {
 /*TODO*///		/* can't lookup line because it may be negative! */					\
 /*TODO*///		dst = (type *)(bitmap->line[0] + dy * ty) + tx;						\
 /*TODO*///	}
-/*TODO*///
-/*TODO*///DECLAREG(draw_scanline, (
-/*TODO*///		struct osd_bitmap *bitmap,int x,int y,int length,
-/*TODO*///		const DATA_TYPE *src,UINT32 *pens,int transparent_pen),
-/*TODO*///{
-/*TODO*///	/* 8bpp destination */
-/*TODO*///	if (bitmap->depth == 8)
-/*TODO*///	{
-/*TODO*///		/* adjust in case we're oddly oriented */
-/*TODO*///		ADJUST_FOR_ORIENTATION(UINT8, Machine->orientation, bitmap, x, y);
-/*TODO*///
-/*TODO*///		/* with pen lookups */
-/*TODO*///		if (pens)
-/*TODO*///		{
-/*TODO*///			if (transparent_pen == -1)
-/*TODO*///				while (length--)
-/*TODO*///				{
-/*TODO*///					*dst = pens[*src++];
-/*TODO*///					dst += xadv;
-/*TODO*///				}
-/*TODO*///			else
-/*TODO*///				while (length--)
-/*TODO*///				{
-/*TODO*///					UINT32 spixel = *src++;
-/*TODO*///					if (spixel != transparent_pen)
-/*TODO*///						*dst = pens[spixel];
-/*TODO*///					dst += xadv;
-/*TODO*///				}
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		/* without pen lookups */
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			if (transparent_pen == -1)
-/*TODO*///				while (length--)
-/*TODO*///				{
-/*TODO*///					*dst = *src++;
-/*TODO*///					dst += xadv;
-/*TODO*///				}
-/*TODO*///			else
-/*TODO*///				while (length--)
-/*TODO*///				{
-/*TODO*///					UINT32 spixel = *src++;
-/*TODO*///					if (spixel != transparent_pen)
-/*TODO*///						*dst = spixel;
-/*TODO*///					dst += xadv;
-/*TODO*///				}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	/* 16bpp destination */
-/*TODO*///	else if(bitmap->depth == 15 || bitmap->depth == 16)
-/*TODO*///	{
-/*TODO*///		/* adjust in case we're oddly oriented */
+    public static void draw_scanline8(osd_bitmap bitmap, int x, int y, int length, UBytePtr src, IntArray pens, int transparent_pen) {
+        /* 8bpp destination */
+        if (bitmap.depth == 8) {
+            /* adjust in case we're oddly oriented */
+            UBytePtr dst = new UBytePtr(bitmap.line[y], x);
+            int xadv = 1;
+            if (Machine.orientation != 0) {
+                int dy = bitmap.line[1].offset - bitmap.line[0].offset;
+                int tx = x, ty = y, temp;
+                if ((Machine.orientation & ORIENTATION_SWAP_XY) != 0) {
+                    temp = tx;
+                    tx = ty;
+                    ty = temp;
+                    xadv = dy / 1/*sizeof(type)*/;
+                }
+                if ((Machine.orientation & ORIENTATION_FLIP_X) != 0) {
+                    tx = bitmap.width - 1 - tx;
+                    if ((Machine.orientation & ORIENTATION_SWAP_XY) == 0) {
+                        xadv = -xadv;
+                    }
+                }
+                if ((Machine.orientation & ORIENTATION_FLIP_Y) != 0) {
+                    ty = bitmap.height - 1 - ty;
+                    if ((Machine.orientation & ORIENTATION_SWAP_XY) != 0) {
+                        xadv = -xadv;
+                    }
+                }
+                /* can't lookup line because it may be negative! */
+                dst = new UBytePtr(bitmap.line[0], (dy * ty) + tx);
+            }
+
+            /* with pen lookups */
+            if (pens != null) {
+                if (transparent_pen == -1) {
+                    while (length-- != 0) {
+                        dst.write(pens.read(src.readinc()));
+                        dst.inc(xadv);
+                    }
+                } else {
+                    while (length-- != 0) {
+                        int/*UINT32*/ spixel = src.readinc();
+                        if (spixel != transparent_pen) {
+                            dst.write(pens.read(spixel));
+                        }
+                        dst.inc(xadv);
+                    }
+                }
+            } /* without pen lookups */ else {
+                if (transparent_pen == -1) {
+                    while (length-- != 0) {
+                        dst.write(src.readinc());
+                        dst.inc(xadv);
+                    }
+                } else {
+                    while (length-- != 0) {
+                        int/*UINT32*/ spixel = src.readinc();
+                        if (spixel != transparent_pen) {
+                            dst.write(spixel);
+                        }
+                        dst.inc(xadv);
+                    }
+                }
+            }
+        } /* 16bpp destination */ else if (bitmap.depth == 15 || bitmap.depth == 16) {
+            throw new UnsupportedOperationException("Unsupported");
+            /*TODO*///		/* adjust in case we're oddly oriented */
 /*TODO*///		ADJUST_FOR_ORIENTATION(UINT16, Machine->orientation, bitmap, x, y);
 /*TODO*///
 /*TODO*///		/* with pen lookups */
@@ -2374,12 +2395,9 @@ public class drawgfx_modes8 {
 /*TODO*///					dst += xadv;
 /*TODO*///				}
 /*TODO*///		}
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	/* 32bpp destination */
-/*TODO*///	else
-/*TODO*///	{
-/*TODO*///		/* adjust in case we're oddly oriented */
+        } /* 32bpp destination */ else {
+            throw new UnsupportedOperationException("Unsupported");
+            /*TODO*///		/* adjust in case we're oddly oriented */
 /*TODO*///		ADJUST_FOR_ORIENTATION(UINT32, Machine->orientation, bitmap, x, y);
 /*TODO*///
 /*TODO*///		/* with pen lookups */
@@ -2419,9 +2437,9 @@ public class drawgfx_modes8 {
 /*TODO*///					dst += xadv;
 /*TODO*///				}
 /*TODO*///		}
-/*TODO*///	}
-/*TODO*///})
-/*TODO*///
+        }
+    }
+    /*TODO*///
 /*TODO*///#undef ADJUST_FOR_ORIENTATION
 /*TODO*///
 /*TODO*///#define ADJUST_FOR_ORIENTATION(type, orientation, bitmapi, bitmapp, x, y)	\
