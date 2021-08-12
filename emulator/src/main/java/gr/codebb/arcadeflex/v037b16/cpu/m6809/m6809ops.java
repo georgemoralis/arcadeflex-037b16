@@ -117,9 +117,8 @@ public class m6809ops {
 
     public static opcode tst_di = new opcode() {
         public void handler() {
-            int t;
-            t = DIRBYTE();
-            CLR_NZVC();
+            int t = DIRBYTE();
+            CLR_NZV();
             SET_NZ8(t);
         }
     };
@@ -1301,7 +1300,7 @@ public class m6809ops {
         public void handler() {
             fetch_effective_address();
             int t = RM(ea);
-            CLR_NZVC();
+            CLR_NZV();
             SET_NZ8(t);
         }
     };
@@ -1426,9 +1425,8 @@ public class m6809ops {
 
     public static opcode tst_ex = new opcode() {
         public void handler() {
-            int t;
-            t = EXTBYTE();
-            CLR_NZVC();
+            int t = EXTBYTE();
+            CLR_NZV();
             SET_NZ8(t);
         }
     };
@@ -2906,6 +2904,7 @@ public class m6809ops {
             WM16(ea, m6809.s);
         }
     };
+
     public static opcode subb_ex = new opcode() {
         public void handler() {
             int t, r;
