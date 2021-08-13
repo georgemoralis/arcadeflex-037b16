@@ -43,6 +43,8 @@ import static gr.codebb.arcadeflex.v037b16.drivers.bking2.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.dotrikun.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.balsente.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.starwars.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.momoko.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.jailbrek.*;
 
 public class driver {
 
@@ -2510,8 +2512,8 @@ public class driver {
         driver_rushatck, /* GX577 (c) 1985 */
         driver_gberetb, /* bootleg on different hardware */
         driver_mrgoemon, /* GX621 (c) 1986 (Japan) */
-        /*TODO*///	driver_jailbrek,	/* GX507 (c) 1986 */
-        /*TODO*///	driver_manhatan,	/* GX507 (c) 1986 (Japan) */
+        driver_jailbrek, /* GX507 (c) 1986 */
+        driver_manhatan, /* GX507 (c) 1986 (Japan) */
         /*TODO*///	driver_finalizr,	/* GX523 (c) 1985 */
         /*TODO*///	driver_finalizb,	/* bootleg */
         /*TODO*///	driver_ironhors,	/* GX560 (c) 1986 */
@@ -2803,13 +2805,13 @@ public class driver {
         /*TODO*///	driver_quantum1,	/* 136016			(c) 1982 */	/* made by Gencomp */
         /*TODO*///	driver_quantump,	/* 136016			(c) 1982 */	/* made by Gencomp */
         /*TODO*///	driver_bwidow,	/* 136017			(c) 1982 */
-        	driver_starwars,	/* 136021			(c) 1983 */
-        	driver_starwar1,	/* 136021			(c) 1983 */
+        driver_starwars, /* 136021			(c) 1983 */
+        driver_starwar1, /* 136021			(c) 1983 */
         /*TODO*///	driver_mhavoc,	/* 136025			(c) 1983 */
         /*TODO*///	driver_mhavoc2,	/* 136025			(c) 1983 */
         /*TODO*///	driver_mhavocp,	/* 136025			(c) 1983 */
         /*TODO*///	driver_mhavocrv,	/* (hack) */
-        	driver_esb,		/* 136031			(c) 1985 */
+        driver_esb, /* 136031			(c) 1985 */
         /*TODO*///
         /*TODO*///	/* Atari "Centipede hardware" games */
         /*TODO*///	driver_warlord,	/* 037153-037159	(c) 1980 */
@@ -3287,7 +3289,7 @@ public class driver {
         driver_cruisin, /* (c) 1985 Jaleco/Kitkorp */
         /*TODO*///	driver_pinbo,		/* (c) 1984 Jaleco */
         /*TODO*///	driver_pinbos,	/* (c) 1985 Strike */
-        /*TODO*///	driver_momoko,	/* (c) 1986 Jaleco */
+        driver_momoko, /* (c) 1986 Jaleco */
         /*TODO*///	driver_argus,		/* (c) 1986 Jaleco */
         /*TODO*///	driver_valtric,	/* (c) 1986 Jaleco */
         /*TODO*///	driver_butasan,	/* (c) 1987 Jaleco */
