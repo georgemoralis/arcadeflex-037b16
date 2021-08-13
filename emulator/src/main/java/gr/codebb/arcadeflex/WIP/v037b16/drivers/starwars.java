@@ -122,8 +122,8 @@ public class starwars
 /*TODO*///	void slapstic_init (int chip);
 /*TODO*///	int slapstic_tweak (offs_t offset);
 	
-	static UBytePtr slapstic_base;	/* ASG - made static */
-	static UBytePtr slapstic_area;
+	static UBytePtr slapstic_base=new UBytePtr();	/* ASG - made static */
+	static UBytePtr slapstic_area=new UBytePtr();
 	
 	/* ASG - added this (including the function) */
 	static int last_bank;

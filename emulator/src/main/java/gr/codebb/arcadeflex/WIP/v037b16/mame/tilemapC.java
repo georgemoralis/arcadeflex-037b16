@@ -1178,90 +1178,91 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
             }
     }
 
-/*TODO*///static void tilemap_mark_all_pixels_dirty( struct tilemap *tilemap )
-/*TODO*///{
-/*TODO*///	if( tilemap==ALL_TILEMAPS )
-/*TODO*///	{
-/*TODO*///		tilemap = first_tilemap;
-/*TODO*///		while( tilemap )
-/*TODO*///		{
-/*TODO*///			tilemap_mark_all_pixels_dirty( tilemap );
-/*TODO*///			tilemap = tilemap->next;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	else
-/*TODO*///	{
-/*TODO*///		/* invalidate all offscreen tiles */
-/*TODO*///		UINT32 cached_tile_indx;
-/*TODO*///		UINT32 num_pens = tilemap->tile_size*tilemap->tile_size;
-/*TODO*///		for( cached_tile_indx=0; cached_tile_indx<tilemap->num_tiles; cached_tile_indx++ )
-/*TODO*///		{
-/*TODO*///			if( !tilemap->visible[cached_tile_indx] )
-/*TODO*///			{
-/*TODO*///				unregister_pens( &tilemap->cached_tile_info[cached_tile_indx], num_pens );
-/*TODO*///				tilemap->dirty_vram[cached_tile_indx] = 1;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///		memset( tilemap->dirty_pixels, 1, tilemap->num_tiles );
-/*TODO*///	}
-/*TODO*///}
-/*TODO*///
+    static void tilemap_mark_all_pixels_dirty( struct_tilemap tilemap )
+    {
+            if( tilemap==ALL_TILEMAPS )
+            {
+                    tilemap = first_tilemap;
+                    while( tilemap != null )
+                    {
+                            tilemap_mark_all_pixels_dirty( tilemap );
+                            tilemap = tilemap.next;
+                    }
+            }
+            else
+            {
+                    /* invalidate all offscreen tiles */
+                    int cached_tile_indx;
+                    int num_pens = tilemap.tile_size*tilemap.tile_size;
+                    for( cached_tile_indx=0; cached_tile_indx<tilemap.num_tiles; cached_tile_indx++ )
+                    {
+                            if( tilemap.u8_visible[cached_tile_indx]==0 )
+                            {
+                                    unregister_pens( tilemap.cached_tile_info[cached_tile_indx], num_pens );
+                                    tilemap.u8_dirty_vram[cached_tile_indx] = 1;
+                            }
+                    }
+                    memset( tilemap.u8_dirty_pixels, 1, tilemap.num_tiles );
+            }
+    }
+
     public static void tilemap_dirty_palette(UBytePtr dirty_pens) {
-        System.out.println("tilemap_dirty_palette TODO");
-        /*TODO*///	UINT32 *color_base = Machine->remapped_colortable;
-/*TODO*///	struct tilemap *tilemap = first_tilemap;
-/*TODO*///	while( tilemap )
-/*TODO*///	{
-/*TODO*///		if( !tilemap->tile_dirty_map)
-/*TODO*///			tilemap_mark_all_pixels_dirty( tilemap );
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			UINT8 *dirty_map = tilemap->tile_dirty_map;
-/*TODO*///			int i, j, pen, row, col;
-/*TODO*///			int step = 1 << tilemap->tile_granularity;
-/*TODO*///			int count = 1 << tilemap->tile_depth;
-/*TODO*///			int limit = Machine->drv->total_colors - count;
-/*TODO*///			pen = 0;
-/*TODO*///			for( i=0; i<limit; i+=step )
-/*TODO*///			{
-/*TODO*///				for( j=0; j<count; j++ )
-/*TODO*///					if( dirty_pens[i+j] )
-/*TODO*///					{
-/*TODO*///						dirty_map[pen++] = 1;
-/*TODO*///						goto next;
-/*TODO*///					}
-/*TODO*///				dirty_map[pen++] = 0;
-/*TODO*///			next:
-/*TODO*///				;
-/*TODO*///			}
-/*TODO*///
-/*TODO*///			i = 0;
-/*TODO*///			for( row=0; row<tilemap->num_cached_rows; row++ )
-/*TODO*///			{
-/*TODO*///				for( col=0; col<tilemap->num_cached_cols; col++ )
-/*TODO*///				{
-/*TODO*///					if (!tilemap->dirty_vram[i] && !tilemap->dirty_pixels[i])
-/*TODO*///					{
-/*TODO*///						struct cached_tile_info *cached_tile = tilemap->cached_tile_info+i;
-/*TODO*///						j = (cached_tile->pal_data - color_base) >> tilemap->tile_granularity;
-/*TODO*///						if( dirty_map[j] )
-/*TODO*///						{
-/*TODO*///							if( tilemap->visible[i] )
-/*TODO*///							{
-/*TODO*///								tilemap->draw_tile( tilemap, i, col, row );
-/*TODO*///							}
-/*TODO*///							else
-/*TODO*///							{
-/*TODO*///								tilemap->dirty_pixels[i] = 1;
-/*TODO*///							}
-/*TODO*///						}
-/*TODO*///					}
-/*TODO*///					i++;
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///		tilemap = tilemap->next;
-/*TODO*///	}
+        
+        IntArray color_base = new IntArray(Machine.remapped_colortable);
+	struct_tilemap tilemap = first_tilemap;
+	while( tilemap != null )
+	{
+		if( tilemap.tile_dirty_map==null)
+			tilemap_mark_all_pixels_dirty( tilemap );
+		else
+		{
+			UBytePtr dirty_map = new UBytePtr(tilemap.tile_dirty_map);
+			int i, j, pen, row, col;
+			int step = 1 << tilemap.tile_granularity;
+			int count = 1 << tilemap.tile_depth;
+			int limit = Machine.drv.total_colors - count;
+			pen = 0;
+			for( i=0; i<limit; i+=step )
+			{
+				for( j=0; j<count; j++ )
+					if( dirty_pens.read(i+j) != 0 )
+					{
+						dirty_map.write(pen++, 1);
+						//goto next;
+					} else {
+                                                dirty_map.write(pen++, 0);
+                                        }
+			//next:
+			//	;
+			}
+
+			i = 0;
+			for( row=0; row<tilemap.num_cached_rows; row++ )
+			{
+				for( col=0; col<tilemap.num_cached_cols; col++ )
+				{
+					if (tilemap.u8_dirty_vram[i]==0 && tilemap.u8_dirty_pixels[i]==0)
+					{
+						cached_tile_info cached_tile = tilemap.cached_tile_info[i];
+						j = (cached_tile.pal_data.offset - color_base.offset) >> tilemap.tile_granularity;
+						if( dirty_map.read(j) != 0 )
+						{
+							if( tilemap.u8_visible[i] != 0 )
+							{
+								tilemap.draw_tile.handler(tilemap, i, col, row );
+							}
+							else
+							{
+								tilemap.u8_dirty_pixels[i] = 1;
+							}
+						}
+					}
+					i++;
+				}
+			}
+		}
+		tilemap = tilemap.next;
+	}
     }
     /*TODO*///
 /*TODO*////***********************************************************************************/
