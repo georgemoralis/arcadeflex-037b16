@@ -45,6 +45,8 @@ import static gr.codebb.arcadeflex.v037b16.drivers.balsente.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.starwars.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.momoko.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.jailbrek.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.arabian.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.ironhors.*;
 
 public class driver {
 
@@ -2516,9 +2518,9 @@ public class driver {
         driver_manhatan, /* GX507 (c) 1986 (Japan) */
         /*TODO*///	driver_finalizr,	/* GX523 (c) 1985 */
         /*TODO*///	driver_finalizb,	/* bootleg */
-        /*TODO*///	driver_ironhors,	/* GX560 (c) 1986 */
-        /*TODO*///	driver_dairesya,	/* GX560 (c) 1986 (Japan) */
-        /*TODO*///	driver_farwest,
+        driver_ironhors, /* GX560 (c) 1986 */
+        driver_dairesya, /* GX560 (c) 1986 (Japan) */
+        driver_farwest,
         /*TODO*///	driver_jackal,	/* GX631 (c) 1986 (World) */
         /*TODO*///	driver_topgunr,	/* GX631 (c) 1986 (US) */
         /*TODO*///	driver_jackalj,	/* GX631 (c) 1986 (Japan) */
@@ -3489,8 +3491,8 @@ public class driver {
         /*TODO*///	driver_kangaroo,	/* (c) 1982 Sun Electronics */
         /*TODO*///	driver_kangaroa,	/* 136008			(c) 1982 Atari */
         /*TODO*///	driver_kangarob,	/* (bootleg) */
-        /*TODO*///	driver_arabian,	/* TVG13 (c) 1983 Sun Electronics */
-        /*TODO*///	driver_arabiana,	/* 136019			(c) 1983 Atari */
+        driver_arabian, /* TVG13 (c) 1983 Sun Electronics */
+        driver_arabiana, /* 136019			(c) 1983 Atari */
         /*TODO*///	driver_markham,	/* TVG14 (c) 1983 Sun Electronics */
         /*TODO*///	driver_strnskil,	/* TVG15 (c) 1984 Sun Electronics */
         /*TODO*///	driver_guiness,	/* TVG15 (c) 1984 Sun Electronics */
