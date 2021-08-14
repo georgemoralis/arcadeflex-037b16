@@ -47,6 +47,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.momoko.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.jailbrek.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.arabian.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.ironhors.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.jack.*;
 
 public class driver {
 
@@ -3188,17 +3189,16 @@ public class driver {
         /*TODO*///	driver_rmpgwt,	/* (c) 1997 Midway */
         /*TODO*///	driver_rmpgwt11,	/* (c) 1997 Midway */
         /*TODO*///
-        /*TODO*///	/* Cinematronics raster games */
-        /*TODO*///	driver_jack,		/* (c) 1982 Cinematronics */
-        /*TODO*///	driver_jack2,		/* (c) 1982 Cinematronics */
-        /*TODO*///	driver_jack3,		/* (c) 1982 Cinematronics */
-        /*TODO*///	driver_treahunt,	/* (c) 1982 Hara Ind. */
-        /*TODO*///	driver_zzyzzyxx,	/* (c) 1982 Cinematronics + Advanced Microcomputer Systems */
-        /*TODO*///	driver_zzyzzyx2,	/* (c) 1982 Cinematronics + Advanced Microcomputer Systems */
-        /*TODO*///	driver_brix,		/* (c) 1982 Cinematronics + Advanced Microcomputer Systems */
-        /*TODO*///	driver_freeze,	/* Cinematronics */
-        /*TODO*///	driver_sucasino,	/* (c) 1982 Data Amusement */
-        /*TODO*///
+        /* Cinematronics raster games */
+        driver_jack, /* (c) 1982 Cinematronics */
+        driver_jack2, /* (c) 1982 Cinematronics */
+        driver_jack3, /* (c) 1982 Cinematronics */
+        driver_treahunt, /* (c) 1982 Hara Ind. */
+        driver_zzyzzyxx, /* (c) 1982 Cinematronics + Advanced Microcomputer Systems */
+        driver_zzyzzyx2, /* (c) 1982 Cinematronics + Advanced Microcomputer Systems */
+        driver_brix, /* (c) 1982 Cinematronics + Advanced Microcomputer Systems */
+        driver_freeze, /* Cinematronics */
+        driver_sucasino, /* (c) 1982 Data Amusement */
         /*TODO*///	/* Cinematronics vector games */
         /*TODO*///	driver_spacewar,
         /*TODO*///	driver_barrier,
