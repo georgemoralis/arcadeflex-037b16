@@ -9,7 +9,7 @@ import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //cpu imports
 import static gr.codebb.arcadeflex.v037b16.cpu.z80.z80H.*;
 //drivers imports
-import static gr.codebb.arcadeflex.WIP.v037b16.drivers.pacman.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.pacman.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.scramble.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
