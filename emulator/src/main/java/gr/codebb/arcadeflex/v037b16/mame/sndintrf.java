@@ -28,6 +28,7 @@ import gr.codebb.arcadeflex.v037b16.sound.MSM5205;
 import gr.codebb.arcadeflex.v037b16.sound._5110intf;
 import gr.codebb.arcadeflex.v037b16.sound._5220intf;
 import gr.codebb.arcadeflex.v037b16.sound.cem3394;
+import gr.codebb.arcadeflex.v037b16.sound.adpcm;
 
 //to be organized
 import static mame037b16.common.*;
@@ -254,9 +255,6 @@ public class sndintrf {
 
     /*TODO*///#if (HAS_DAC)
 /*TODO*///int DAC_num(const struct MachineSound *msound) { return ((struct DACinterface*)msound->sound_interface)->num; }
-/*TODO*///#endif
-/*TODO*///#if (HAS_ADPCM)
-/*TODO*///int ADPCM_num(const struct MachineSound *msound) { return ((struct ADPCMinterface*)msound->sound_interface)->num; }
 /*TODO*///#endif
 /*TODO*///#if (HAS_OKIM6295)
 /*TODO*///int OKIM6295_num(const struct MachineSound *msound) { return ((struct OKIM6295interface*)msound->sound_interface)->num; }
@@ -520,19 +518,7 @@ public class sndintrf {
                 new _5110intf(),
                 new _5220intf(),
                 new vlm5030(),
-                /*TODO*///#endif
-                /*TODO*///#if (HAS_ADPCM)
-                /*TODO*///    {
-                /*TODO*///		SOUND_ADPCM,
-                /*TODO*///		"ADPCM",
-                /*TODO*///		ADPCM_num,
-                /*TODO*///		0,
-                /*TODO*///		ADPCM_sh_start,
-                /*TODO*///		ADPCM_sh_stop,
-                /*TODO*///		ADPCM_sh_update,
-                /*TODO*///		0
-                /*TODO*///	},
-                new Dummy_snd(),
+                new adpcm(),
                 /*TODO*///#endif
                 /*TODO*///#if (HAS_OKIM6295)
                 /*TODO*///    {
