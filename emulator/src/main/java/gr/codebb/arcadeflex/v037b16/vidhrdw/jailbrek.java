@@ -13,7 +13,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 //vidhrdw imports
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 //to be organized
 import static mame037b16.mame.*;
 import static mame037b16.drawgfx.*;

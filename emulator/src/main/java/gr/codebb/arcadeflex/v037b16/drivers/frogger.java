@@ -7,7 +7,7 @@ package gr.codebb.arcadeflex.v037b16.drivers;
 //generic imports
 import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //drivers imports
-import static gr.codebb.arcadeflex.v037b16.drivers.galaxian.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.galaxian.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
@@ -21,14 +21,14 @@ import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 //machine imports
-import static gr.codebb.arcadeflex.v037b16.machine.scramble.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.machine.scramble.*;
 //sndhrdw imports
-import static gr.codebb.arcadeflex.v037b16.sndhrdw.scramble.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.sndhrdw.scramble.*;
 //sound imports
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910.*;
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
 //vidhrdw imports
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.galaxian.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.galaxian.*;
 //to be organized
 import static mame037b5.sound.mixerH.MIXERG;
 import static mame037b5.sound.mixerH.MIXER_GAIN_2x;
@@ -211,7 +211,7 @@ public class frogger {
         }
     };
 
-    static AY8910interface frogger_ay8910_interface = new AY8910interface(
+    public static AY8910interface frogger_ay8910_interface = new AY8910interface(
             1, /* 1 chip */
             14318000 / 8, /* 1.78975 MHz */
             new int[]{MIXERG(80, MIXER_GAIN_2x, MIXER_PAN_CENTER)},

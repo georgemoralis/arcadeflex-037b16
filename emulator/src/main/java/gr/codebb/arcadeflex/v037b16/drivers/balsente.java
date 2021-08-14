@@ -30,7 +30,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 import static gr.codebb.arcadeflex.v037b16.sound.cem3394.*;;
 import static gr.codebb.arcadeflex.v037b16.sound.cem3394H.*;
 //vidhrdw imports
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.balsente.*;
 
 //to be organized

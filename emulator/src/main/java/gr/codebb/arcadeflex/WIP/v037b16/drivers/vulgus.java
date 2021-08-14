@@ -21,7 +21,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910.*;
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
 //vidhrdw imports
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.vulgus.*;
 
 public class vulgus {

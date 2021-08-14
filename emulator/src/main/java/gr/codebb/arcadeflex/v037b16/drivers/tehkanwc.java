@@ -30,7 +30,7 @@ import static gr.codebb.arcadeflex.v037b16.sound.MSM5205H.*;
 import static gr.codebb.arcadeflex.v037b16.sound.MSM5205.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.tehkanwc.*;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 //to be organized
 import common.ptr.UBytePtr;
 

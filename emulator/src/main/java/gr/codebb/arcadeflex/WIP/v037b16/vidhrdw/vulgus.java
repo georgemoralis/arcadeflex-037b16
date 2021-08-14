@@ -10,7 +10,7 @@ import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.osdependH.*;
 //vidhrdw imports
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 
 //to be organized
 import static common.ptr.*;

@@ -78,7 +78,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v058.sound.sn76496.*;
 import gr.codebb.arcadeflex.v058.sound.sn76496H.SN76496interface;
 

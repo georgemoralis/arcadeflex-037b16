@@ -24,7 +24,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.palette.palette_used_colors;
 import static gr.codebb.arcadeflex.v037b16.mame.paletteH.PALETTE_COLOR_VISIBLE;
 import static mame037b7.palette.*;
 //import static gr.codebb.arcadeflex.v037b16.mame.paletteH.*;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 import static mame037b16.mame.Machine;
 import static mame037b16.drawgfx.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.flip_screen_set;

@@ -45,7 +45,7 @@ import common.ptr.UBytePtr;
 import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.vector.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.avgdvgH.*;
 import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 import static arcadeflex036.osdepend.logerror;

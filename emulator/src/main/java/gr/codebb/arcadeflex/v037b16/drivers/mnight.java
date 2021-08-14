@@ -23,7 +23,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.sound._2203intf.*;
 import static gr.codebb.arcadeflex.v037b16.sound._2203intfH.*;
 //vidhrdw imports
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.mnight.*;
 //to be organized
 import common.ptr.UBytePtr;

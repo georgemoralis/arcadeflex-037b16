@@ -21,7 +21,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v058.sound.sn76496.*;
 import static gr.codebb.arcadeflex.v058.sound.sn76496H.*;
 //vidhrdw imports
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.mikie.*;
 
 public class mikie {

@@ -16,7 +16,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.paletteH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
 import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 //vidhrdw imports
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 //to be organized
 import static common.libc.cstring.memset;
 import static common.libc.expressions.NOT;

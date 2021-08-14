@@ -25,7 +25,7 @@ import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
 import static gr.codebb.arcadeflex.v037b16.sound.dac.*;
 import static gr.codebb.arcadeflex.v037b16.sound.dacH.*;
 //vidhrdw imports
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.vidhrdw.bking2.*;
 //to be organized
 import static arcadeflex036.osdepend.logerror;

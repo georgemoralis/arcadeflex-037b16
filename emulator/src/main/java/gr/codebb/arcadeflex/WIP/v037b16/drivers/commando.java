@@ -59,7 +59,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.sound._2203intf.*;
 import static gr.codebb.arcadeflex.v037b16.sound._2203intfH.*;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 
 public class commando

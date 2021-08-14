@@ -20,7 +20,7 @@ import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.drawgfxH.*;
 import gr.codebb.arcadeflex.v037b16.mame.osdependH.osd_bitmap;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 import static mame037b16.drawgfx.drawgfx;
 import static mame037b16.mame.Machine;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;

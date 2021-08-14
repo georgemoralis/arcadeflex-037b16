@@ -16,7 +16,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 import static gr.codebb.arcadeflex.v037b16.mame.paletteH.*;
 //vidhrdw imports
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 //to be organized
 import static common.ptr.*;
 import static mame037b16.mame.*;

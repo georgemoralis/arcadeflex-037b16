@@ -54,8 +54,8 @@ import static gr.codebb.arcadeflex.v037b16.mame.palette.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.sound.pokey.*;
 import static gr.codebb.arcadeflex.v037b16.sound.pokeyH.*; 
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.atetris.*;
-import static gr.codebb.arcadeflex.v037b16.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.atetris.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 
 public class atetris
 {
