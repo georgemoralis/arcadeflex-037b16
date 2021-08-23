@@ -3,7 +3,7 @@
  * ported to v0.37b7
  *
  */
-package gr.codebb.arcadeflex.WIP.v037b16.machine;
+package gr.codebb.arcadeflex.v037b16.machine;
 
 //generic functions
 import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;

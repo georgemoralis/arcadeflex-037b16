@@ -2,12 +2,12 @@
  * ported to v0.37b16
  * ported to v0.37b7
  */
-package gr.codebb.arcadeflex.WIP.v037b16.drivers;
+package gr.codebb.arcadeflex.v037b16.drivers;
 
 //generic functions
 import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //machine imports
-import static gr.codebb.arcadeflex.WIP.v037b16.machine.digdug.*;
+import static gr.codebb.arcadeflex.v037b16.machine.digdug.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
@@ -20,7 +20,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 //sound imports
 //vidhrdw imports
 import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
-import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.digdug.*;
+import static gr.codebb.arcadeflex.v037b16.vidhrdw.digdug.*;
 //to organized
 import static mame056.sound.namco.*;
 import static mame056.sound.namcoH.*;

@@ -49,6 +49,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.arabian.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.ironhors.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.jack.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.trackfld.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.digdug.*;
 
 public class driver {
 
@@ -393,10 +394,10 @@ public class driver {
         /*TODO*///	driver_galagab2,	/* bootleg */
         /*TODO*///	driver_galaga84,	/* hack */
         /*TODO*///	driver_nebulbee,	/* hack */
-        /*TODO*///	driver_digdug,	/* (c) 1982 */
-        /*TODO*///	driver_digdugb,	/* (c) 1982 */
-        /*TODO*///	driver_digdugat,	/* (c) 1982 Atari */
-        /*TODO*///	driver_dzigzag,	/* bootleg */
+        driver_digdug, /* (c) 1982 */
+        driver_digdugb, /* (c) 1982 */
+        driver_digdugat, /* (c) 1982 Atari */
+        driver_dzigzag, /* bootleg */
         /*TODO*///	driver_xevious,	/* (c) 1982 */
         /*TODO*///	driver_xeviousa,	/* (c) 1982 + Atari license */
         /*TODO*///	driver_xevios,	/* bootleg */
