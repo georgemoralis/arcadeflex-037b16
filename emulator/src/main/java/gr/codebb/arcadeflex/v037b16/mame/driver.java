@@ -50,6 +50,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.ironhors.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.jack.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.trackfld.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.digdug.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.espial.*;
 
 public class driver {
 
@@ -3391,8 +3392,8 @@ public class driver {
         /*TODO*///	driver_moguchan,	/* (c) 1982 Orca + Eastern Commerce Inc. license (doesn't appear on screen) */
         /*TODO*///	driver_percuss,	/* (c) 1981 Orca */
         /*TODO*///	driver_bounty,	/* (c) 1982 Orca */
-        /*TODO*///	driver_espial,	/* (c) 1983 Thunderbolt, Orca logo is hidden in title screen */
-        /*TODO*///	driver_espiale,	/* (c) 1983 Thunderbolt, Orca logo is hidden in title screen */
+        driver_espial, /* (c) 1983 Thunderbolt, Orca logo is hidden in title screen */
+        driver_espiale, /* (c) 1983 Thunderbolt, Orca logo is hidden in title screen */
         /*TODO*///	/* Vastar was made by Orca, but when it was finished, Orca had already bankrupted. */
         /*TODO*///	/* So they sold this game as "Made by Sesame Japan" because they couldn't use */
         /*TODO*///	/* the name "Orca" */
