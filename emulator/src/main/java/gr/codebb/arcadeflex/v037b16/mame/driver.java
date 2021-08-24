@@ -53,7 +53,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.digdug.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.espial.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.hexa.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.gotya.*;
-import static gr.codebb.arcadeflex.WIP.v037b16.drivers.hyperspt.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.hyperspt.*;
 
 public class driver {
 
