@@ -52,6 +52,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.trackfld.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.digdug.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.espial.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.hexa.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.gotya.*;
 
 public class driver {
 
@@ -3666,7 +3667,7 @@ public class driver {
         /*TODO*///TESTdriver_dlair,
         /*TODO*///	driver_aztarac,	/* (c) 1983 Centuri (vector game) */
         /*TODO*///	driver_mole,		/* (c) 1982 Yachiyo Electronics, Ltd. */
-        /*TODO*///	driver_gotya,		/* (c) 1981 Game-A-Tron */
+        driver_gotya, /* (c) 1981 Game-A-Tron */
         /*TODO*///	driver_mrjong,	/* (c) 1983 Kiwako */
         /*TODO*///	driver_crazyblk,	/* (c) 1983 Kiwako + ECI license */
         /*TODO*///	driver_polyplay,

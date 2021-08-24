@@ -2,7 +2,7 @@
  * ported to v0.37b16
  * ported to v0.37b7
  */
-package gr.codebb.arcadeflex.WIP.v037b16.drivers;
+package gr.codebb.arcadeflex.v037b16.drivers;
 
 //generic functions
 import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
@@ -22,7 +22,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.sndhrdw.gotya.*;
 import static gr.codebb.arcadeflex.v037b16.sound.samplesH.*;
 //vidhrdw imports
 import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
-import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.gotya.*;
+import static gr.codebb.arcadeflex.v037b16.vidhrdw.gotya.*;
 
 public class gotya {
 
