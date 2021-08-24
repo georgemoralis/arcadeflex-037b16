@@ -51,6 +51,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.jack.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.trackfld.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.digdug.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.espial.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.hexa.*;
 
 public class driver {
 
@@ -3649,7 +3650,7 @@ public class driver {
         /*TODO*///	driver_omegrace,	/* (c) 1981 Midway */
         /*TODO*///	driver_dday,		/* (c) 1982 Olympia */
         /*TODO*///	driver_ddayc,		/* (c) 1982 Olympia + Centuri license */
-        /*TODO*///	driver_hexa,		/* D. R. Korea */
+        driver_hexa, /* D. R. Korea */
         /*TODO*///	driver_spiders,	/* (c) 1981 Sigma Ent. Inc. */
         /*TODO*///	driver_spiders2,	/* (c) 1981 Sigma Ent. Inc. */
         /*TODO*///	driver_stactics,	/* [1981 Sega] */
