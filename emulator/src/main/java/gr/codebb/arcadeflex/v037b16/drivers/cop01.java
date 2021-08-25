@@ -2,7 +2,7 @@
  * ported to v0.37b16
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b16.drivers;
+package gr.codebb.arcadeflex.v037b16.drivers;
 
 //generic functions
 import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
@@ -21,7 +21,7 @@ import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910.*;
 import static gr.codebb.arcadeflex.v037b16.sound.ay8910H.*;
 //vidhrdw imports
-import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.cop01.*;
+import static gr.codebb.arcadeflex.v037b16.vidhrdw.cop01.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.generic.*;
 
 public class cop01 {
