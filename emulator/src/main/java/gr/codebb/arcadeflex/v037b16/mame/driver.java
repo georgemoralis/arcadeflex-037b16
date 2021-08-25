@@ -55,6 +55,8 @@ import static gr.codebb.arcadeflex.v037b16.drivers.hexa.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.gotya.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.hyperspt.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.cop01.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.hanaawas.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.higemaru.*;
 
 public class driver {
 
@@ -1549,18 +1551,18 @@ public class driver {
         /*TODO*///	driver_inferno,	/* (c) 1984 */
         /*TODO*///	driver_joust2,	/* (c) 1986 */
         /*TODO*///	driver_lottofun,	/* (c) 1987 H.A.R. Management */
-        /*TODO*///
-        /*TODO*///	/* Capcom games */
-        /*TODO*///	/* The following is a COMPLETE list of the Capcom games up to 1997, as shown on */
-        /*TODO*///	/* their web site. The list is sorted by production date.                       */
-        /*TODO*///	/* A comprehensive list of Capcom games with board info can be found here:      */
-        /*TODO*///	/* http://www.emugaming.com/strider/capcom_list.shtml                           */
+
+        /* Capcom games */
+        /* The following is a COMPLETE list of the Capcom games up to 1997, as shown on */
+        /* their web site. The list is sorted by production date.                       */
+        /* A comprehensive list of Capcom games with board info can be found here:      */
+        /* http://www.emugaming.com/strider/capcom_list.shtml                           */
         driver_vulgus, /*  5/1984 (c) 1984 */
         driver_vulgus2, /*  5/1984 (c) 1984 */
         driver_vulgusj, /*  5/1984 (c) 1984 */
         driver_sonson, /*  7/1984 (c) 1984 */
         driver_sonsonj, /*  7/1984 (c) 1984 (Japan) */
-        /*TODO*///	driver_higemaru,	/*  9/1984 (c) 1984 */
+        driver_higemaru, /*  9/1984 (c) 1984 */
         driver_1942, /* 12/1984 (c) 1984 */
         driver_1942a, /* 12/1984 (c) 1984 */
         driver_1942b, /* 12/1984 (c) 1984 */
@@ -3451,7 +3453,7 @@ public class driver {
         /*TODO*///	driver_airbustr,	/* (c) 1990 Kaneko */
         /*TODO*///
         /*TODO*///	/* Seta games */
-        /*TODO*///	driver_hanaawas,	/* (c) SetaKikaku */
+        driver_hanaawas, /* (c) SetaKikaku */
         /*TODO*///	driver_srmp2,		/* UB or UC?? (c) 1987 */
         /*TODO*///	driver_tndrcade,	/* UA-0 (c) 1987 Taito */
         /*TODO*///	driver_tndrcadj,	/* UA-0 (c) 1987 Taito */
