@@ -57,6 +57,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.hyperspt.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.cop01.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.hanaawas.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.higemaru.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.bombjack.*;
 
 public class driver {
 
@@ -2446,8 +2447,8 @@ public class driver {
         /*TODO*///	driver_starfore,	/* (c) 1984 Tehkan */
         /*TODO*///	driver_megaforc,	/* (c) 1985 Tehkan + Video Ware license */
         /*TODO*///	driver_baluba,	/* (c) 1986 Able Corp. */
-        /*TODO*///	driver_bombjack,	/* (c) 1984 Tehkan */
-        /*TODO*///	driver_bombjac2,	/* (c) 1984 Tehkan */
+        driver_bombjack,	/* (c) 1984 Tehkan */
+        driver_bombjac2,	/* (c) 1984 Tehkan */
         driver_pbaction, /* (c) 1985 Tehkan */
         driver_pbactio2, /* (c) 1985 Tehkan */
         /* 6009 Tank Busters */
