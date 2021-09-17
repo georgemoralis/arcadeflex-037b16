@@ -1644,13 +1644,13 @@ public class drawgfx {
             }
         }
     }
-    /*TODO*///
-/*TODO*///
-/*TODO*///INLINE void common_drawgfxzoom( struct osd_bitmap *dest_bmp,const struct GfxElement *gfx,
-/*TODO*///		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
-/*TODO*///		const struct rectangle *clip,int transparency,int transparent_color,
-/*TODO*///		int scalex, int scaley,struct osd_bitmap *pri_buffer,UINT32 pri_mask)
-/*TODO*///{
+    
+
+static void common_drawgfxzoom( osd_bitmap dest_bmp, GfxElement gfx,
+		int code,int color,int flipx,int flipy,int sx,int sy,
+		rectangle clip,int transparency,int transparent_color,
+		int scalex, int scaley,osd_bitmap pri_buffer,int pri_mask)
+{
 /*TODO*///	struct rectangle myclip;
 /*TODO*///	int alphapen = 0;
 /*TODO*///
@@ -3437,29 +3437,29 @@ public class drawgfx {
 /*TODO*///			}
 /*TODO*///		}
 /*TODO*///	}
-/*TODO*///}
-/*TODO*///
-/*TODO*///void drawgfxzoom( struct osd_bitmap *dest_bmp,const struct GfxElement *gfx,
-/*TODO*///		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
-/*TODO*///		const struct rectangle *clip,int transparency,int transparent_color,int scalex, int scaley)
-/*TODO*///{
-/*TODO*///	profiler_mark(PROFILER_DRAWGFX);
-/*TODO*///	common_drawgfxzoom(dest_bmp,gfx,code,color,flipx,flipy,sx,sy,
-/*TODO*///			clip,transparency,transparent_color,scalex,scaley,NULL,0);
-/*TODO*///	profiler_mark(PROFILER_END);
-/*TODO*///}
-/*TODO*///
-/*TODO*///void pdrawgfxzoom( struct osd_bitmap *dest_bmp,const struct GfxElement *gfx,
-/*TODO*///		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
-/*TODO*///		const struct rectangle *clip,int transparency,int transparent_color,int scalex, int scaley,
-/*TODO*///		UINT32 priority_mask)
-/*TODO*///{
-/*TODO*///	profiler_mark(PROFILER_DRAWGFX);
-/*TODO*///	common_drawgfxzoom(dest_bmp,gfx,code,color,flipx,flipy,sx,sy,
-/*TODO*///			clip,transparency,transparent_color,scalex,scaley,priority_bitmap,priority_mask | (1<<31));
-/*TODO*///	profiler_mark(PROFILER_END);
-/*TODO*///}
-/*TODO*///
+    }
+
+    public static void drawgfxzoom( osd_bitmap dest_bmp, GfxElement gfx,
+                    int code, int color,int flipx,int flipy,int sx,int sy,
+                    rectangle clip,int transparency,int transparent_color,int scalex, int scaley)
+    {        
+    /*TODO*///	profiler_mark(PROFILER_DRAWGFX);
+    	common_drawgfxzoom(dest_bmp,gfx,code,color,flipx,flipy,sx,sy,
+    			clip,transparency,transparent_color,scalex,scaley,null,0);
+    /*TODO*///	profiler_mark(PROFILER_END);
+    }
+    
+    public static void pdrawgfxzoom( osd_bitmap dest_bmp, GfxElement gfx,
+                    int code, int color,int flipx,int flipy,int sx,int sy,
+                    rectangle clip,int transparency,int transparent_color,int scalex, int scaley,
+                    int priority_mask)
+    {
+        
+    /*TODO*///	profiler_mark(PROFILER_DRAWGFX);
+    	common_drawgfxzoom(dest_bmp,gfx,code,color,flipx,flipy,sx,sy,
+    			clip,transparency,transparent_color,scalex,scaley,priority_bitmap,priority_mask | (1<<31));
+    /*TODO*///	profiler_mark(PROFILER_END);
+    }
 /*TODO*///void mdrawgfxzoom( struct osd_bitmap *dest_bmp,const struct GfxElement *gfx,
 /*TODO*///		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
 /*TODO*///		const struct rectangle *clip,int transparency,int transparent_color,int scalex, int scaley,

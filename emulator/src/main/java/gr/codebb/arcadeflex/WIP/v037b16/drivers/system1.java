@@ -244,7 +244,7 @@ public class system1
 		new IO_WritePort(MEMPORT_MARKER, 0)
 	};
 	
-	static UBytePtr work_ram;
+	static UBytePtr work_ram=new UBytePtr();
 	
 	public static ReadHandlerPtr work_ram_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
@@ -1323,7 +1323,7 @@ public class system1
 	
 	***************************************************************************/
 	
-	/* Since the standard System 1 PROM has part # 5317, Star Jacker, whose first */
+/*TODO*///	/* Since the standard System 1 PROM has part # 5317, Star Jacker, whose first */
 	/* ROM is #5318, is probably the first or second System 1 game produced */
 	static RomLoadPtr rom_starjack = new RomLoadPtr(){ public void handler(){ 
 		ROM_REGION( 0x10000, REGION_CPU1, 0 );/* 64k for code */
@@ -1334,7 +1334,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "5318",         0x0000, 0x4000, 0x6f2e1fd3 );	ROM_LOAD( "5319",         0x4000, 0x4000, 0xebee4999 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_starjacs = new RomLoadPtr(){ public void handler(){ 
@@ -1351,7 +1351,7 @@ public class system1
 		ROM_LOAD( "5319",         0x4000, 0x4000, BADCRC(0xebee4999));
 	
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_regulus = new RomLoadPtr(){ public void handler(){ 
@@ -1367,7 +1367,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "epr5638.92",   0x0000, 0x4000, 0x617363dd );	ROM_LOAD( "epr5639.93",   0x4000, 0x4000, 0xa4ec5131 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.106",   0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.106",   0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_regulusu = new RomLoadPtr(){ public void handler(){ 
@@ -1379,7 +1379,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "epr5638.92",   0x0000, 0x4000, 0x617363dd );	ROM_LOAD( "epr5639.93",   0x4000, 0x4000, 0xa4ec5131 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.106",   0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.106",   0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_upndown = new RomLoadPtr(){ public void handler(){ 
@@ -1391,7 +1391,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "upnd5514.bin", 0x0000, 0x4000, 0xfcc0a88b );	ROM_LOAD( "upnd5515.bin", 0x4000, 0x4000, 0x60908838 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_mrviking = new RomLoadPtr(){ public void handler(){ 
@@ -1407,7 +1407,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "epr-5749.bin", 0x0000, 0x4000, 0xe24682cd );	ROM_LOAD( "epr-5750.bin", 0x4000, 0x4000, 0x6564d1ad );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_mrvikinj = new RomLoadPtr(){ public void handler(){ 
@@ -1423,7 +1423,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "epr-5749.bin", 0x0000, 0x4000, 0xe24682cd );	ROM_LOAD( "epr-5750.bin", 0x4000, 0x4000, 0x6564d1ad );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_swat = new RomLoadPtr(){ public void handler(){ 
@@ -1439,7 +1439,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "epr5805.92",   0x0000, 0x4000, 0x5a732865 );	ROM_LOAD( "epr5806.93",   0x4000, 0x4000, 0x26ac258c );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.106",   0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.106",   0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_flicky = new RomLoadPtr(){ public void handler(){ 
@@ -1453,7 +1453,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "epr5855",      0x0000, 0x4000, 0xb5f894a1 );	ROM_LOAD( "epr5856",      0x4000, 0x4000, 0x266af78f );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		//ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_flicky2 = new RomLoadPtr(){ public void handler(){ 
@@ -1469,7 +1469,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "epr5855",      0x0000, 0x4000, 0xb5f894a1 );	ROM_LOAD( "epr5856",      0x4000, 0x4000, 0x266af78f );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_bullfgt = new RomLoadPtr(){ public void handler(){ 
@@ -1485,7 +1485,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "6069",         0x0000, 0x4000, 0xfe691e41 );	ROM_LOAD( "6070",         0x4000, 0x4000, 0x34f080df );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr-5317",      0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr-5317",      0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_bullfgtj = new RomLoadPtr(){ public void handler(){ 
@@ -1499,7 +1499,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "6069",         0x0000, 0x4000, 0xfe691e41 );	ROM_LOAD( "6070",         0x4000, 0x4000, 0x34f080df );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr-5317",      0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr-5317",      0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_pitfall2 = new RomLoadPtr(){ public void handler(){ 
@@ -1513,7 +1513,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "epr6454a.117", 0x0000, 0x4000, 0xa5d96780 );	ROM_LOAD( "epr6455.05",   0x4000, 0x4000, 0x32ee64a1 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_pitfallu = new RomLoadPtr(){ public void handler(){ 
@@ -1525,7 +1525,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "epr6454a.117", 0x0000, 0x4000, 0xa5d96780 );	ROM_LOAD( "epr6455.05",   0x4000, 0x4000, 0x32ee64a1 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_seganinj = new RomLoadPtr(){ public void handler(){ 
@@ -1539,7 +1539,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "6546.117",     0x0000, 0x4000, 0xa4785692 );	ROM_LOAD( "6548.04",      0x4000, 0x4000, 0xbdf278c1 );	ROM_LOAD( "6547.110",     0x8000, 0x4000, 0x34451b08 );	ROM_LOAD( "6549.05",      0xc000, 0x4000, 0xd2057668 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317",       0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "pr5317",       0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_seganinu = new RomLoadPtr(){ public void handler(){ 
@@ -1551,7 +1551,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "6546.117",     0x0000, 0x4000, 0xa4785692 );	ROM_LOAD( "6548.04",      0x4000, 0x4000, 0xbdf278c1 );	ROM_LOAD( "6547.110",     0x8000, 0x4000, 0x34451b08 );	ROM_LOAD( "6549.05",      0xc000, 0x4000, 0xd2057668 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317",       0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "pr5317",       0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_nprinces = new RomLoadPtr(){ public void handler(){ 
@@ -1565,7 +1565,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "6546.117",     0x0000, 0x4000, 0xa4785692 );	ROM_LOAD( "6548.04",      0x4000, 0x4000, 0xbdf278c1 );	ROM_LOAD( "6547.110",     0x8000, 0x4000, 0x34451b08 );	ROM_LOAD( "6549.05",      0xc000, 0x4000, 0xd2057668 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317",       0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "pr5317",       0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_nprincsu = new RomLoadPtr(){ public void handler(){ 
@@ -1577,7 +1577,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "6546.117",     0x0000, 0x4000, 0xa4785692 );	ROM_LOAD( "6548.04",      0x4000, 0x4000, 0xbdf278c1 );	ROM_LOAD( "6547.110",     0x8000, 0x4000, 0x34451b08 );	ROM_LOAD( "6549.05",      0xc000, 0x4000, 0xd2057668 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317",       0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "pr5317",       0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_nprincsb = new RomLoadPtr(){ public void handler(){ 
@@ -1591,7 +1591,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "6546.117",     0x0000, 0x4000, 0xa4785692 );	ROM_LOAD( "6548.04",      0x4000, 0x4000, 0xbdf278c1 );	ROM_LOAD( "6547.110",     0x8000, 0x4000, 0x34451b08 );	ROM_LOAD( "6549.05",      0xc000, 0x4000, 0xd2057668 );
 		ROM_REGION( 0x0220, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317",       0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "pr5317",       0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 		ROM_LOAD( "nprinces.129", 0x0100, 0x0100, 0xae765f62 );/* decryption table (not used) */
 		ROM_LOAD( "nprinces.123", 0x0200, 0x0020, 0xed5146e9 );/* decryption table (not used) */
 	ROM_END(); }}; 
@@ -1607,7 +1607,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "epr66xx.117",  0x0000, 0x4000, 0x1ba167ee );	ROM_LOAD( "epr66xx.u04",  0x4000, 0x4000, 0xedda7ad6 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "5317.u76",     0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "5317.u76",     0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_imsorryj = new RomLoadPtr(){ public void handler(){ 
@@ -1621,7 +1621,7 @@ public class system1
 		ROM_REGION( 0x8000, REGION_GFX2, 0 );/* 32k for sprites data */
 		ROM_LOAD( "epr66xx.117",  0x0000, 0x4000, 0x1ba167ee );	ROM_LOAD( "epr66xx.u04",  0x4000, 0x4000, 0xedda7ad6 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "5317.u76",     0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "5317.u76",     0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_teddybb = new RomLoadPtr(){ public void handler(){ 
@@ -1635,7 +1635,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "6735.117",     0x0000, 0x4000, 0x1be35a97 );	ROM_LOAD( "6737.004",     0x4000, 0x4000, 0x6b53aa7a );	ROM_LOAD( "6736.110",     0x8000, 0x4000, 0x565c25d0 );	ROM_LOAD( "6738.005",     0xc000, 0x4000, 0xe116285f );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	/* This is the first System 1 game to have extended ROM space */
@@ -1651,7 +1651,7 @@ public class system1
 		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr7036.3",     0x0000, 0x0100, 0x146f16fb );/* palette red component */
 		ROM_LOAD( "pr7035.2",     0x0100, 0x0100, 0x50b201ed );/* palette green component */
 		ROM_LOAD( "pr7034.1",     0x0200, 0x0100, 0xdfb5f139 );/* palette blue component */
-		ROM_LOAD( "pr5317p.4",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "pr5317p.4",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_myhero = new RomLoadPtr(){ public void handler(){ 
@@ -1663,7 +1663,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "epr6921.117",  0x0000, 0x4000, 0xf19e05a1 );	ROM_LOAD( "epr6923.u04",  0x4000, 0x4000, 0x7988adc3 );	ROM_LOAD( "epr6922.110",  0x8000, 0x4000, 0x37f77a78 );	ROM_LOAD( "epr6924.u05",  0xc000, 0x4000, 0x42bdc8f6 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_myheroj = new RomLoadPtr(){ public void handler(){ 
@@ -1677,7 +1677,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "epr6921.117",  0x0000, 0x4000, 0xf19e05a1 );	ROM_LOAD( "epr6923.u04",  0x4000, 0x4000, 0x7988adc3 );	ROM_LOAD( "epr6922.110",  0x8000, 0x4000, 0x37f77a78 );	ROM_LOAD( "epr6924.u05",  0xc000, 0x4000, 0x42bdc8f6 );
 		ROM_REGION( 0x0200, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 		ROM_LOAD( "82s129.pr1",   0x0100, 0x0100, 0xcfe797bf );/* decryption table (not used) */
 	ROM_END(); }}; 
 	
@@ -1696,7 +1696,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "epr6921.117",  0x0000, 0x4000, 0xf19e05a1 );	ROM_LOAD( "epr6923.u04",  0x4000, 0x4000, 0x7988adc3 );	ROM_LOAD( "epr6922.110",  0x8000, 0x4000, 0x37f77a78 );	ROM_LOAD( "epr6924.u05",  0xc000, 0x4000, 0x42bdc8f6 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "5317",         0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_shtngmst = new RomLoadPtr(){ public void handler(){ 
@@ -1710,7 +1710,7 @@ public class system1
 		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "epr7113",      0x0000, 0x0100, 0x5c0e1360 );/* palette red component */
 		ROM_LOAD( "epr7112",      0x0100, 0x0100, 0x46fbd351 );/* palette green component */
 		ROM_LOAD( "epr7111",      0x0200, 0x0100, 0x8123b6b9 );/* palette blue component */
-		ROM_LOAD( "epr5317",      0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "epr5317",      0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_chplft = new RomLoadPtr(){ public void handler(){ 
@@ -1724,7 +1724,7 @@ public class system1
 		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr7119.20",    0x0000, 0x0100, 0xb2a8260f );/* palette red component */
 		ROM_LOAD( "pr7118.14",    0x0100, 0x0100, 0x693e20c7 );/* palette green component */
 		ROM_LOAD( "pr7117.8",     0x0200, 0x0100, 0x4124307e );/* palette blue component */
-		ROM_LOAD( "pr5317.28",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "pr5317.28",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_chplftb = new RomLoadPtr(){ public void handler(){ 
@@ -1738,7 +1738,7 @@ public class system1
 		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr7119.20",    0x0000, 0x0100, 0xb2a8260f );/* palette red component */
 		ROM_LOAD( "pr7118.14",    0x0100, 0x0100, 0x693e20c7 );/* palette green component */
 		ROM_LOAD( "pr7117.8",     0x0200, 0x0100, 0x4124307e );/* palette blue component */
-		ROM_LOAD( "pr5317.28",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "pr5317.28",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_chplftbl = new RomLoadPtr(){ public void handler(){ 
@@ -1752,7 +1752,7 @@ public class system1
 		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr7119.20",    0x0000, 0x0100, 0xb2a8260f );/* palette red component */
 		ROM_LOAD( "pr7118.14",    0x0100, 0x0100, 0x693e20c7 );/* palette green component */
 		ROM_LOAD( "pr7117.8",     0x0200, 0x0100, 0x4124307e );/* palette blue component */
-		ROM_LOAD( "pr5317.28",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "pr5317.28",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_4dwarrio = new RomLoadPtr(){ public void handler(){ 
@@ -1766,7 +1766,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "4d.117",       0x0000, 0x4000, 0x436e4141 );	ROM_LOAD( "4d.04",        0x4000, 0x4000, 0x8b7cecef );	ROM_LOAD( "4d.110",       0x8000, 0x4000, 0x6ec5990a );	ROM_LOAD( "4d.05",        0xc000, 0x4000, 0xf31a1e6a );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*////*TODO*///		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_brain = new RomLoadPtr(){ public void handler(){ 
@@ -1783,7 +1783,7 @@ public class system1
 		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "prom.3",       0x0000, 0x0100, 0x00000000 );/* palette red component */
 		ROM_LOAD( "prom.2",       0x0100, 0x0100, 0x00000000 );/* palette green component */
 		ROM_LOAD( "prom.1",       0x0200, 0x0100, 0x00000000 );/* palette blue component */
-		ROM_LOAD( "pr5317.76",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.76",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_wboy = new RomLoadPtr(){ public void handler(){ 
@@ -1797,7 +1797,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "epr7485.117",  0x0000, 0x4000, 0xc2891722 );	ROM_LOAD( "epr7487.04",   0x4000, 0x4000, 0x2d3a421b );	ROM_LOAD( "epr7486.110",  0x8000, 0x4000, 0x8d622c50 );	ROM_LOAD( "epr7488.05",   0xc000, 0x4000, 0x007c2f1b );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_wboyo = new RomLoadPtr(){ public void handler(){ 
@@ -1811,7 +1811,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "epr7485.117",  0x0000, 0x4000, 0xc2891722 );	ROM_LOAD( "epr7487.04",   0x4000, 0x4000, 0x2d3a421b );	ROM_LOAD( "epr7486.110",  0x8000, 0x4000, 0x8d622c50 );	ROM_LOAD( "epr7488.05",   0xc000, 0x4000, 0x007c2f1b );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_wboy2 = new RomLoadPtr(){ public void handler(){ 
@@ -1827,7 +1827,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "epr7485.117",  0x0000, 0x4000, 0xc2891722 );	ROM_LOAD( "epr7487.04",   0x4000, 0x4000, 0x2d3a421b );	ROM_LOAD( "epr7486.110",  0x8000, 0x4000, 0x8d622c50 );	ROM_LOAD( "epr7488.05",   0xc000, 0x4000, 0x007c2f1b );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_wboy2u = new RomLoadPtr(){ public void handler(){ 
@@ -1839,7 +1839,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "epr7485.117",  0x0000, 0x4000, 0xc2891722 );	ROM_LOAD( "epr7487.04",   0x4000, 0x4000, 0x2d3a421b );	ROM_LOAD( "epr7486.110",  0x8000, 0x4000, 0x8d622c50 );	ROM_LOAD( "epr7488.05",   0xc000, 0x4000, 0x007c2f1b );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_wboy3 = new RomLoadPtr(){ public void handler(){ 
@@ -1853,7 +1853,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "epr7485.117",  0x0000, 0x4000, 0xc2891722 );	ROM_LOAD( "epr7487.04",   0x4000, 0x4000, 0x2d3a421b );	ROM_LOAD( "epr7486.110",  0x8000, 0x4000, 0x8d622c50 );	ROM_LOAD( "epr7488.05",   0xc000, 0x4000, 0x007c2f1b );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_wboyu = new RomLoadPtr(){ public void handler(){ 
@@ -1865,7 +1865,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "ic117_85.bin", 0x0000, 0x4000, 0x1ee96ae8 );	ROM_LOAD( "ic004_87.bin", 0x4000, 0x4000, 0x119735bb );	ROM_LOAD( "ic110_86.bin", 0x8000, 0x4000, 0x26d0fac4 );	ROM_LOAD( "ic005_88.bin", 0xc000, 0x4000, 0x2602e519 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_wbdeluxe = new RomLoadPtr(){ public void handler(){ 
@@ -1877,7 +1877,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "epr7485.117",  0x0000, 0x4000, 0xc2891722 );	ROM_LOAD( "epr7487.04",   0x4000, 0x4000, 0x2d3a421b );	ROM_LOAD( "epr7486.110",  0x8000, 0x4000, 0x8d622c50 );	ROM_LOAD( "epr7488.05",   0xc000, 0x4000, 0x007c2f1b );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_gardia = new RomLoadPtr(){ public void handler(){ 
@@ -1891,7 +1891,7 @@ public class system1
 		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "bprom.3",      0x0000, 0x0100, 0x8eee0f72 );/* palette red component */
 		ROM_LOAD( "bprom.2",      0x0100, 0x0100, 0x3e7babd7 );/* palette green component */
 		ROM_LOAD( "bprom.1",      0x0200, 0x0100, 0x371c44a6 );/* palette blue component */
-		ROM_LOAD( "pr5317.4",     0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.4",     0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_gardiab = new RomLoadPtr(){ public void handler(){ 
@@ -1905,7 +1905,7 @@ public class system1
 		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "bprom.3",      0x0000, 0x0100, 0x8eee0f72 );/* palette red component */
 		ROM_LOAD( "bprom.2",      0x0100, 0x0100, 0x3e7babd7 );/* palette green component */
 		ROM_LOAD( "bprom.1",      0x0200, 0x0100, 0x371c44a6 );/* palette blue component */
-		ROM_LOAD( "pr5317.4",     0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.4",     0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_blockgal = new RomLoadPtr(){ public void handler(){ 
@@ -1920,7 +1920,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "bg.117",       0x0000, 0x4000, 0xe99cc920 );	ROM_LOAD( "bg.04",        0x4000, 0x4000, 0x213057f8 );	ROM_LOAD( "bg.110",       0x8000, 0x4000, 0x064c812c );	ROM_LOAD( "bg.05",        0xc000, 0x4000, 0x02e0b040 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_blckgalb = new RomLoadPtr(){ public void handler(){ 
@@ -1934,7 +1934,7 @@ public class system1
 		ROM_REGION( 0x10000, REGION_GFX2, 0 );/* 64k for sprites data */
 		ROM_LOAD( "bg.117",       0x0000, 0x4000, 0xe99cc920 );	ROM_LOAD( "bg.04",        0x4000, 0x4000, 0x213057f8 );	ROM_LOAD( "bg.110",       0x8000, 0x4000, 0x064c812c );	ROM_LOAD( "bg.05",        0xc000, 0x4000, 0x02e0b040 );
 		ROM_REGION( 0x0100, REGION_USER1, 0 );/* misc PROMs, but no color so don't use REGION_PROMS! */
-		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.76",    0x0000, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_tokisens = new RomLoadPtr(){ public void handler(){ 
@@ -1963,7 +1963,7 @@ public class system1
 		ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE );	ROM_LOAD( "wbml.08",      0x00000, 0x8000, 0xbbea6afe );	ROM_LOAD( "wbml.09",      0x08000, 0x8000, 0x77567d41 );	ROM_LOAD( "wbml.10",      0x10000, 0x8000, 0xa52ffbdd );
 		ROM_REGION( 0x20000, REGION_GFX2, 0 );/* 128k for sprites data */
 		ROM_LOAD( "epr11028.87",  0x00000, 0x8000, 0xaf0b3972 );	ROM_LOAD( "epr11027.86",  0x08000, 0x8000, 0x277d8f1d );	ROM_LOAD( "epr11030.89",  0x10000, 0x8000, 0xf05ffc76 );	ROM_LOAD( "epr11029.88",  0x18000, 0x8000, 0xcedc9c61 );
-		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr11026.20",   0x0000, 0x0100, 0x27057298 );	ROM_LOAD( "pr11025.14",   0x0100, 0x0100, 0x41e4d86b );	ROM_LOAD( "pr11024.8",    0x0200, 0x0100, 0x08d71954 );	ROM_LOAD( "pr5317.37",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr11026.20",   0x0000, 0x0100, 0x27057298 );	ROM_LOAD( "pr11025.14",   0x0100, 0x0100, 0x41e4d86b );	ROM_LOAD( "pr11024.8",    0x0200, 0x0100, 0x08d71954 );	ROM_LOAD( "pr5317.37",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_wbmlj = new RomLoadPtr(){ public void handler(){ 
@@ -1977,7 +1977,7 @@ public class system1
 		ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE );	ROM_LOAD( "epr11034.4",   0x00000, 0x8000, 0x37a2077d );	ROM_LOAD( "epr11035.5",   0x08000, 0x8000, 0xcdf2a21b );	ROM_LOAD( "epr11036.6",   0x10000, 0x8000, 0x644687fa );
 		ROM_REGION( 0x20000, REGION_GFX2, 0 );/* 128k for sprites data */
 		ROM_LOAD( "epr11028.87",  0x00000, 0x8000, 0xaf0b3972 );	ROM_LOAD( "epr11027.86",  0x08000, 0x8000, 0x277d8f1d );	ROM_LOAD( "epr11030.89",  0x10000, 0x8000, 0xf05ffc76 );	ROM_LOAD( "epr11029.88",  0x18000, 0x8000, 0xcedc9c61 );
-		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr11026.20",   0x0000, 0x0100, 0x27057298 );	ROM_LOAD( "pr11025.14",   0x0100, 0x0100, 0x41e4d86b );	ROM_LOAD( "pr11024.8",    0x0200, 0x0100, 0x08d71954 );	ROM_LOAD( "pr5317.37",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr11026.20",   0x0000, 0x0100, 0x27057298 );	ROM_LOAD( "pr11025.14",   0x0100, 0x0100, 0x41e4d86b );	ROM_LOAD( "pr11024.8",    0x0200, 0x0100, 0x08d71954 );	ROM_LOAD( "pr5317.37",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_wbmlj2 = new RomLoadPtr(){ public void handler(){ 
@@ -1991,7 +1991,7 @@ public class system1
 		ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE );	ROM_LOAD( "epr11034.4",   0x00000, 0x8000, 0x37a2077d );	ROM_LOAD( "epr11035.5",   0x08000, 0x8000, 0xcdf2a21b );	ROM_LOAD( "epr11036.6",   0x10000, 0x8000, 0x644687fa );
 		ROM_REGION( 0x20000, REGION_GFX2, 0 );/* 128k for sprites data */
 		ROM_LOAD( "epr11028.87",  0x00000, 0x8000, 0xaf0b3972 );	ROM_LOAD( "epr11027.86",  0x08000, 0x8000, 0x277d8f1d );	ROM_LOAD( "epr11030.89",  0x10000, 0x8000, 0xf05ffc76 );	ROM_LOAD( "epr11029.88",  0x18000, 0x8000, 0xcedc9c61 );
-		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr11026.20",   0x0000, 0x0100, 0x27057298 );	ROM_LOAD( "pr11025.14",   0x0100, 0x0100, 0x41e4d86b );	ROM_LOAD( "pr11024.8",    0x0200, 0x0100, 0x08d71954 );	ROM_LOAD( "pr5317.37",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr11026.20",   0x0000, 0x0100, 0x27057298 );	ROM_LOAD( "pr11025.14",   0x0100, 0x0100, 0x41e4d86b );	ROM_LOAD( "pr11024.8",    0x0200, 0x0100, 0x08d71954 );	ROM_LOAD( "pr5317.37",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_wbmlju = new RomLoadPtr(){ public void handler(){ 
@@ -2006,7 +2006,7 @@ public class system1
 		ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE );	ROM_LOAD( "epr11034.4",   0x00000, 0x8000, 0x37a2077d );	ROM_LOAD( "epr11035.5",   0x08000, 0x8000, 0xcdf2a21b );	ROM_LOAD( "epr11036.6",   0x10000, 0x8000, 0x644687fa );
 		ROM_REGION( 0x20000, REGION_GFX2, 0 );/* 128k for sprites data */
 		ROM_LOAD( "epr11028.87",  0x00000, 0x8000, 0xaf0b3972 );	ROM_LOAD( "epr11027.86",  0x08000, 0x8000, 0x277d8f1d );	ROM_LOAD( "epr11030.89",  0x10000, 0x8000, 0xf05ffc76 );	ROM_LOAD( "epr11029.88",  0x18000, 0x8000, 0xcedc9c61 );
-		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr11026.20",   0x0000, 0x0100, 0x27057298 );	ROM_LOAD( "pr11025.14",   0x0100, 0x0100, 0x41e4d86b );	ROM_LOAD( "pr11024.8",    0x0200, 0x0100, 0x08d71954 );	ROM_LOAD( "pr5317.37",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr11026.20",   0x0000, 0x0100, 0x27057298 );	ROM_LOAD( "pr11025.14",   0x0100, 0x0100, 0x41e4d86b );	ROM_LOAD( "pr11024.8",    0x0200, 0x0100, 0x08d71954 );	ROM_LOAD( "pr5317.37",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_dakkochn = new RomLoadPtr(){ public void handler(){ 
@@ -2023,7 +2023,7 @@ public class system1
 		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr11219.20",   0x0000, 0x0100, 0x45e252d9 );/* palette red component */
 		ROM_LOAD( "pr11218.14",   0x0100, 0x0100, 0x3eda3a1b );/* palette green component */
 		ROM_LOAD( "pr11217.8",    0x0200, 0x0100, 0x49dbde88 );/* palette blue component */
-		ROM_LOAD( "pr5317.37",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.37",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	static RomLoadPtr rom_ufosensi = new RomLoadPtr(){ public void handler(){ 
@@ -2040,7 +2040,7 @@ public class system1
 		ROM_REGION( 0x0400, REGION_PROMS, 0 );	ROM_LOAD( "pr11656.20",   0x0000, 0x0100, 0x640740eb );/* palette red component */
 		ROM_LOAD( "pr11655.14",   0x0100, 0x0100, 0xa0c3fa77 );/* palette green component */
 		ROM_LOAD( "pr11654.8",    0x0200, 0x0100, 0xba624305 );/* palette blue component */
-		ROM_LOAD( "pr5317.28",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
+/*TODO*///		ROM_LOAD( "pr5317.28",    0x0300, 0x0100, 0x648350b8 );/* timing? (not used) */
 	ROM_END(); }}; 
 	
 	

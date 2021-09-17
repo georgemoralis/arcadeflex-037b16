@@ -1109,25 +1109,25 @@ public static void tilemap_set_clip(struct_tilemap tilemap, rectangle clip) {
 //	logerror("clip: %d,%d,%d,%d\n", left,top,right,bottom );
     }
 
-/*TODO*////***********************************************************************************/
-/*TODO*///
-/*TODO*///void tilemap_set_scroll_cols( struct tilemap *tilemap, int n )
-/*TODO*///{
-/*TODO*///	if( tilemap->orientation & ORIENTATION_SWAP_XY )
-/*TODO*///	{
-/*TODO*///		if (tilemap->scroll_rows != n)
-/*TODO*///		{
-/*TODO*///			tilemap->scroll_rows = n;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	else
-/*TODO*///	{
-/*TODO*///		if (tilemap->scroll_cols != n)
-/*TODO*///		{
-/*TODO*///			tilemap->scroll_cols = n;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///}
+/***********************************************************************************/
+
+public static void tilemap_set_scroll_cols( struct_tilemap tilemap, int n )
+{
+	if(( tilemap.orientation & ORIENTATION_SWAP_XY ) != 0)
+	{
+		if (tilemap.scroll_rows != n)
+		{
+			tilemap.scroll_rows = n;
+		}
+	}
+	else
+	{
+		if (tilemap.scroll_cols != n)
+		{
+			tilemap.scroll_cols = n;
+		}
+	}
+}
 
     public static void tilemap_set_scroll_rows( struct_tilemap tilemap, int n )
     {
