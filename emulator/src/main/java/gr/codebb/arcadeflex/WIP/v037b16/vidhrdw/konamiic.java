@@ -1003,6 +1003,8 @@ import static mame037b16.mame.Machine;
 import static mame037b16.mameH.*;
 import static arcadeflex036.osdepend.logerror;
 import common.ptr.UShortPtr;
+import common.subArrays;
+import common.subArrays.IntArray;
 
 public class konamiic
 {
@@ -1925,7 +1927,7 @@ public class konamiic
 			return 1;
 	
 		/* set the color information */
-		Machine.gfx[gfx_index].colortable = Machine.remapped_colortable;
+		Machine.gfx[gfx_index].colortable = new IntArray(Machine.remapped_colortable);
 		Machine.gfx[gfx_index].total_colors = Machine.drv.color_table_len / 16;
 	
 		K052109_memory_region = gfx_memory_region;
@@ -2410,7 +2412,7 @@ public class konamiic
 			return 1;
 	
 		/* set the color information */
-		Machine.gfx[gfx_index].colortable = Machine.remapped_colortable;
+		Machine.gfx[gfx_index].colortable = new IntArray(Machine.remapped_colortable);
 		Machine.gfx[gfx_index].total_colors = Machine.drv.color_table_len / 16;
 	
 		K051960_memory_region = gfx_memory_region;

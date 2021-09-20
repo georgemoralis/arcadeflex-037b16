@@ -91,7 +91,7 @@ public class aliens
 	
 	public static WriteHandlerPtr aliens_snd_bankswitch_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
-		UBytePtr RAM = memory_region(REGION_SOUND1);
+		UBytePtr RAM = new UBytePtr(memory_region(REGION_SOUND1));
 		/* b1: bank for chanel A */
 		/* b0: bank for chanel B */
 	
@@ -248,7 +248,7 @@ public class aliens
         
         public static InitMachinePtr aliens_init_machine = new InitMachinePtr() { public void handler() 
 	{
-		UBytePtr RAM = memory_region(REGION_CPU1);
+		UBytePtr RAM = new UBytePtr(memory_region(REGION_CPU1));
 	
 		konami_cpu_setlines_callback = aliens_banking;
 	
@@ -426,7 +426,7 @@ public class aliens
 	
 	public static konami_cpu_setlines_callbackPtr aliens_banking = new konami_cpu_setlines_callbackPtr() { public void handler(int lines) 
 	{
-		UBytePtr RAM = memory_region(REGION_CPU1);
+		UBytePtr RAM = new UBytePtr(memory_region(REGION_CPU1));
 		int offs = 0x18000;
 	
 	
