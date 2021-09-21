@@ -62,6 +62,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.system1.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.aliens.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.williams.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.namcos1.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.ddragon.*;
 
 public class driver {
 
@@ -3065,9 +3066,9 @@ public class driver {
         /*TODO*///	driver_battlane,	/* TA-???? (c) 1986 + Taito license */
         /*TODO*///	driver_battlan2,	/* TA-???? (c) 1986 + Taito license */
         /*TODO*///	driver_battlan3,	/* TA-???? (c) 1986 + Taito license */
-        /*TODO*///	driver_ddragon,	/* TA-0021 (c) 1987 */
-        /*TODO*///	driver_ddragonu,	/* TA-0021 (c) 1987 Taito America */
-        /*TODO*///	driver_ddragonb,	/* bootleg */
+        	driver_ddragon,	/* TA-0021 (c) 1987 */
+        	driver_ddragonu,	/* TA-0021 (c) 1987 Taito America */
+        	driver_ddragonb,	/* bootleg */
         /*TODO*///	driver_spdodgeb,	/* TA-0022 (c) 1987 */
         /*TODO*///	driver_nkdodgeb,	/* TA-0022 (c) 1987 (Japan) */
         /*TODO*///	driver_chinagat,	/* TA-0023 (c) 1988 Taito + Romstar license (US) */
@@ -3077,8 +3078,8 @@ public class driver {
         /*TODO*///	driver_wwfsstar,	/* TA-0024 (c) 1989 (US) */
         /*TODO*///	driver_vball,		/* TA-0025 (c) 1988 */
         /*TODO*///	driver_vball2pj,	/* TA-0025 (c) 1988 (Japan) */
-        /*TODO*///	driver_ddragon2,	/* TA-0026 (c) 1988 (World) */
-        /*TODO*///	driver_ddragn2u,	/* TA-0026 (c) 1988 (US) */
+        	driver_ddragon2,	/* TA-0026 (c) 1988 (World) */
+        	driver_ddragn2u,	/* TA-0026 (c) 1988 (US) */
         /*TODO*///	driver_ctribe,	/* TA-0028 (c) 1990 (US) */
         /*TODO*///	driver_ctribeb,	/* bootleg */
         /*TODO*///	driver_blockout,	/* TA-0029 (c) 1989 + California Dreams */
