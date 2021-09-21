@@ -1569,7 +1569,8 @@ public static void tilemap_set_scroll_cols( struct_tilemap tilemap, int n )
     
     	if(( type & TILEMAP_BITMASK ) != 0)
     	{
-            throw new UnsupportedOperationException("Not supported yet.");
+            //throw new UnsupportedOperationException("Not supported yet.");
+            System.out.println("TILEMAP_BITMASK in render_mask method, not implemented!!!!");
     		/* hack; games using TILEMAP_BITMASK may pass in NULL or (~0) to indicate
     		 * tiles that are wholly transparent or opaque.
     		 */

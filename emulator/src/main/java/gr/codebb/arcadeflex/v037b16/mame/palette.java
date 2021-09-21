@@ -60,9 +60,9 @@ public class palette {
 /*TODO*///#define PALETTE_COLOR_NEEDS_REMAP 0x80
 /*TODO*///
 /*TODO*////* helper macro for 16-bit mode */
-/*TODO*///#define rgbpenindex(r,g,b) ((Machine->scrbitmap->depth==16) ? ((((r)>>3)<<10)+(((g)>>3)<<5)+((b)>>3)) : ((((r)>>5)<<5)+(((g)>>5)<<2)+((b)>>6)))
-/*TODO*///
-/*TODO*///
+    public static int rgbpenindex(int r, int g, int b){ return ((Machine.scrbitmap.depth==16) ? ((((r)>>3)<<10)+(((g)>>3)<<5)+((b)>>3)) : ((((r)>>5)<<5)+(((g)>>5)<<2)+((b)>>6))); }
+
+
 /*TODO*///UINT16 *palette_shadow_table;
 /*TODO*///
 /*TODO*///
@@ -77,27 +77,27 @@ public class palette {
 /*TODO*///{
 /*TODO*///	int i,num;
 /*TODO*///
-/*TODO*///	game_palette = malloc(3 * Machine->drv->total_colors);
-/*TODO*///	palette_map = malloc(Machine->drv->total_colors * sizeof(UINT16));
-/*TODO*///	if (Machine->drv->color_table_len)
+/*TODO*///	game_palette = malloc(3 * Machine.drv.total_colors);
+/*TODO*///	palette_map = malloc(Machine.drv.total_colors * sizeof(UINT16));
+/*TODO*///	if (Machine.drv.color_table_len)
 /*TODO*///	{
-/*TODO*///		Machine->game_colortable = malloc(Machine->drv->color_table_len * sizeof(UINT16));
-/*TODO*///		Machine->remapped_colortable = malloc(Machine->drv->color_table_len * sizeof(UINT32));
+/*TODO*///		Machine.game_colortable = malloc(Machine.drv.color_table_len * sizeof(UINT16));
+/*TODO*///		Machine.remapped_colortable = malloc(Machine.drv.color_table_len * sizeof(UINT32));
 /*TODO*///	}
 /*TODO*///	else
 /*TODO*///	{
-/*TODO*///		Machine->game_colortable = 0;
-/*TODO*///		Machine->remapped_colortable = 0;
+/*TODO*///		Machine.game_colortable = 0;
+/*TODO*///		Machine.remapped_colortable = 0;
 /*TODO*///	}
-/*TODO*///	Machine->debug_remapped_colortable = malloc(2*DEBUGGER_TOTAL_COLORS*DEBUGGER_TOTAL_COLORS * sizeof(UINT32));
+/*TODO*///	Machine.debug_remapped_colortable = malloc(2*DEBUGGER_TOTAL_COLORS*DEBUGGER_TOTAL_COLORS * sizeof(UINT32));
 /*TODO*///
-/*TODO*///	if (Machine->color_depth == 15)
+/*TODO*///	if (Machine.color_depth == 15)
 /*TODO*///		colormode = DIRECT_15BIT;
-/*TODO*///	else if (Machine->color_depth == 32)
+/*TODO*///	else if (Machine.color_depth == 32)
 /*TODO*///		colormode = DIRECT_32BIT;
-/*TODO*///	else if (Machine->color_depth == 16 || (Machine->gamedrv->flags & GAME_REQUIRES_16BIT))
+/*TODO*///	else if (Machine.color_depth == 16 || (Machine.gamedrv.flags & GAME_REQUIRES_16BIT))
 /*TODO*///	{
-/*TODO*///		if (Machine->color_depth == 8 || Machine->drv->total_colors > 65532)
+/*TODO*///		if (Machine.color_depth == 8 || Machine.drv.total_colors > 65532)
 /*TODO*///			colormode = STATIC_16BIT;
 /*TODO*///		else
 /*TODO*///			colormode = PALETTIZED_16BIT;
@@ -108,7 +108,7 @@ public class palette {
 /*TODO*///	switch (colormode)
 /*TODO*///	{
 /*TODO*///		case PALETTIZED_8BIT:
-/*TODO*///			if (Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE)
+/*TODO*///			if (Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE)
 /*TODO*///				total_shrinked_pens = DYNAMIC_MAX_PENS;
 /*TODO*///			else
 /*TODO*///				total_shrinked_pens = STATIC_MAX_PENS;
@@ -117,7 +117,7 @@ public class palette {
 /*TODO*///			total_shrinked_pens = 32768;
 /*TODO*///			break;
 /*TODO*///		case PALETTIZED_16BIT:
-/*TODO*///			total_shrinked_pens = Machine->drv->total_colors + RESERVED_PENS;
+/*TODO*///			total_shrinked_pens = Machine.drv.total_colors + RESERVED_PENS;
 /*TODO*///			break;
 /*TODO*///		case DIRECT_15BIT:
 /*TODO*///		case DIRECT_32BIT:
@@ -138,16 +138,16 @@ public class palette {
 /*TODO*///		shrinked_palette = 0;
 /*TODO*///	}
 /*TODO*///
-/*TODO*///	Machine->pens = malloc(Machine->drv->total_colors * sizeof(UINT32));
-/*TODO*///	Machine->debug_pens = malloc(DEBUGGER_TOTAL_COLORS * sizeof(UINT32));
+/*TODO*///	Machine.pens = malloc(Machine.drv.total_colors * sizeof(UINT32));
+/*TODO*///	Machine.debug_pens = malloc(DEBUGGER_TOTAL_COLORS * sizeof(UINT32));
 /*TODO*///
-/*TODO*///	if ((Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE) && total_shrinked_pens
+/*TODO*///	if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) && total_shrinked_pens
 /*TODO*///			&& colormode != DIRECT_15BIT && colormode != DIRECT_32BIT)
 /*TODO*///	{
 /*TODO*///		/* if the palette changes dynamically, */
 /*TODO*///		/* we'll need the usage arrays to help in shrinking. */
-/*TODO*///		palette_used_colors = malloc((1+1+1+3+1) * Machine->drv->total_colors);
-/*TODO*///		pen_visiblecount = malloc(2 * Machine->drv->total_colors * sizeof(int));
+/*TODO*///		palette_used_colors = malloc((1+1+1+3+1) * Machine.drv.total_colors);
+/*TODO*///		pen_visiblecount = malloc(2 * Machine.drv.total_colors * sizeof(int));
 /*TODO*///
 /*TODO*///		if (palette_used_colors == 0 || pen_visiblecount == 0)
 /*TODO*///		{
@@ -155,34 +155,34 @@ public class palette {
 /*TODO*///			return 1;
 /*TODO*///		}
 /*TODO*///
-/*TODO*///		old_used_colors = palette_used_colors + Machine->drv->total_colors;
-/*TODO*///		just_remapped = old_used_colors + Machine->drv->total_colors;
-/*TODO*///		new_palette = just_remapped + Machine->drv->total_colors;
-/*TODO*///		palette_dirty = new_palette + 3*Machine->drv->total_colors;
-/*TODO*///		memset(palette_used_colors,PALETTE_COLOR_USED,Machine->drv->total_colors);
-/*TODO*///		memset(old_used_colors,PALETTE_COLOR_UNUSED,Machine->drv->total_colors);
-/*TODO*///		memset(palette_dirty,0,Machine->drv->total_colors);
-/*TODO*///		pen_cachedcount = pen_visiblecount + Machine->drv->total_colors;
-/*TODO*///		memset(pen_visiblecount,0,Machine->drv->total_colors * sizeof(int));
-/*TODO*///		memset(pen_cachedcount,0,Machine->drv->total_colors * sizeof(int));
+/*TODO*///		old_used_colors = palette_used_colors + Machine.drv.total_colors;
+/*TODO*///		just_remapped = old_used_colors + Machine.drv.total_colors;
+/*TODO*///		new_palette = just_remapped + Machine.drv.total_colors;
+/*TODO*///		palette_dirty = new_palette + 3*Machine.drv.total_colors;
+/*TODO*///		memset(palette_used_colors,PALETTE_COLOR_USED,Machine.drv.total_colors);
+/*TODO*///		memset(old_used_colors,PALETTE_COLOR_UNUSED,Machine.drv.total_colors);
+/*TODO*///		memset(palette_dirty,0,Machine.drv.total_colors);
+/*TODO*///		pen_cachedcount = pen_visiblecount + Machine.drv.total_colors;
+/*TODO*///		memset(pen_visiblecount,0,Machine.drv.total_colors * sizeof(int));
+/*TODO*///		memset(pen_cachedcount,0,Machine.drv.total_colors * sizeof(int));
 /*TODO*///	}
 /*TODO*///	else palette_used_colors = old_used_colors = just_remapped = new_palette = palette_dirty = 0;
 /*TODO*///
 /*TODO*///	// Modified colors list for direct palettes
 /*TODO*///	if (alpha_active)
 /*TODO*///	{
-/*TODO*///		just_remapped = malloc(Machine->drv->total_colors);
+/*TODO*///		just_remapped = malloc(Machine.drv.total_colors);
 /*TODO*///		if (!just_remapped)
 /*TODO*///		{
 /*TODO*///			palette_stop();
 /*TODO*///			return 1;
 /*TODO*///		}
-/*TODO*///		memset(just_remapped, 0, Machine->drv->total_colors);
+/*TODO*///		memset(just_remapped, 0, Machine.drv.total_colors);
 /*TODO*///	}
 /*TODO*///
 /*TODO*///	if (total_shrinked_pens)
 /*TODO*///	{
-/*TODO*///		if (Machine->color_depth == 8)
+/*TODO*///		if (Machine.color_depth == 8)
 /*TODO*///			num = 256;
 /*TODO*///		else
 /*TODO*///			num = 65536;
@@ -198,18 +198,18 @@ public class palette {
 /*TODO*///	else
 /*TODO*///		palette_shadow_table = 0;
 /*TODO*///
-/*TODO*///	if ((Machine->drv->color_table_len && (Machine->game_colortable == 0 || Machine->remapped_colortable == 0))
+/*TODO*///	if ((Machine.drv.color_table_len && (Machine.game_colortable == 0 || Machine.remapped_colortable == 0))
 /*TODO*///			|| game_palette == 0 ||	palette_map == 0
 /*TODO*///			|| (total_shrinked_pens && (shrinked_pens == 0 || shrinked_palette == 0))
-/*TODO*///			|| Machine->pens == 0 || Machine->debug_pens == 0 || Machine->debug_remapped_colortable == 0)
+/*TODO*///			|| Machine.pens == 0 || Machine.debug_pens == 0 || Machine.debug_remapped_colortable == 0)
 /*TODO*///	{
 /*TODO*///		palette_stop();
 /*TODO*///		return 1;
 /*TODO*///	}
 /*TODO*///
-/*TODO*///	if (Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE)
+/*TODO*///	if (Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE)
 /*TODO*///	{
-/*TODO*///		state_save_register_UINT8("palette", 0, "colors", game_palette, Machine->drv->total_colors*3);
+/*TODO*///		state_save_register_UINT8("palette", 0, "colors", game_palette, Machine.drv.total_colors*3);
 /*TODO*///		switch (colormode)
 /*TODO*///		{
 /*TODO*///			case PALETTIZED_8BIT:
@@ -245,20 +245,20 @@ public class palette {
 /*TODO*///	game_palette = 0;
 /*TODO*///	free(palette_map);
 /*TODO*///	palette_map = 0;
-/*TODO*///	free(Machine->game_colortable);
-/*TODO*///	Machine->game_colortable = 0;
-/*TODO*///	free(Machine->remapped_colortable);
-/*TODO*///	Machine->remapped_colortable = 0;
-/*TODO*///	free(Machine->debug_remapped_colortable);
-/*TODO*///	Machine->debug_remapped_colortable = 0;
+/*TODO*///	free(Machine.game_colortable);
+/*TODO*///	Machine.game_colortable = 0;
+/*TODO*///	free(Machine.remapped_colortable);
+/*TODO*///	Machine.remapped_colortable = 0;
+/*TODO*///	free(Machine.debug_remapped_colortable);
+/*TODO*///	Machine.debug_remapped_colortable = 0;
 /*TODO*///	free(shrinked_pens);
 /*TODO*///	shrinked_pens = 0;
 /*TODO*///	free(shrinked_palette);
 /*TODO*///	shrinked_palette = 0;
-/*TODO*///	free(Machine->pens);
-/*TODO*///	Machine->pens = 0;
-/*TODO*///	free(Machine->debug_pens);
-/*TODO*///	Machine->debug_pens = 0;
+/*TODO*///	free(Machine.pens);
+/*TODO*///	Machine.pens = 0;
+/*TODO*///	free(Machine.debug_pens);
+/*TODO*///	Machine.debug_pens = 0;
 /*TODO*///	free(palette_shadow_table);
 /*TODO*///	palette_shadow_table = 0;
 /*TODO*///}
@@ -275,7 +275,7 @@ public class palette {
 /*TODO*///	if (mame_debug)
 /*TODO*///	{
 /*TODO*///		debug_palette = debugger_palette;
-/*TODO*///		debug_pens = Machine->debug_pens;
+/*TODO*///		debug_pens = Machine.debug_pens;
 /*TODO*///	}
 /*TODO*///	else
 /*TODO*///#endif
@@ -288,7 +288,7 @@ public class palette {
 /*TODO*///	/* drivers which dynamically change the palette don't need a vh_init_palette() */
 /*TODO*///	/* function (provided the default color table fits their needs). */
 /*TODO*///
-/*TODO*///	for (i = 0;i < Machine->drv->total_colors;i++)
+/*TODO*///	for (i = 0;i < Machine.drv.total_colors;i++)
 /*TODO*///	{
 /*TODO*///		game_palette[3*i + 0] = ((i & 1) >> 0) * 0xff;
 /*TODO*///		game_palette[3*i + 1] = ((i & 2) >> 1) * 0xff;
@@ -298,12 +298,12 @@ public class palette {
 /*TODO*///	/* Preload the colortable with a default setting, following the same */
 /*TODO*///	/* order of the palette. The driver can overwrite this in */
 /*TODO*///	/* vh_init_palette() */
-/*TODO*///	for (i = 0;i < Machine->drv->color_table_len;i++)
-/*TODO*///		Machine->game_colortable[i] = i % Machine->drv->total_colors;
+/*TODO*///	for (i = 0;i < Machine.drv.color_table_len;i++)
+/*TODO*///		Machine.game_colortable[i] = i % Machine.drv.total_colors;
 /*TODO*///
 /*TODO*///	/* now the driver can modify the default values if it wants to. */
-/*TODO*///	if (Machine->drv->vh_init_palette)
-/*TODO*///		(*Machine->drv->vh_init_palette)(game_palette,Machine->game_colortable,memory_region(REGION_PROMS));
+/*TODO*///	if (Machine.drv.vh_init_palette)
+/*TODO*///		(*Machine.drv.vh_init_palette)(game_palette,Machine.game_colortable,memory_region(REGION_PROMS));
 /*TODO*///
 /*TODO*///
 /*TODO*///	switch (colormode)
@@ -318,7 +318,7 @@ public class palette {
 /*TODO*///				shrinked_palette[3*i + 2] = 0;
 /*TODO*///			}
 /*TODO*///
-/*TODO*///			if (Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE)
+/*TODO*///			if (Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE)
 /*TODO*///			{
 /*TODO*///				/* initialize pen usage counters */
 /*TODO*///				for (i = 0;i < DYNAMIC_MAX_PENS;i++)
@@ -333,7 +333,7 @@ public class palette {
 /*TODO*///
 /*TODO*///				/* create some defaults associations of game colors to shrinked pens. */
 /*TODO*///				/* They will be dynamically modified at run time. */
-/*TODO*///				for (i = 0;i < Machine->drv->total_colors;i++)
+/*TODO*///				for (i = 0;i < Machine.drv.total_colors;i++)
 /*TODO*///					palette_map[i] = (i & 7) + 8;
 /*TODO*///
 /*TODO*///				if (osd_allocate_colors(total_shrinked_pens,shrinked_palette,shrinked_pens,1,debug_palette,debug_pens))
@@ -344,12 +344,12 @@ public class palette {
 /*TODO*///				int j,used;
 /*TODO*///
 /*TODO*///
-/*TODO*///logerror("shrinking %d colors palette...\n",Machine->drv->total_colors);
+/*TODO*///logerror("shrinking %d colors palette...\n",Machine.drv.total_colors);
 /*TODO*///
 /*TODO*///				/* shrink palette to fit */
 /*TODO*///				used = 0;
 /*TODO*///
-/*TODO*///				for (i = 0;i < Machine->drv->total_colors;i++)
+/*TODO*///				for (i = 0;i < Machine.drv.total_colors;i++)
 /*TODO*///				{
 /*TODO*///					for (j = 0;j < used;j++)
 /*TODO*///					{
@@ -387,8 +387,8 @@ public class palette {
 /*TODO*///			}
 /*TODO*///
 /*TODO*///
-/*TODO*///			for (i = 0;i < Machine->drv->total_colors;i++)
-/*TODO*///				Machine->pens[i] = shrinked_pens[palette_map[i]];
+/*TODO*///			for (i = 0;i < Machine.drv.total_colors;i++)
+/*TODO*///				Machine.pens[i] = shrinked_pens[palette_map[i]];
 /*TODO*///
 /*TODO*///			palette_transparent_pen = shrinked_pens[TRANSPARENT_PEN];	/* for dynamic palette games */
 /*TODO*///		}
@@ -399,7 +399,7 @@ public class palette {
 /*TODO*///			UINT8 *p = shrinked_palette;
 /*TODO*///			int r,g,b;
 /*TODO*///
-/*TODO*///			if (Machine->scrbitmap->depth == 16)
+/*TODO*///			if (Machine.scrbitmap.depth == 16)
 /*TODO*///			{
 /*TODO*///				for (r = 0;r < 32;r++)
 /*TODO*///				{
@@ -436,13 +436,13 @@ public class palette {
 /*TODO*///					return 1;
 /*TODO*///			}
 /*TODO*///
-/*TODO*///			for (i = 0;i < Machine->drv->total_colors;i++)
+/*TODO*///			for (i = 0;i < Machine.drv.total_colors;i++)
 /*TODO*///			{
 /*TODO*///				r = game_palette[3*i + 0];
 /*TODO*///				g = game_palette[3*i + 1];
 /*TODO*///				b = game_palette[3*i + 2];
 /*TODO*///
-/*TODO*///				Machine->pens[i] = shrinked_pens[rgbpenindex(r,g,b)];
+/*TODO*///				Machine.pens[i] = shrinked_pens[rgbpenindex(r,g,b)];
 /*TODO*///			}
 /*TODO*///
 /*TODO*///			palette_transparent_pen = shrinked_pens[0];	/* we are forced to use black for the transparent pen */
@@ -458,18 +458,18 @@ public class palette {
 /*TODO*///				shrinked_palette[3*i + 2] = 0;
 /*TODO*///			}
 /*TODO*///
-/*TODO*///			for (i = 0;i < Machine->drv->total_colors;i++)
+/*TODO*///			for (i = 0;i < Machine.drv.total_colors;i++)
 /*TODO*///			{
 /*TODO*///				shrinked_palette[3*(i+RESERVED_PENS) + 0] = game_palette[3*i + 0];
 /*TODO*///				shrinked_palette[3*(i+RESERVED_PENS) + 1] = game_palette[3*i + 1];
 /*TODO*///				shrinked_palette[3*(i+RESERVED_PENS) + 2] = game_palette[3*i + 2];
 /*TODO*///			}
 /*TODO*///
-/*TODO*///			if (osd_allocate_colors(total_shrinked_pens,shrinked_palette,shrinked_pens,(Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE),debug_palette,debug_pens))
+/*TODO*///			if (osd_allocate_colors(total_shrinked_pens,shrinked_palette,shrinked_pens,(Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE),debug_palette,debug_pens))
 /*TODO*///				return 1;
 /*TODO*///
-/*TODO*///			for (i = 0;i < Machine->drv->total_colors;i++)
-/*TODO*///				Machine->pens[i] = shrinked_pens[i + RESERVED_PENS];
+/*TODO*///			for (i = 0;i < Machine.drv.total_colors;i++)
+/*TODO*///				Machine.pens[i] = shrinked_pens[i + RESERVED_PENS];
 /*TODO*///
 /*TODO*///			palette_transparent_pen = shrinked_pens[TRANSPARENT_PEN];	/* for dynamic palette games */
 /*TODO*///		}
@@ -482,8 +482,8 @@ public class palette {
 /*TODO*///			if (osd_allocate_colors(3,rgbpalette,shrinked_pens,0,debug_palette,debug_pens))
 /*TODO*///				return 1;
 /*TODO*///
-/*TODO*///			for (i = 0;i < Machine->drv->total_colors;i++)
-/*TODO*///				Machine->pens[i] =
+/*TODO*///			for (i = 0;i < Machine.drv.total_colors;i++)
+/*TODO*///				Machine.pens[i] =
 /*TODO*///						(game_palette[3*i + 0] >> 3) * (shrinked_pens[0] / 0x1f) +
 /*TODO*///						(game_palette[3*i + 1] >> 3) * (shrinked_pens[1] / 0x1f) +
 /*TODO*///						(game_palette[3*i + 2] >> 3) * (shrinked_pens[2] / 0x1f);
@@ -500,8 +500,8 @@ public class palette {
 /*TODO*///			if (osd_allocate_colors(3,rgbpalette,shrinked_pens,0,debug_palette,debug_pens))
 /*TODO*///				return 1;
 /*TODO*///
-/*TODO*///			for (i = 0;i < Machine->drv->total_colors;i++)
-/*TODO*///				Machine->pens[i] =
+/*TODO*///			for (i = 0;i < Machine.drv.total_colors;i++)
+/*TODO*///				Machine.pens[i] =
 /*TODO*///						game_palette[3*i + 0] * (shrinked_pens[0] / 0xff) +
 /*TODO*///						game_palette[3*i + 1] * (shrinked_pens[1] / 0xff) +
 /*TODO*///						game_palette[3*i + 2] * (shrinked_pens[2] / 0xff);
@@ -512,22 +512,22 @@ public class palette {
 /*TODO*///		}
 /*TODO*///	}
 /*TODO*///
-/*TODO*///	for (i = 0;i < Machine->drv->color_table_len;i++)
+/*TODO*///	for (i = 0;i < Machine.drv.color_table_len;i++)
 /*TODO*///	{
-/*TODO*///		int color = Machine->game_colortable[i];
+/*TODO*///		int color = Machine.game_colortable[i];
 /*TODO*///
-/*TODO*///		/* check for invalid colors set by Machine->drv->vh_init_palette */
-/*TODO*///		if (color < Machine->drv->total_colors)
-/*TODO*///			Machine->remapped_colortable[i] = Machine->pens[color];
+/*TODO*///		/* check for invalid colors set by Machine.drv.vh_init_palette */
+/*TODO*///		if (color < Machine.drv.total_colors)
+/*TODO*///			Machine.remapped_colortable[i] = Machine.pens[color];
 /*TODO*///		else
 /*TODO*///			usrintf_showmessage("colortable[%d] (=%d) out of range (total_colors = %d)",
-/*TODO*///					i,color,Machine->drv->total_colors);
+/*TODO*///					i,color,Machine.drv.total_colors);
 /*TODO*///	}
 /*TODO*///
 /*TODO*///	for (i = 0;i < DEBUGGER_TOTAL_COLORS*DEBUGGER_TOTAL_COLORS;i++)
 /*TODO*///	{
-/*TODO*///		Machine->debug_remapped_colortable[2*i+0] = Machine->debug_pens[i / DEBUGGER_TOTAL_COLORS];
-/*TODO*///		Machine->debug_remapped_colortable[2*i+1] = Machine->debug_pens[i % DEBUGGER_TOTAL_COLORS];
+/*TODO*///		Machine.debug_remapped_colortable[2*i+0] = Machine.debug_pens[i / DEBUGGER_TOTAL_COLORS];
+/*TODO*///		Machine.debug_remapped_colortable[2*i+1] = Machine.debug_pens[i % DEBUGGER_TOTAL_COLORS];
 /*TODO*///	}
 /*TODO*///
 /*TODO*///	return 0;
@@ -544,8 +544,8 @@ public class palette {
 /*TODO*///	game_palette[3*color + 0] = red;
 /*TODO*///	game_palette[3*color + 1] = green;
 /*TODO*///	game_palette[3*color + 2] = blue;
-/*TODO*///	Machine->pens[Machine->game_colortable[color]] =
-/*TODO*///		Machine->remapped_colortable[color] =
+/*TODO*///	Machine.pens[Machine.game_colortable[color]] =
+/*TODO*///		Machine.remapped_colortable[color] =
 /*TODO*///						(red   >> 3) * (shrinked_pens[0] / 0x1f) +
 /*TODO*///						(green >> 3) * (shrinked_pens[1] / 0x1f) +
 /*TODO*///						(blue  >> 3) * (shrinked_pens[2] / 0x1f);
@@ -557,15 +557,15 @@ public class palette {
 /*TODO*///static void palette_reset_15_direct(void)
 /*TODO*///{
 /*TODO*///	int color;
-/*TODO*///	for(color = 0; color < Machine->drv->total_colors; color++)
-/*TODO*///		Machine->pens[Machine->game_colortable[color]] =
-/*TODO*///			Machine->remapped_colortable[color] =
+/*TODO*///	for(color = 0; color < Machine.drv.total_colors; color++)
+/*TODO*///		Machine.pens[Machine.game_colortable[color]] =
+/*TODO*///			Machine.remapped_colortable[color] =
 /*TODO*///				(game_palette[3*color + 0]>>3) * (shrinked_pens[0] / 0x1f) +
 /*TODO*///				(game_palette[3*color + 1]>>3) * (shrinked_pens[1] / 0x1f) +
 /*TODO*///				(game_palette[3*color + 2]>>3) * (shrinked_pens[2] / 0x1f);
 /*TODO*///
 /*TODO*///	has_remap = 1;
-/*TODO*///	memset(just_remapped, 1, Machine->drv->total_colors);
+/*TODO*///	memset(just_remapped, 1, Machine.drv.total_colors);
 /*TODO*///}
 /*TODO*///
 /*TODO*///INLINE void palette_change_color_32_direct(int color,UINT8 red,UINT8 green,UINT8 blue)
@@ -577,8 +577,8 @@ public class palette {
 /*TODO*///	game_palette[3*color + 0] = red;
 /*TODO*///	game_palette[3*color + 1] = green;
 /*TODO*///	game_palette[3*color + 2] = blue;
-/*TODO*///	Machine->pens[Machine->game_colortable[color]] =
-/*TODO*///		Machine->remapped_colortable[color] =
+/*TODO*///	Machine.pens[Machine.game_colortable[color]] =
+/*TODO*///		Machine.remapped_colortable[color] =
 /*TODO*///						red   * (shrinked_pens[0] / 0xff) +
 /*TODO*///						green * (shrinked_pens[1] / 0xff) +
 /*TODO*///						blue  * (shrinked_pens[2] / 0xff);
@@ -590,15 +590,15 @@ public class palette {
 /*TODO*///static void palette_reset_32_direct(void)
 /*TODO*///{
 /*TODO*///	int color;
-/*TODO*///	for(color = 0; color < Machine->drv->total_colors; color++)
-/*TODO*///		Machine->pens[Machine->game_colortable[color]] =
-/*TODO*///			Machine->remapped_colortable[color] =
+/*TODO*///	for(color = 0; color < Machine.drv.total_colors; color++)
+/*TODO*///		Machine.pens[Machine.game_colortable[color]] =
+/*TODO*///			Machine.remapped_colortable[color] =
 /*TODO*///				game_palette[3*color + 0] * (shrinked_pens[0] / 0xff) +
 /*TODO*///				game_palette[3*color + 1] * (shrinked_pens[1] / 0xff) +
 /*TODO*///				game_palette[3*color + 2] * (shrinked_pens[2] / 0xff);
 /*TODO*///
 /*TODO*///	has_remap = 1;
-/*TODO*///	memset(just_remapped, 1, Machine->drv->total_colors);
+/*TODO*///	memset(just_remapped, 1, Machine.drv.total_colors);
 /*TODO*///}
 /*TODO*///
 /*TODO*///INLINE void palette_change_color_16_static(int color,UINT8 red,UINT8 green,UINT8 blue)
@@ -620,7 +620,7 @@ public class palette {
 /*TODO*///static void palette_reset_16_static(void)
 /*TODO*///{
 /*TODO*///	int color;
-/*TODO*///	for (color=0; color<Machine->drv->total_colors; color++)
+/*TODO*///	for (color=0; color<Machine.drv.total_colors; color++)
 /*TODO*///		if (old_used_colors[color] & PALETTE_COLOR_VISIBLE)
 /*TODO*///			old_used_colors[color] |= PALETTE_COLOR_NEEDS_REMAP;
 /*TODO*///}
@@ -632,7 +632,7 @@ public class palette {
 /*TODO*///			game_palette[3*color + 2] == blue)
 /*TODO*///		return;
 /*TODO*///
-/*TODO*///	/* Machine->pens[color] might have been remapped to transparent_pen, so I */
+/*TODO*///	/* Machine.pens[color] might have been remapped to transparent_pen, so I */
 /*TODO*///	/* use shrinked_pens[] directly */
 /*TODO*///	osd_modify_pen(shrinked_pens[color + RESERVED_PENS],red,green,blue);
 /*TODO*///	game_palette[3*color + 0] = red;
@@ -643,7 +643,7 @@ public class palette {
 /*TODO*///static void palette_reset_16_palettized(void)
 /*TODO*///{
 /*TODO*///	int color;
-/*TODO*///	for (color=0; color<Machine->drv->total_colors; color++)
+/*TODO*///	for (color=0; color<Machine.drv.total_colors; color++)
 /*TODO*///		osd_modify_pen(shrinked_pens[color + RESERVED_PENS],
 /*TODO*///					   game_palette[3*color + 0],
 /*TODO*///					   game_palette[3*color + 1],
@@ -679,21 +679,21 @@ public class palette {
 /*TODO*///
 /*TODO*///static void palette_reset_8(void)
 /*TODO*///{
-/*TODO*///	memcpy(new_palette, game_palette, 3*Machine->drv->total_colors);
-/*TODO*///	memset(palette_dirty, 1, Machine->drv->total_colors);
+/*TODO*///	memcpy(new_palette, game_palette, 3*Machine.drv.total_colors);
+/*TODO*///	memset(palette_dirty, 1, Machine.drv.total_colors);
 /*TODO*///}
 /*TODO*///
 /*TODO*///void palette_change_color(int color,UINT8 red,UINT8 green,UINT8 blue)
 /*TODO*///{
-/*TODO*///	if ((Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE) == 0)
+/*TODO*///	if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) == 0)
 /*TODO*///	{
 /*TODO*///logerror("Error: palette_change_color() called, but VIDEO_MODIFIES_PALETTE not set.\n");
 /*TODO*///		return;
 /*TODO*///	}
 /*TODO*///
-/*TODO*///	if (color >= Machine->drv->total_colors)
+/*TODO*///	if (color >= Machine.drv.total_colors)
 /*TODO*///	{
-/*TODO*///logerror("error: palette_change_color() called with color %d, but only %d allocated.\n",color,Machine->drv->total_colors);
+/*TODO*///logerror("error: palette_change_color() called with color %d, but only %d allocated.\n",color,Machine.drv.total_colors);
 /*TODO*///		return;
 /*TODO*///	}
 /*TODO*///
@@ -730,9 +730,9 @@ public class palette {
 /*TODO*///		if (usage_mask & 1)
 /*TODO*///		{
 /*TODO*///			if (color_flags & PALETTE_COLOR_VISIBLE)
-/*TODO*///				pen_visiblecount[Machine->game_colortable[table_offset]]++;
+/*TODO*///				pen_visiblecount[Machine.game_colortable[table_offset]]++;
 /*TODO*///			if (color_flags & PALETTE_COLOR_CACHED)
-/*TODO*///				pen_cachedcount[Machine->game_colortable[table_offset]]++;
+/*TODO*///				pen_cachedcount[Machine.game_colortable[table_offset]]++;
 /*TODO*///		}
 /*TODO*///		table_offset++;
 /*TODO*///		usage_mask >>= 1;
@@ -749,9 +749,9 @@ public class palette {
 /*TODO*///		if (usage_mask & 1)
 /*TODO*///		{
 /*TODO*///			if (color_flags & PALETTE_COLOR_VISIBLE)
-/*TODO*///				pen_visiblecount[Machine->game_colortable[table_offset]]--;
+/*TODO*///				pen_visiblecount[Machine.game_colortable[table_offset]]--;
 /*TODO*///			if (color_flags & PALETTE_COLOR_CACHED)
-/*TODO*///				pen_cachedcount[Machine->game_colortable[table_offset]]--;
+/*TODO*///				pen_cachedcount[Machine.game_colortable[table_offset]]--;
 /*TODO*///		}
 /*TODO*///		table_offset++;
 /*TODO*///		usage_mask >>= 1;
@@ -769,9 +769,9 @@ public class palette {
 /*TODO*///		if (flag[pen] == 0)
 /*TODO*///		{
 /*TODO*///			if (color_flags & PALETTE_COLOR_VISIBLE)
-/*TODO*///				pen_visiblecount[Machine->game_colortable[table_offset+pen]]++;
+/*TODO*///				pen_visiblecount[Machine.game_colortable[table_offset+pen]]++;
 /*TODO*///			if (color_flags & PALETTE_COLOR_CACHED)
-/*TODO*///				pen_cachedcount[Machine->game_colortable[table_offset+pen]]++;
+/*TODO*///				pen_cachedcount[Machine.game_colortable[table_offset+pen]]++;
 /*TODO*///			flag[pen] = 1;
 /*TODO*///		}
 /*TODO*///	}
@@ -788,9 +788,9 @@ public class palette {
 /*TODO*///		if (flag[pen] == 0)
 /*TODO*///		{
 /*TODO*///			if (color_flags & PALETTE_COLOR_VISIBLE)
-/*TODO*///				pen_visiblecount[Machine->game_colortable[table_offset+pen]]--;
+/*TODO*///				pen_visiblecount[Machine.game_colortable[table_offset+pen]]--;
 /*TODO*///			if (color_flags & PALETTE_COLOR_CACHED)
-/*TODO*///				pen_cachedcount[Machine->game_colortable[table_offset+pen]]--;
+/*TODO*///				pen_cachedcount[Machine.game_colortable[table_offset+pen]]--;
 /*TODO*///			flag[pen] = 1;
 /*TODO*///		}
 /*TODO*///	}
@@ -804,9 +804,9 @@ public class palette {
 /*TODO*///	/* if we are not dynamically reducing the palette, return immediately. */
 /*TODO*///	if (palette_used_colors == 0 ) return;
 /*TODO*///
-/*TODO*///	memset(palette_used_colors,PALETTE_COLOR_UNUSED,Machine->drv->total_colors);
+/*TODO*///	memset(palette_used_colors,PALETTE_COLOR_UNUSED,Machine.drv.total_colors);
 /*TODO*///
-/*TODO*///	for (pen = 0;pen < Machine->drv->total_colors;pen++)
+/*TODO*///	for (pen = 0;pen < Machine.drv.total_colors;pen++)
 /*TODO*///	{
 /*TODO*///		if (pen_visiblecount[pen]) palette_used_colors[pen] |= PALETTE_COLOR_VISIBLE;
 /*TODO*///		if (pen_cachedcount[pen]) palette_used_colors[pen] |= PALETTE_COLOR_CACHED;
@@ -894,7 +894,7 @@ public class palette {
 /*TODO*///	for (i = 0;i < 8;i++)
 /*TODO*///		subcount[i] = 0;
 /*TODO*///
-/*TODO*///	for (i = 0;i < Machine->drv->total_colors;i++)
+/*TODO*///	for (i = 0;i < Machine.drv.total_colors;i++)
 /*TODO*///		subcount[palette_used_colors[i]]++;
 /*TODO*///
 /*TODO*///	logerror("Ran out of pens! %d colors used (%d unused, %d visible %d cached %d visible+cached, %d transparent)\n",
@@ -909,60 +909,60 @@ public class palette {
         return saved;
     }
 
-    /*TODO*///static const UINT8 *palette_recalc_16_static(void)
-/*TODO*///{
-/*TODO*///	int i,color;
-/*TODO*///	int did_remap = 0;
-/*TODO*///	int need_refresh = 0;
-/*TODO*///
-/*TODO*///
-/*TODO*///	memset(just_remapped,0,Machine->drv->total_colors);
-/*TODO*///
-/*TODO*///	for (color = 0;color < Machine->drv->total_colors;color++)
-/*TODO*///	{
-/*TODO*///		/* the comparison between palette_used_colors and old_used_colors also includes */
-/*TODO*///		/* PALETTE_COLOR_NEEDS_REMAP which might have been set by palette_change_color() */
-/*TODO*///		if ((palette_used_colors[color] & PALETTE_COLOR_VISIBLE) &&
-/*TODO*///				palette_used_colors[color] != old_used_colors[color])
-/*TODO*///		{
-/*TODO*///			int r,g,b;
-/*TODO*///
-/*TODO*///
-/*TODO*///			did_remap = 1;
-/*TODO*///			if (old_used_colors[color] & palette_used_colors[color] & PALETTE_COLOR_CACHED)
-/*TODO*///			{
-/*TODO*///				/* the color was and still is cached, we'll have to redraw everything */
-/*TODO*///				need_refresh = 1;
-/*TODO*///				just_remapped[color] = 1;
-/*TODO*///			}
-/*TODO*///
-/*TODO*///			if (palette_used_colors[color] & PALETTE_COLOR_TRANSPARENT_FLAG)
-/*TODO*///				Machine->pens[color] = palette_transparent_pen;
-/*TODO*///			else
-/*TODO*///			{
-/*TODO*///				r = game_palette[3*color + 0];
-/*TODO*///				g = game_palette[3*color + 1];
-/*TODO*///				b = game_palette[3*color + 2];
-/*TODO*///
-/*TODO*///				Machine->pens[color] = shrinked_pens[rgbpenindex(r,g,b)];
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		old_used_colors[color] = palette_used_colors[color];
-/*TODO*///	}
-/*TODO*///
-/*TODO*///
-/*TODO*///	if (did_remap)
-/*TODO*///	{
-/*TODO*///		/* rebuild the color lookup table */
-/*TODO*///		for (i = 0;i < Machine->drv->color_table_len;i++)
-/*TODO*///			Machine->remapped_colortable[i] = Machine->pens[Machine->game_colortable[i]];
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	if (need_refresh) return just_remapped;
-/*TODO*///	else return 0;
-/*TODO*///}
-/*TODO*///
+    static UBytePtr palette_recalc_16_static()
+{
+	int i,color;
+	int did_remap = 0;
+	int need_refresh = 0;
+
+
+	memset(just_remapped,0,Machine.drv.total_colors);
+
+	for (color = 0;color < Machine.drv.total_colors;color++)
+	{
+		/* the comparison between palette_used_colors and old_used_colors also includes */
+		/* PALETTE_COLOR_NEEDS_REMAP which might have been set by palette_change_color() */
+		if (((palette_used_colors.read(color) & PALETTE_COLOR_VISIBLE)!=0) &&
+				palette_used_colors.read(color) != old_used_colors.read(color))
+		{
+			int r,g,b;
+
+
+			did_remap = 1;
+			if ((old_used_colors.read(color) & palette_used_colors.read(color) & PALETTE_COLOR_CACHED) != 0)
+			{
+				/* the color was and still is cached, we'll have to redraw everything */
+				need_refresh = 1;
+				just_remapped.write(color, 1);
+			}
+
+			if ((palette_used_colors.read(color) & PALETTE_COLOR_TRANSPARENT_FLAG) != 0)
+				Machine.pens[color] = palette_transparent_pen;
+			else
+			{
+				r = game_palette[3*color + 0];
+				g = game_palette[3*color + 1];
+				b = game_palette[3*color + 2];
+
+				Machine.pens[color] = shrinked_pens[rgbpenindex(r,g,b)];
+			}
+		}
+
+		old_used_colors.write(color, palette_used_colors.read(color));
+	}
+
+
+	if (did_remap != 0)
+	{
+		/* rebuild the color lookup table */
+		for (i = 0;i < Machine.drv.color_table_len;i++)
+			Machine.remapped_colortable.write(i, Machine.pens[Machine.game_colortable[i]]);
+	}
+
+	if (need_refresh != 0) return just_remapped;
+	else return null;
+}
+
 /*TODO*///static const UINT8 *palette_recalc_16_palettized(void)
 /*TODO*///{
 /*TODO*///	int i,color;
@@ -970,9 +970,9 @@ public class palette {
 /*TODO*///	int need_refresh = 0;
 /*TODO*///
 /*TODO*///
-/*TODO*///	memset(just_remapped,0,Machine->drv->total_colors);
+/*TODO*///	memset(just_remapped,0,Machine.drv.total_colors);
 /*TODO*///
-/*TODO*///	for (color = 0;color < Machine->drv->total_colors;color++)
+/*TODO*///	for (color = 0;color < Machine.drv.total_colors;color++)
 /*TODO*///	{
 /*TODO*///		if ((palette_used_colors[color] & PALETTE_COLOR_TRANSPARENT_FLAG) !=
 /*TODO*///				(old_used_colors[color] & PALETTE_COLOR_TRANSPARENT_FLAG))
@@ -986,9 +986,9 @@ public class palette {
 /*TODO*///			}
 /*TODO*///
 /*TODO*///			if (palette_used_colors[color] & PALETTE_COLOR_TRANSPARENT_FLAG)
-/*TODO*///				Machine->pens[color] = palette_transparent_pen;
+/*TODO*///				Machine.pens[color] = palette_transparent_pen;
 /*TODO*///			else
-/*TODO*///				Machine->pens[color] = shrinked_pens[color + RESERVED_PENS];
+/*TODO*///				Machine.pens[color] = shrinked_pens[color + RESERVED_PENS];
 /*TODO*///		}
 /*TODO*///
 /*TODO*///		old_used_colors[color] = palette_used_colors[color];
@@ -998,8 +998,8 @@ public class palette {
 /*TODO*///	if (did_remap)
 /*TODO*///	{
 /*TODO*///		/* rebuild the color lookup table */
-/*TODO*///		for (i = 0;i < Machine->drv->color_table_len;i++)
-/*TODO*///			Machine->remapped_colortable[i] = Machine->pens[Machine->game_colortable[i]];
+/*TODO*///		for (i = 0;i < Machine.drv.color_table_len;i++)
+/*TODO*///			Machine.remapped_colortable[i] = Machine.pens[Machine.game_colortable[i]];
 /*TODO*///	}
 /*TODO*///
 /*TODO*///	if (need_refresh) return just_remapped;
@@ -1334,10 +1334,10 @@ public class palette {
                 }
                 break;
             case STATIC_16BIT:
-                throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///		if (palette_used_colors != 0)
-/*TODO*///			ret = palette_recalc_16_static();
-/*TODO*///		break;
+                //throw new UnsupportedOperationException("Unsupported");
+            	if (palette_used_colors != null)
+			ret = palette_recalc_16_static();
+		break;
             case PALETTIZED_16BIT:
                 throw new UnsupportedOperationException("Unsupported");
             /*TODO*///		if (palette_used_colors != 0)
@@ -1363,7 +1363,7 @@ public class palette {
 /*TODO*///{
 /*TODO*///	if(has_remap)
 /*TODO*///	{
-/*TODO*///		memset(just_remapped, 0, Machine->drv->total_colors);
+/*TODO*///		memset(just_remapped, 0, Machine.drv.total_colors);
 /*TODO*///		has_remap = 0;
 /*TODO*///	}
 /*TODO*///}

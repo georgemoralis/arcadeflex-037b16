@@ -30,6 +30,7 @@ import gr.codebb.arcadeflex.v037b16.sound._5220intf;
 import gr.codebb.arcadeflex.v037b16.sound.cem3394;
 import gr.codebb.arcadeflex.v037b16.sound.adpcm;
 import gr.codebb.arcadeflex.WIP.v037b16.sound.hc55516;
+import gr.codebb.arcadeflex.v037b16.sound._2151intf;
 
 //to be organized
 import static mame037b16.common.*;
@@ -366,19 +367,7 @@ public class sndintrf {
                 new Dummy_snd(),
                 new ay8910(),
                 new _2203intf(),
-                /*TODO*///#endif
-                /*TODO*///#if (HAS_YM2151 || HAS_YM2151_ALT)
-                /*TODO*///    {
-                /*TODO*///		SOUND_YM2151,
-                /*TODO*///		"YM2151",
-                /*TODO*///		YM2151_num,
-                /*TODO*///		YM2151_clock,
-                /*TODO*///		YM2151_sh_start,
-                /*TODO*///		YM2151_sh_stop,
-                /*TODO*///		0,
-                /*TODO*///		YM2151_sh_reset
-                /*TODO*///	},
-                new Dummy_snd(),
+                new _2151intf(),
                 new _2608intf(),
                 /*TODO*///#endif
                 /*TODO*///#if (HAS_YM2610)

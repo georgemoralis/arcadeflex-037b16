@@ -322,7 +322,8 @@ public class namco extends snd_interface {
         sample_rate = Machine.sample_rate;
         /* get stream channels */
         if (intf.stereo != 0) {
-            throw new UnsupportedOperationException("Namco stereo unsupported ");
+            //throw new UnsupportedOperationException("Namco stereo unsupported ");
+            System.out.println("Namco stereo unsupported !!!!");
             /*TODO*///		int vol[2];
             /*TODO*///
             /*TODO*///		vol[0] = MIXER(intf->volume,MIXER_PAN_LEFT);
