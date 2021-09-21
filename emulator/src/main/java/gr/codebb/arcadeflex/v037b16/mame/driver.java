@@ -63,6 +63,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.aliens.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.williams.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.namcos1.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.ddragon.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.shisen.*;
 
 public class driver {
 
@@ -985,10 +986,10 @@ public class driver {
         /*TODO*///	driver_poundfou,	/* (c) 1990 Irem America (US) */
         /*TODO*///	driver_airduel,	/* (c) 1990 (Japan) */
         /*TODO*///	driver_gallop,	/* (c) 1991 (Japan) */
-        /*TODO*///	/* not M72, but same sound hardware */
-        /*TODO*///	driver_sichuan2,	/* (c) 1989 Tamtex */
-        /*TODO*///	driver_sichuana,	/* (c) 1989 Tamtex */
-        /*TODO*///	driver_shisen,	/* (c) 1989 Tamtex */
+        	/* not M72, but same sound hardware */
+        	driver_sichuan2,	/* (c) 1989 Tamtex */
+        	driver_sichuana,	/* (c) 1989 Tamtex */
+        	driver_shisen,	/* (c) 1989 Tamtex */
         /*TODO*///	/* M90 */
         /*TODO*///TESTdriver_hasamu,
         /*TODO*///	driver_bombrman,	/* (c) 1991 Irem (Japan) */
