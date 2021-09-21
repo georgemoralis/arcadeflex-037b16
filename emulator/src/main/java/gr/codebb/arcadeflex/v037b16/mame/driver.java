@@ -60,6 +60,7 @@ import static gr.codebb.arcadeflex.v037b16.drivers.higemaru.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.bombjack.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.system1.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.aliens.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.williams.*;
 
 public class driver {
 
@@ -1525,36 +1526,35 @@ public class driver {
         /*TODO*///	driver_skywolf,	/* bootleg */
         /*TODO*///	driver_skywolf2,	/* bootleg */
         /*TODO*///
-        /*TODO*///	/* Williams games */
-        /*TODO*///	driver_defender,	/* (c) 1980 */
-        /*TODO*///	driver_defendg,	/* (c) 1980 */
-        /*TODO*///	driver_defendw,	/* (c) 1980 */
-        /*TODO*///TESTdriver_defndjeu,	/* bootleg */
-        /*TODO*///	driver_defcmnd,	/* bootleg */
-        /*TODO*///	driver_defence,	/* bootleg */
-        /*TODO*///	driver_mayday,
-        /*TODO*///	driver_maydaya,
-        /*TODO*///	driver_colony7,	/* (c) 1981 Taito */
-        /*TODO*///	driver_colony7a,	/* (c) 1981 Taito */
-        /*TODO*///	driver_stargate,	/* (c) 1981 */
-        /*TODO*///	driver_robotron,	/* (c) 1982 */
-        /*TODO*///	driver_robotryo,	/* (c) 1982 */
-        /*TODO*///	driver_joust,		/* (c) 1982 */
-        /*TODO*///	driver_joustr,	/* (c) 1982 */
-        /*TODO*///	driver_joustwr,	/* (c) 1982 */
-        /*TODO*///	driver_bubbles,	/* (c) 1982 */
-        /*TODO*///	driver_bubblesr,	/* (c) 1982 */
-        /*TODO*///	driver_splat,		/* (c) 1982 */
-        /*TODO*///	driver_sinistar,	/* (c) 1982 */
-        /*TODO*///	driver_sinista1,	/* (c) 1982 */
-        /*TODO*///	driver_sinista2,	/* (c) 1982 */
-        /*TODO*///	driver_blaster,	/* (c) 1983 */
-        /*TODO*///	driver_mysticm,	/* (c) 1983 */
-        /*TODO*///	driver_tshoot,	/* (c) 1984 */
-        /*TODO*///	driver_inferno,	/* (c) 1984 */
-        /*TODO*///	driver_joust2,	/* (c) 1986 */
-        /*TODO*///	driver_lottofun,	/* (c) 1987 H.A.R. Management */
-
+        /* Williams games */
+        driver_defender, /* (c) 1980 */
+        driver_defendg, /* (c) 1980 */
+        driver_defendw, /* (c) 1980 */
+        driver_defndjeu, /* bootleg */
+        driver_defcmnd, /* bootleg */
+        driver_defence, /* bootleg */
+        driver_mayday,
+        driver_maydaya,
+        driver_colony7, /* (c) 1981 Taito */
+        driver_colony7a, /* (c) 1981 Taito */
+        driver_stargate, /* (c) 1981 */
+        driver_robotron, /* (c) 1982 */
+        driver_robotryo, /* (c) 1982 */
+        driver_joust, /* (c) 1982 */
+        driver_joustr, /* (c) 1982 */
+        driver_joustwr, /* (c) 1982 */
+        driver_bubbles, /* (c) 1982 */
+        driver_bubblesr, /* (c) 1982 */
+        driver_splat, /* (c) 1982 */
+        driver_sinistar, /* (c) 1982 */
+        driver_sinista1, /* (c) 1982 */
+        driver_sinista2, /* (c) 1982 */
+        driver_blaster, /* (c) 1983 */
+        driver_mysticm, /* (c) 1983 */
+        driver_tshoot, /* (c) 1984 */
+        driver_inferno, /* (c) 1984 */
+        driver_joust2, /* (c) 1986 */
+        driver_lottofun, /* (c) 1987 H.A.R. Management */
         /* Capcom games */
         /* The following is a COMPLETE list of the Capcom games up to 1997, as shown on */
         /* their web site. The list is sorted by production date.                       */
@@ -2029,59 +2029,59 @@ public class driver {
         /*TODO*///	driver_ixion,		/* (c) 1983 */
         /*TODO*///	driver_congo,		/* 605-5167 (c) 1983 */
         /*TODO*///	driver_tiptop,	/* 605-5167 (c) 1983 */
-        
-        	/* Sega System 1 / System 2 games */
-        	driver_starjack,	/* 834-5191 (c) 1983 (S1) */
-        	driver_starjacs,	/* (c) 1983 Stern (S1) */
-        	driver_regulus,	/* 834-5328 (c) 1983 (S1) */
-        	driver_regulusu,	/* 834-5328 (c) 1983 (S1) */
-        	driver_upndown,	/* (c) 1983 (S1) */
-        	driver_mrviking,	/* 834-5383 (c) 1984 (S1) */
-        	driver_mrvikinj,	/* 834-5383 (c) 1984 (S1) */
-        	driver_swat,		/* 834-5388 (c) 1984 Coreland / Sega (S1) */
-        	driver_flicky,	/* (c) 1984 (S1) */
-        	driver_flicky2,	/* (c) 1984 (S1) */
-        	/* Water Match (S1) */
-        	driver_bullfgt,	/* 834-5478 (c) 1984 Sega / Coreland (S1) */
-        	driver_bullfgtj,	/* 834-5478 (c) 1984 Sega / Coreland (S1) */
-        	driver_pitfall2,	/* 834-5627 [1985?] reprogrammed, (c) 1984 Activision (S1) */
-        	driver_pitfallu,	/* 834-5627 [1985?] reprogrammed, (c) 1984 Activision (S1) */
-        	driver_seganinj,	/* 834-5677 (c) 1985 (S1) */
-        	driver_seganinu,	/* 834-5677 (c) 1985 (S1) */
-        	driver_nprinces,	/* 834-5677 (c) 1985 (S1) */
-        	driver_nprincsu,	/* 834-5677 (c) 1985 (S1) */
-        	driver_nprincsb,	/* bootleg? (S1) */
-        	driver_imsorry,	/* 834-5707 (c) 1985 Coreland / Sega (S1) */
-        	driver_imsorryj,	/* 834-5707 (c) 1985 Coreland / Sega (S1) */
-        	driver_teddybb,	/* 834-5712 (c) 1985 (S1) */
-        	driver_hvymetal,	/* 834-5745 (c) 1985 (S2?) */
-        	driver_myhero,	/* 834-5755 (c) 1985 (S1) */
-        	driver_myheroj,	/* 834-5755 (c) 1985 Coreland / Sega (S1) */
-        	driver_myherok,	/* 834-5755 (c) 1985 Coreland / Sega (S1) */
-        	driver_shtngmst,	/* 834-5719/5720 (c) 1985 (S2) */
-        	driver_chplft,	/* 834-5795 (c) 1985, (c) 1982 Dan Gorlin (S2) */
-        	driver_chplftb,	/* 834-5795 (c) 1985, (c) 1982 Dan Gorlin (S2) */
-        	driver_chplftbl,	/* bootleg (S2) */
-        	driver_4dwarrio,	/* 834-5918 (c) 1985 Coreland / Sega (S1) */
-        	driver_brain,		/* (c) 1986 Coreland / Sega (S2?) */
-        	driver_wboy,		/* 834-5984 (c) 1986 + Escape license (S1) */
-        	driver_wboyo,		/* 834-5984 (c) 1986 + Escape license (S1) */
-        	driver_wboy2,		/* 834-5984 (c) 1986 + Escape license (S1) */
-        	driver_wboy2u,	/* 834-5984 (c) 1986 + Escape license (S1) */
-        	driver_wboy3,		/* 834-5984 (c) 1986 + Escape license (S1) */
-        	driver_wboyu,		/* 834-5753 (? maybe a conversion) (c) 1986 + Escape license (S1) */
-        	driver_wbdeluxe,	/* (c) 1986 + Escape license (S1) */
-        	driver_gardia,	/* 834-6119 (S2?) */
-        	driver_gardiab,	/* bootleg */
-        	driver_blockgal,	/* 834-6303 (S1) */
-        	driver_blckgalb,	/* bootleg */
-        	driver_tokisens,	/* (c) 1987 (from a bootleg board) (S2) */
-        	driver_wbml,		/* bootleg (S2) */
-        	driver_wbmlj,		/* (c) 1987 Sega/Westone (S2) */
-        	driver_wbmlj2,	/* (c) 1987 Sega/Westone (S2) */
-        	driver_wbmlju,	/* bootleg? (S2) */
-        	driver_dakkochn,	/* 836-6483? (S2) */
-        	driver_ufosensi,	/* 834-6659 (S2) */
+
+        /* Sega System 1 / System 2 games */
+        driver_starjack, /* 834-5191 (c) 1983 (S1) */
+        driver_starjacs, /* (c) 1983 Stern (S1) */
+        driver_regulus, /* 834-5328 (c) 1983 (S1) */
+        driver_regulusu, /* 834-5328 (c) 1983 (S1) */
+        driver_upndown, /* (c) 1983 (S1) */
+        driver_mrviking, /* 834-5383 (c) 1984 (S1) */
+        driver_mrvikinj, /* 834-5383 (c) 1984 (S1) */
+        driver_swat, /* 834-5388 (c) 1984 Coreland / Sega (S1) */
+        driver_flicky, /* (c) 1984 (S1) */
+        driver_flicky2, /* (c) 1984 (S1) */
+        /* Water Match (S1) */
+        driver_bullfgt, /* 834-5478 (c) 1984 Sega / Coreland (S1) */
+        driver_bullfgtj, /* 834-5478 (c) 1984 Sega / Coreland (S1) */
+        driver_pitfall2, /* 834-5627 [1985?] reprogrammed, (c) 1984 Activision (S1) */
+        driver_pitfallu, /* 834-5627 [1985?] reprogrammed, (c) 1984 Activision (S1) */
+        driver_seganinj, /* 834-5677 (c) 1985 (S1) */
+        driver_seganinu, /* 834-5677 (c) 1985 (S1) */
+        driver_nprinces, /* 834-5677 (c) 1985 (S1) */
+        driver_nprincsu, /* 834-5677 (c) 1985 (S1) */
+        driver_nprincsb, /* bootleg? (S1) */
+        driver_imsorry, /* 834-5707 (c) 1985 Coreland / Sega (S1) */
+        driver_imsorryj, /* 834-5707 (c) 1985 Coreland / Sega (S1) */
+        driver_teddybb, /* 834-5712 (c) 1985 (S1) */
+        driver_hvymetal, /* 834-5745 (c) 1985 (S2?) */
+        driver_myhero, /* 834-5755 (c) 1985 (S1) */
+        driver_myheroj, /* 834-5755 (c) 1985 Coreland / Sega (S1) */
+        driver_myherok, /* 834-5755 (c) 1985 Coreland / Sega (S1) */
+        driver_shtngmst, /* 834-5719/5720 (c) 1985 (S2) */
+        driver_chplft, /* 834-5795 (c) 1985, (c) 1982 Dan Gorlin (S2) */
+        driver_chplftb, /* 834-5795 (c) 1985, (c) 1982 Dan Gorlin (S2) */
+        driver_chplftbl, /* bootleg (S2) */
+        driver_4dwarrio, /* 834-5918 (c) 1985 Coreland / Sega (S1) */
+        driver_brain, /* (c) 1986 Coreland / Sega (S2?) */
+        driver_wboy, /* 834-5984 (c) 1986 + Escape license (S1) */
+        driver_wboyo, /* 834-5984 (c) 1986 + Escape license (S1) */
+        driver_wboy2, /* 834-5984 (c) 1986 + Escape license (S1) */
+        driver_wboy2u, /* 834-5984 (c) 1986 + Escape license (S1) */
+        driver_wboy3, /* 834-5984 (c) 1986 + Escape license (S1) */
+        driver_wboyu, /* 834-5753 (? maybe a conversion) (c) 1986 + Escape license (S1) */
+        driver_wbdeluxe, /* (c) 1986 + Escape license (S1) */
+        driver_gardia, /* 834-6119 (S2?) */
+        driver_gardiab, /* bootleg */
+        driver_blockgal, /* 834-6303 (S1) */
+        driver_blckgalb, /* bootleg */
+        driver_tokisens, /* (c) 1987 (from a bootleg board) (S2) */
+        driver_wbml, /* bootleg (S2) */
+        driver_wbmlj, /* (c) 1987 Sega/Westone (S2) */
+        driver_wbmlj2, /* (c) 1987 Sega/Westone (S2) */
+        driver_wbmlju, /* bootleg? (S2) */
+        driver_dakkochn, /* 836-6483? (S2) */
+        driver_ufosensi, /* 834-6659 (S2) */
         /*TODO*////*
         /*TODO*///other System 1 / System 2 games:
         /*TODO*///
@@ -2449,8 +2449,8 @@ public class driver {
         /*TODO*///	driver_starfore,	/* (c) 1984 Tehkan */
         /*TODO*///	driver_megaforc,	/* (c) 1985 Tehkan + Video Ware license */
         /*TODO*///	driver_baluba,	/* (c) 1986 Able Corp. */
-        driver_bombjack,	/* (c) 1984 Tehkan */
-        driver_bombjac2,	/* (c) 1984 Tehkan */
+        driver_bombjack, /* (c) 1984 Tehkan */
+        driver_bombjac2, /* (c) 1984 Tehkan */
         driver_pbaction, /* (c) 1985 Tehkan */
         driver_pbactio2, /* (c) 1985 Tehkan */
         /* 6009 Tank Busters */
@@ -2593,10 +2593,10 @@ public class driver {
         /*TODO*///	driver_mstadium,	/* GX891 (c) 1989 (Japan) */
         /*TODO*///	driver_blockhl,	/* GX973 (c) 1989 */
         /*TODO*///	driver_quarth,	/* GX973 (c) 1989 (Japan) */
-        driver_aliens,	/* GX875 (c) 1990 (World) */
-        driver_aliens2,	/* GX875 (c) 1990 (World) */
-        driver_aliensu,	/* GX875 (c) 1990 (US) */
-        driver_aliensj,	/* GX875 (c) 1990 (Japan) */
+        driver_aliens, /* GX875 (c) 1990 (World) */
+        driver_aliens2, /* GX875 (c) 1990 (World) */
+        driver_aliensu, /* GX875 (c) 1990 (US) */
+        driver_aliensj, /* GX875 (c) 1990 (Japan) */
         /*TODO*///	driver_surpratk,	/* GX911 (c) 1990 (Japan) */
         /*TODO*///	driver_parodius,	/* GX955 (c) 1990 (Japan) */
         /*TODO*///	driver_rollerg,	/* GX999 (c) 1991 (US) */

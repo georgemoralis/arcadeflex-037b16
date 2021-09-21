@@ -12,7 +12,6 @@ import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
 //to be organized
 import common.ptr.UBytePtr;
 
-
 public class memoryH {
 
     public static abstract interface opbase_handlerPtr {
@@ -206,8 +205,8 @@ public class memoryH {
 /*TODO*////* 8-bit reads */
     public static final int MRA_BANK1 = STATIC_BANK1;
     public static final int MRA_BANK2 = STATIC_BANK2;
-    /*TODO*///#define MRA_BANK3				((mem_read_handler)STATIC_BANK3)
-/*TODO*///#define MRA_BANK4				((mem_read_handler)STATIC_BANK4)
+    public static final int MRA_BANK3 = STATIC_BANK3;
+    /*TODO*///#define MRA_BANK4				((mem_read_handler)STATIC_BANK4)
 /*TODO*///#define MRA_BANK5				((mem_read_handler)STATIC_BANK5)
 /*TODO*///#define MRA_BANK6				((mem_read_handler)STATIC_BANK6)
 /*TODO*///#define MRA_BANK7				((mem_read_handler)STATIC_BANK7)
@@ -235,8 +234,8 @@ public class memoryH {
     /*TODO*///
 /*TODO*////* 8-bit writes */
     public static final int MWA_BANK1 = STATIC_BANK1;
-    /*TODO*///#define MWA_BANK2				((mem_write_handler)STATIC_BANK2)
-/*TODO*///#define MWA_BANK3				((mem_write_handler)STATIC_BANK3)
+    public static final int MWA_BANK2 = STATIC_BANK2;
+    /*TODO*///#define MWA_BANK3				((mem_write_handler)STATIC_BANK3)
 /*TODO*///#define MWA_BANK4				((mem_write_handler)STATIC_BANK4)
 /*TODO*///#define MWA_BANK5				((mem_write_handler)STATIC_BANK5)
 /*TODO*///#define MWA_BANK6				((mem_write_handler)STATIC_BANK6)
