@@ -64,6 +64,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.williams.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.namcos1.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.ddragon.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.shisen.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.simpsons.*;
 
 public class driver {
 
@@ -2604,9 +2605,9 @@ public class driver {
         /*TODO*///	driver_parodius,	/* GX955 (c) 1990 (Japan) */
         /*TODO*///	driver_rollerg,	/* GX999 (c) 1991 (US) */
         /*TODO*///	driver_rollergj,	/* GX999 (c) 1991 (Japan) */
-        /*TODO*///	driver_simpsons,	/* GX072 (c) 1991 */
-        /*TODO*///	driver_simpsn2p,	/* GX072 (c) 1991 */
-        /*TODO*///	driver_simps2pj,	/* GX072 (c) 1991 (Japan) */
+        	driver_simpsons,	/* GX072 (c) 1991 */
+        	driver_simpsn2p,	/* GX072 (c) 1991 */
+        	driver_simps2pj,	/* GX072 (c) 1991 (Japan) */
         /*TODO*///	driver_vendetta,	/* GX081 (c) 1991 (US) */
         /*TODO*///	driver_vendetas,	/* GX081 (c) 1991 (Asia) */
         /*TODO*///	driver_vendeta2,	/* GX081 (c) 1991 (Asia) */

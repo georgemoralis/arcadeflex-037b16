@@ -1178,7 +1178,7 @@ public static void tilemap_set_scroll_cols( struct_tilemap tilemap, int n )
             }
     }
 
-    static void tilemap_mark_all_pixels_dirty( struct_tilemap tilemap )
+    public static void tilemap_mark_all_pixels_dirty( struct_tilemap tilemap )
     {
             if( tilemap==ALL_TILEMAPS )
             {
