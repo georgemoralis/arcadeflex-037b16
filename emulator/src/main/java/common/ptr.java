@@ -452,6 +452,12 @@ public class ptr {
                     | (((int) memory[base + 3]) << 24);
             return myNumber;
         }
+        public void write(int index, int value) {
+            memory[base + index + 3] = (char) ((value >> 24) & 0xFF);
+            memory[base + index + 2] = (char) ((value >> 16) & 0xFF);
+            memory[base + index + 1] = (char) ((value >> 8) & 0xFF);
+            memory[base + index] = (char) (value & 0xFF);
+        }
 
         public void or(int value) {
             int tempbase = this.base;

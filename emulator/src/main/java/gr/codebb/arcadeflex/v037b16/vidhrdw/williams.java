@@ -5,7 +5,9 @@ package gr.codebb.arcadeflex.v037b16.vidhrdw;
 
 import static arcadeflex036.osdepend.logerror;
 import static common.libc.cstring.memset;
+import common.ptr.IntPtr;
 import common.ptr.UBytePtr;
+import common.subArrays.IntArray;
 import gr.codebb.arcadeflex.v037b16.generic.fucPtr.VhStartPtr;
 import gr.codebb.arcadeflex.v037b16.mame.drawgfxH.rectangle;
 import gr.codebb.arcadeflex.v037b16.mame.osdependH.osd_bitmap;
@@ -17,9 +19,11 @@ import gr.codebb.arcadeflex.v037b16.generic.fucPtr.VhUpdatePtr;
 import gr.codebb.arcadeflex.v037b16.generic.fucPtr.WriteHandlerPtr;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.cpu_get_pc;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.cpu_getscanline;
+import static gr.codebb.arcadeflex.v037b16.mame.drawgfx_modes8.draw_scanline8;
 import static gr.codebb.arcadeflex.v037b16.mame.memory.cpu_readmem16;
 import static gr.codebb.arcadeflex.v037b16.mame.memory.cpu_writemem16;
 import static gr.codebb.arcadeflex.v037b16.mame.palette.palette_recalc;
+import static mame037b16.drawgfx.mark_dirty;
 import static mame037b7.palette.palette_change_color;
 
 public class williams {
@@ -98,40 +102,40 @@ public class williams {
                 if (scanline_dirty.read(y) == 0) {
                     continue;
                 }
-                /*TODO*///                scanline_dirty[y]--;
+                scanline_dirty.write(y,scanline_dirty.read()-1);//scanline_dirty[y]--;
             }
 
             /* mark the pixels dirty */
- /*TODO*///            mark_dirty(clip.min_x, y, clip.max_x, y);
+            mark_dirty.handler(clip.min_x, y, clip.max_x, y);
 
             /* draw all pairs */
- /*TODO*///            for (x = 0; x < pairs; x++, source += 256) {
-/*TODO*///                int pix =  * source;
-/*TODO*///                 * dest++ = pix >> 4;
-/*TODO*///                 * dest++ = pix & 0x0f;
-/*TODO*///            }
+             for (x = 0; x < pairs; x++, source.inc(256)) {
+                int pix =  source.read();
+                 dest.writeinc(pix >> 4);
+                 dest.writeinc(pix & 0x0f);
+            }
 
             /* handle general case */
- /*TODO*///            if (!williams_blitter_remap) {
-/*TODO*///                draw_scanline8(bitmap, xoffset, y, pairs * 2, scanline, Machine.pens, transparent_pen);
-/*TODO*///            } /* handle Blaster special case */ else {
-/*TODO*///                UINT8 saved_pen0;
+             if (williams_blitter_remap==0) {
+                draw_scanline8(bitmap, xoffset, y, pairs * 2, new UBytePtr(scanline), new IntArray(Machine.pens), transparent_pen);
+            } /* handle Blaster special case */ else {
+                int/*UINT8*/ saved_pen0;
 
             /* pick the background pen */
- /*TODO*///                if ( * blaster_video_bits & 1) {
-/*TODO*///                    if (blaster_color_zero_flags[y] & 1) {
-/*TODO*///                        blaster_back_color = 16 + y - Machine.visible_area.min_y;
-/*TODO*///                    }
-/*TODO*///                } else {
-/*TODO*///                    blaster_back_color = 0;
-/*TODO*///                }
+                 if ((blaster_video_bits.read() & 1)!=0) {
+                    if ((blaster_color_zero_flags.read(y) & 1)!=0) {
+                        blaster_back_color = 16 + y - Machine.visible_area.min_y;
+                    }
+                } else {
+                    blaster_back_color = 0;
+                }
 
-            /*TODO*///                /* draw the scanline, temporarily remapping pen 0 */
-/*TODO*///                saved_pen0 = Machine.pens[0];
-/*TODO*///                Machine.pens[0] = Machine.pens[blaster_back_color];
-/*TODO*///                draw_scanline8(bitmap, xoffset, y, pairs * 2, scanline, Machine.pens, transparent_pen);
-/*TODO*///                Machine.pens[0] = saved_pen0;
-/*TODO*///            }
+                            /* draw the scanline, temporarily remapping pen 0 */
+                saved_pen0 = Machine.pens[0];
+                Machine.pens[0] = Machine.pens[blaster_back_color];
+                draw_scanline8(bitmap, xoffset, y, pairs * 2, new UBytePtr(scanline), new IntArray(Machine.pens), transparent_pen);
+                Machine.pens[0] = saved_pen0;
+            }
         }
     }
 
@@ -196,37 +200,39 @@ public class williams {
      ************************************
      */
     public static void williams_vh_update(int scanline) {
-        /*TODO*///	int erase_behind = 0;
-/*TODO*///	UINT32 *srcbase, *dstbase;
-/*TODO*///	int x;
-/*TODO*///
-/*TODO*///	/* wrap around at the bottom */
-/*TODO*///	if (scanline == 0)
-/*TODO*///		scanline = 256;
-/*TODO*///
-/*TODO*///	/* should we erase as we draw? */
-/*TODO*///	if (williams_blitter_remap && scanline >= 32 && (*blaster_video_bits & 0x02))
-/*TODO*///		erase_behind = 1;
-/*TODO*///
-/*TODO*///	/* determine the source and destination */
-/*TODO*/// 	srcbase = (UINT32 *)&williams_videoram[scanline - 8];
-/*TODO*/// 	dstbase = (UINT32 *)&williams_videoram_copy[scanline - 8];
-/*TODO*///
-/*TODO*/// 	/* loop over columns and copy a 16-row chunk */
-/*TODO*/// 	for (x = 0; x < VIDEORAM_WIDTH/2; x++)
-/*TODO*/// 	{
-/*TODO*/// 		/* copy 16 rows' worth of data */
-/*TODO*/// 		dstbase[0] = srcbase[0];
-/*TODO*/// 		dstbase[1] = srcbase[1];
-/*TODO*///
-/*TODO*///		/* handle Blaster autoerase for scanlines 24 and up */
-/*TODO*///		if (erase_behind)
-/*TODO*///			srcbase[0] = srcbase[1] = 0;
-/*TODO*///
-/*TODO*/// 		/* advance to the next column */
-/*TODO*/// 		srcbase += 256/4;
-/*TODO*/// 		dstbase += 256/4;
-/*TODO*/// 	}
+        	int erase_behind = 0;
+	IntPtr srcbase, dstbase;
+	int x;
+
+	/* wrap around at the bottom */
+	if (scanline == 0)
+		scanline = 256;
+
+	/* should we erase as we draw? */
+	if (williams_blitter_remap!=0 && scanline >= 32 && (blaster_video_bits.read() & 0x02)!=0)
+		erase_behind = 1;
+
+	/* determine the source and destination */
+ 	srcbase = new IntPtr(williams_videoram,scanline - 8);
+ 	dstbase = new IntPtr(williams_videoram_copy,scanline - 8);
+
+ 	/* loop over columns and copy a 16-row chunk */
+ 	for (x = 0; x < VIDEORAM_WIDTH/2; x++)
+ 	{
+ 		/* copy 16 rows' worth of data */
+ 		dstbase.write(0, srcbase.read(0));//dstbase[0] = srcbase[0];
+ 		dstbase.write(4, srcbase.read(4));//dstbase[1] = srcbase[1];
+
+		/* handle Blaster autoerase for scanlines 24 and up */
+		if (erase_behind!=0){
+			srcbase.write(0,0);
+                        srcbase.write(4,0);//srcbase[0] = srcbase[1] = 0;
+                }
+
+ 		/* advance to the next column */
+ 		srcbase.base += 256;//srcbase += 256/4;
+ 		dstbase.base += 256;//dstbase += 256/4;
+ 	}
     }
     public static VhUpdatePtr williams_vh_screenrefresh = new VhUpdatePtr() {
         public void handler(osd_bitmap bitmap, int full_refresh) {
