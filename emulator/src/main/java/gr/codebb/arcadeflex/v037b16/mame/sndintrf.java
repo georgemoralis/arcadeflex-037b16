@@ -33,6 +33,7 @@ import gr.codebb.arcadeflex.WIP.v037b16.sound.hc55516;
 import gr.codebb.arcadeflex.v037b16.sound._2151intf;
 import gr.codebb.arcadeflex.v037b16.sound.okim6295;
 import gr.codebb.arcadeflex.WIP.v037b16.sound.k053260;
+import gr.codebb.arcadeflex.v037b16.sound.k007232;
 
 //to be organized
 import static mame037b16.common.*;
@@ -541,19 +542,7 @@ public class sndintrf {
                 /*TODO*///	},
                 new Dummy_snd(),
                 /*TODO*///#endif
-                /*TODO*///#if (HAS_K007232)
-                /*TODO*///    {
-                /*TODO*///		SOUND_K007232,
-                /*TODO*///		"007232",
-                /*TODO*///		K007232_num,
-                /*TODO*///		0,
-                /*TODO*///		K007232_sh_start,
-                /*TODO*///		0,
-                /*TODO*///		0,
-                /*TODO*///		0
-                /*TODO*///	},
-                new Dummy_snd(),
-                /*TODO*///#endif
+                new k007232(),
                 /*TODO*///#if (HAS_K051649)
                 /*TODO*///    {
                 /*TODO*///		SOUND_K051649,
