@@ -85,6 +85,14 @@ public class subArrays {
             this.buffer = buffer;
             this.offset = offset;
         }
+        
+        public IntArray(char[] buffer, int offset) {
+            int _longo=buffer.length;
+            this.buffer = new int[_longo];
+            for (int _i=0 ; _i<_longo ; _i++)
+                this.buffer[_i] = buffer[_i];
+            this.offset = offset;
+        }
 
         public int read() {
             return buffer[offset];
