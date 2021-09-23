@@ -392,7 +392,7 @@ public class _6821pia {
                 if (OUTPUT_SELECTED(pia[which].u8_ctl_b)) {
                     /* update the input */
                     if (pia[which].intf.in_b_func != null) {
-                        pia[which].u8_in_b = pia[which].intf.in_b_func.handler(0);
+                        pia[which].u8_in_b = pia[which].intf.in_b_func.handler(0) & 0xFF;
                     }
 
                     /* combine input and output values */
