@@ -2385,54 +2385,58 @@ public class konamiic
 			K051960_callbackProcPtr callback)
 	{
 		int gfx_index;
-		GfxLayout spritelayout = new GfxLayout
-		(
-			16,16,
-			0,				/* filled in later */
-			4,
-			new int[] { 0, 0, 0, 0 },	/* filled in later */
-			new int[] { 0, 1, 2, 3, 4, 5, 6, 7,
-					8*32+0, 8*32+1, 8*32+2, 8*32+3, 8*32+4, 8*32+5, 8*32+6, 8*32+7 },
-			new int[] { 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32,
-					16*32, 17*32, 18*32, 19*32, 20*32, 21*32, 22*32, 23*32 },
-			128*8
-		);
-	
-	
-		/* find first empty slot to decode gfx */
-		for (gfx_index = 0; gfx_index < MAX_GFX_ELEMENTS; gfx_index++)
-			if (Machine.gfx[gfx_index] == null)
-				break;
-		if (gfx_index == MAX_GFX_ELEMENTS)
-			return 1;
-	
-		/* tweak the structure for the number of tiles we have */
-		spritelayout.total = memory_region_length(gfx_memory_region) / 128;
-		spritelayout.planeoffset[0] = plane0 * 8;
-		spritelayout.planeoffset[1] = plane1 * 8;
-		spritelayout.planeoffset[2] = plane2 * 8;
-		spritelayout.planeoffset[3] = plane3 * 8;
-	
-		/* decode the graphics */
-		Machine.gfx[gfx_index] = decodegfx(memory_region(gfx_memory_region),spritelayout);
-		if (Machine.gfx[gfx_index]==null)
-			return 1;
-	
-		/* set the color information */
-		Machine.gfx[gfx_index].colortable = new IntArray(Machine.remapped_colortable);
-		Machine.gfx[gfx_index].total_colors = Machine.drv.color_table_len / 16;
-	
-		K051960_memory_region = gfx_memory_region;
-		K051960_gfx = Machine.gfx[gfx_index];
-		K051960_callback = callback;
-		K051960_ram = new UBytePtr(0x400);
-		if (K051960_ram==null) return 1;
-		
+                GfxLayout spritelayout = new GfxLayout(
+                        16, 16,
+                        0, /* filled in later */
+                        4,
+                        new int[]{0, 0, 0, 0}, /* filled in later */
+                        new int[]{0, 1, 2, 3, 4, 5, 6, 7,
+                            8 * 32 + 0, 8 * 32 + 1, 8 * 32 + 2, 8 * 32 + 3, 8 * 32 + 4, 8 * 32 + 5, 8 * 32 + 6, 8 * 32 + 7},
+                        new int[]{0 * 32, 1 * 32, 2 * 32, 3 * 32, 4 * 32, 5 * 32, 6 * 32, 7 * 32,
+                            16 * 32, 17 * 32, 18 * 32, 19 * 32, 20 * 32, 21 * 32, 22 * 32, 23 * 32},
+                        128 * 8
+                );
+
+
+                /* find first empty slot to decode gfx */
+                for (gfx_index = 0; gfx_index < MAX_GFX_ELEMENTS; gfx_index++) {
+                    if (Machine.gfx[gfx_index] == null) {
+                        break;
+                    }
+                }
+                if (gfx_index == MAX_GFX_ELEMENTS) {
+                    return 1;
+                }
+
+                /* tweak the structure for the number of tiles we have */
+                spritelayout.total = memory_region_length(gfx_memory_region) / 128;
+                spritelayout.planeoffset[0] = plane0 * 8;
+                spritelayout.planeoffset[1] = plane1 * 8;
+                spritelayout.planeoffset[2] = plane2 * 8;
+                spritelayout.planeoffset[3] = plane3 * 8;
+
+                /* decode the graphics */
+                Machine.gfx[gfx_index] = decodegfx(memory_region(gfx_memory_region), spritelayout);
+                if (Machine.gfx[gfx_index] == null) {
+                    return 1;
+                }
+
+                /* set the color information */
+                Machine.gfx[gfx_index].colortable = new IntArray(Machine.remapped_colortable);
+                Machine.gfx[gfx_index].total_colors = Machine.drv.color_table_len / 16;
+
+                K051960_memory_region = gfx_memory_region;
+                K051960_gfx = Machine.gfx[gfx_index];
+                K051960_callback = callback;
+                K051960_ram = new UBytePtr(0x400);
+                if (K051960_ram == null) {
+                    return 1;
+                }
+
                 for (int i = 0; i < 0x400; i++) {
                     K051960_ram.write(i, 0);//memset(K051960_ram,0,0x400);
                 }
-	
-		return 0;
+                return 0;
 	}
 	
 	public static VhStopPtr K051960_vh_stop = new VhStopPtr() { public void handler() 
@@ -2610,265 +2614,260 @@ public class konamiic
 	 */
 	
 	public static void K051960_sprites_draw(osd_bitmap bitmap,int min_priority,int max_priority)
-	{
-                int NUM_SPRITES = 128;
-		int offs,pri_code;
-		int[] sortedlist = new int[NUM_SPRITES];
-	
-		for (offs = 0;offs < NUM_SPRITES;offs++)
-			sortedlist[offs] = -1;
-	
-		/* prebuild a sorted table */
-		for (offs = 0;offs < 0x400;offs += 8)
-		{
-			if ((K051960_ram.read(offs) & 0x80) != 0)
-			{
-				if (max_priority == -1)	/* draw front to back when using priority buffer */
-					sortedlist[(K051960_ram.read(offs) & 0x7f) ^ 0x7f] = offs;
-				else
-					sortedlist[K051960_ram.read(offs) & 0x7f] = offs;
-			}
-		}
-	
-		for (pri_code = 0;pri_code < NUM_SPRITES;pri_code++)
-		{
-			int ox,oy,size,w,h,x,y,flipx,flipy,zoomx,zoomy;
-                        int[] code=new int[1],color=new int[1],pri=new int[1],shadow=new int[1];
-			/* sprites can be grouped up to 8x8. The draw order is
-				 0  1  4  5 16 17 20 21
-				 2  3  6  7 18 19 22 23
-				 8  9 12 13 24 25 28 29
-				10 11 14 15 26 27 30 31
-				32 33 36 37 48 49 52 53
-				34 35 38 39 50 51 54 55
-				40 41 44 45 56 57 60 61
-				42 43 46 47 58 59 62 63
-			*/
-			int xoffset[] = { 0, 1, 4, 5, 16, 17, 20, 21 };
-			int yoffset[] = { 0, 2, 8, 10, 32, 34, 40, 42 };
-			int width[] =  { 1, 2, 1, 2, 4, 2, 4, 8 };
-			int height[] = { 1, 1, 2, 2, 2, 4, 4, 8 };
-	
-	
-			offs = sortedlist[pri_code];
-			if (offs == -1) continue;
-	
-			code[0] = K051960_ram.read(offs+2) + ((K051960_ram.read(offs+1) & 0x1f) << 8);
-			color[0] = K051960_ram.read(offs+3) & 0xff;
-			pri[0] = 0;
-			shadow[0] = color[0] & 0x80;
-			(K051960_callback).handler(code,color,pri,shadow);
-	
-			if (max_priority != -1)
-				if (pri[0] < min_priority || pri[0] > max_priority) continue;
-	
-			size = (K051960_ram.read(offs+1) & 0xe0) >> 5;
-			w = width[size];
-			h = height[size];
-	
-			if (w >= 2) code[0] &= ~0x01;
-			if (h >= 2) code[0] &= ~0x02;
-			if (w >= 4) code[0] &= ~0x04;
-			if (h >= 4) code[0] &= ~0x08;
-			if (w >= 8) code[0] &= ~0x10;
-			if (h >= 8) code[0] &= ~0x20;
-	
-			ox = (256 * K051960_ram.read(offs+6) + K051960_ram.read(offs+7)) & 0x01ff;
-			oy = 256 - ((256 * K051960_ram.read(offs+4) + K051960_ram.read(offs+5)) & 0x01ff);
-			flipx = K051960_ram.read(offs+6) & 0x02;
-			flipy = K051960_ram.read(offs+4) & 0x02;
-			zoomx = (K051960_ram.read(offs+6) & 0xfc) >> 2;
-			zoomy = (K051960_ram.read(offs+4) & 0xfc) >> 2;
-			zoomx = 0x10000 / 128 * (128 - zoomx);
-			zoomy = 0x10000 / 128 * (128 - zoomy);
-	
-			if (K051960_spriteflip != 0)
-			{
-				ox = 512 - (zoomx * w >> 12) - ox;
-				oy = 256 - (zoomy * h >> 12) - oy;
-				flipx = NOT(flipx);
-				flipy = NOT(flipy);
-			}
-	
-			if (zoomx == 0x10000 && zoomy == 0x10000)
-			{
-				int sx,sy;
-	
-				for (y = 0;y < h;y++)
-				{
-					sy = oy + 16 * y;
-	
-					for (x = 0;x < w;x++)
-					{
-						int c = code[0];
-	
-						sx = ox + 16 * x;
-						if (flipx != 0) c += xoffset[(w-1-x)];
-						else c += xoffset[x];
-						if (flipy != 0) c += yoffset[(h-1-y)];
-						else c += yoffset[y];
-	
-						/* hack to simulate shadow */
-						if (shadow[0] != 0)
-						{
-							int o = K051960_gfx.colortable.read(16*color[0]+15);
-							K051960_gfx.colortable.write(16*color[0]+15, palette_transparent_pen);
-							if (max_priority == -1)
-								pdrawgfx(bitmap,K051960_gfx,
-										c,
-										color[0],
-										flipx,flipy,
-										sx & 0x1ff,sy,
-										Machine.visible_area,TRANSPARENCY_PENS,(cpu_getcurrentframe() & 1)!=0 ? 0x8001 : 0x0001,pri[0]);
-							else
-								drawgfx(bitmap,K051960_gfx,
-										c,
-										color[0],
-										flipx,flipy,
-										sx & 0x1ff,sy,
-										Machine.visible_area,TRANSPARENCY_PENS,(cpu_getcurrentframe() & 1)!=0 ? 0x8001 : 0x0001);
-							K051960_gfx.colortable.write(16*color[0]+15, o);
-						}
-						else
-						{
-							if (max_priority == -1)
-								pdrawgfx(bitmap,K051960_gfx,
-										c,
-										color[0],
-										flipx,flipy,
-										sx & 0x1ff,sy,
-										Machine.visible_area,TRANSPARENCY_PEN,0,pri[0]);
-							else
-								drawgfx(bitmap,K051960_gfx,
-										c,
-										color[0],
-										flipx,flipy,
-										sx & 0x1ff,sy,
-										Machine.visible_area,TRANSPARENCY_PEN,0);
-						}
-					}
-				}
-			}
-			else
-			{
-				int sx,sy,zw,zh;
-	
-				for (y = 0;y < h;y++)
-				{
-					sy = oy + ((zoomy * y + (1<<11)) >> 12);
-					zh = (oy + ((zoomy * (y+1) + (1<<11)) >> 12)) - sy;
-	
-					for (x = 0;x < w;x++)
-					{
-						int c = code[0];
-	
-						sx = ox + ((zoomx * x + (1<<11)) >> 12);
-						zw = (ox + ((zoomx * (x+1) + (1<<11)) >> 12)) - sx;
-						if (flipx != 0) c += xoffset[(w-1-x)];
-						else c += xoffset[x];
-						if (flipy != 0) c += yoffset[(h-1-y)];
-						else c += yoffset[y];
-	
-						/* hack to simulate shadow */
-						if (shadow[0] != 0)
-						{
-							int o = K051960_gfx.colortable.read(16*color[0]+15);
-							K051960_gfx.colortable.write(16*color[0]+15, palette_transparent_pen);
-							if (max_priority == -1)
-								pdrawgfxzoom(bitmap,K051960_gfx,
-										c,
-										color[0],
-										flipx,flipy,
-										sx & 0x1ff,sy,
-										Machine.visible_area,TRANSPARENCY_PENS,(cpu_getcurrentframe() & 1)!=0 ? 0x8001 : 0x0001,
-										(zw << 16) / 16,(zh << 16) / 16,pri[0]);
-							else
-								drawgfxzoom(bitmap,K051960_gfx,
-										c,
-										color[0],
-										flipx,flipy,
-										sx & 0x1ff,sy,
-										Machine.visible_area,TRANSPARENCY_PENS,(cpu_getcurrentframe() & 1)!=0 ? 0x8001 : 0x0001,
-										(zw << 16) / 16,(zh << 16) / 16);
-							K051960_gfx.colortable.write(16*color[0]+15, o);
-						}
-						else
-						{
-							if (max_priority == -1)
-								pdrawgfxzoom(bitmap,K051960_gfx,
-										c,
-										color[0],
-										flipx,flipy,
-										sx & 0x1ff,sy,
-										Machine.visible_area,TRANSPARENCY_PEN,0,
-										(zw << 16) / 16,(zh << 16) / 16,pri[0]);
-							else
-								drawgfxzoom(bitmap,K051960_gfx,
-										c,
-										color[0],
-										flipx,flipy,
-										sx & 0x1ff,sy,
-										Machine.visible_area,TRANSPARENCY_PEN,0,
-										(zw << 16) / 16,(zh << 16) / 16);
-						}
-					}
-				}
-			}
-		}
-/*TODO*///	#if 0
-/*TODO*///	if (keyboard_pressed(KEYCODE_D))
-/*TODO*///	{
-/*TODO*///		FILE *fp;
-/*TODO*///		fp=fopen("SPRITE.DMP", "w+b");
-/*TODO*///		if (fp != 0)
-/*TODO*///		{
-/*TODO*///			fwrite(K051960_ram, 0x400, 1, fp);
-/*TODO*///			usrintf_showmessage("saved");
-/*TODO*///			fclose(fp);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	#endif
-/*TODO*///	#undef NUM_SPRITES
-	}
+        {
+            int NUM_SPRITES = 128;
+            int offs, pri_code;
+            int[] sortedlist = new int[NUM_SPRITES];
+
+            for (offs = 0; offs < NUM_SPRITES; offs++) {
+                sortedlist[offs] = -1;
+            }
+
+            /* prebuild a sorted table */
+            for (offs = 0; offs < 0x400; offs += 8) {
+                if ((K051960_ram.read(offs) & 0x80) != 0) {
+                    if (max_priority == -1) /* draw front to back when using priority buffer */ {
+                        sortedlist[(K051960_ram.read(offs) & 0x7f) ^ 0x7f] = offs;
+                    } else {
+                        sortedlist[K051960_ram.read(offs) & 0x7f] = offs;
+                    }
+                }
+            }
+            for (pri_code = 0; pri_code < NUM_SPRITES; pri_code++) {
+                int ox, oy, size, w, h, x, y, flipx, flipy, zoomx, zoomy;
+                int[] code = new int[1];
+                int[] color = new int[1];
+                int[] pri = new int[1];
+                int[] shadow = new int[1];
+
+                int xoffset[] = {0, 1, 4, 5, 16, 17, 20, 21};
+                int yoffset[] = {0, 2, 8, 10, 32, 34, 40, 42};
+                int width[] = {1, 2, 1, 2, 4, 2, 4, 8};
+                int height[] = {1, 1, 2, 2, 2, 4, 4, 8};
+
+                offs = sortedlist[pri_code];
+                if (offs == -1) {
+                    continue;
+                }
+
+                code[0] = K051960_ram.read(offs + 2) + ((K051960_ram.read(offs + 1) & 0x1f) << 8);
+                color[0] = K051960_ram.read(offs + 3) & 0xff;
+                pri[0] = 0;
+                shadow[0] = color[0] & 0x80;
+                K051960_callback.handler(code, color, pri, shadow);
+
+                if (max_priority != -1) {
+                    if (pri[0] < min_priority || pri[0] > max_priority) {
+                        continue;
+                    }
+                }
+
+                size = (K051960_ram.read(offs + 1) & 0xe0) >> 5;
+                w = width[size];
+                h = height[size];
+
+                if (w >= 2) {
+                    code[0] &= ~0x01;
+                }
+                if (h >= 2) {
+                    code[0] &= ~0x02;
+                }
+                if (w >= 4) {
+                    code[0] &= ~0x04;
+                }
+                if (h >= 4) {
+                    code[0] &= ~0x08;
+                }
+                if (w >= 8) {
+                    code[0] &= ~0x10;
+                }
+                if (h >= 8) {
+                    code[0] &= ~0x20;
+                }
+
+                ox = (256 * K051960_ram.read(offs + 6) + K051960_ram.read(offs + 7)) & 0x01ff;
+                oy = 256 - ((256 * K051960_ram.read(offs + 4) + K051960_ram.read(offs + 5)) & 0x01ff);
+                flipx = K051960_ram.read(offs + 6) & 0x02;
+                flipy = K051960_ram.read(offs + 4) & 0x02;
+                zoomx = (K051960_ram.read(offs + 6) & 0xfc) >> 2;
+                zoomy = (K051960_ram.read(offs + 4) & 0xfc) >> 2;
+                zoomx = 0x10000 / 128 * (128 - zoomx);
+                zoomy = 0x10000 / 128 * (128 - zoomy);
+
+                if (K051960_spriteflip != 0) {
+                    ox = 512 - (zoomx * w >> 12) - ox;
+                    oy = 256 - (zoomy * h >> 12) - oy;
+                    flipx = NOT(flipx);
+                    flipy = NOT(flipy);
+                }
+
+                if (zoomx == 0x10000 && zoomy == 0x10000) {
+                    int sx, sy;
+
+                    for (y = 0; y < h; y++) {
+                        sy = oy + 16 * y;
+
+                        for (x = 0; x < w; x++) {
+                            int c = code[0];
+
+                            sx = ox + 16 * x;
+                            if (flipx != 0) {
+                                c += xoffset[(w - 1 - x)];
+                            } else {
+                                c += xoffset[x];
+                            }
+                            if (flipy != 0) {
+                                c += yoffset[(h - 1 - y)];
+                            } else {
+                                c += yoffset[y];
+                            }
+
+                            /* hack to simulate shadow */
+                            if (shadow[0] != 0) {
+                                int o = K051960_gfx.colortable.read(16 * color[0] + 15);
+                                K051960_gfx.colortable.write(16 * color[0] + 15, palette_transparent_pen);
+                                if (max_priority == -1) {
+                                    pdrawgfx(bitmap, K051960_gfx,
+                                            c,
+                                            color[0],
+                                            flipx, flipy,
+                                            sx & 0x1ff, sy,
+                                            Machine.visible_area, TRANSPARENCY_PENS, (cpu_getcurrentframe() & 1) != 0 ? 0x8001 : 0x0001, pri[0]);
+                                } else {
+                                    drawgfx(bitmap, K051960_gfx,
+                                            c,
+                                            color[0],
+                                            flipx, flipy,
+                                            sx & 0x1ff, sy,
+                                            Machine.visible_area, TRANSPARENCY_PENS, (cpu_getcurrentframe() & 1) != 0 ? 0x8001 : 0x0001);
+                                }
+                                K051960_gfx.colortable.write(16 * color[0] + 15, o);
+                            } else {
+                                if (max_priority == -1) {
+                                    pdrawgfx(bitmap, K051960_gfx,
+                                            c,
+                                            color[0],
+                                            flipx, flipy,
+                                            sx & 0x1ff, sy,
+                                            Machine.visible_area, TRANSPARENCY_PEN, 0, pri[0]);
+                                } else {
+                                    drawgfx(bitmap, K051960_gfx,
+                                            c,
+                                            color[0],
+                                            flipx, flipy,
+                                            sx & 0x1ff, sy,
+                                            Machine.visible_area, TRANSPARENCY_PEN, 0);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    int sx, sy, zw, zh;
+
+                    for (y = 0; y < h; y++) {
+                        sy = oy + ((zoomy * y + (1 << 11)) >> 12);
+                        zh = (oy + ((zoomy * (y + 1) + (1 << 11)) >> 12)) - sy;
+
+                        for (x = 0; x < w; x++) {
+                            int c = code[0];
+
+                            sx = ox + ((zoomx * x + (1 << 11)) >> 12);
+                            zw = (ox + ((zoomx * (x + 1) + (1 << 11)) >> 12)) - sx;
+                            if (flipx != 0) {
+                                c += xoffset[(w - 1 - x)];
+                            } else {
+                                c += xoffset[x];
+                            }
+                            if (flipy != 0) {
+                                c += yoffset[(h - 1 - y)];
+                            } else {
+                                c += yoffset[y];
+                            }
+
+                            /* hack to simulate shadow */
+                            if (shadow[0] != 0) {
+                                int o = K051960_gfx.colortable.read(16 * color[0] + 15);
+                                K051960_gfx.colortable.write(16 * color[0] + 15, palette_transparent_pen);
+                                if (max_priority == -1) {
+                                    pdrawgfxzoom(bitmap, K051960_gfx,
+                                            c,
+                                            color[0],
+                                            flipx, flipy,
+                                            sx & 0x1ff, sy,
+                                            Machine.visible_area, TRANSPARENCY_PENS, (cpu_getcurrentframe() & 1) != 0 ? 0x8001 : 0x0001,
+                                            (zw << 16) / 16, (zh << 16) / 16, pri[0]);
+                                } else {
+                                    drawgfxzoom(bitmap, K051960_gfx,
+                                            c,
+                                            color[0],
+                                            flipx, flipy,
+                                            sx & 0x1ff, sy,
+                                            Machine.visible_area, TRANSPARENCY_PENS, (cpu_getcurrentframe() & 1) != 0 ? 0x8001 : 0x0001,
+                                            (zw << 16) / 16, (zh << 16) / 16);
+                                }
+                                K051960_gfx.colortable.write(16 * color[0] + 15, o);
+                            } else {
+                                if (max_priority == -1) {
+                                    pdrawgfxzoom(bitmap, K051960_gfx,
+                                            c,
+                                            color[0],
+                                            flipx, flipy,
+                                            sx & 0x1ff, sy,
+                                            Machine.visible_area, TRANSPARENCY_PEN, 0,
+                                            (zw << 16) / 16, (zh << 16) / 16, pri[0]);
+                                } else {
+                                    drawgfxzoom(bitmap, K051960_gfx,
+                                            c,
+                                            color[0],
+                                            flipx, flipy,
+                                            sx & 0x1ff, sy,
+                                            Machine.visible_area, TRANSPARENCY_PEN, 0,
+                                            (zw << 16) / 16, (zh << 16) / 16);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 	
 	public static void K051960_mark_sprites_colors()
 	{
-		int offs,i;
-	
-		short[] palette_map=new short[512];
-	
-		memset (palette_map, 0, palette_map.length);
-	
-		/* sprites */
-		for (offs = 0x400-8;offs >= 0;offs -= 8)
-		{
-			if ((K051960_ram.read(offs) & 0x80) != 0)
-			{
-				int[] code = new int[1];
-                                int[] color = new int[1];
-                                int[] pri = new int[1];
-                                int[] shadow = new int[1];
-	
-				code[0] = K051960_ram.read(offs+2) + ((K051960_ram.read(offs+1) & 0x1f) << 8);
-				color[0] = (K051960_ram.read(offs+3) & 0xff);
-				pri[0] = 0;
-				shadow[0] = color[0] & 0x80;
-				K051960_callback.handler(code,color,pri,shadow);
-				palette_map[color[0]] |= 0xffff;
-			}
-		}
-	
-		/* now build the final table */
-		for (i = 0; i < 512; i++)
-		{
-			int usage = palette_map[i], j;
-			if (usage != 0)
-			{
-				for (j = 1; j < 16; j++)
-					if ((usage & (1 << j)) != 0)
-						palette_used_colors.write(i * 16 + j, palette_used_colors.read(i * 16 + j) | PALETTE_COLOR_VISIBLE);
-			}
-		}
+            int offs, i;
+
+            /*unsigned short*/ char[] palette_map = new char[512];
+
+            memset(palette_map, 0, palette_map.length);
+
+            /* sprites */
+            for (offs = 0x400 - 8; offs >= 0; offs -= 8) {
+                if ((K051960_ram.read(offs) & 0x80) != 0) {
+                    //int code,color,pri;
+                    int[] code = new int[1];
+                    int[] color = new int[1];
+                    int[] pri = new int[1];
+                    int[] shadow = new int[1];
+
+                    code[0] = K051960_ram.read(offs + 2) + ((K051960_ram.read(offs + 1) & 0x1f) << 8);
+                    color[0] = (K051960_ram.read(offs + 3) & 0xff);
+                    pri[0] = 0;
+                    shadow[0] = color[0] & 0x80;
+                    K051960_callback.handler(code, color, pri, shadow);//(*K051960_callback)(&code,&color,&pri);
+                    palette_map[color[0]] |= 0xffff;
+                }
+            }
+
+            /* now build the final table */
+            for (i = 0; i < 512; i++) {
+                int usage = palette_map[i], j;
+                if (usage != 0) {
+                    for (j = 1; j < 16; j++) {
+                        if ((usage & (1 << j)) != 0) {
+                            palette_used_colors.write(i * 16 + j, palette_used_colors.read(i * 16 + j) | PALETTE_COLOR_VISIBLE);
+                        }
+                    }
+                }
+            }
 	}
 	
 	public static int K051960_is_IRQ_enabled()

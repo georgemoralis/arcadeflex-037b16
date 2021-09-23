@@ -65,6 +65,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.namcos1.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.ddragon.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.shisen.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.simpsons.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gbusters.*;
 
 public class driver {
 
@@ -2586,8 +2587,8 @@ public class driver {
         /*TODO*///	driver_88games,	/* GX861 (c) 1988 */
         /*TODO*///	driver_konami88,	/* GX861 (c) 1988 */
         /*TODO*///	driver_hypsptsp,	/* GX861 (c) 1988 (Japan) */
-        /*TODO*///	driver_gbusters,	/* GX878 (c) 1988 */
-        /*TODO*///	driver_crazycop,	/* GX878 (c) 1988 (Japan) */
+        	driver_gbusters,	/* GX878 (c) 1988 */
+        	driver_crazycop,	/* GX878 (c) 1988 (Japan) */
         /*TODO*///	driver_crimfght,	/* GX821 (c) 1989 (US) */
         /*TODO*///	driver_crimfgt2,	/* GX821 (c) 1989 (World) */
         /*TODO*///	driver_crimfgtj,	/* GX821 (c) 1989 (Japan) */
