@@ -986,7 +986,7 @@ static void memsetbitmask8(UBytePtr dest, int value, UBytePtr bitmask, int count
     				palette_decrease_usage_countx(
     					pal_data.offset-Machine.remapped_colortable.offset,
     					num_pens,
-    					cached_tile_info.pen_data,
+    					new UBytePtr(cached_tile_info.pen_data),
     					PALETTE_COLOR_VISIBLE|PALETTE_COLOR_CACHED );
     			}
     			cached_tile_info.pal_data = null;
@@ -1011,7 +1011,7 @@ static void memsetbitmask8(UBytePtr dest, int value, UBytePtr bitmask, int count
     			palette_increase_usage_countx(
     				cached_tile_info.pal_data.offset-Machine.remapped_colortable.offset,
     				num_pens,
-    				cached_tile_info.pen_data,
+    				new UBytePtr(cached_tile_info.pen_data),
     				PALETTE_COLOR_VISIBLE|PALETTE_COLOR_CACHED );
     		}
     	}
@@ -1327,7 +1327,7 @@ public static void tilemap_set_scroll_cols( struct_tilemap tilemap, int n )
             int /*UINT32*/ x0, int /*UINT32*/ y0,
             int /*UINT32*/ tile_size,
             UBytePtr pPenData,
-            UShortArray clut,
+            IntArray clut,
             int transparent_color,
             int /*UINT32*/ flags,
             int pitch )
@@ -1607,14 +1607,14 @@ public static void tilemap_set_scroll_cols( struct_tilemap tilemap, int n )
     		{ /* foreground transparent */
     			ClearMask( tilemap.background.bitmask, tile_size, x0, y0 );
     			draw_mask( tilemap,tilemap.background.bitmask,
-    				x0, y0, tile_size, pen_data, bgmask, flags, pitch );
+    				x0, y0, tile_size, new UBytePtr(pen_data), bgmask, flags, pitch );
     			tilemap.foreground.data_row[row].write(col, TILE_TRANSPARENT);
     		}
     		else
     		{ /* masked tile */
     			ClearMask( tilemap.foreground.bitmask, tile_size, x0, y0 );
     			draw_mask( tilemap,tilemap.foreground.bitmask,
-    				x0, y0, tile_size, pen_data, fgmask, flags, pitch );
+    				x0, y0, tile_size, new UBytePtr(pen_data), fgmask, flags, pitch );
     			tilemap.foreground.data_row[row].write(col, TILE_MASKED);
     		}
     
@@ -1626,7 +1626,7 @@ public static void tilemap_set_scroll_cols( struct_tilemap tilemap, int n )
     		{ /* background transparent */
     			ClearMask( tilemap.foreground.bitmask, tile_size, x0, y0 );
     			draw_mask( tilemap,tilemap.foreground.bitmask,
-    				x0, y0, tile_size, pen_data, fgmask, flags, pitch );
+    				x0, y0, tile_size, new UBytePtr(pen_data), fgmask, flags, pitch );
     				tilemap.foreground.data_row[row].write(col, TILE_MASKED);
     			tilemap.background.data_row[row].write(col, TILE_TRANSPARENT);
     		}
@@ -1634,7 +1634,7 @@ public static void tilemap_set_scroll_cols( struct_tilemap tilemap, int n )
     		{ /* masked tile */
     			ClearMask( tilemap.background.bitmask, tile_size, x0, y0 );
     			draw_mask( tilemap,tilemap.background.bitmask,
-    				x0, y0, tile_size, pen_data, bgmask, flags, pitch );
+    				x0, y0, tile_size, new UBytePtr(pen_data), bgmask, flags, pitch );
     			tilemap.background.data_row[row].write(col, TILE_MASKED);
     		}
     	}
@@ -1652,7 +1652,7 @@ public static void tilemap_set_scroll_cols( struct_tilemap tilemap, int n )
     			{
     				ClearMask( tilemap.foreground.bitmask, tile_size, x0, y0 );
     				draw_mask( tilemap,tilemap.foreground.bitmask,
-    					x0, y0, tile_size, pen_data, fgmask, flags, pitch );
+    					x0, y0, tile_size, new UBytePtr(pen_data), fgmask, flags, pitch );
     				tilemap.foreground.data_row[row].write(col, TILE_MASKED);
     			}
     			else
@@ -1679,7 +1679,7 @@ public static void tilemap_set_scroll_cols( struct_tilemap tilemap, int n )
     		draw_color_mask(
     				tilemap,tilemap.foreground.bitmask,
     				x0, y0, tile_size, new UBytePtr(pen_data),
-    				new UShortArray(Machine.game_colortable, (cached_tile_info.pal_data.offset - Machine.remapped_colortable.offset)),
+    				new IntArray(Machine.game_colortable, (cached_tile_info.pal_data.offset - Machine.remapped_colortable.offset)),
     				tilemap.transparent_pen, flags, pitch );
     
     		tilemap.foreground.data_row[row].write(col,
@@ -1717,7 +1717,7 @@ public static void tilemap_set_scroll_cols( struct_tilemap tilemap, int n )
     				cached_tile_info.u32_flags = (flags&0xfc)|logical_flip_to_cached_flip[flags&0x3];
     			}
     			cached_tile_info.u32_pen_usage = tile_info.pen_usage;
-    			cached_tile_info.pen_data = tile_info.pen_data;
+    			cached_tile_info.pen_data = new UBytePtr(tile_info.pen_data);
     			cached_tile_info.pal_data = tile_info.pal_data;
     			cached_tile_info.skip = tile_info.skip;
     			tilemap.u8_priority[cached_indx] = (char) tile_info.priority;

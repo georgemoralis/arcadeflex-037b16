@@ -1453,11 +1453,36 @@ public class inptport {
         }
     };
 
-    /*TODO*///READ16_HANDLER( input_port_0_word_r ) { return readinputport(0); }
-/*TODO*///READ16_HANDLER( input_port_1_word_r ) { return readinputport(1); }
-/*TODO*///READ16_HANDLER( input_port_2_word_r ) { return readinputport(2); }
-/*TODO*///READ16_HANDLER( input_port_3_word_r ) { return readinputport(3); }
-/*TODO*///READ16_HANDLER( input_port_4_word_r ) { return readinputport(4); }
+    public static ReadHandlerPtr input_port_0_word_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return readinputport(0);
+        } 
+    };
+    
+    public static ReadHandlerPtr input_port_1_word_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return readinputport(1);
+        } 
+    };
+    
+    public static ReadHandlerPtr input_port_2_word_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return readinputport(2);
+        } 
+    };
+    
+    public static ReadHandlerPtr input_port_3_word_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return readinputport(3);
+        } 
+    };
+    
+    public static ReadHandlerPtr input_port_4_word_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return readinputport(4);
+        } 
+    };
+    
 /*TODO*///READ16_HANDLER( input_port_5_word_r ) { return readinputport(5); }
 /*TODO*///READ16_HANDLER( input_port_6_word_r ) { return readinputport(6); }
 /*TODO*///READ16_HANDLER( input_port_7_word_r ) { return readinputport(7); }

@@ -66,6 +66,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.ddragon.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.shisen.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.simpsons.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gbusters.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.terracre.*;
 
 public class driver {
 
@@ -257,9 +258,9 @@ public class driver {
         /*TODO*///	driver_magmax,	/* (c) 1985 */
         driver_cop01, /* (c) 1985 */
         driver_cop01a, /* (c) 1985 */
-        /*TODO*///	driver_terracre,	/* (c) 1985 */
-        /*TODO*///	driver_terracrb,	/* (c) 1985 */
-        /*TODO*///	driver_terracra,	/* (c) 1985 */
+        driver_terracre,	/* (c) 1985 */
+        driver_terracrb,	/* (c) 1985 */
+        driver_terracra,	/* (c) 1985 */
         /*TODO*///	driver_galivan,	/* (c) 1985 */
         /*TODO*///	driver_galivan2,	/* (c) 1985 */
         /*TODO*///	driver_dangar,	/* (c) 1986 */
