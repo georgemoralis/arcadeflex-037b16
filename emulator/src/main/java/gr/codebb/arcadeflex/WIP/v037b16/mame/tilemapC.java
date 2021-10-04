@@ -269,13 +269,13 @@ public class tilemapC {
     	}
     }
     
-/*TODO*///struct osd_bitmap *tilemap_get_pixmap( struct tilemap * tilemap )
-/*TODO*///{
-/*TODO*///profiler_mark(PROFILER_TILEMAP_DRAW);
-/*TODO*///	tmap_render( tilemap );
-/*TODO*///profiler_mark(PROFILER_END);
-/*TODO*///	return tilemap->pixmap;
-/*TODO*///}
+    public static osd_bitmap tilemap_get_pixmap( struct_tilemap tilemap )
+    {
+    /*TODO*///profiler_mark(PROFILER_TILEMAP_DRAW);
+            tmap_render( tilemap );
+    /*TODO*///profiler_mark(PROFILER_END);
+            return tilemap.pixmap;
+    }
 
     public static void tilemap_set_transparent_pen( struct_tilemap tilemap, int pen )
     {
@@ -288,19 +288,19 @@ public class tilemapC {
             tilemap.bgmask[which] = bgmask;
     }
 
-/*TODO*///void tilemap_set_depth( struct tilemap *tilemap, int tile_depth, int tile_granularity )
-/*TODO*///{
-/*TODO*///	if( tilemap->tile_dirty_map )
-/*TODO*///	{
-/*TODO*///		free( tilemap->tile_dirty_map);
-/*TODO*///	}
-/*TODO*///	tilemap->tile_dirty_map = malloc( Machine->drv->total_colors >> tile_granularity);
-/*TODO*///	if( tilemap->tile_dirty_map )
-/*TODO*///	{
-/*TODO*///		tilemap->tile_depth = tile_depth;
-/*TODO*///		tilemap->tile_granularity = tile_granularity;
-/*TODO*///	}
-/*TODO*///}
+public static void tilemap_set_depth( struct_tilemap tilemap, int tile_depth, int tile_granularity )
+{
+	if( tilemap.tile_dirty_map != null )
+	{
+		tilemap.tile_dirty_map = null;
+	}
+	tilemap.tile_dirty_map = new UBytePtr( Machine.drv.total_colors >> tile_granularity);
+	if( tilemap.tile_dirty_map != null )
+	{
+		tilemap.tile_depth = tile_depth;
+		tilemap.tile_granularity = tile_granularity;
+	}
+}
 
     /***********************************************************************************/
     /* some common mappings */

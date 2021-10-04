@@ -35,6 +35,7 @@ import gr.codebb.arcadeflex.v037b16.sound.okim6295;
 import gr.codebb.arcadeflex.WIP.v037b16.sound.k053260;
 import gr.codebb.arcadeflex.v037b16.sound.k007232;
 import mame037b7.sound.y8950intf.*;
+import gr.codebb.arcadeflex.v037b16.sound.upd7759;
 //to be organized
 import static mame037b16.common.*;
 import static mame056.sound.streams.*;
@@ -491,19 +492,7 @@ public class sndintrf {
                 new adpcm(),
                 new okim6295(),
                 new MSM5205(),
-                /*TODO*///#endif
-                /*TODO*///#if (HAS_UPD7759)
-                /*TODO*///    {
-                /*TODO*///		SOUND_UPD7759,
-                /*TODO*///		"uPD7759",
-                /*TODO*///		0,
-                /*TODO*///		UPD7759_clock,
-                /*TODO*///		UPD7759_sh_start,
-                /*TODO*///		UPD7759_sh_stop,
-                /*TODO*///		0,
-                /*TODO*///		0
-                /*TODO*///	},
-                new Dummy_snd(),
+                new upd7759(),
                 new hc55516(),
                 /*TODO*///#endif
                 /*TODO*///#if (HAS_K005289)
