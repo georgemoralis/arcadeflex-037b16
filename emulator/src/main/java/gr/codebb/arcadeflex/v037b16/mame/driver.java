@@ -67,6 +67,8 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.shisen.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.simpsons.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.gbusters.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.terracre.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.hal21.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.snk.*;
 
 public class driver {
 
@@ -258,9 +260,9 @@ public class driver {
         /*TODO*///	driver_magmax,	/* (c) 1985 */
         driver_cop01, /* (c) 1985 */
         driver_cop01a, /* (c) 1985 */
-        driver_terracre,	/* (c) 1985 */
-        driver_terracrb,	/* (c) 1985 */
-        driver_terracra,	/* (c) 1985 */
+        driver_terracre, /* (c) 1985 */
+        driver_terracrb, /* (c) 1985 */
+        driver_terracra, /* (c) 1985 */
         /*TODO*///	driver_galivan,	/* (c) 1985 */
         /*TODO*///	driver_galivan2,	/* (c) 1985 */
         /*TODO*///	driver_dangar,	/* (c) 1986 */
@@ -472,41 +474,40 @@ public class driver {
         /*TODO*///	driver_rthunder,	/* (c) 1986 new version */
         /*TODO*///	driver_rthundro,	/* (c) 1986 old version */
         /*TODO*///	driver_wndrmomo,	/* (c) 1987 */
-        
-        	/* Namco System 1 games */
-        	driver_shadowld,	/* (c) 1987 */
-        	driver_youkaidk,	/* (c) 1987 (Japan new version) */
-        	driver_yokaidko,	/* (c) 1987 (Japan old version) */
-        	driver_dspirit,	/* (c) 1987 new version */
-        	driver_dspirito,	/* (c) 1987 old version */
-        	driver_blazer,	/* (c) 1987 (Japan) */
-        	driver_quester,	/* (c) 1987 (Japan) */
-        	driver_pacmania,	/* (c) 1987 */
-        	driver_pacmanij,	/* (c) 1987 (Japan) */
-        	driver_galaga88,	/* (c) 1987 */
-        	driver_galag88b,	/* (c) 1987 */
-        	driver_galag88j,	/* (c) 1987 (Japan) */
-        	driver_ws,		/* (c) 1988 (Japan) */
-        	driver_berabohm,	/* (c) 1988 (Japan) */
-        	/* 1988 Alice in Wonderland (English version of Marchen maze) */
-        	driver_mmaze,		/* (c) 1988 (Japan) */
+
+        /* Namco System 1 games */
+        driver_shadowld, /* (c) 1987 */
+        driver_youkaidk, /* (c) 1987 (Japan new version) */
+        driver_yokaidko, /* (c) 1987 (Japan old version) */
+        driver_dspirit, /* (c) 1987 new version */
+        driver_dspirito, /* (c) 1987 old version */
+        driver_blazer, /* (c) 1987 (Japan) */
+        driver_quester, /* (c) 1987 (Japan) */
+        driver_pacmania, /* (c) 1987 */
+        driver_pacmanij, /* (c) 1987 (Japan) */
+        driver_galaga88, /* (c) 1987 */
+        driver_galag88b, /* (c) 1987 */
+        driver_galag88j, /* (c) 1987 (Japan) */
+        driver_ws, /* (c) 1988 (Japan) */
+        driver_berabohm, /* (c) 1988 (Japan) */
+        /* 1988 Alice in Wonderland (English version of Marchen maze) */
+        driver_mmaze, /* (c) 1988 (Japan) */
         /*TODO*///TESTdriver_bakutotu,	/* (c) 1988 */
-        	driver_wldcourt,	/* (c) 1988 (Japan) */
-        	driver_splatter,	/* (c) 1988 (Japan) */
-        	driver_faceoff,	/* (c) 1988 (Japan) */
-        	driver_rompers,	/* (c) 1989 (Japan) */
-        	driver_romperso,	/* (c) 1989 (Japan) */
-        	driver_blastoff,	/* (c) 1989 (Japan) */
-        	driver_ws89,		/* (c) 1989 (Japan) */
-        	driver_dangseed,	/* (c) 1989 (Japan) */
-        	driver_ws90,		/* (c) 1990 (Japan) */
-        	driver_pistoldm,	/* (c) 1990 (Japan) */
-        	driver_boxyboy,	/* (c) 1990 (US) */
-        	driver_soukobdx,	/* (c) 1990 (Japan) */
-        	driver_puzlclub,	/* (c) 1990 (Japan) */
-        	driver_tankfrce,	/* (c) 1991 (US) */
-        	driver_tankfrcj,	/* (c) 1991 (Japan) */
-        
+        driver_wldcourt, /* (c) 1988 (Japan) */
+        driver_splatter, /* (c) 1988 (Japan) */
+        driver_faceoff, /* (c) 1988 (Japan) */
+        driver_rompers, /* (c) 1989 (Japan) */
+        driver_romperso, /* (c) 1989 (Japan) */
+        driver_blastoff, /* (c) 1989 (Japan) */
+        driver_ws89, /* (c) 1989 (Japan) */
+        driver_dangseed, /* (c) 1989 (Japan) */
+        driver_ws90, /* (c) 1990 (Japan) */
+        driver_pistoldm, /* (c) 1990 (Japan) */
+        driver_boxyboy, /* (c) 1990 (US) */
+        driver_soukobdx, /* (c) 1990 (Japan) */
+        driver_puzlclub, /* (c) 1990 (Japan) */
+        driver_tankfrce, /* (c) 1991 (US) */
+        driver_tankfrcj, /* (c) 1991 (Japan) */
         /*TODO*///	/* Namco System 2 games */
         /*TODO*///TESTdriver_finallap,	/* 87.12 Final Lap */
         /*TODO*///TESTdriver_finalapd,	/* 87.12 Final Lap */
@@ -989,10 +990,10 @@ public class driver {
         /*TODO*///	driver_poundfou,	/* (c) 1990 Irem America (US) */
         /*TODO*///	driver_airduel,	/* (c) 1990 (Japan) */
         /*TODO*///	driver_gallop,	/* (c) 1991 (Japan) */
-        	/* not M72, but same sound hardware */
-        	driver_sichuan2,	/* (c) 1989 Tamtex */
-        	driver_sichuana,	/* (c) 1989 Tamtex */
-        	driver_shisen,	/* (c) 1989 Tamtex */
+        /* not M72, but same sound hardware */
+        driver_sichuan2, /* (c) 1989 Tamtex */
+        driver_sichuana, /* (c) 1989 Tamtex */
+        driver_shisen, /* (c) 1989 Tamtex */
         /*TODO*///	/* M90 */
         /*TODO*///TESTdriver_hasamu,
         /*TODO*///	driver_bombrman,	/* (c) 1991 Irem (Japan) */
@@ -2588,8 +2589,8 @@ public class driver {
         /*TODO*///	driver_88games,	/* GX861 (c) 1988 */
         /*TODO*///	driver_konami88,	/* GX861 (c) 1988 */
         /*TODO*///	driver_hypsptsp,	/* GX861 (c) 1988 (Japan) */
-        	driver_gbusters,	/* GX878 (c) 1988 */
-        	driver_crazycop,	/* GX878 (c) 1988 (Japan) */
+        driver_gbusters, /* GX878 (c) 1988 */
+        driver_crazycop, /* GX878 (c) 1988 (Japan) */
         /*TODO*///	driver_crimfght,	/* GX821 (c) 1989 (US) */
         /*TODO*///	driver_crimfgt2,	/* GX821 (c) 1989 (World) */
         /*TODO*///	driver_crimfgtj,	/* GX821 (c) 1989 (Japan) */
@@ -2607,9 +2608,9 @@ public class driver {
         /*TODO*///	driver_parodius,	/* GX955 (c) 1990 (Japan) */
         /*TODO*///	driver_rollerg,	/* GX999 (c) 1991 (US) */
         /*TODO*///	driver_rollergj,	/* GX999 (c) 1991 (Japan) */
-        	driver_simpsons,	/* GX072 (c) 1991 */
-        	driver_simpsn2p,	/* GX072 (c) 1991 */
-        	driver_simps2pj,	/* GX072 (c) 1991 (Japan) */
+        driver_simpsons, /* GX072 (c) 1991 */
+        driver_simpsn2p, /* GX072 (c) 1991 */
+        driver_simps2pj, /* GX072 (c) 1991 (Japan) */
         /*TODO*///	driver_vendetta,	/* GX081 (c) 1991 (US) */
         /*TODO*///	driver_vendetas,	/* GX081 (c) 1991 (Asia) */
         /*TODO*///	driver_vendeta2,	/* GX081 (c) 1991 (Asia) */
@@ -2978,33 +2979,33 @@ public class driver {
         /*TODO*///	driver_madcrash,	/* A2005      (c) 1984 */
         /*TODO*///	driver_vangrd2,	/*            (c) 1984 */
         /*TODO*///	driver_sgladiat,	/* A3006      (c) 1984 */
-        /*TODO*///	driver_hal21,		/*            (c) 1985 */
-        /*TODO*///	driver_hal21j,	/*            (c) 1985 (Japan) */
-        /*TODO*///	driver_aso,		/*            (c) 1985 */
-        /*TODO*///	driver_tnk3,		/* A5001      (c) 1985 */
-        /*TODO*///	driver_tnk3j,		/* A5001      (c) 1985 */
-        /*TODO*///	driver_athena,	/*       'UP' (c) 1986 */
-        /*TODO*///	driver_fitegolf,	/*       'GU' (c) 1988 */
-        /*TODO*///	driver_ikari,		/* A5004 'IW' (c) 1986 */
-        /*TODO*///	driver_ikarijp,	/* A5004 'IW' (c) 1986 (Japan) */
-        /*TODO*///	driver_ikarijpb,	/* bootleg */
-        /*TODO*///	driver_victroad,	/*            (c) 1986 */
-        /*TODO*///	driver_dogosoke,	/*            (c) 1986 */
-        /*TODO*///	driver_gwar,		/* A7003 'GV' (c) 1987 */
-        /*TODO*///	driver_gwarj,		/* A7003 'GV' (c) 1987 (Japan) */
-        /*TODO*///	driver_gwara,		/* A7003 'GV' (c) 1987 */
-        /*TODO*///	driver_gwarb,		/* bootleg */
-        /*TODO*///	driver_bermudat,	/* A6003 'WW' (c) 1987 */
-        /*TODO*///	driver_bermudaj,	/* A6003 'WW' (c) 1987 */
-        /*TODO*///	driver_bermudaa,	/* A6003 'WW' (c) 1987 */
-        /*TODO*///	driver_worldwar,	/* A6003 'WW' (c) 1987 */
-        /*TODO*///	driver_psychos,	/*       'PS' (c) 1987 */
-        /*TODO*///	driver_psychosj,	/*       'PS' (c) 1987 (Japan) */
-        /*TODO*///	driver_chopper,	/* A7003 'KK' (c) 1988 */
-        /*TODO*///	driver_legofair,	/* A7003 'KK' (c) 1988 */
-        /*TODO*///	driver_ftsoccer,	/*            (c) 1988 */
-        /*TODO*///	driver_tdfever,	/* A6006 'TD' (c) 1987 */
-        /*TODO*///	driver_tdfeverj,	/* A6006 'TD' (c) 1987 */
+        driver_hal21, /*            (c) 1985 */
+        driver_hal21j, /*            (c) 1985 (Japan) */
+        driver_aso, /*            (c) 1985 */
+        driver_tnk3, /* A5001      (c) 1985 */
+        driver_tnk3j, /* A5001      (c) 1985 */
+        driver_athena, /*       'UP' (c) 1986 */
+        driver_fitegolf, /*       'GU' (c) 1988 */
+        driver_ikari, /* A5004 'IW' (c) 1986 */
+        driver_ikarijp, /* A5004 'IW' (c) 1986 (Japan) */
+        driver_ikarijpb, /* bootleg */
+        driver_victroad, /*            (c) 1986 */
+        driver_dogosoke, /*            (c) 1986 */
+        driver_gwar, /* A7003 'GV' (c) 1987 */
+        driver_gwarj, /* A7003 'GV' (c) 1987 (Japan) */
+        driver_gwara, /* A7003 'GV' (c) 1987 */
+        driver_gwarb, /* bootleg */
+        driver_bermudat, /* A6003 'WW' (c) 1987 */
+        driver_bermudaj, /* A6003 'WW' (c) 1987 */
+        driver_bermudaa, /* A6003 'WW' (c) 1987 */
+        driver_worldwar, /* A6003 'WW' (c) 1987 */
+        driver_psychos, /*       'PS' (c) 1987 */
+        driver_psychosj, /*       'PS' (c) 1987 (Japan) */
+        driver_chopper, /* A7003 'KK' (c) 1988 */
+        driver_legofair, /* A7003 'KK' (c) 1988 */
+        driver_ftsoccer, /*            (c) 1988 */
+        driver_tdfever, /* A6006 'TD' (c) 1987 */
+        driver_tdfeverj, /* A6006 'TD' (c) 1987 */
         /*TODO*///	driver_ikari3,	/* A7007 'IK3'(c) 1989 */
         /*TODO*///	driver_pow,		/* A7008 'DG' (c) 1988 */
         /*TODO*///	driver_powj,		/* A7008 'DG' (c) 1988 */
@@ -3070,9 +3071,9 @@ public class driver {
         /*TODO*///	driver_battlane,	/* TA-???? (c) 1986 + Taito license */
         /*TODO*///	driver_battlan2,	/* TA-???? (c) 1986 + Taito license */
         /*TODO*///	driver_battlan3,	/* TA-???? (c) 1986 + Taito license */
-        	driver_ddragon,	/* TA-0021 (c) 1987 */
-        	driver_ddragonu,	/* TA-0021 (c) 1987 Taito America */
-        	driver_ddragonb,	/* bootleg */
+        driver_ddragon, /* TA-0021 (c) 1987 */
+        driver_ddragonu, /* TA-0021 (c) 1987 Taito America */
+        driver_ddragonb, /* bootleg */
         /*TODO*///	driver_spdodgeb,	/* TA-0022 (c) 1987 */
         /*TODO*///	driver_nkdodgeb,	/* TA-0022 (c) 1987 (Japan) */
         /*TODO*///	driver_chinagat,	/* TA-0023 (c) 1988 Taito + Romstar license (US) */
@@ -3082,8 +3083,8 @@ public class driver {
         /*TODO*///	driver_wwfsstar,	/* TA-0024 (c) 1989 (US) */
         /*TODO*///	driver_vball,		/* TA-0025 (c) 1988 */
         /*TODO*///	driver_vball2pj,	/* TA-0025 (c) 1988 (Japan) */
-        	driver_ddragon2,	/* TA-0026 (c) 1988 (World) */
-        	driver_ddragn2u,	/* TA-0026 (c) 1988 (US) */
+        driver_ddragon2, /* TA-0026 (c) 1988 (World) */
+        driver_ddragn2u, /* TA-0026 (c) 1988 (US) */
         /*TODO*///	driver_ctribe,	/* TA-0028 (c) 1990 (US) */
         /*TODO*///	driver_ctribeb,	/* bootleg */
         /*TODO*///	driver_blockout,	/* TA-0029 (c) 1989 + California Dreams */
