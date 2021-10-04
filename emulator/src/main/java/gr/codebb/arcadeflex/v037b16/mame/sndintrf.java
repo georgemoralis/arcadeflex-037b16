@@ -34,7 +34,7 @@ import gr.codebb.arcadeflex.v037b16.sound._2151intf;
 import gr.codebb.arcadeflex.v037b16.sound.okim6295;
 import gr.codebb.arcadeflex.WIP.v037b16.sound.k053260;
 import gr.codebb.arcadeflex.v037b16.sound.k007232;
-
+import mame037b7.sound.y8950intf.*;
 //to be organized
 import static mame037b16.common.*;
 import static mame056.sound.streams.*;
@@ -43,6 +43,7 @@ import static mame037b5.sound.mixer.*;
 import static mame037b16.mame.Machine;
 import mame056.sound.namco;
 import gr.codebb.arcadeflex.v037b16.sound.pokey;
+import mame037b7.sound.y8950intf;
 
 public class sndintrf {
 
@@ -452,33 +453,9 @@ public class sndintrf {
                 /*TODO*///		0
                 /*TODO*///	},
                 new Dummy_snd(),
-                /*TODO*///#endif
-                /*TODO*///#if (HAS_Y8950)
-                /*TODO*///	{
-                /*TODO*///		SOUND_Y8950,
-                /*TODO*///		"Y8950",	/* (MSX-AUDIO) */
-                /*TODO*///		YM3812_num,
-                /*TODO*///		YM3812_clock,
-                /*TODO*///		Y8950_sh_start,
-                /*TODO*///		Y8950_sh_stop,
-                /*TODO*///		0,
-                /*TODO*///		0
-                /*TODO*///	},
-                new Dummy_snd(),
+                new y8950intf(),
                 new sn76477(),
                 new sn76496(),
-                /*TODO*///#endif
-                /*TODO*///#if (HAS_POKEY)
-                /*TODO*///    {
-                /*TODO*///		SOUND_POKEY,
-                /*TODO*///		"Pokey",
-                /*TODO*///		POKEY_num,
-                /*TODO*///		POKEY_clock,
-                /*TODO*///		pokey_sh_start,
-                /*TODO*///		pokey_sh_stop,
-                /*TODO*///		0,
-                /*TODO*///		0
-                /*TODO*///	},
                 new pokey(),
                 /*TODO*///#endif
                 /*TODO*///#if (HAS_NES)
