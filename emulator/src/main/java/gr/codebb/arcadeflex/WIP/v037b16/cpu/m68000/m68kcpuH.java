@@ -4,6 +4,9 @@
  */ 
 package gr.codebb.arcadeflex.WIP.v037b16.cpu.m68000;
 
+import static gr.codebb.arcadeflex.WIP.v037b16.cpu.m68000.m68kcpu.m68ki_cpu;
+import gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.irqcallbacksPtr;
+
 public class m68kcpuH
 {
 	/* ======================================================================== */
@@ -27,6 +30,7 @@ public class m68kcpuH
 	 * http://kstenerud.cjb.net
 	 */
 	
+    
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	
@@ -156,13 +160,13 @@ public class m68kcpuH
 /*TODO*///	#define FUNCTION_CODE_SUPERVISOR_DATA    5
 /*TODO*///	#define FUNCTION_CODE_SUPERVISOR_PROGRAM 6
 /*TODO*///	#define FUNCTION_CODE_CPU_SPACE          7
-/*TODO*///	
-/*TODO*///	/* CPU types for deciding what to emulate */
-/*TODO*///	#define CPU_TYPE_000   1
-/*TODO*///	#define CPU_TYPE_010   2
-/*TODO*///	#define CPU_TYPE_EC020 4
-/*TODO*///	#define CPU_TYPE_020   8
-/*TODO*///	
+	
+	/* CPU types for deciding what to emulate */
+	public static final int CPU_TYPE_000   = 1;
+	public static final int CPU_TYPE_010   = 2;
+	public static final int CPU_TYPE_EC020 = 4;
+	public static final int CPU_TYPE_020   = 8;
+	
 /*TODO*///	/* Different ways to stop the CPU */
 /*TODO*///	#define STOP_LEVEL_STOP 1
 /*TODO*///	#define STOP_LEVEL_HALT 2
@@ -341,15 +345,52 @@ public class m68kcpuH
 /*TODO*///	#define CYC_RESET        m68ki_cpu.cyc_reset
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	#define CALLBACK_INT_ACK     m68ki_cpu.int_ack_callback
-/*TODO*///	#define CALLBACK_BKPT_ACK    m68ki_cpu.bkpt_ack_callback
-/*TODO*///	#define CALLBACK_RESET_INSTR m68ki_cpu.reset_instr_callback
-/*TODO*///	#define CALLBACK_PC_CHANGED  m68ki_cpu.pc_changed_callback
-/*TODO*///	#define CALLBACK_SET_FC      m68ki_cpu.set_fc_callback
-/*TODO*///	#define CALLBACK_INSTR_HOOK  m68ki_cpu.instr_hook_callback
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
+        public static abstract interface bkpt_ack_callbackPtr {
+        public abstract void handler(int data);
+    }
+
+    public static abstract interface reset_instr_callbackPtr {
+        public abstract void handler();
+    }
+
+    public static abstract interface pc_changed_callbackPtr {
+        public abstract void handler(int new_pc);
+    }
+
+    public static abstract interface set_fc_callbackPtr {
+        public abstract void handler(int new_fc);
+    }
+
+    public static abstract interface instr_hook_callbackPtr {
+        public abstract void handler();
+    }
+
+    public static void set_CPU_INT_ACK_CALLBACK(irqcallbacksPtr int_ack_callback) {
+        m68ki_cpu.int_ack_callback = int_ack_callback;
+    }
+    
+    public static void set_CALLBACK_BKPT_ACK(bkpt_ack_callbackPtr bkpt_ack_callback) {    
+        m68ki_cpu.bkpt_ack_callback = bkpt_ack_callback;
+    }
+    
+    public static void set_CALLBACK_RESET_INSTR(reset_instr_callbackPtr reset_instr_callback) {
+        m68ki_cpu.reset_instr_callback = reset_instr_callback;
+    }
+    
+    public static void set_CALLBACK_PC_CHANGED(pc_changed_callbackPtr pc_changed_callback) {
+            m68ki_cpu.pc_changed_callback = pc_changed_callback;
+    }
+    
+    public static void set_CALLBACK_SET_FC(set_fc_callbackPtr set_fc_callback) {
+        m68ki_cpu.set_fc_callback = set_fc_callback;
+    }
+    
+    public static void set_CALLBACK_INSTR_HOOK(instr_hook_callbackPtr instr_hook_callback) {
+        m68ki_cpu.instr_hook_callback = instr_hook_callback;
+    }
+	
+	
+	
 /*TODO*///	/* ----------------------------- Configuration ---------------------------- */
 /*TODO*///	
 /*TODO*///	/* These defines are dependant on the configuration defines in m68kconf.h */
@@ -752,7 +793,7 @@ public class m68kcpuH
 	
 	public static class m68ki_cpu_core
 	{
-/*TODO*///		uint cpu_type;     /* CPU Type: 68000, 68010, 68EC020, or 68020 */
+		int cpu_type;     /* CPU Type: 68000, 68010, 68EC020, or 68020 */
 /*TODO*///		uint dar[16];      /* Data and Address Registers */
 /*TODO*///		uint ppc;		   /* Previous program counter */
 /*TODO*///		uint pc;           /* Program Counter */
@@ -773,35 +814,35 @@ public class m68kcpuH
 /*TODO*///		uint v_flag;       /* Overflow */
 /*TODO*///		uint c_flag;       /* Carry */
 /*TODO*///		uint int_mask;     /* I0-I2 */
-/*TODO*///		uint int_level;    /* State of interrupt pins IPL0-IPL2 -- ASG: changed from ints_pending */
+		int int_level;    /* State of interrupt pins IPL0-IPL2 -- ASG: changed from ints_pending */
 /*TODO*///		uint int_cycles;   /* ASG: extra cycles from generated interrupts */
 /*TODO*///		uint stopped;      /* Stopped state */
 /*TODO*///		uint pref_addr;    /* Last prefetch address */
 /*TODO*///		uint pref_data;    /* Data in the prefetch queue */
-/*TODO*///		uint address_mask; /* Available address pins */
-/*TODO*///		uint sr_mask;      /* Implemented status register bits */
-/*TODO*///	
-/*TODO*///		/* Clocks required for instructions / exceptions */
-/*TODO*///		uint cyc_bcc_notake_b;
-/*TODO*///		uint cyc_bcc_notake_w;
-/*TODO*///		uint cyc_dbcc_f_noexp;
-/*TODO*///		uint cyc_dbcc_f_exp;
-/*TODO*///		uint cyc_scc_r_false;
-/*TODO*///		uint cyc_movem_w;
-/*TODO*///		uint cyc_movem_l;
-/*TODO*///		uint cyc_shift;
-/*TODO*///		uint cyc_reset;
-/*TODO*///		uint8* cyc_instruction;
-/*TODO*///		uint8* cyc_exception;
-/*TODO*///	
-/*TODO*///		/* Callbacks to host */
-/*TODO*///		int  (*int_ack_callback)(int int_line);           /* Interrupt Acknowledge */
-/*TODO*///		void (*bkpt_ack_callback)(unsigned int data);     /* Breakpoint Acknowledge */
-/*TODO*///		void (*reset_instr_callback)(void);               /* Called when a RESET instruction is encountered */
-/*TODO*///		void (*pc_changed_callback)(unsigned int new_pc); /* Called when the PC changes by a large amount */
-/*TODO*///		void (*set_fc_callback)(unsigned int new_fc);     /* Called when the CPU function code changes */
-/*TODO*///		void (*instr_hook_callback)(void);                /* Called every instruction cycle prior to execution */
-/*TODO*///	
+		int address_mask; /* Available address pins */
+		int sr_mask;      /* Implemented status register bits */
+	
+		/* Clocks required for instructions / exceptions */
+		int cyc_bcc_notake_b;
+		int cyc_bcc_notake_w;
+		int cyc_dbcc_f_noexp;
+		int cyc_dbcc_f_exp;
+		int cyc_scc_r_false;
+		int cyc_movem_w;
+		int cyc_movem_l;
+		int cyc_shift;
+		int cyc_reset;
+		char[] /*uint8* */ cyc_instruction;
+		char[] /*uint8* */ cyc_exception;
+	
+		/* Callbacks to host */
+		irqcallbacksPtr int_ack_callback;           /* Interrupt Acknowledge */
+                bkpt_ack_callbackPtr bkpt_ack_callback;     /* Breakpoint Acknowledge */
+                reset_instr_callbackPtr reset_instr_callback;               /* Called when a RESET instruction is encountered */
+                pc_changed_callbackPtr pc_changed_callback; /* Called when the PC changes by a large amount */
+                set_fc_callbackPtr set_fc_callback;     /* Called when the CPU function code changes */
+                instr_hook_callbackPtr instr_hook_callback;                /* Called every instruction cycle prior to execution */
+
 	};
 
 

@@ -6,6 +6,7 @@ package gr.codebb.arcadeflex.WIP.v037b16.cpu.m68000;
 
 import static gr.codebb.arcadeflex.WIP.v037b16.cpu.m68000.m68000H.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.cpu.m68000.m68kH.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.cpu.m68000.m68kcpu.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.cpu.m68000.m68kcpuH.*;
 import gr.codebb.arcadeflex.v037b16.mame.cpuintrfH;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
@@ -273,9 +274,10 @@ public class m68kmame  extends cpu_interface {
 	
 	public static void m68000_init()
 	{
-/*TODO*///		m68k_init();
-/*TODO*///		m68k_set_cpu_type(M68K_CPU_TYPE_68000);
+		m68k_init();
+		m68k_set_cpu_type(M68K_CPU_TYPE_68000);
 /*TODO*///		m68k_memory_intf = interface_a24_d16;
+                System.out.println("m68k_memory_intf not implemented!!!!");
 /*TODO*///		m68k_state_register("m68000");
 	}
 /*TODO*///	
@@ -1396,8 +1398,7 @@ public class m68kmame  extends cpu_interface {
 
     @Override
     public void init() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-/*TODO*///        m68000_init();
+        m68000_init();
     }
 
     @Override

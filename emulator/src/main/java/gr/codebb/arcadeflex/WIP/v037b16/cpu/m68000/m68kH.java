@@ -48,13 +48,13 @@ public class m68kH
 /*TODO*/// * Use these as special returns from the interrupt acknowledge callback
 /*TODO*/// * (specified later in this header).
 /*TODO*/// */
-/*TODO*///
-/*TODO*////* Causes an interrupt autovector (0x18 + interrupt level) to be taken.
-/*TODO*/// * This happens in a real 68K if VPA or AVEC is asserted during an interrupt
-/*TODO*/// * acknowledge cycle instead of DTACK.
-/*TODO*/// */
-/*TODO*///#define M68K_INT_ACK_AUTOVECTOR    0xffffffff
-/*TODO*///
+
+    /* Causes an interrupt autovector (0x18 + interrupt level) to be taken.
+     * This happens in a real 68K if VPA or AVEC is asserted during an interrupt
+     * acknowledge cycle instead of DTACK.
+     */
+    public static final int M68K_INT_ACK_AUTOVECTOR    = 0xffffffff;
+
 /*TODO*////* Causes the spurious interrupt vector (0x18) to be taken
 /*TODO*/// * This happens in a real 68K if BERR is asserted during the interrupt
 /*TODO*/// * acknowledge cycle (i.e. no devices responded to the acknowledge).
