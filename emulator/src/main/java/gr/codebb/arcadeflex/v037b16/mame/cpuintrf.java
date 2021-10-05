@@ -19,6 +19,9 @@ import gr.codebb.arcadeflex.v037b16.cpu.m6809.m6809;
 import static gr.codebb.arcadeflex.v037b16.cpu.m6809.m6809H.*;
 import gr.codebb.arcadeflex.WIP.v037b16.cpu.m68000.m68kmame;
 import static gr.codebb.arcadeflex.WIP.v037b16.cpu.m68000.m68000H.*;
+import gr.codebb.arcadeflex.WIP.v037b16.cpu.m6805.m6805;
+import gr.codebb.arcadeflex.WIP.v037b16.cpu.m6805.m68705;
+import gr.codebb.arcadeflex.WIP.v037b16.cpu.m6805.HD63705;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
@@ -351,9 +354,9 @@ public class cpuintrf {
                 new m6808(),//CPU0(M6808,    m6808,	 1,  0,1.00,M6808_INT_NONE,    M6808_INT_IRQ,  M6808_INT_NMI,  8, 16,	  0,16,BE,1, 4	),
                 new hd63701(),//CPU0(HD63701,  hd63701,  1,  0,1.00,HD63701_INT_NONE,  HD63701_INT_IRQ,HD63701_INT_NMI,8, 16,	  0,16,BE,1, 4	),
                 new nsc8105(),//CPU0(NSC8105,  nsc8105,  1,  0,1.00,NSC8105_INT_NONE,  NSC8105_INT_IRQ,NSC8105_INT_NMI,8, 16,	  0,16,BE,1, 4	),
-                new dummy_cpu(),//CPU0(M6805,    m6805,	 1,  0,1.00,M6805_INT_NONE,    M6805_INT_IRQ,  -1,			   8, 16,	  0,11,BE,1, 3	),
-                new dummy_cpu(),//CPU0(M68705,   m68705,	 1,  0,1.00,M68705_INT_NONE,   M68705_INT_IRQ, -1,			   8, 16,	  0,11,BE,1, 3	),
-                new dummy_cpu(),//CPU0(HD63705,  hd63705,  8,  0,1.00,HD63705_INT_NONE,  HD63705_INT_IRQ,-1,			   8, 16,	  0,16,BE,1, 3	),
+                new m6805(),//CPU0(M6805,    m6805,	 1,  0,1.00,M6805_INT_NONE,    M6805_INT_IRQ,  -1,			   8, 16,	  0,11,BE,1, 3	),
+                new m68705(),//CPU0(M68705,   m68705,	 1,  0,1.00,M68705_INT_NONE,   M68705_INT_IRQ, -1,			   8, 16,	  0,11,BE,1, 3	),
+                new HD63705(),//CPU0(HD63705,  hd63705,  8,  0,1.00,HD63705_INT_NONE,  HD63705_INT_IRQ,-1,			   8, 16,	  0,16,BE,1, 3	),
                 new dummy_cpu(),//CPU0(HD6309,   hd6309,	 2,  0,1.00,HD6309_INT_NONE,   HD6309_INT_IRQ, HD6309_INT_NMI, 8, 16,	  0,16,BE,1, 4	),
                 new m6809(),//CPU0(M6809,    m6809,	 2,  0,1.00,M6809_INT_NONE,    M6809_INT_IRQ,  M6809_INT_NMI,  8, 16,	  0,16,BE,1, 4	),
                 new konami(),//CPU0(KONAMI,   konami,	 2,  0,1.00,KONAMI_INT_NONE,   KONAMI_INT_IRQ, KONAMI_INT_NMI, 8, 16,	  0,16,BE,1, 4	),
@@ -1712,13 +1715,22 @@ public class cpuintrf {
                         /*LOG(("HD63701 IRQ\n"));*/ break;
                     /*TODO*///#endif
 /*TODO*///#if (HAS_M6805)
-/*TODO*///			case CPU_M6805: 			irq_line = 0; LOG(("M6805 IRQ\n")); break;
+			case CPU_M6805: 			
+                            irq_line = 0; 
+                            //LOG(("M6805 IRQ\n")); 
+                            break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_M68705)
-/*TODO*///			case CPU_M68705:			irq_line = 0; LOG(("M68705 IRQ\n")); break;
+			case CPU_M68705:			
+                            irq_line = 0; 
+                            //LOG(("M68705 IRQ\n")); 
+                            break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_HD63705)
-/*TODO*///			case CPU_HD63705:			irq_line = 0; LOG(("HD68705 IRQ\n")); break;
+			case CPU_HD63705:			
+                            irq_line = 0; 
+                            //LOG(("HD68705 IRQ\n")); 
+                            break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_HD6309)
 /*TODO*///			case CPU_HD6309:

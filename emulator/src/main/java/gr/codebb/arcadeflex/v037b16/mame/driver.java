@@ -70,6 +70,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.terracre.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.hal21.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.snk.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers._88games.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.arkanoid.*;
 
 public class driver {
 
@@ -1148,16 +1149,16 @@ public class driver {
         /*TODO*///	driver_rainbowa,	/* B22 (c) 1987 Taito Corporation */
         /*TODO*///	driver_rainbowe,	/* ??? (c) 1988 Taito Corporation */
         /*TODO*///	driver_jumping,	/* bootleg */
-        /*TODO*///	driver_arkanoid,	/* A75 (c) 1986 Taito Corporation Japan (World) */
-        /*TODO*///	driver_arknoidu,	/* A75 (c) 1986 Taito America Corporation + Romstar license (US) */
-        /*TODO*///	driver_arknoidj,	/* A75 (c) 1986 Taito Corporation (Japan) */
-        /*TODO*///	driver_arkbl2,	/* bootleg */
+        driver_arkanoid,	/* A75 (c) 1986 Taito Corporation Japan (World) */
+        driver_arknoidu,	/* A75 (c) 1986 Taito America Corporation + Romstar license (US) */
+        driver_arknoidj,	/* A75 (c) 1986 Taito Corporation (Japan) */
+        driver_arkbl2,	/* bootleg */
         /*TODO*///TESTdriver_arkbl3,	/* bootleg */
-        /*TODO*///	driver_arkatayt,	/* bootleg */
+        driver_arkatayt,	/* bootleg */
         /*TODO*///TESTdriver_arkblock,	/* bootleg */
-        /*TODO*///	driver_arkbloc2,	/* bootleg */
-        /*TODO*///	driver_arkangc,	/* bootleg */
-        /*TODO*///	driver_arkatour,	/* ??? (c) 1987 Taito America Corporation + Romstar license (US) */
+        driver_arkbloc2,	/* bootleg */
+        driver_arkangc,	/* bootleg */
+        driver_arkatour,	/* ??? (c) 1987 Taito America Corporation + Romstar license (US) */
         /*TODO*///	driver_superqix,	/* B03 1987 */
         /*TODO*///	driver_sqixbl,	/* bootleg? but (c) 1987 */
         /*TODO*///	driver_exzisus,	/* B23 (c) 1987 Taito Corporation (Japan) */
