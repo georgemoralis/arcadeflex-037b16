@@ -23,6 +23,8 @@ public class m6805 extends cpu_interface {
         nmi_int = -1;
         address_shift = 0;
         address_bits = 11;
+        databus_width = 8;
+        address_shift = 0;
         endianess = CPU_IS_BE;
         align_unit = 1;
         max_inst_len = 3;
@@ -32,10 +34,15 @@ public class m6805 extends cpu_interface {
         icount = m6805_ICount;
         icount[0] = 50000;
     }
+    
+/*TODO*///    void m68705_init(void)
+/*TODO*///    {
+/*TODO*///            state_register("m68705");
+/*TODO*///    }
 
     @Override
     public void init() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // nothing to do
     }
 
     @Override
@@ -50,7 +57,7 @@ public class m6805 extends cpu_interface {
 
     @Override
     public int mem_address_bits_of_cpu() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return 11;
     }
 
     public static class PAIR {

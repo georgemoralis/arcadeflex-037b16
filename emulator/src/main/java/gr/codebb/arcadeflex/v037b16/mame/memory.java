@@ -1268,7 +1268,7 @@ public class memory {
                     }
                 } else {
                     //do the same for 16,32bit handlers
-                    throw new UnsupportedOperationException("Unsupported");
+                    //throw new UnsupportedOperationException("Unsupported");
                 }
             }
 
@@ -1291,7 +1291,7 @@ public class memory {
                     }
                 } else {
                     //do the same for 16,32bit handlers
-                    throw new UnsupportedOperationException("Unsupported");
+                    //throw new UnsupportedOperationException("Unsupported");
                 }
             }
 
@@ -1611,7 +1611,7 @@ public class memory {
                     }
                 } else {
                     //16bit -32 bit support
-                    throw new UnsupportedOperationException("Unsupported");
+                    //throw new UnsupportedOperationException("Unsupported");
                 }
             }
 
@@ -1635,7 +1635,7 @@ public class memory {
                     }
                 } else {
                     //16bit -32 bit support
-                    throw new UnsupportedOperationException("Unsupported");
+                    //throw new UnsupportedOperationException("Unsupported");
                 }
             }
             /*TODO*///

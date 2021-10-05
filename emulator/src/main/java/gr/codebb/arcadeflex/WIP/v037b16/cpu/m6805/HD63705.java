@@ -14,7 +14,7 @@ public class HD63705 extends m6805 {
         irq_int = HD63705_INT_IRQ;
         nmi_int = -1;
         address_shift = 0;
-        address_bits = 11;
+        address_bits = 16;
         endianess = CPU_IS_BE;
         align_unit = 1;
         max_inst_len = 3;
@@ -23,6 +23,11 @@ public class HD63705 extends m6805 {
         //abitsmin = ABITS_MIN_16;
         icount = m6805_ICount;
         icount[0] = 50000;
+    }
+    
+    @Override
+    public int mem_address_bits_of_cpu() {
+        return 16;
     }
 
     @Override
