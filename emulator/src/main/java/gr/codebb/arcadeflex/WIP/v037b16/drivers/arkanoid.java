@@ -274,7 +274,7 @@ public class arkanoid
 			new MachineCPU(
 				CPU_M68705,
 				500000,	/* .5 MHz (don't know really how fast, but it doesn't need to even be this fast) */
-				mcu_readmem,mcu_writemem,0,null,
+				mcu_readmem,mcu_writemem,null,null,
 				ignore_interrupt,1
 			),
 		},
