@@ -14,7 +14,7 @@ public class m68705 extends m6805 {
         irq_int = M68705_INT_IRQ;
         nmi_int = -1;
         address_shift = 0;
-        address_bits = 11;
+        address_bits = 16;
         endianess = CPU_IS_BE;
         align_unit = 1;
         max_inst_len = 3;

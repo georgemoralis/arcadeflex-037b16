@@ -1251,6 +1251,7 @@ public class memory {
 
             /* verify the read handlers */
             if (mra_obj != null) {
+                
                 if (mra_obj instanceof IO_ReadPort[]) {
                     IO_ReadPort[] mra = (IO_ReadPort[]) mra_obj;
                     int mra_ptr = 0;
@@ -1268,7 +1269,7 @@ public class memory {
                     }
                 } else {
                     //do the same for 16,32bit handlers
-                    //throw new UnsupportedOperationException("Unsupported");
+                    throw new UnsupportedOperationException("Unsupported");
                 }
             }
 
@@ -1291,7 +1292,7 @@ public class memory {
                     }
                 } else {
                     //do the same for 16,32bit handlers
-                    //throw new UnsupportedOperationException("Unsupported");
+                    throw new UnsupportedOperationException("Unsupported");
                 }
             }
 

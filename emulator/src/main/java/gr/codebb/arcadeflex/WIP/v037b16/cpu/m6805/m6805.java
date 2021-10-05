@@ -22,7 +22,7 @@ public class m6805 extends cpu_interface {
         irq_int = M6805_INT_IRQ;
         nmi_int = -1;
         address_shift = 0;
-        address_bits = 11;
+        address_bits = 16;
         databus_width = 8;
         address_shift = 0;
         endianess = CPU_IS_BE;
@@ -57,7 +57,7 @@ public class m6805 extends cpu_interface {
 
     @Override
     public int mem_address_bits_of_cpu() {
-        return 11;
+        return 16;
     }
 
     public static class PAIR {
