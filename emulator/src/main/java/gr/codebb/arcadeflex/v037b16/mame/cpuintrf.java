@@ -22,6 +22,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.cpu.m68000.m68000H.*;
 import gr.codebb.arcadeflex.WIP.v037b16.cpu.m6805.m6805;
 import gr.codebb.arcadeflex.WIP.v037b16.cpu.m6805.m68705;
 import gr.codebb.arcadeflex.WIP.v037b16.cpu.m6805.HD63705;
+import gr.codebb.arcadeflex.WIP.v037b16.cpu.m6502.m6502;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
@@ -322,7 +323,7 @@ public class cpuintrf {
                 new z80(),//CPU1(Z80,	   z80, 	 1,255,1.00,Z80_IGNORE_INT,    Z80_IRQ_INT,    Z80_NMI_INT,    8, 16,	  0,16,LE,1, 4	),
                 new dummy_cpu(),//CPU0(8080,	   i8080,	 4,255,1.00,I8080_NONE, 	   I8080_INTR,	   I8080_TRAP,	   8, 16,	  0,16,LE,1, 3	),
                 new dummy_cpu(),//CPU0(8085A,    i8085,	 4,255,1.00,I8085_NONE, 	   I8085_INTR,	   I8085_TRAP,	   8, 16,	  0,16,LE,1, 3	),
-                new dummy_cpu(),//CPU0(M6502,    m6502,	 1,  0,1.00,M6502_INT_NONE,    M6502_INT_IRQ,  M6502_INT_NMI,  8, 16,	  0,16,LE,1, 3	),
+                new m6502(),//CPU0(M6502,    m6502,	 1,  0,1.00,M6502_INT_NONE,    M6502_INT_IRQ,  M6502_INT_NMI,  8, 16,	  0,16,LE,1, 3	),
                 new dummy_cpu(),//CPU0(M65C02,   m65c02,	 1,  0,1.00,M65C02_INT_NONE,   M65C02_INT_IRQ, M65C02_INT_NMI, 8, 16,	  0,16,LE,1, 3	),
                 new dummy_cpu(),//CPU0(M65SC02,  m65sc02,  1,  0,1.00,M65SC02_INT_NONE,  M65SC02_INT_IRQ,M65SC02_INT_NMI,8, 16,	  0,16,LE,1, 3	),
                 new dummy_cpu(),//CPU0(M65CE02,  m65ce02,  1,  0,1.00,M65CE02_INT_NONE,  M65CE02_INT_IRQ,M65CE02_INT_NMI,8, 16,	  0,16,LE,1, 3	),
@@ -1615,7 +1616,10 @@ public class cpuintrf {
 /*TODO*///				break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_M6502)
-/*TODO*///			case CPU_M6502: 			irq_line = 0; LOG(("M6502 IRQ\n")); break;
+			case CPU_M6502: 			
+                            irq_line = 0; 
+                            //LOG(("M6502 IRQ\n")); 
+                            break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_M65C02)
 /*TODO*///			case CPU_M65C02:			irq_line = 0; LOG(("M65C02 IRQ\n")); break;
