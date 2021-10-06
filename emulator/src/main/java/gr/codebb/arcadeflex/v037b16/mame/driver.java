@@ -75,6 +75,9 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.bublbobl.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.retofinv.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.taitosj.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.matmania.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.buggychl.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.flstory.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.lkage.*;
 
 public class driver {
 
@@ -1098,10 +1101,10 @@ public class driver {
         driver_bking2, /* AD6 (c) 1983 Taito Corporation */
         /*TODO*///TESTdriver_josvolly,	/* ??? (c) 1983 Taito Corporation */
         /*TODO*///	driver_gsword,	/* ??? (c) 1984 Taito Corporation */
-        /*TODO*///	driver_lkage,		/* A54 (c) 1984 Taito Corporation */
-        /*TODO*///	driver_lkageb,	/* bootleg */
-        /*TODO*///	driver_lkageb2,	/* bootleg */
-        /*TODO*///	driver_lkageb3,	/* bootleg */
+        driver_lkage,		/* A54 (c) 1984 Taito Corporation */
+        driver_lkageb,	/* bootleg */
+        driver_lkageb2,	/* bootleg */
+        driver_lkageb3,	/* bootleg */
         driver_retofinv,	/* A37 (c) 1985 Taito Corporation */
         driver_retofin1,	/* bootleg */
         driver_retofin2,	/* bootleg */
@@ -1115,10 +1118,10 @@ public class driver {
         /*TODO*///	driver_m660,      /* ??? (c) 1986 Taito */
         /*TODO*///	driver_m660b,     /* bootleg */
         /*TODO*///	driver_alphaxz,   /* ??? (c) 1986 Ed/Wood Place */
-        /*TODO*///	driver_buggychl,	/* A22 (c) 1984 Taito Corporation */
-        /*TODO*///	driver_buggycht,	/* A22 (c) 1984 Taito Corporation + Tefri license */
-        /*TODO*///	driver_flstory,	/* A45 (c) 1985 Taito Corporation */
-        /*TODO*///	driver_flstoryj,	/* A45 (c) 1985 Taito Corporation (Japan) */
+        driver_buggychl,	/* A22 (c) 1984 Taito Corporation */
+        driver_buggycht,	/* A22 (c) 1984 Taito Corporation + Tefri license */
+        driver_flstory,	/* A45 (c) 1985 Taito Corporation */
+        driver_flstoryj,	/* A45 (c) 1985 Taito Corporation (Japan) */
         /*TODO*///TESTdriver_onna34ro,	/* A52 */
         /*TODO*///	driver_gladiatr,	/* ??? (c) 1986 Taito America Corporation (US) */
         /*TODO*///	driver_ogonsiro,	/* ??? (c) 1986 Taito Corporation (Japan) */
