@@ -332,7 +332,7 @@ public class lkage
 			new MachineCPU(
 				CPU_Z80 | CPU_16BIT_PORT,
 				6000000,	/* ??? */
-				readmem,writemem,readport,0,
+				readmem,writemem,readport,null,
 				interrupt,1
 			),
 			new MachineCPU(
@@ -384,7 +384,7 @@ public class lkage
 			new MachineCPU(
 				CPU_Z80 | CPU_16BIT_PORT,
 				6000000,	/* ??? */
-				readmem,writemem,readport,0,
+				readmem,writemem,readport,null,
 				interrupt,1
 			),
 			new MachineCPU(

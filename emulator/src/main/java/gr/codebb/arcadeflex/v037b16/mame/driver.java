@@ -78,6 +78,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.matmania.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.buggychl.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.flstory.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.lkage.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.mexico86.*;
 
 public class driver {
 
@@ -1127,16 +1128,16 @@ public class driver {
         /*TODO*///	driver_ogonsiro,	/* ??? (c) 1986 Taito Corporation (Japan) */
         /*TODO*///	driver_lsasquad,	/* A64 (c) 1986 Taito Corporation / Taito America (dip switch) */
         /*TODO*///	driver_storming,	/* A64 (c) 1986 Taito Corporation */
-        	driver_tokio,		/* A71 1986 */
-        	driver_tokiob,	/* bootleg */
-        	driver_bublbobl,	/* A78 (c) 1986 Taito Corporation */
-        	driver_bublbobr,	/* A78 (c) 1986 Taito America Corporation + Romstar license */
-        	driver_bubbobr1,	/* A78 (c) 1986 Taito America Corporation + Romstar license */
-        	driver_boblbobl,	/* bootleg */
-        	driver_sboblbob,	/* bootleg */
-        /*TODO*///	driver_kikikai,	/* A85 (c) 1986 Taito Corporation */
-        /*TODO*///	driver_kicknrun,	/* A87 (c) 1986 Taito Corporation */
-        /*TODO*///	driver_mexico86,	/* bootleg (Micro Research) */
+        driver_tokio,		/* A71 1986 */
+        driver_tokiob,	/* bootleg */
+        driver_bublbobl,	/* A78 (c) 1986 Taito Corporation */
+        driver_bublbobr,	/* A78 (c) 1986 Taito America Corporation + Romstar license */
+        driver_bubbobr1,	/* A78 (c) 1986 Taito America Corporation + Romstar license */
+        driver_boblbobl,	/* bootleg */
+        driver_sboblbob,	/* bootleg */
+        driver_kikikai,	/* A85 (c) 1986 Taito Corporation */
+        driver_kicknrun,	/* A87 (c) 1986 Taito Corporation */
+        driver_mexico86,	/* bootleg (Micro Research) */
         /*TODO*///	driver_darius,	/* A96 (c) 1986 Taito Corporation Japan (World) */
         /*TODO*///	driver_dariusj,	/* A96 (c) 1986 Taito Corporation (Japan) */
         /*TODO*///	driver_dariuso,	/* A96 (c) 1986 Taito Corporation (Japan) */
