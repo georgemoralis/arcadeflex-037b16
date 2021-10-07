@@ -79,6 +79,8 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.buggychl.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.flstory.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.lkage.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.mexico86.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.lsasquad.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.fastfred.*;
 
 public class driver {
 
@@ -234,11 +236,11 @@ public class driver {
         driver_turtles, /* (c) 1981 Stern */
         driver_turpin, /* (c) 1981 Sega */
         driver_600, /* GX353 (c) 1981 Konami */
-        /*TODO*///	driver_flyboy,	/* (c) 1982 Kaneko */
-        /*TODO*///	driver_flyboyb,	/* bootleg */
-        /*TODO*///	driver_fastfred,	/* (c) 1982 Atari */
-        /*TODO*///	driver_jumpcoas,	/* (c) 1983 Kaneko */
-        /*TODO*///
+        driver_flyboy,	/* (c) 1982 Kaneko */
+        driver_flyboyb,	/* bootleg */
+        driver_fastfred,	/* (c) 1982 Atari */
+        driver_jumpcoas,	/* (c) 1983 Kaneko */
+        
         /*TODO*///	/* "Crazy Climber hardware" games */
         /*TODO*///	driver_cclimber,	/* (c) 1980 Nichibutsu */
         /*TODO*///	driver_cclimbrj,	/* (c) 1980 Nichibutsu */
@@ -1126,8 +1128,8 @@ public class driver {
         /*TODO*///TESTdriver_onna34ro,	/* A52 */
         /*TODO*///	driver_gladiatr,	/* ??? (c) 1986 Taito America Corporation (US) */
         /*TODO*///	driver_ogonsiro,	/* ??? (c) 1986 Taito Corporation (Japan) */
-        /*TODO*///	driver_lsasquad,	/* A64 (c) 1986 Taito Corporation / Taito America (dip switch) */
-        /*TODO*///	driver_storming,	/* A64 (c) 1986 Taito Corporation */
+        driver_lsasquad,	/* A64 (c) 1986 Taito Corporation / Taito America (dip switch) */
+        driver_storming,	/* A64 (c) 1986 Taito Corporation */
         driver_tokio,		/* A71 1986 */
         driver_tokiob,	/* bootleg */
         driver_bublbobl,	/* A78 (c) 1986 Taito Corporation */
