@@ -90,6 +90,7 @@
 package gr.codebb.arcadeflex.WIP.v037b16.cpu.hd6309;
 
 import static gr.codebb.arcadeflex.WIP.v037b16.cpu.hd6309.hd6309H.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.cpu.hd6309.hd6309tbl.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memory.*;
@@ -126,7 +127,7 @@ public class hd6309 extends cpu_interface {
 
     @Override
     public void reset(Object param) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        hd6309_reset(param);
     }
 
     @Override
@@ -136,7 +137,7 @@ public class hd6309 extends cpu_interface {
 
     @Override
     public int execute(int cycles) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return hd6309_execute(cycles);
     }
 
     @Override
@@ -147,12 +148,12 @@ public class hd6309 extends cpu_interface {
 
     @Override
     public Object get_context() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return hd6309_get_context();
     }
 
     @Override
     public void set_context(Object reg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        hd6309_set_context(reg);
     }
 
     @Override
@@ -167,7 +168,7 @@ public class hd6309 extends cpu_interface {
 
     @Override
     public int get_pc() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return hd6309_get_pc();
     }
 
     @Override
@@ -202,12 +203,12 @@ public class hd6309 extends cpu_interface {
 
     @Override
     public void set_irq_line(int irqline, int linestate) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        hd6309_set_irq_line(irqline, linestate);
     }
 
     @Override
     public void set_irq_callback(irqcallbacksPtr callback) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        hd6309.irq_callback = callback;
     }
 
     @Override
@@ -217,7 +218,7 @@ public class hd6309 extends cpu_interface {
 
     @Override
     public String cpu_info(Object context, int regnum) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return hd6309_info(context, regnum);
     }
 
     @Override
@@ -309,26 +310,26 @@ public class hd6309 extends cpu_interface {
             public int /*UINT8*/ nmi_state;
         }
 
-/*TODO*///	/* flag bits in the cc register */
-/*TODO*///	#define CC_C	0x01		/* Carry */
-/*TODO*///	#define CC_V	0x02		/* Overflow */
-/*TODO*///	#define CC_Z	0x04		/* Zero */
-/*TODO*///	#define CC_N	0x08		/* Negative */
-/*TODO*///	#define CC_II	0x10		/* Inhibit IRQ */
-/*TODO*///	#define CC_H	0x20		/* Half (auxiliary) carry */
-/*TODO*///	#define CC_IF	0x40		/* Inhibit FIRQ */
-/*TODO*///	#define CC_E	0x80		/* entire state pushed */
+        /* flag bits in the cc register */
+        public static final int CC_C    = 0x01;    /* Carry */
+        public static final int CC_V    = 0x02;    /* Overflow */
+        public static final int CC_Z    = 0x04;    /* Zero */
+        public static final int CC_N    = 0x08;    /* Negative */
+        public static final int CC_II   = 0x10;    /* Inhibit IRQ */
+        public static final int CC_H    = 0x20;    /* Half (auxiliary) carry */
+        public static final int CC_IF   = 0x40;    /* Inhibit FIRQ */
+        public static final int CC_E    = 0x80;    /* entire state pushed */
 
-/*TODO*///	/* flag bits in the md register */
-/*TODO*///	#define MD_EM	0x01		/* Execution mode */
-/*TODO*///	#define MD_FM	0x02		/* FIRQ mode */
-/*TODO*///	#define MD_II	0x40		/* Illegal instruction */
-/*TODO*///	#define MD_DZ	0x80		/* Division by zero */
+	/* flag bits in the md register */
+	public static final int MD_EM	= 0x01;     /* Execution mode */
+	public static final int MD_FM	= 0x02;     /* FIRQ mode */
+	public static final int MD_II	= 0x40;     /* Illegal instruction */
+	public static final int MD_DZ	= 0x80;     /* Division by zero */
 
 	/* 6309 registers */
-	public static hd6309_Regs m6809 = new hd6309_Regs();
+	public static hd6309_Regs hd6309 = new hd6309_Regs();
 /*TODO*///	int hd6309_slapstic = 0;
-/*TODO*///	
+
 /*TODO*///	#define pPPC	hd6309.ppc
 /*TODO*///	#define pPC 	hd6309.pc
 /*TODO*///	#define pU		hd6309.u
@@ -364,12 +365,15 @@ public class hd6309 extends cpu_interface {
 /*TODO*///	#define DPD 	hd6309.dp.d
 /*TODO*///	#define CC		hd6309.cc
 /*TODO*///	#define MD		hd6309.md
-/*TODO*///	
+
 /*TODO*///	static PAIR ea; 		/* effective address */
 /*TODO*///	#define EA	ea.w.l
 /*TODO*///	#define EAD ea.d
-/*TODO*///	
-/*TODO*///	#define CHANGE_PC change_pc16(PCD)
+        public static int ea;
+
+        public static void CHANGE_PC() {
+            change_pc16(hd6309.pc & 0xFFFF);//ensure it's 16bit just in case
+        }
 /*TODO*///	#if 0
 /*TODO*///	#define CHANGE_PC	{			\
 /*TODO*///		if (hd6309_slapstic != 0)		\
@@ -379,23 +383,61 @@ public class hd6309 extends cpu_interface {
 /*TODO*///		}
 /*TODO*///	#endif
 /*TODO*///	
-/*TODO*///	#define HD6309_CWAI 	8	/* set when CWAI is waiting for an interrupt */
-/*TODO*///	#define HD6309_SYNC 	16	/* set when SYNC is waiting for an interrupt */
-/*TODO*///	#define HD6309_LDS		32	/* set when LDS occured at least once */
+        public static final int HD6309_CWAI 	= 8;	/* set when CWAI is waiting for an interrupt */
+	public static final int HD6309_SYNC 	= 16;	/* set when SYNC is waiting for an interrupt */
+        public static final int HD6309_LDS	= 32;	/* set when LDS occured at least once */
 
-/*TODO*///	/* these are re-defined in hd6309.h TO RAM, ROM or functions in cpuintrf.c */
-/*TODO*///	#define RM(mAddr)		HD6309_RDMEM(mAddr)
-/*TODO*///	#define WM(mAddr,Value) HD6309_WRMEM(mAddr,Value)
-/*TODO*///	#define ROP(mAddr)		HD6309_RDOP(mAddr)
-/*TODO*///	#define ROP_ARG(mAddr)	HD6309_RDOP_ARG(mAddr)
-/*TODO*///	
-/*TODO*///	/* macros to access memory */
-/*TODO*///	#define IMMBYTE(b)	b = ROP_ARG(PCD); PC++
-/*TODO*///	#define IMMWORD(w)	w.d = (ROP_ARG(PCD)<<8) | ROP_ARG((PCD+1)&0xffff); PC+=2
+	/* these are re-defined in hd6309.h TO RAM, ROM or functions in cpuintrf.c */
+        //#define RM(mAddr)		HD6309_RDMEM(mAddr)
+        public static int RM(int addr) {
+            return (cpu_readmem16(addr) & 0xFF);
+        }
+        
+        //#define WM(mAddr,Value) HD6309_WRMEM(mAddr,Value)
+        public static void WM(int addr, int value) {
+            cpu_writemem16(addr, value & 0xFF);
+        }
+        
+        //#define ROP(mAddr)		HD6309_RDOP(mAddr)
+        public static char ROP(int addr) {
+            return cpu_readop(addr);
+        }
+        
+        //#define ROP_ARG(mAddr)	HD6309_RDOP_ARG(mAddr)
+        public static char ROP_ARG(int addr) {
+            return cpu_readop_arg(addr);
+        }
+	
+	/* macros to access memory */
+        //#define IMMBYTE(b)	b = ROP_ARG(PCD); PC++
+        public static int IMMBYTE() {
+            int reg = ROP_ARG(hd6309.pc);
+            hd6309.pc = (hd6309.pc + 1) & 0xFFFF;
+            return reg & 0xFF;
+        }
+        
+        //#define IMMWORD(w)	w.d = (ROP_ARG(PCD)<<8) | ROP_ARG((PCD+1)&0xffff); PC+=2
+        public static int IMMWORD() {
+            int reg = ((ROP_ARG(hd6309.pc) << 8) | ROP_ARG((hd6309.pc + 1)) & 0xffff);
+            hd6309.pc = (hd6309.pc) + 2 & 0xFFFF;
+            return reg;
+        }
+        
 /*TODO*///	#define IMMLONG(w)	w.d = (ROP_ARG(PCD)<<24) + (ROP_ARG(PCD+1)<<16) + (ROP_ARG(PCD+2)<<8) + (ROP_ARG(PCD+3)); PC+=4
-/*TODO*///	
-/*TODO*///	#define PUSHBYTE(b) --S; WM(SD,b)
-/*TODO*///	#define PUSHWORD(w) --S; WM(SD,w.b.l); --S; WM(SD,w.b.h)
+
+        //#define PUSHBYTE(b) --S; WM(SD,b)
+        public static void PUSHBYTE(int w) {
+            hd6309.s = hd6309.s - 1 & 0xFFFF;
+            WM(hd6309.s, w);
+        }
+        
+        //#define PUSHWORD(w) --S; WM(SD,w.b.l); --S; WM(SD,w.b.h)
+        public static void PUSHWORD(int w) {
+            hd6309.s = hd6309.s - 1 & 0xFFFF;
+            WM(hd6309.s, w & 0xFF);
+            hd6309.s = hd6309.s - 1 & 0xFFFF;
+            WM(hd6309.s, w >> 8);
+        }
 /*TODO*///	#define PULLBYTE(b) b = RM(SD); S++
 /*TODO*///	#define PULLWORD(w) w = RM(SD)<<8; S++; w |= RM(SD); S++
 /*TODO*///	
@@ -405,39 +447,73 @@ public class hd6309 extends cpu_interface {
 /*TODO*///	#define PULUWORD(w) w = RM(UD)<<8; U++; w |= RM(UD); U++
 /*TODO*///	
 /*TODO*///	#define CLR_HNZVC	CC&=~(CC_H|CC_N|CC_Z|CC_V|CC_C)
-/*TODO*///	#define CLR_NZV 	CC&=~(CC_N|CC_Z|CC_V)
+        //#define CLR_NZV 	CC&=~(CC_N|CC_Z|CC_V)
+        public static void CLR_NZV() {
+            hd6309.cc &= ~(CC_N | CC_Z | CC_V);
+        }
 /*TODO*///	#define CLR_HNZC	CC&=~(CC_H|CC_N|CC_Z|CC_C)
-/*TODO*///	#define CLR_NZVC	CC&=~(CC_N|CC_Z|CC_V|CC_C)
+        //#define CLR_NZVC	CC&=~(CC_N|CC_Z|CC_V|CC_C)
+        public static void CLR_NZVC() {
+            hd6309.cc &= ~(CC_N | CC_Z | CC_V | CC_C);
+        }
 /*TODO*///	#define CLR_Z		CC&=~(CC_Z)
 /*TODO*///	#define CLR_N		CC&=~(CC_N)
 /*TODO*///	#define CLR_NZC 	CC&=~(CC_N|CC_Z|CC_C)
 /*TODO*///	#define CLR_ZC		CC&=~(CC_Z|CC_C)
-/*TODO*///	
-/*TODO*///	/* macros for CC -- CC bits affected should be reset before calling */
-/*TODO*///	#define SET_Z(a)		if(!a)SEZ
-/*TODO*///	#define SET_Z8(a)		SET_Z((UINT8)a)
+	
+	/* macros for CC -- CC bits affected should be reset before calling */
+        //#define SET_Z(a)		if(!a)SEZ
+        public static void SET_Z(int a) {
+            if (a == 0) {
+                SEZ();
+            }
+        }
+        
+        //#define SET_Z8(a)		SET_Z((UINT8)a)
+        public static void SET_Z8(int a) {
+            SET_Z(a & 0xFF);
+        }
 /*TODO*///	#define SET_Z16(a)		SET_Z((UINT16)a)
 /*TODO*///	#define SET_N8(a)		CC|=((a&0x80)>>4)
+        public static void SET_N8(int a) {
+            hd6309.cc |= ((a & 0x80) >> 4);
+        }
 /*TODO*///	#define SET_N16(a)		CC|=((a&0x8000)>>12)
 /*TODO*///	#define SET_N32(a)		CC|=((a&0x8000)>>20)
 /*TODO*///	#define SET_H(a,b,r)	CC|=(((a^b^r)&0x10)<<1)
-/*TODO*///	#define SET_C8(a)		CC|=((a&0x100)>>8)
+        //#define SET_C8(a)		CC|=((a&0x100)>>8)
+        public static void SET_C8(int a) {
+            hd6309.cc |= ((a & 0x100) >> 8);
+        }
 /*TODO*///	#define SET_C16(a)		CC|=((a&0x10000)>>16)
-/*TODO*///	#define SET_V8(a,b,r)	CC|=(((a^b^r^(r>>1))&0x80)>>6)
+        //#define SET_V8(a,b,r)	CC|=(((a^b^r^(r>>1))&0x80)>>6)
+        public static void SET_V8(int a, int b, int r) {
+            hd6309.cc |= (((a ^ b ^ r ^ (r >> 1)) & 0x80) >> 6);
+        }
 /*TODO*///	#define SET_V16(a,b,r)	CC|=(((a^b^r^(r>>1))&0x8000)>>14)
 /*TODO*///	
 /*TODO*///	#define SET_FLAGS8I(a)		{CC|=flags8i[(a)&0xff];}
 /*TODO*///	#define SET_FLAGS8D(a)		{CC|=flags8d[(a)&0xff];}
-/*TODO*///	
-/*TODO*///	static UINT8 *cycle_counts_page0;
-/*TODO*///	static UINT8 *cycle_counts_page01;
-/*TODO*///	static UINT8 *cycle_counts_page11;
-/*TODO*///	static UINT8 *index_cycle;
-/*TODO*///	
-/*TODO*///	/* combos */
-/*TODO*///	#define SET_NZ8(a)			{SET_N8(a);SET_Z(a);}
+
+	static int[] cycle_counts_page0;
+        static int[] cycle_counts_page01;
+        static int[] cycle_counts_page11;
+        static int[] index_cycle;
+
+	/* combos */
+        //#define SET_NZ8(a)			{SET_N8(a);SET_Z(a);}
+        public static void SET_NZ8(int a) {
+            SET_N8(a);
+            SET_Z(a);
+        }
 /*TODO*///	#define SET_NZ16(a) 		{SET_N16(a);SET_Z(a);}
 /*TODO*///	#define SET_FLAGS8(a,b,r)	{SET_N8(r);SET_Z8(r);SET_V8(a,b,r);SET_C8(r);}
+        public static void SET_FLAGS8(int a, int b, int r) {
+            SET_N8(r);
+            SET_Z8(r);
+            SET_V8(a, b, r);
+            SET_C8(r);
+        }
 /*TODO*///	#define SET_FLAGS16(a,b,r)	{SET_N16(r);SET_Z16(r);SET_V16(a,b,r);SET_C16(r);}
 /*TODO*///	
 /*TODO*///	#define NXORV				((CC&CC_N)^((CC&CC_V)<<2))
@@ -449,14 +525,24 @@ public class hd6309 extends cpu_interface {
 /*TODO*///	
 /*TODO*///	/* macros for addressing modes (postbytes have their own code) */
 /*TODO*///	#define DIRECT	EAD = DPD; IMMBYTE(ea.b.l)
+        public static void DIRECT() {
+            ea = IMMBYTE();
+            ea |= hd6309.dp << 8;
+        }
 /*TODO*///	#define IMM8	EAD = PCD; PC++
 /*TODO*///	#define IMM16	EAD = PCD; PC+=2
-/*TODO*///	#define EXTENDED IMMWORD(ea)
-/*TODO*///	
-/*TODO*///	/* macros to set status flags */
+        //#define EXTENDED IMMWORD(ea)
+        public static void EXTENDED() {
+            ea = IMMWORD();
+        }
+	
+	/* macros to set status flags */
 /*TODO*///	#define SEC CC|=CC_C
 /*TODO*///	#define CLC CC&=~CC_C
-/*TODO*///	#define SEZ CC|=CC_Z
+        //#define SEZ CC|=CC_Z
+        public static void SEZ() {
+            hd6309.cc |= CC_Z;
+        }
 /*TODO*///	#define CLZ CC&=~CC_Z
 /*TODO*///	#define SEN CC|=CC_N
 /*TODO*///	#define CLN CC&=~CC_N
@@ -476,7 +562,11 @@ public class hd6309 extends cpu_interface {
 /*TODO*///	#define CLEM MD&=~MD_EM
 /*TODO*///	
 /*TODO*///	/* macros for convenience */
-/*TODO*///	#define DIRBYTE(b) {DIRECT;b=RM(EAD);}
+        //#define DIRBYTE(b) {DIRECT;b=RM(EAD);}
+        public static int DIRBYTE() {
+            DIRECT();
+            return RM(ea) & 0xFF;
+        }
 /*TODO*///	#define DIRWORD(w) {DIRECT;w.d=RM16(EAD);}
 /*TODO*///	#define DIRLONG(lng) {DIRECT;lng.w.h=RM16(EAD);lng.w.l=RM16(EAD+2);}
 /*TODO*///	#define EXTBYTE(b) {EXTENDED;b=RM(EAD);}
@@ -507,12 +597,12 @@ public class hd6309 extends cpu_interface {
 /*TODO*///		}									\
 /*TODO*///	}
 /*TODO*///	
-/*TODO*///	INLINE UINT32 RM16( UINT32 mAddr );
-/*TODO*///	INLINE UINT32 RM16( UINT32 mAddr )
-/*TODO*///	{
-/*TODO*///		UINT32 result = RM(mAddr) << 8;
-/*TODO*///		return result | RM((mAddr+1)&0xffff);
-/*TODO*///	}
+
+        public static int RM16(int addr) {
+            int i = RM(addr + 1 & 0xFFFF);
+            i |= RM(addr) << 8;
+            return i & 0xFFFF;
+        }
 /*TODO*///	
 /*TODO*///	INLINE UINT32 RM32( UINT32 mAddr );
 /*TODO*///	INLINE UINT32 RM32( UINT32 mAddr )
@@ -539,141 +629,193 @@ public class hd6309 extends cpu_interface {
 /*TODO*///		WM( (mAddr+2)&0xffff, p.b.h );
 /*TODO*///		WM( (mAddr+3)&0xffff, p.b.l );
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	void UpdateState( void )
-/*TODO*///	{
-/*TODO*///		if ( hd6309.md & MD_EM )
-/*TODO*///		{
-/*TODO*///			cycle_counts_page0  = ccounts_page0_na;
-/*TODO*///			cycle_counts_page01 = ccounts_page01_na;
-/*TODO*///			cycle_counts_page11 = ccounts_page11_na;
-/*TODO*///			index_cycle         = index_cycle_na;
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			cycle_counts_page0  = ccounts_page0_em;
-/*TODO*///			cycle_counts_page01 = ccounts_page01_em;
-/*TODO*///			cycle_counts_page11 = ccounts_page11_em;
-/*TODO*///			index_cycle         = index_cycle_em;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	void CHECK_IRQ_LINES( void )
-/*TODO*///	{
-/*TODO*///		if( hd6309.irq_state[HD6309_IRQ_LINE] != CLEAR_LINE ||
-/*TODO*///			hd6309.irq_state[HD6309_FIRQ_LINE] != CLEAR_LINE )
-/*TODO*///			hd6309.int_state &= ~HD6309_SYNC; /* clear SYNC flag */
-/*TODO*///		if( hd6309.irq_state[HD6309_FIRQ_LINE]!=CLEAR_LINE && !(CC & CC_IF))
-/*TODO*///		{
-/*TODO*///			/* fast IRQ */
-/*TODO*///			/* HJB 990225: state already saved by CWAI? */
-/*TODO*///			if( hd6309.int_state & HD6309_CWAI )
-/*TODO*///			{
-/*TODO*///				hd6309.int_state &= ~HD6309_CWAI;
-/*TODO*///				hd6309.extra_cycles += 7;		 /* subtract +7 cycles */
-/*TODO*///			}
-/*TODO*///			else
-/*TODO*///			{
-/*TODO*///				if ((MD & MD_FM) != 0)
-/*TODO*///				{
-/*TODO*///					CC |= CC_E; 				/* save entire state */
-/*TODO*///					PUSHWORD(pPC);
-/*TODO*///					PUSHWORD(pU);
-/*TODO*///					PUSHWORD(pY);
-/*TODO*///					PUSHWORD(pX);
-/*TODO*///					PUSHBYTE(DP);
-/*TODO*///					if ((MD & MD_EM) != 0)
-/*TODO*///					{
-/*TODO*///						PUSHBYTE(F);
-/*TODO*///						PUSHBYTE(E);
-/*TODO*///						hd6309.extra_cycles += 2; /* subtract +2 cycles */
-/*TODO*///					}
-/*TODO*///					PUSHBYTE(B);
-/*TODO*///					PUSHBYTE(A);
-/*TODO*///					PUSHBYTE(CC);
-/*TODO*///					hd6309.extra_cycles += 19;	 /* subtract +19 cycles */
-/*TODO*///				}
-/*TODO*///				else
-/*TODO*///				{
-/*TODO*///					CC &= ~CC_E;				/* save 'short' state */
-/*TODO*///					PUSHWORD(pPC);
-/*TODO*///					PUSHBYTE(CC);
-/*TODO*///					hd6309.extra_cycles += 10;	/* subtract +10 cycles */
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///			CC |= CC_IF | CC_II;			/* inhibit FIRQ and IRQ */
-/*TODO*///			PCD=RM16(0xfff6);
-/*TODO*///			CHANGE_PC;
-/*TODO*///			(void)(*hd6309.irq_callback)(HD6309_FIRQ_LINE);
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		if( hd6309.irq_state[HD6309_IRQ_LINE]!=CLEAR_LINE && !(CC & CC_II) )
-/*TODO*///		{
-/*TODO*///			/* standard IRQ */
-/*TODO*///			/* HJB 990225: state already saved by CWAI? */
-/*TODO*///			if( hd6309.int_state & HD6309_CWAI )
-/*TODO*///			{
-/*TODO*///				hd6309.int_state &= ~HD6309_CWAI;  /* clear CWAI flag */
-/*TODO*///				hd6309.extra_cycles += 7;		 /* subtract +7 cycles */
-/*TODO*///			}
-/*TODO*///			else
-/*TODO*///			{
-/*TODO*///				CC |= CC_E; 				/* save entire state */
-/*TODO*///				PUSHWORD(pPC);
-/*TODO*///				PUSHWORD(pU);
-/*TODO*///				PUSHWORD(pY);
-/*TODO*///				PUSHWORD(pX);
-/*TODO*///				PUSHBYTE(DP);
-/*TODO*///				if ((MD & MD_EM) != 0)
-/*TODO*///				{
-/*TODO*///					PUSHBYTE(F);
-/*TODO*///					PUSHBYTE(E);
-/*TODO*///					hd6309.extra_cycles += 2; /* subtract +2 cycles */
-/*TODO*///				}
-/*TODO*///				PUSHBYTE(B);
-/*TODO*///				PUSHBYTE(A);
-/*TODO*///				PUSHBYTE(CC);
-/*TODO*///				hd6309.extra_cycles += 19;	 /* subtract +19 cycles */
-/*TODO*///			}
-/*TODO*///			CC |= CC_II;					/* inhibit IRQ */
-/*TODO*///			PCD=RM16(0xfff8);
-/*TODO*///			CHANGE_PC;
-/*TODO*///			(void)(*hd6309.irq_callback)(HD6309_IRQ_LINE);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	/****************************************************************************
-/*TODO*///	 * Get all registers in given buffer
-/*TODO*///	 ****************************************************************************/
-/*TODO*///	unsigned hd6309_get_context(void *dst)
-/*TODO*///	{
+	
+	public static void UpdateState()
+	{
+		if (( hd6309.md & MD_EM ) != 0)
+		{
+			cycle_counts_page0  = ccounts_page0_na;
+			cycle_counts_page01 = ccounts_page01_na;
+			cycle_counts_page11 = ccounts_page11_na;
+			index_cycle         = index_cycle_na;
+		}
+		else
+		{
+			cycle_counts_page0  = ccounts_page0_em;
+			cycle_counts_page01 = ccounts_page01_em;
+			cycle_counts_page11 = ccounts_page11_em;
+			index_cycle         = index_cycle_em;
+		}
+	}
+	
+	public static void CHECK_IRQ_LINES()
+	{
+		if( hd6309.irq_state[HD6309_IRQ_LINE] != CLEAR_LINE ||
+			hd6309.irq_state[HD6309_FIRQ_LINE] != CLEAR_LINE )
+			hd6309.int_state &= ~HD6309_SYNC; /* clear SYNC flag */
+		if( hd6309.irq_state[HD6309_FIRQ_LINE]!=CLEAR_LINE && (hd6309.cc & CC_IF)==0)
+		{
+			/* fast IRQ */
+			/* HJB 990225: state already saved by CWAI? */
+			if(( hd6309.int_state & HD6309_CWAI ) != 0)
+			{
+				hd6309.int_state &= ~HD6309_CWAI;
+				hd6309.extra_cycles += 7;		 /* subtract +7 cycles */
+			}
+			else
+			{
+				if ((hd6309.md & MD_FM) != 0)
+				{
+					hd6309.cc |= CC_E; 				/* save entire state */
+					PUSHWORD(hd6309.ppc);
+					PUSHWORD(hd6309.u);
+					PUSHWORD(hd6309.y);
+					PUSHWORD(hd6309.x);
+					PUSHBYTE(hd6309.dp);
+					if ((hd6309.md & MD_EM) != 0)
+					{
+						PUSHBYTE(hd6309.f);
+						PUSHBYTE(hd6309.e);
+						hd6309.extra_cycles += 2; /* subtract +2 cycles */
+					}
+					PUSHBYTE(hd6309.b);
+					PUSHBYTE(hd6309.a);
+					PUSHBYTE(hd6309.cc);
+					hd6309.extra_cycles += 19;	 /* subtract +19 cycles */
+				}
+				else
+				{
+					hd6309.cc &= ~CC_E;				/* save 'short' state */
+					PUSHWORD(hd6309.ppc);
+					PUSHBYTE(hd6309.cc);
+					hd6309.extra_cycles += 10;	/* subtract +10 cycles */
+				}
+			}
+			hd6309.cc |= CC_IF | CC_II;			/* inhibit FIRQ and IRQ */
+			hd6309.pc=RM16(0xfff6);
+			CHANGE_PC();
+			(hd6309.irq_callback).handler(HD6309_FIRQ_LINE);
+		}
+		else
+		if( hd6309.irq_state[HD6309_IRQ_LINE]!=CLEAR_LINE && (hd6309.cc & CC_II)==0 )
+		{
+			/* standard IRQ */
+			/* HJB 990225: state already saved by CWAI? */
+			if(( hd6309.int_state & HD6309_CWAI ) != 0)
+			{
+				hd6309.int_state &= ~HD6309_CWAI;  /* clear CWAI flag */
+				hd6309.extra_cycles += 7;		 /* subtract +7 cycles */
+			}
+			else
+			{
+				hd6309.cc |= CC_E; 				/* save entire state */
+				PUSHWORD(hd6309.ppc);
+				PUSHWORD(hd6309.u);
+				PUSHWORD(hd6309.y);
+				PUSHWORD(hd6309.x);
+				PUSHBYTE(hd6309.dp);
+				if ((hd6309.md & MD_EM) != 0)
+				{
+					PUSHBYTE(hd6309.f);
+					PUSHBYTE(hd6309.e);
+					hd6309.extra_cycles += 2; /* subtract +2 cycles */
+				}
+				PUSHBYTE(hd6309.b);
+				PUSHBYTE(hd6309.a);
+				PUSHBYTE(hd6309.cc);
+				hd6309.extra_cycles += 19;	 /* subtract +19 cycles */
+			}
+			hd6309.cc |= CC_II;					/* inhibit IRQ */
+			hd6309.pc=RM16(0xfff8);
+			CHANGE_PC();
+			(hd6309.irq_callback).handler(HD6309_IRQ_LINE);
+		}
+	}
+	
+	/****************************************************************************
+	 * Get all registers in given buffer
+	 ****************************************************************************/
+	public static Object hd6309_get_context()
+	{
 /*TODO*///		if (dst != 0)
 /*TODO*///			*(hd6309_Regs*)dst = hd6309;
 /*TODO*///		return sizeof(hd6309_Regs);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	/****************************************************************************
-/*TODO*///	 * Set all registers to given values
-/*TODO*///	 ****************************************************************************/
-/*TODO*///	void hd6309_set_context(void *src)
-/*TODO*///	{
+            hd6309_Regs regs = new hd6309_Regs();
+            regs.pc = hd6309.pc;
+            regs.ppc = hd6309.ppc;
+            regs.a = hd6309.a;
+            regs.b = hd6309.b;
+            regs.dp = hd6309.dp;
+            regs.u = hd6309.u;
+            regs.s = hd6309.s;
+            regs.x = hd6309.x;
+            regs.y = hd6309.y;
+            regs.cc = hd6309.cc;
+            regs.ireg = hd6309.ireg;
+            regs.irq_state[0] = hd6309.irq_state[0];
+            regs.irq_state[1] = hd6309.irq_state[1];
+            regs.extra_cycles = hd6309.extra_cycles;
+            regs.irq_callback = hd6309.irq_callback;
+            regs.int_state = hd6309.int_state;
+            regs.nmi_state = hd6309.nmi_state;
+            regs.e = hd6309.e;
+            regs.f = hd6309.f;
+            regs.v = hd6309.v;
+            regs.md = hd6309.md;
+            
+            return regs;
+        
+	}
+	
+	/****************************************************************************
+	 * Set all registers to given values
+	 ****************************************************************************/
+	public static void hd6309_set_context(Object src)
+	{
 /*TODO*///		if (src != 0)
 /*TODO*///			hd6309 = *(hd6309_Regs*)src;
 /*TODO*///		CHANGE_PC;
 /*TODO*///	
 /*TODO*///		CHECK_IRQ_LINES();
 /*TODO*///		UpdateState();
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	/****************************************************************************
-/*TODO*///	 * Return program counter
-/*TODO*///	 ****************************************************************************/
-/*TODO*///	unsigned hd6309_get_pc(void)
-/*TODO*///	{
-/*TODO*///		return PC;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
+            hd6309_Regs Regs = (hd6309_Regs) src;
+            hd6309.pc = Regs.pc;
+            hd6309.ppc = Regs.ppc;
+            hd6309.a = Regs.a;
+            hd6309.b = Regs.b;
+            hd6309.dp = Regs.dp;
+            hd6309.u = Regs.u;
+            hd6309.s = Regs.s;
+            hd6309.x = Regs.x;
+            hd6309.y = Regs.y;
+            hd6309.cc = Regs.cc;
+            hd6309.ireg = Regs.ireg;
+            hd6309.irq_state[0] = Regs.irq_state[0];
+            hd6309.irq_state[1] = Regs.irq_state[1];
+            hd6309.extra_cycles = Regs.extra_cycles;
+            hd6309.irq_callback = Regs.irq_callback;
+            hd6309.int_state = Regs.int_state;
+            hd6309.nmi_state = Regs.nmi_state;
+            hd6309.e = Regs.e;
+            hd6309.f = Regs.f;
+            hd6309.v = Regs.v;
+            hd6309.md = Regs.md;
+
+            CHANGE_PC();
+            CHECK_IRQ_LINES();
+            
+            UpdateState();
+	}
+	
+	/****************************************************************************
+	 * Return program counter
+	 ****************************************************************************/
+	public static int hd6309_get_pc()
+	{
+		return hd6309.pc;
+	}
+	
+	
 /*TODO*///	/****************************************************************************
 /*TODO*///	 * Set program counter
 /*TODO*///	 ****************************************************************************/
@@ -792,27 +934,27 @@ public class hd6309 extends cpu_interface {
 /*TODO*///		state_save_register_UINT8("hd6309", cpu, "FIRQ", &hd6309.irq_state[1], 1);
 	}
 	
-/*TODO*///	/****************************************************************************/
-/*TODO*///	/* Reset registers to their initial values									*/
-/*TODO*///	/****************************************************************************/
-/*TODO*///	void hd6309_reset(void *param)
-/*TODO*///	{
-/*TODO*///		hd6309.int_state = 0;
-/*TODO*///		hd6309.nmi_state = CLEAR_LINE;
-/*TODO*///		hd6309.irq_state[0] = CLEAR_LINE;
-/*TODO*///		hd6309.irq_state[0] = CLEAR_LINE;
-/*TODO*///	
-/*TODO*///		DPD = 0;			/* Reset direct page register */
-/*TODO*///	
-/*TODO*///		MD = 0; 			/* Mode register gets reset */
-/*TODO*///		CC |= CC_II;		/* IRQ disabled */
-/*TODO*///		CC |= CC_IF;		/* FIRQ disabled */
-/*TODO*///	
-/*TODO*///		PCD = RM16(0xfffe);
-/*TODO*///		CHANGE_PC;
-/*TODO*///		UpdateState();
-/*TODO*///	}
-/*TODO*///	
+	/****************************************************************************/
+	/* Reset registers to their initial values									*/
+	/****************************************************************************/
+	public static void hd6309_reset(Object param)
+	{
+            hd6309.int_state = 0;
+            hd6309.nmi_state = CLEAR_LINE;
+            hd6309.irq_state[0] = CLEAR_LINE;
+            hd6309.irq_state[0] = CLEAR_LINE;
+
+            hd6309.dp = 0;/* Reset direct page register */
+            hd6309.md = 0;/* Mode register gets reset */
+
+            hd6309.cc |= CC_II;/* IRQ disabled */
+            hd6309.cc |= CC_IF;/* FIRQ disabled */
+
+            hd6309.pc = (RM16(0xfffe)) & 0xFFFF;
+            CHANGE_PC();
+            UpdateState();
+	}
+	
 /*TODO*///	void hd6309_exit(void)
 /*TODO*///	{
 /*TODO*///		/* nothing to do ? */
@@ -863,18 +1005,18 @@ public class hd6309 extends cpu_interface {
 /*TODO*///		PCD = RM16(0xfffc);
 /*TODO*///		CHANGE_PC;
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	/****************************************************************************
-/*TODO*///	 * Set IRQ line state
-/*TODO*///	 ****************************************************************************/
-/*TODO*///	void hd6309_set_irq_line(int irqline, int state)
-/*TODO*///	{
-/*TODO*///		LOG(("HD6309#%d set_irq_line %d, %d\n", cpu_getactivecpu(), irqline, state));
-/*TODO*///		hd6309.irq_state[irqline] = state;
-/*TODO*///		if (state == CLEAR_LINE) return;
-/*TODO*///		CHECK_IRQ_LINES();
-/*TODO*///	}
-/*TODO*///	
+	
+	/****************************************************************************
+	 * Set IRQ line state
+	 ****************************************************************************/
+	public static void hd6309_set_irq_line(int irqline, int state)
+	{
+		//LOG(("HD6309#%d set_irq_line %d, %d\n", cpu_getactivecpu(), irqline, state));
+		hd6309.irq_state[irqline] = state;
+		if (state == CLEAR_LINE) return;
+		CHECK_IRQ_LINES();
+	}
+	
 /*TODO*///	/****************************************************************************
 /*TODO*///	 * Set IRQ vector callback
 /*TODO*///	 ****************************************************************************/
@@ -882,12 +1024,12 @@ public class hd6309 extends cpu_interface {
 /*TODO*///	{
 /*TODO*///		hd6309.irq_callback = callback;
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	/****************************************************************************
-/*TODO*///	 * Return a formatted string for a register
-/*TODO*///	 ****************************************************************************/
-/*TODO*///	const char *hd6309_info(void *context, int regnum)
-/*TODO*///	{
+	
+	/****************************************************************************
+	 * Return a formatted string for a register
+	 ****************************************************************************/
+	public String hd6309_info(Object context, int regnum)
+	{
 /*TODO*///		static char buffer[16][47+1];
 /*TODO*///		static int which = 0;
 /*TODO*///		hd6309_Regs *r = context;
@@ -896,14 +1038,14 @@ public class hd6309 extends cpu_interface {
 /*TODO*///		buffer[which][0] = '\0';
 /*TODO*///		if( !context )
 /*TODO*///			r = &hd6309;
-/*TODO*///	
-/*TODO*///		switch( regnum )
-/*TODO*///		{
-/*TODO*///			case CPU_INFO_NAME: return "HD6309";
-/*TODO*///			case CPU_INFO_FAMILY: return "Hitachi 6309";
-/*TODO*///			case CPU_INFO_VERSION: return "1.0";
-/*TODO*///			case CPU_INFO_FILE: return __FILE__;
-/*TODO*///			case CPU_INFO_CREDITS: return "Copyright (C) John Butler 1997 and Tim Lindner 2000";
+	
+		switch( regnum )
+		{
+			case CPU_INFO_NAME: return "HD6309";
+			case CPU_INFO_FAMILY: return "Hitachi 6309";
+			case CPU_INFO_VERSION: return "1.0";
+			case CPU_INFO_FILE: return "hd6309.java";
+			case CPU_INFO_CREDITS: return "Copyright (C) John Butler 1997 and Tim Lindner 2000";
 /*TODO*///			case CPU_INFO_REG_LAYOUT: return (const char*)hd6309_reg_layout;
 /*TODO*///			case CPU_INFO_WIN_LAYOUT: return (const char*)hd6309_win_layout;
 /*TODO*///	
@@ -939,10 +1081,11 @@ public class hd6309 extends cpu_interface {
 /*TODO*///			case CPU_INFO_REG+HD6309_NMI_STATE: sprintf(buffer[which], "NMI:%X", r.nmi_state); break;
 /*TODO*///			case CPU_INFO_REG+HD6309_IRQ_STATE: sprintf(buffer[which], "IRQ:%X", r.irq_state[HD6309_IRQ_LINE]); break;
 /*TODO*///			case CPU_INFO_REG+HD6309_FIRQ_STATE: sprintf(buffer[which], "FIRQ:%X", r.irq_state[HD6309_FIRQ_LINE]); break;
-/*TODO*///		}
+		}
 /*TODO*///		return buffer[which];
-/*TODO*///	}
-/*TODO*///	
+            throw new UnsupportedOperationException("unsupported m6809 cpu_info");
+        }
+
 /*TODO*///	unsigned hd6309_dasm(char *buffer, unsigned pc)
 /*TODO*///	{
 /*TODO*///	#ifdef MAME_DEBUG
@@ -954,28 +1097,28 @@ public class hd6309 extends cpu_interface {
 /*TODO*///	}
 /*TODO*///	
 /*TODO*///	/* includes the actual opcode implementations */
-/*TODO*///	
-/*TODO*///	/* execute instructions on this CPU until icount expires */
-/*TODO*///	int hd6309_execute(int cycles)	/* NS 970908 */
-/*TODO*///	{
-/*TODO*///		hd6309_ICount = cycles - hd6309.extra_cycles;
-/*TODO*///		hd6309.extra_cycles = 0;
-/*TODO*///	
-/*TODO*///		if (hd6309.int_state & (HD6309_CWAI | HD6309_SYNC))
-/*TODO*///		{
-/*TODO*///			hd6309_ICount = 0;
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			do
-/*TODO*///			{
-/*TODO*///				pPPC = pPC;
-/*TODO*///	
+	
+	/* execute instructions on this CPU until icount expires */
+	public static int hd6309_execute(int cycles)	/* NS 970908 */
+	{
+		hd6309_ICount[0] = cycles - hd6309.extra_cycles;
+		hd6309.extra_cycles = 0;
+	
+		if ((hd6309.int_state & (HD6309_CWAI | HD6309_SYNC)) != 0)
+		{
+			hd6309_ICount[0] = 0;
+		}
+		else
+		{
+			do
+			{
+				hd6309.ppc = hd6309.pc;
+	
 /*TODO*///				CALL_MAME_DEBUG;
-/*TODO*///	
-/*TODO*///				hd6309.ireg = ROP(PCD);
-/*TODO*///				PC++;
-/*TODO*///	
+	
+				hd6309.ireg = ROP(hd6309.pc);
+				hd6309.pc = (hd6309.pc + 1) & 0xFFFF;
+	
 /*TODO*///	#ifdef BIG_SWITCH
 /*TODO*///				switch( hd6309.ireg )
 /*TODO*///				{
@@ -1237,20 +1380,20 @@ public class hd6309 extends cpu_interface {
 /*TODO*///				case 0xff: stu_ex();   				break;
 /*TODO*///				}
 /*TODO*///	#else
-/*TODO*///				(*hd6309_main[hd6309.ireg])();
+				(hd6309_main[hd6309.ireg]).handler();
 /*TODO*///	#endif    /* BIG_SWITCH */
-/*TODO*///	
-/*TODO*///				hd6309_ICount -= cycle_counts_page0[hd6309.ireg];
-/*TODO*///	
-/*TODO*///			} while( hd6309_ICount > 0 );
-/*TODO*///	
-/*TODO*///			hd6309_ICount -= hd6309.extra_cycles;
-/*TODO*///			hd6309.extra_cycles = 0;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		return cycles - hd6309_ICount;	 /* NS 970908 */
-/*TODO*///	}
-/*TODO*///	
+	
+				hd6309_ICount[0] -= cycle_counts_page0[hd6309.ireg];
+	
+			} while( hd6309_ICount[0] > 0 );
+	
+			hd6309_ICount[0] -= hd6309.extra_cycles;
+			hd6309.extra_cycles = 0;
+		}
+	
+		return cycles - hd6309_ICount[0];	 /* NS 970908 */
+	}
+	
 /*TODO*///	INLINE void fetch_effective_address( void )
 /*TODO*///	{
 /*TODO*///		UINT8 postbyte = ROP_ARG(PCD);
