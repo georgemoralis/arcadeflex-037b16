@@ -23,6 +23,8 @@ import gr.codebb.arcadeflex.WIP.v037b16.cpu.m6805.m6805;
 import gr.codebb.arcadeflex.WIP.v037b16.cpu.m6805.m68705;
 import gr.codebb.arcadeflex.WIP.v037b16.cpu.m6805.HD63705;
 import gr.codebb.arcadeflex.WIP.v037b16.cpu.m6502.m6502;
+import gr.codebb.arcadeflex.WIP.v037b16.cpu.hd6309.hd6309;
+import static gr.codebb.arcadeflex.WIP.v037b16.cpu.hd6309.hd6309H.*;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.*;
@@ -358,7 +360,7 @@ public class cpuintrf {
                 new m6805(),//CPU0(M6805,    m6805,	 1,  0,1.00,M6805_INT_NONE,    M6805_INT_IRQ,  -1,			   8, 16,	  0,11,BE,1, 3	),
                 new m68705(),//CPU0(M68705,   m68705,	 1,  0,1.00,M68705_INT_NONE,   M68705_INT_IRQ, -1,			   8, 16,	  0,11,BE,1, 3	),
                 new HD63705(),//CPU0(HD63705,  hd63705,  8,  0,1.00,HD63705_INT_NONE,  HD63705_INT_IRQ,-1,			   8, 16,	  0,16,BE,1, 3	),
-                new dummy_cpu(),//CPU0(HD6309,   hd6309,	 2,  0,1.00,HD6309_INT_NONE,   HD6309_INT_IRQ, HD6309_INT_NMI, 8, 16,	  0,16,BE,1, 4	),
+                new hd6309(),//CPU0(HD6309,   hd6309,	 2,  0,1.00,HD6309_INT_NONE,   HD6309_INT_IRQ, HD6309_INT_NMI, 8, 16,	  0,16,BE,1, 4	),
                 new m6809(),//CPU0(M6809,    m6809,	 2,  0,1.00,M6809_INT_NONE,    M6809_INT_IRQ,  M6809_INT_NMI,  8, 16,	  0,16,BE,1, 4	),
                 new konami(),//CPU0(KONAMI,   konami,	 2,  0,1.00,KONAMI_INT_NONE,   KONAMI_INT_IRQ, KONAMI_INT_NMI, 8, 16,	  0,16,BE,1, 4	),
                 new m68kmame(),//CPU0(M68000,   m68000,	 8, -1,1.00,MC68000_INT_NONE,  -1,			   -1,			   16,24bew,  0,24,BE,2,10	),
@@ -1737,14 +1739,22 @@ public class cpuintrf {
                             break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_HD6309)
-/*TODO*///			case CPU_HD6309:
-/*TODO*///				switch (num)
-/*TODO*///				{
-/*TODO*///				case HD6309_INT_IRQ:	irq_line = 0; LOG(("M6309 IRQ\n")); break;
-/*TODO*///				case HD6309_INT_FIRQ:	irq_line = 1; LOG(("M6309 FIRQ\n")); break;
-/*TODO*///				default:				irq_line = 0; LOG(("M6309 unknown\n"));
-/*TODO*///				}
-/*TODO*///				break;
+			case CPU_HD6309:
+				switch (num)
+				{
+				case HD6309_INT_IRQ:	
+                                    irq_line = 0; 
+                                    //LOG(("M6309 IRQ\n")); 
+                                    break;
+				case HD6309_INT_FIRQ:	
+                                    irq_line = 1; 
+                                    //LOG(("M6309 FIRQ\n")); 
+                                    break;
+				default:
+                                    irq_line = 0; 
+                                    //LOG(("M6309 unknown\n"));
+				}
+				break;
 /*TODO*///#endif
                     case CPU_M6809:
                         switch (num) {
