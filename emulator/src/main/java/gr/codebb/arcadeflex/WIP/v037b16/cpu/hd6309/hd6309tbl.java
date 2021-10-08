@@ -277,58 +277,58 @@ public class hd6309tbl {
             eorb_ex, adcb_ex, orb_ex,  addb_ex, ldd_ex,  std_ex,  ldu_ex,  stu_ex
     };
 
-/*TODO*///static void (*hd6309_page01[0x100])(void) = {
-/*TODO*////*	        0xX0,   0xX1,     0xX2,    0xX3,    0xX4,    0xX5,    0xX6,    0xX7,
-/*TODO*///			0xX8,   0xX9,     0xXA,    0xXB,    0xXC,    0xXD,    0xXE,    0xXF   */
-/*TODO*///
-/*TODO*////* 0x0X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///
-/*TODO*////* 0x1X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///
-/*TODO*////* 0x2X */  IIError, lbrn,    lbhi,    lbls,    lbcc,    lbcs,    lbne,    lbeq,
-/*TODO*///			lbvc,    lbvs,    lbpl,    lbmi,    lbge,    lblt,    lbgt,    lble,
-/*TODO*///
-/*TODO*////* 0x3X */  addr_r,  adcr,    subr,    sbcr,    andr,    orr,     eorr,    cmpr,
-/*TODO*///			pshsw,   pulsw,   pshuw,   puluw,   IIError, IIError, IIError, swi2,
-/*TODO*///
-/*TODO*////* 0x4X */  negd,    IIError, IIError, comd,    lsrd,    IIError, rord,    asrd,
-/*TODO*///			asld,    rold,    decd,    IIError, incd,    tstd,    IIError, clrd,
-/*TODO*///
-/*TODO*////* 0x5X */  IIError, IIError, IIError, comw,    lsrw,    IIError, rorw,    IIError,
-/*TODO*///			IIError, rolw,    decw,    IIError, incw,    tstw,    IIError, clrw,
-/*TODO*///
-/*TODO*////* 0x6X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///
-/*TODO*////* 0x7X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///
-/*TODO*////* 0x8X */  subw_im, cmpw_im, sbcd_im, cmpd_im, andd_im, bitd_im, ldw_im,  IIError,
-/*TODO*///			eord_im, adcd_im, ord_im,  addw_im, cmpy_im, IIError, ldy_im,  IIError,
-/*TODO*///
-/*TODO*////* 0x9X */  subw_di, cmpw_di, sbcd_di, cmpd_di, andd_di, bitd_di, ldw_di,  stw_di,
-/*TODO*///			eord_di, adcd_di, ord_di,  addw_di, cmpy_di, IIError, ldy_di,  sty_di,
-/*TODO*///
-/*TODO*////* 0xAX */  subw_ix, cmpw_ix, sbcd_ix, cmpd_ix, andd_ix, bitd_ix, ldw_ix,  stw_ix,
-/*TODO*///			eord_ix, adcd_ix, ord_ix,  addw_ix, cmpy_ix, IIError, ldy_ix,  sty_ix,
-/*TODO*///
-/*TODO*////* 0xBX */  subw_ex, cmpw_ex, sbcd_ex, cmpd_ex, andd_ex, bitd_ex, ldw_ex,  stw_ex,
-/*TODO*///			eord_ex, adcd_ex, ord_ex,  addw_ex, cmpy_ex, IIError, ldy_ex,  sty_ex,
-/*TODO*///
-/*TODO*////* 0xCX */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, IIError, IIError, IIError, IIError, lds_im,  IIError,
-/*TODO*///
-/*TODO*////* 0xDX */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, IIError, IIError, ldq_di,  stq_di,  lds_di,  sts_di,
-/*TODO*///
-/*TODO*////* 0xEX */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, IIError, IIError, ldq_ix,  stq_ix,  lds_ix,  sts_ix,
-/*TODO*///
-/*TODO*////* 0xFX */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, IIError, IIError, ldq_ex,  stq_ex,  lds_ex,  sts_ex
-/*TODO*///};
+    static opcode hd6309_page01[] = {
+    /*	        0xX0,   0xX1,     0xX2,    0xX3,    0xX4,    0xX5,    0xX6,    0xX7,
+                            0xX8,   0xX9,     0xXA,    0xXB,    0xXC,    0xXD,    0xXE,    0xXF   */
+
+    /* 0x0X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+                            IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+
+    /* 0x1X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+                            IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+
+    /* 0x2X */  IIError, lbrn,    lbhi,    lbls,    lbcc,    lbcs,    lbne,    lbeq,
+                            lbvc,    lbvs,    lbpl,    lbmi,    lbge,    lblt,    lbgt,    lble,
+
+    /* 0x3X */  addr_r,  adcr,    subr,    sbcr,    andr,    orr,     eorr,    cmpr,
+                            pshsw,   pulsw,   pshuw,   puluw,   IIError, IIError, IIError, swi2,
+
+    /* 0x4X */  negd,    IIError, IIError, comd,    lsrd,    IIError, rord,    asrd,
+                            asld,    rold,    decd,    IIError, incd,    tstd,    IIError, clrd,
+
+    /* 0x5X */  IIError, IIError, IIError, comw,    lsrw,    IIError, rorw,    IIError,
+                            IIError, rolw,    decw,    IIError, incw,    tstw,    IIError, clrw,
+
+    /* 0x6X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+                            IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+
+    /* 0x7X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+                            IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+
+    /* 0x8X */  subw_im, cmpw_im, sbcd_im, cmpd_im, andd_im, bitd_im, ldw_im,  IIError,
+                            eord_im, adcd_im, ord_im,  addw_im, cmpy_im, IIError, ldy_im,  IIError,
+
+    /* 0x9X */  subw_di, cmpw_di, sbcd_di, cmpd_di, andd_di, bitd_di, ldw_di,  stw_di,
+                            eord_di, adcd_di, ord_di,  addw_di, cmpy_di, IIError, ldy_di,  sty_di,
+
+    /* 0xAX */  subw_ix, cmpw_ix, sbcd_ix, cmpd_ix, andd_ix, bitd_ix, ldw_ix,  stw_ix,
+                            eord_ix, adcd_ix, ord_ix,  addw_ix, cmpy_ix, IIError, ldy_ix,  sty_ix,
+
+    /* 0xBX */  subw_ex, cmpw_ex, sbcd_ex, cmpd_ex, andd_ex, bitd_ex, ldw_ex,  stw_ex,
+                            eord_ex, adcd_ex, ord_ex,  addw_ex, cmpy_ex, IIError, ldy_ex,  sty_ex,
+
+    /* 0xCX */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+                            IIError, IIError, IIError, IIError, IIError, IIError, lds_im,  IIError,
+
+    /* 0xDX */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+                            IIError, IIError, IIError, IIError, ldq_di,  stq_di,  lds_di,  sts_di,
+
+    /* 0xEX */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+                            IIError, IIError, IIError, IIError, ldq_ix,  stq_ix,  lds_ix,  sts_ix,
+
+    /* 0xFX */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+                            IIError, IIError, IIError, IIError, ldq_ex,  stq_ex,  lds_ex,  sts_ex
+    };
 /*TODO*///static void (*hd6309_page11[0x100])(void) = {
 /*TODO*////*	        0xX0,   0xX1,     0xX2,    0xX3,    0xX4,    0xX5,    0xX6,    0xX7,
 /*TODO*///			0xX8,   0xX9,     0xXA,    0xXB,    0xXC,    0xXD,    0xXE,    0xXF   */
