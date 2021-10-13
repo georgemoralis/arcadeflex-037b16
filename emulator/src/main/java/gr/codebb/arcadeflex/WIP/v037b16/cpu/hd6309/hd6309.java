@@ -492,8 +492,22 @@ public class hd6309 extends cpu_interface {
             WM(hd6309.u, w >>> 8);
         }
         
-/*TODO*///	#define PULUBYTE(b) b = RM(UD); U++
-/*TODO*///	#define PULUWORD(w) w = RM(UD)<<8; U++; w |= RM(UD); U++
+	//#define PULUBYTE(b) b = RM(UD); U++
+        public static int PULUBYTE() {
+            int b = RM(hd6309.u);
+            hd6309.u = (hd6309.u + 1) & 0xFFFF;
+            return b;
+        }
+	
+        //#define PULUWORD(w) w = RM(UD)<<8; U++; w |= RM(UD); U++
+        public static int PULUWORD()//TODO recheck
+        {
+            int w = RM(hd6309.u) << 8;
+            hd6309.u = (hd6309.u + 1) & 0xFFFF;
+            w |= RM(hd6309.u);
+            hd6309.u = (hd6309.u + 1) & 0xFFFF;
+            return w;
+        }
 
         //#define CLR_HNZVC	CC&=~(CC_H|CC_N|CC_Z|CC_V|CC_C)
         public static void CLR_HNZVC() {
@@ -619,8 +633,11 @@ public class hd6309 extends cpu_interface {
             SET_V16(a, b, r);
             SET_C16(r);
         }
-/*TODO*///	
-/*TODO*///	#define NXORV				((CC&CC_N)^((CC&CC_V)<<2))
+	
+        //#define NXORV				((CC&CC_N)^((CC&CC_V)<<2))
+        public static int NXORV() {
+            return ((hd6309.cc & CC_N) ^ ((hd6309.cc & CC_V) << 2));
+        }
 
 	/* for treating an unsigned byte as a signed word */
         //#define SIGNED(b) ((UINT16)(b&0x80?b|0xff00:b))
@@ -691,7 +708,12 @@ public class hd6309 extends cpu_interface {
             return RM(ea) & 0xFF;
         }
         
-/*TODO*///	#define EXTWORD(w) {EXTENDED;w.d=RM16(EAD);}
+        //#define EXTWORD(w) {EXTENDED;w.d=RM16(EAD);}
+        public static int EXTWORD() {
+            EXTENDED();
+            return RM16(ea) & 0xFFFF;
+        }
+        
 /*TODO*///	#define EXTLONG(lng) {EXTENDED;lng.w.h=RM16(EAD);lng.w.l=RM16(EAD+2);}
 /*TODO*///	
 /*TODO*///	/* includes the static function prototypes and other tables */
@@ -1139,7 +1161,7 @@ public class hd6309 extends cpu_interface {
 	/****************************************************************************
 	 * Set NMI line state
 	 ****************************************************************************/
-        public static void hd6309_set_nmi_line(int state)
+        public static void hd6309_set_nmi_line_old(int state)
 	{
             if (hd6309.nmi_state == state) {
             return;
@@ -1181,7 +1203,7 @@ public class hd6309 extends cpu_interface {
         CHANGE_PC();
         }
         
-	public static void hd6309_set_nmi_line_2(int state)
+	public static void hd6309_set_nmi_line(int state)
 	{
 		if (hd6309.nmi_state == state) return;
 		hd6309.nmi_state = state;
@@ -1944,22 +1966,70 @@ public class hd6309 extends cpu_interface {
                     hd6309_ICount[0] -= 1;
                     break;
 	
-/*TODO*///		case 0x50: EA=U-16; 												break;
-/*TODO*///		case 0x51: EA=U-15; 												break;
-/*TODO*///		case 0x52: EA=U-14; 												break;
-/*TODO*///		case 0x53: EA=U-13; 												break;
-/*TODO*///		case 0x54: EA=U-12; 												break;
-/*TODO*///		case 0x55: EA=U-11; 												break;
-/*TODO*///		case 0x56: EA=U-10; 												break;
-/*TODO*///		case 0x57: EA=U-9;													break;
-/*TODO*///		case 0x58: EA=U-8;													break;
-/*TODO*///		case 0x59: EA=U-7;													break;
-/*TODO*///		case 0x5a: EA=U-6;													break;
-/*TODO*///		case 0x5b: EA=U-5;													break;
-/*TODO*///		case 0x5c: EA=U-4;													break;
-/*TODO*///		case 0x5d: EA=U-3;													break;
-/*TODO*///		case 0x5e: EA=U-2;													break;
-/*TODO*///		case 0x5f: EA=U-1;													break;
+		case 0x50: 
+                    ea = (hd6309.u - 16) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x51: 
+                    ea = (hd6309.u - 15) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x52: 
+                    ea = (hd6309.u - 14) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x53: 
+                    ea = (hd6309.u - 13) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x54: 
+                    ea = (hd6309.u - 12) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x55: 
+                    ea = (hd6309.u - 11) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x56: 
+                    ea = (hd6309.u - 10) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x57: 
+                    ea = (hd6309.u - 9) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x58: 
+                    ea = (hd6309.u - 8) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x59: 
+                    ea = (hd6309.u - 7) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x5a: 
+                    ea = (hd6309.u - 6) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x5b: 
+                    ea = (hd6309.u - 5) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x5c: 
+                    ea = (hd6309.u - 4) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x5d: 
+                    ea = (hd6309.u - 3) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x5e: 
+                    ea = (hd6309.u - 2) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0x5f: 
+                    ea = (hd6309.u - 1) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
 	
 		case 0x60: 
                     ea = (hd6309.s) & 0xFFFF;
@@ -2101,8 +2171,16 @@ public class hd6309 extends cpu_interface {
                     hd6309.x = (hd6309.x + 2) & 0xFFFF;
                     hd6309_ICount[0] -= 3;
                     break;
-/*TODO*///		case 0x82: X--; 	EA=X;											break;
-/*TODO*///		case 0x83: X-=2;	EA=X;											break;
+		case 0x82: 
+                    hd6309.x = (hd6309.x - 1) & 0xFFFF;
+                    ea = hd6309.x & 0xFFFF;
+                    hd6309_ICount[0] -= 3;
+                    break;
+		case 0x83: 
+                    hd6309.x = (hd6309.x - 2) & 0xFFFF;
+                    ea = hd6309.x & 0xFFFF;
+                    hd6309_ICount[0] -= 3;
+                    break;
 		case 0x84: 
                     ea = hd6309.x & 0xFFFF;
                     break;
@@ -2118,14 +2196,21 @@ public class hd6309 extends cpu_interface {
                     ea = (hd6309.x + SIGNED(hd6309.e)) & 0xFFFF;
                     hd6309_ICount[0] -= 1;
                     break;
-/*TODO*///		case 0x88: IMMBYTE(EA); 	EA=X+SIGNED(EA);						break;
+		case 0x88: 
+                    ea = IMMBYTE();
+                    ea = (hd6309.x + SIGNED(ea)) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
 		case 0x89: 
                     ea = IMMWORD();
                     ea = (ea + hd6309.x) & 0xFFFF;
                     hd6309_ICount[0] -= 4;
                     break;
                     
-/*TODO*///		case 0x8a: EA=X+SIGNED(F);											break;
+		case 0x8a: 
+                    ea = (hd6309.x + SIGNED(hd6309.f)) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
 		case 0x8b: 
                     ea = (hd6309.x + getDreg()) & 0xFFFF;
                     hd6309_ICount[0] -= 4;
@@ -2135,15 +2220,31 @@ public class hd6309 extends cpu_interface {
 /*TODO*///		case 0x8d: IMMWORD(ea); 	EA+=PC; 								break;
 /*TODO*///		case 0x8e: EA=X+W;													break;
 /*TODO*///		case 0x8f: EA=W;		 											break;
-/*TODO*///	
+
 /*TODO*///		case 0x90: EA=W;								EAD=RM16(EAD);		break;
 /*TODO*///		case 0x91: EA=X;	X+=2;						EAD=RM16(EAD);		break;
 /*TODO*///		case 0x92: X--; 	EA=X;						EAD=RM16(EAD);		break;
 /*TODO*///		case 0x93: X-=2;	EA=X;						EAD=RM16(EAD);		break;
-/*TODO*///		case 0x94: EA=X;								EAD=RM16(EAD);		break;
-/*TODO*///		case 0x95: EA=X+SIGNED(B);						EAD=RM16(EAD);		break;
-/*TODO*///		case 0x96: EA=X+SIGNED(A);						EAD=RM16(EAD);		break;
-/*TODO*///		case 0x97: EA=X+SIGNED(E);						EAD=RM16(EAD);		break;
+		case 0x94: 
+                    ea = (hd6309.x) & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 4;
+                    break;
+		case 0x95: 
+                    ea = (hd6309.x + SIGNED(hd6309.b)) & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 4;
+                    break;
+		case 0x96: 
+                    ea = (hd6309.x + SIGNED(hd6309.a)) & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 4;
+                    break;
+		case 0x97: 
+                    ea = (hd6309.x + SIGNED(hd6309.e)) & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 4;
+                    break;
 /*TODO*///		case 0x98: IMMBYTE(EA); 	EA=X+SIGNED(EA);	EAD=RM16(EAD);		break;
 /*TODO*///		case 0x99: IMMWORD(ea); 	EA+=X;				EAD=RM16(EAD);		break;
 /*TODO*///		case 0x9a: EA=X+SIGNED(F);						EAD=RM16(EAD);		break;
@@ -2151,8 +2252,12 @@ public class hd6309 extends cpu_interface {
 /*TODO*///		case 0x9c: IMMBYTE(EA); 	EA=PC+SIGNED(EA);	EAD=RM16(EAD);		break;
 /*TODO*///		case 0x9d: IMMWORD(ea); 	EA+=PC; 			EAD=RM16(EAD);		break;
 /*TODO*///		case 0x9e: EA=X+W;								EAD=RM16(EAD);		break;
-/*TODO*///		case 0x9f: IMMWORD(ea); 						EAD=RM16(EAD);		break;
-/*TODO*///	
+		case 0x9f: 
+                    ea = IMMWORD();
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 8;
+                    break;
+	
 		case 0xa0:                    
                     ea = hd6309.y & 0xFFFF;
                     hd6309.y = (hd6309.y + 1) & 0xFFFF;
@@ -2163,8 +2268,16 @@ public class hd6309 extends cpu_interface {
                     hd6309.y = (hd6309.y + 2) & 0xFFFF;
                     hd6309_ICount[0] -= 3;                
                     break;
-/*TODO*///		case 0xa2: Y--; 	EA=Y;											break;
-/*TODO*///		case 0xa3: Y-=2;	EA=Y;											break;
+		case 0xa2: 
+                    hd6309.y = (hd6309.y - 1) & 0xFFFF;
+                    ea = hd6309.y;
+                    hd6309_ICount[0] -= 2;
+                    break;
+		case 0xa3: 
+                    hd6309.y = (hd6309.y - 2) & 0xFFFF;
+                    ea = hd6309.y;
+                    hd6309_ICount[0] -= 3;
+                    break;
 		case 0xa4:                     
                     ea = hd6309.y & 0xFFFF;
                     hd6309_ICount[0] -= 2; // added by Chuso
@@ -2191,8 +2304,14 @@ public class hd6309 extends cpu_interface {
                     ea = (ea + hd6309.y) & 0xFFFF;
                     hd6309_ICount[0] -= 4;
                     break;
-/*TODO*///		case 0xaa: EA=Y+SIGNED(F);											break;
-/*TODO*///		case 0xab: EA=Y+D;													break;
+		case 0xaa: 
+                    ea = (hd6309.y + SIGNED(hd6309.f)) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0xab: 
+                    ea = (hd6309.y + getDreg()) & 0xFFFF;
+                    hd6309_ICount[0] -= 4;
+                    break;
 /*TODO*///		case 0xac: IMMBYTE(EA); 	EA=PC+SIGNED(EA);						break;
 /*TODO*///		case 0xad: IMMWORD(ea); 	EA+=PC; 								break;
 /*TODO*///		case 0xae: EA=Y+W;													break;
@@ -2204,28 +2323,73 @@ public class hd6309 extends cpu_interface {
 /*TODO*///		case 0xb3: Y-=2;	EA=Y;						EAD=RM16(EAD);		break;
 /*TODO*///		case 0xb4: EA=Y;								EAD=RM16(EAD);		break;
 /*TODO*///		case 0xb5: EA=Y+SIGNED(B);						EAD=RM16(EAD);		break;
-/*TODO*///		case 0xb6: EA=Y+SIGNED(A);						EAD=RM16(EAD);		break;
-/*TODO*///		case 0xb7: EA=Y+SIGNED(E);						EAD=RM16(EAD);		break;
+		case 0xb6: 
+                    ea = (hd6309.y + SIGNED(hd6309.a)) & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 4;
+                    break;
+		case 0xb7: 
+                    ea = (hd6309.y + SIGNED(hd6309.e)) & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 4;
+                    break;
 /*TODO*///		case 0xb8: IMMBYTE(EA); 	EA=Y+SIGNED(EA);	EAD=RM16(EAD);		break;
 /*TODO*///		case 0xb9: IMMWORD(ea); 	EA+=Y;				EAD=RM16(EAD);		break;
-/*TODO*///		case 0xba: EA=Y+SIGNED(F);						EAD=RM16(EAD);		break;
-/*TODO*///		case 0xbb: EA=Y+D;								EAD=RM16(EAD);		break;
+		case 0xba: 
+                    ea = (hd6309.y + SIGNED(hd6309.f)) & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 4;
+                    break;
+		case 0xbb: 
+                    ea = (hd6309.y + getDreg()) & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 7;
+                    break;
 /*TODO*///		case 0xbc: IMMBYTE(EA); 	EA=PC+SIGNED(EA);	EAD=RM16(EAD);		break;
 /*TODO*///		case 0xbd: IMMWORD(ea); 	EA+=PC; 			EAD=RM16(EAD);		break;
 /*TODO*///		case 0xbe: EA=Y+W;								EAD=RM16(EAD);		break;
 /*TODO*///		case 0xbf: IMMWORD(ea); 						EAD=RM16(EAD);		break;
-/*TODO*///	
-/*TODO*///		case 0xc0: EA=U;			U++;									break;
-/*TODO*///		case 0xc1: EA=U;			U+=2;									break;
-/*TODO*///		case 0xc2: U--; 			EA=U;									break;
-/*TODO*///		case 0xc3: U-=2;			EA=U;									break;
+	
+		case 0xc0: 
+                    ea = hd6309.u & 0xFFFF;
+                    hd6309.u = (hd6309.u + 1) & 0xFFFF;
+                    hd6309_ICount[0] -= 2;
+                    break;
+		case 0xc1: 
+                    ea = hd6309.u & 0xFFFF;
+                    hd6309.u = (hd6309.u + 2) & 0xFFFF;
+                    hd6309_ICount[0] -= 3;
+                    break;
+		case 0xc2: 
+                    hd6309.u = (hd6309.u - 1) & 0xFFFF;
+                    ea = hd6309.u & 0xFFFF;
+                    hd6309_ICount[0] -= 2;
+                    break;
+		case 0xc3: 
+                    hd6309.u = (hd6309.u - 2) & 0xFFFF;
+                    ea = hd6309.u & 0xFFFF;
+                    hd6309_ICount[0] -= 3;
+                    break;
 		case 0xc4: 
                     ea = hd6309.u & 0xFFFF;
-                break;
-/*TODO*///		case 0xc5: EA=U+SIGNED(B);											break;
-/*TODO*///		case 0xc6: EA=U+SIGNED(A);											break;
-/*TODO*///		case 0xc7: EA=U+SIGNED(E);											break;
-/*TODO*///		case 0xc8: IMMBYTE(EA); 	EA=U+SIGNED(EA);						break;
+                    break;
+		case 0xc5: 
+                    ea = (hd6309.u + SIGNED(hd6309.b)) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0xc6: 
+                    ea = (hd6309.u + SIGNED(hd6309.a)) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0xc7: 
+                    ea = (hd6309.u + SIGNED(hd6309.e)) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0xc8:                    						
+                    ea = IMMBYTE();
+                    ea = (hd6309.u + SIGNED(ea)) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
 /*TODO*///		case 0xc9: IMMWORD(ea); 	EA+=U;									break;
 /*TODO*///		case 0xca: EA=U+SIGNED(F);											break;
 		case 0xcb: 
@@ -2242,29 +2406,74 @@ public class hd6309 extends cpu_interface {
 /*TODO*///		case 0xd2: U--; 	EA=U;						EAD=RM16(EAD);		break;
 /*TODO*///		case 0xd3: U-=2;	EA=U;						EAD=RM16(EAD);		break;
 /*TODO*///		case 0xd4: EA=U;								EAD=RM16(EAD);		break;
-/*TODO*///		case 0xd5: EA=U+SIGNED(B);						EAD=RM16(EAD);		break;
-/*TODO*///		case 0xd6: EA=U+SIGNED(A);						EAD=RM16(EAD);		break;
-/*TODO*///		case 0xd7: EA=U+SIGNED(E);						EAD=RM16(EAD);		break;
+		case 0xd5: 
+                    ea = (hd6309.u + SIGNED(hd6309.b)) & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 4;
+                    break;
+		case 0xd6: 
+                    ea = (hd6309.u + SIGNED(hd6309.a)) & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 4;
+                    break;
+		case 0xd7: 
+                    ea = (hd6309.u + SIGNED(hd6309.e)) & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 4;
+                    break;
 /*TODO*///		case 0xd8: IMMBYTE(EA); 	EA=U+SIGNED(EA);	EAD=RM16(EAD);		break;
 /*TODO*///		case 0xd9: IMMWORD(ea); 	EA+=U;				EAD=RM16(EAD);		break;
-/*TODO*///		case 0xda: EA=U+SIGNED(F);						EAD=RM16(EAD);		break;
+		case 0xda: 
+                    ea = (hd6309.u + SIGNED(hd6309.f)) & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 4;
+                    break;
 /*TODO*///		case 0xdb: EA=U+D;								EAD=RM16(EAD);		break;
 /*TODO*///		case 0xdc: IMMBYTE(EA); 	EA=PC+SIGNED(EA);	EAD=RM16(EAD);		break;
 /*TODO*///		case 0xdd: IMMWORD(ea); 	EA+=PC; 			EAD=RM16(EAD);		break;
 /*TODO*///		case 0xde: EA=U+W;								EAD=RM16(EAD);		break;
 /*TODO*///		case 0xdf: IMMWORD(ea); 						EAD=RM16(EAD);		break;
-/*TODO*///	
-/*TODO*///		case 0xe0: EA=S;	S++;											break;
-/*TODO*///		case 0xe1: EA=S;	S+=2;											break;
-/*TODO*///		case 0xe2: S--; 	EA=S;											break;
-/*TODO*///		case 0xe3: S-=2;	EA=S;											break;
+
+		case 0xe0: 
+                    ea = hd6309.s & 0xFFFF;
+                    hd6309.s = (hd6309.s + 1) & 0xFFFF;
+                    hd6309_ICount[0] -= 2;
+                    break;
+		case 0xe1: 
+                    ea = hd6309.s & 0xFFFF;
+                    hd6309.s = (hd6309.s + 2) & 0xFFFF;
+                    hd6309_ICount[0] -= 3;
+                    break;
+		case 0xe2: 
+                    hd6309.s = (hd6309.s - 1) & 0xFFFF;
+                    ea = hd6309.s;
+                    hd6309_ICount[0] -= 2;
+                    break;
+		case 0xe3: 
+                    hd6309.s = (hd6309.s - 2) & 0xFFFF;
+                    ea = hd6309.s;
+                    hd6309_ICount[0] -= 3;
+                    break;
 		case 0xe4: 
                     ea = hd6309.s & 0xFFFF;
                     break;
-/*TODO*///		case 0xe5: EA=S+SIGNED(B);											break;
-/*TODO*///		case 0xe6: EA=S+SIGNED(A);											break;
-/*TODO*///		case 0xe7: EA=S+SIGNED(E);											break;
-/*TODO*///		case 0xe8: IMMBYTE(EA); 	EA=S+SIGNED(EA);						break;
+		case 0xe5: 
+                    ea = (hd6309.s + SIGNED(hd6309.b)) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0xe6: 
+                    ea = (hd6309.s + SIGNED(hd6309.a)) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0xe7: 
+                    ea = (hd6309.s + SIGNED(hd6309.e)) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
+		case 0xe8: 
+                    ea = IMMBYTE();
+                    ea = (hd6309.s + SIGNED(ea)) & 0xFFFF;
+                    hd6309_ICount[0] -= 1;
+                    break;
 /*TODO*///		case 0xe9: IMMWORD(ea); 	EA+=S;									break;
 /*TODO*///		case 0xea: EA=S+SIGNED(F);											break;
 /*TODO*///		case 0xeb: EA=S+D;													break;
