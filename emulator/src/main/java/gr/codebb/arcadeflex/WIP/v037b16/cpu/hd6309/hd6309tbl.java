@@ -329,60 +329,61 @@ public class hd6309tbl {
     /* 0xFX */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
                             IIError, IIError, IIError, IIError, ldq_ex,  stq_ex,  lds_ex,  sts_ex
     };
-/*TODO*///static void (*hd6309_page11[0x100])(void) = {
-/*TODO*////*	        0xX0,   0xX1,     0xX2,    0xX3,    0xX4,    0xX5,    0xX6,    0xX7,
-/*TODO*///			0xX8,   0xX9,     0xXA,    0xXB,    0xXC,    0xXD,    0xXE,    0xXF   */
-/*TODO*///
-/*TODO*////* 0x0X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///
-/*TODO*////* 0x1X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///
-/*TODO*////* 0x2X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///
-/*TODO*////* 0x3X */  band,    biand,   bor,     bior,    beor,    bieor,   ldbt,    stbt,
-/*TODO*///			tfmpp,   tfmmm,   tfmpc,   tfmcp,   bitmd_im,ldmd_im, IIError, swi3,
-/*TODO*///
-/*TODO*////* 0x4X */  IIError, IIError, IIError, come,    IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, dece,    IIError, ince,    tste,    IIError, clre,
-/*TODO*///
-/*TODO*////* 0x5X */  IIError, IIError, IIError, comf,    IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, decf,    IIError, incf,    tstf,    IIError, clrf,
-/*TODO*///
-/*TODO*////* 0x6X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///
-/*TODO*////* 0x7X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///			IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
-/*TODO*///
-/*TODO*////* 0x8X */  sube_im, cmpe_im, IIError, cmpu_im, IIError, IIError, lde_im,  IIError,
-/*TODO*///			IIError, IIError, IIError, adde_im, cmps_im, divd_im, divq_im, muld_im,
-/*TODO*///
-/*TODO*////* 0x9X */  sube_di, cmpe_di, IIError, cmpu_di, IIError, IIError, lde_di,  ste_di,
-/*TODO*///			IIError, IIError, IIError, adde_di, cmps_di, divd_di, divq_di, muld_di,
-/*TODO*///
-/*TODO*////* 0xAX */  sube_ix, cmpe_ix, IIError, cmpu_ix, IIError, IIError, lde_ix,  ste_ix,
-/*TODO*///			IIError, IIError, IIError, adde_ix, cmps_ix, divd_ix, divq_ix, muld_ix,
-/*TODO*///
-/*TODO*////* 0xBX */  sube_ex, cmpe_ex, IIError, cmpu_ex, IIError, IIError, lde_ex,  ste_ex,
-/*TODO*///			IIError, IIError, IIError, adde_ex, cmps_ex, divd_ex, divq_ex, muld_ex,
-/*TODO*///
-/*TODO*////* 0xCX */  subf_im, cmpf_im, IIError, IIError, IIError, IIError, ldf_im,  IIError,
-/*TODO*///			IIError, IIError, IIError, addf_im, IIError, IIError, IIError, IIError,
-/*TODO*///
-/*TODO*////* 0xDX */  subf_di, cmpf_di, IIError, IIError, IIError, IIError, ldf_di,  stf_di,
-/*TODO*///			IIError, IIError, IIError, addf_di, IIError, IIError, IIError, IIError,
-/*TODO*///
-/*TODO*////* 0xEX */  subf_ix, cmpf_ix, IIError, IIError, IIError, IIError, ldf_ix,  stf_ix,
-/*TODO*///			IIError, IIError, IIError, addf_ix, IIError, IIError, IIError, IIError,
-/*TODO*///
-/*TODO*////* 0xFX */  subf_ex, cmpf_ex, IIError, IIError, IIError, IIError, ldf_ex,  stf_ex,
-/*TODO*///			IIError, IIError, IIError, addf_ex, IIError, IIError, IIError, IIError
-/*TODO*///
-/*TODO*///};
-/*TODO*///
+
+    static opcode hd6309_page11[] = {
+    /*	        0xX0,   0xX1,     0xX2,    0xX3,    0xX4,    0xX5,    0xX6,    0xX7,
+                            0xX8,   0xX9,     0xXA,    0xXB,    0xXC,    0xXD,    0xXE,    0xXF   */
+
+    /* 0x0X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+                            IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+
+    /* 0x1X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+                            IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+
+    /* 0x2X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+                            IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+
+    /* 0x3X */  band,    biand,   bor,     bior,    beor,    bieor,   ldbt,    stbt,
+                            tfmpp,   tfmmm,   tfmpc,   tfmcp,   bitmd_im,ldmd_im, IIError, swi3,
+
+    /* 0x4X */  IIError, IIError, IIError, come,    IIError, IIError, IIError, IIError,
+                            IIError, IIError, dece,    IIError, ince,    tste,    IIError, clre,
+
+    /* 0x5X */  IIError, IIError, IIError, comf,    IIError, IIError, IIError, IIError,
+                            IIError, IIError, decf,    IIError, incf,    tstf,    IIError, clrf,
+
+    /* 0x6X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+                            IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+
+    /* 0x7X */  IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+                            IIError, IIError, IIError, IIError, IIError, IIError, IIError, IIError,
+
+    /* 0x8X */  sube_im, cmpe_im, IIError, cmpu_im, IIError, IIError, lde_im,  IIError,
+                            IIError, IIError, IIError, adde_im, cmps_im, divd_im, divq_im, muld_im,
+
+    /* 0x9X */  sube_di, cmpe_di, IIError, cmpu_di, IIError, IIError, lde_di,  ste_di,
+                            IIError, IIError, IIError, adde_di, cmps_di, divd_di, divq_di, muld_di,
+
+    /* 0xAX */  sube_ix, cmpe_ix, IIError, cmpu_ix, IIError, IIError, lde_ix,  ste_ix,
+                            IIError, IIError, IIError, adde_ix, cmps_ix, divd_ix, divq_ix, muld_ix,
+
+    /* 0xBX */  sube_ex, cmpe_ex, IIError, cmpu_ex, IIError, IIError, lde_ex,  ste_ex,
+                            IIError, IIError, IIError, adde_ex, cmps_ex, divd_ex, divq_ex, muld_ex,
+
+    /* 0xCX */  subf_im, cmpf_im, IIError, IIError, IIError, IIError, ldf_im,  IIError,
+                            IIError, IIError, IIError, addf_im, IIError, IIError, IIError, IIError,
+
+    /* 0xDX */  subf_di, cmpf_di, IIError, IIError, IIError, IIError, ldf_di,  stf_di,
+                            IIError, IIError, IIError, addf_di, IIError, IIError, IIError, IIError,
+
+    /* 0xEX */  subf_ix, cmpf_ix, IIError, IIError, IIError, IIError, ldf_ix,  stf_ix,
+                            IIError, IIError, IIError, addf_ix, IIError, IIError, IIError, IIError,
+
+    /* 0xFX */  subf_ex, cmpf_ex, IIError, IIError, IIError, IIError, ldf_ex,  stf_ex,
+                            IIError, IIError, IIError, addf_ex, IIError, IIError, IIError, IIError
+
+    };
+
 /*TODO*///#endif /* BIG_SWITCH */
 
     
