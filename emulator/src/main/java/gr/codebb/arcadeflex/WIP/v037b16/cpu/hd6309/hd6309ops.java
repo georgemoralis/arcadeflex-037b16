@@ -2698,17 +2698,13 @@ public class hd6309ops {
         /* $60 NEG indexed ?**** */
         public static opcode  neg_ix = new opcode() {
             public void handler() {
-                if (hd6309log != null) {
-                    fclose(hd6309log);
-                }
-                throw new UnsupportedOperationException("Unimplemented");
-        /*TODO*///	UINT16 r,t;
-        /*TODO*///	fetch_effective_address();
-        /*TODO*///	t = RM(EAD);
-        /*TODO*///	r=-t;
-        /*TODO*///	CLR_NZVC;
-        /*TODO*///	SET_FLAGS8(0,t,r);
-        /*TODO*///	WM(EAD,r);
+                int/*UINT16*/ r, t;
+                fetch_effective_address();
+                t = RM(ea);
+                r = -t & 0xFFFF;
+                CLR_NZVC();
+                SET_FLAGS8(0, t, r);
+                WM(ea, r & 0xFF);
             }
         };
 
@@ -4481,14 +4477,11 @@ public class hd6309ops {
         /* $b5 BITA extended -**0- */
         public static opcode  bita_ex = new opcode() {
             public void handler() {
-                if (hd6309log != null) {
-                    fclose(hd6309log);
-                }
-                throw new UnsupportedOperationException("Unimplemented");
-        /*TODO*///	UINT8 t,r;
-        /*TODO*///	EXTBYTE(t);
-        /*TODO*///	r = A & t;
-        /*TODO*///	CLR_NZV; SET_NZ8(r);
+                int t, r;
+                t = EXTBYTE();
+                r = (hd6309.a & t) & 0xFF;
+                CLR_NZV();
+                SET_NZ8(r);
             }
         };
 

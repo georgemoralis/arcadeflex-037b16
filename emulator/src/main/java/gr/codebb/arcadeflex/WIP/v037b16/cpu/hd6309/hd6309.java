@@ -134,7 +134,7 @@ public class hd6309 extends cpu_interface {
 
     @Override
     public void exit() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        hd6309_exit();
     }
 
     @Override
@@ -798,54 +798,8 @@ public class hd6309 extends cpu_interface {
 			index_cycle         = index_cycle_em;
 		}
 	}
-        
-        public static void CHECK_IRQ_LINES() {
-        if (hd6309.irq_state[HD6309_IRQ_LINE] != CLEAR_LINE || hd6309.irq_state[HD6309_FIRQ_LINE] != CLEAR_LINE) {
-            hd6309.int_state &= ~HD6309_SYNC;/* clear SYNC flag */
-        }
-        if (hd6309.irq_state[HD6309_FIRQ_LINE] != CLEAR_LINE && ((hd6309.cc & CC_IF) == 0)) {
-            /* fast IRQ */
- /* HJB 990225: state already saved by CWAI? */
-            if ((hd6309.int_state & HD6309_CWAI) != 0) {
-                hd6309.int_state &= ~HD6309_CWAI;/* clear CWAI */
-                hd6309.extra_cycles += 7;/* subtract +7 cycles */
-            } else {
-                hd6309.cc &= ~CC_E;/* save 'short' state */
-                PUSHWORD(hd6309.pc);
-                PUSHBYTE(hd6309.cc);
-                hd6309.extra_cycles += 10;/* subtract +10 cycles */
-            }
-            hd6309.cc |= CC_IF | CC_II;/* inhibit FIRQ and IRQ */
-            hd6309.pc = RM16(0xfff6);
-            CHANGE_PC();
-            hd6309.irq_callback.handler(HD6309_FIRQ_LINE);
-        } else if (hd6309.irq_state[HD6309_IRQ_LINE] != CLEAR_LINE && ((hd6309.cc & CC_II) == 0)) {
-            /* standard IRQ */
- /* HJB 990225: state already saved by CWAI? */
-            if ((hd6309.int_state & HD6309_CWAI) != 0) {
-                hd6309.int_state &= ~HD6309_CWAI;/* clear CWAI flag */
-                hd6309.extra_cycles += 7;/* subtract +7 cycles */
-            } else {
-                hd6309.cc |= CC_E;/* save entire state */
-                PUSHWORD(hd6309.pc);
-                PUSHWORD(hd6309.u);
-                PUSHWORD(hd6309.y);
-                PUSHWORD(hd6309.x);
-                PUSHBYTE(hd6309.dp);
-                PUSHBYTE(hd6309.b);
-                PUSHBYTE(hd6309.a);
-                PUSHBYTE(hd6309.cc);
-                hd6309.extra_cycles += 19;/* subtract +19 cycles */
-            }
-            hd6309.cc |= CC_II;/* inhibit IRQ */
-            hd6309.pc = RM16(0xfff8);
-            CHANGE_PC();
-            hd6309.irq_callback.handler(HD6309_IRQ_LINE);
-        }
-    }
-
-	
-	public static void CHECK_IRQ_LINES2()
+       
+	public static void CHECK_IRQ_LINES()
 	{
 		if( hd6309.irq_state[HD6309_IRQ_LINE] != CLEAR_LINE ||
 			hd6309.irq_state[HD6309_FIRQ_LINE] != CLEAR_LINE )
@@ -864,7 +818,7 @@ public class hd6309 extends cpu_interface {
 				if ((hd6309.md & MD_FM) != 0)
 				{
 					hd6309.cc |= CC_E; 				/* save entire state */
-					PUSHWORD(hd6309.ppc);
+					PUSHWORD(hd6309.pc);
 					PUSHWORD(hd6309.u);
 					PUSHWORD(hd6309.y);
 					PUSHWORD(hd6309.x);
@@ -883,7 +837,7 @@ public class hd6309 extends cpu_interface {
 				else
 				{
 					hd6309.cc &= ~CC_E;				/* save 'short' state */
-					PUSHWORD(hd6309.ppc);
+					PUSHWORD(hd6309.pc);
 					PUSHBYTE(hd6309.cc);
 					hd6309.extra_cycles += 10;	/* subtract +10 cycles */
 				}
@@ -906,7 +860,7 @@ public class hd6309 extends cpu_interface {
 			else
 			{
 				hd6309.cc |= CC_E; 				/* save entire state */
-				PUSHWORD(hd6309.ppc);
+				PUSHWORD(hd6309.pc);
 				PUSHWORD(hd6309.u);
 				PUSHWORD(hd6309.y);
 				PUSHWORD(hd6309.x);
@@ -1152,58 +1106,16 @@ public class hd6309 extends cpu_interface {
             UpdateState();
 	}
 	
-/*TODO*///	void hd6309_exit(void)
-/*TODO*///	{
-/*TODO*///		/* nothing to do ? */
-/*TODO*///	}
+	public static void hd6309_exit()
+	{
+		/* nothing to do ? */
+	}
 	
 	/* Generate interrupts */
 	/****************************************************************************
 	 * Set NMI line state
 	 ****************************************************************************/
-        public static void hd6309_set_nmi_line_old(int state)
-	{
-            if (hd6309.nmi_state == state) {
-            return;
-        }
-        hd6309.nmi_state = state;
-        //LOG(("M6809#%d set_nmi_line %d\n", cpu_getactivecpu(), state));
-        if (state == CLEAR_LINE) {
-            return;
-        }
-
-        /* if the stack was not yet initialized */
-        if ((hd6309.int_state & HD6309_LDS) == 0) {
-            return;
-        }
-
-        hd6309.int_state &= ~HD6309_SYNC;
-        /* HJB 990225: state already saved by CWAI? */
-        if ((hd6309.int_state & HD6309_CWAI) != 0) {
-            hd6309.int_state &= ~HD6309_CWAI;
-            hd6309.extra_cycles += 7;
-            /* subtract +7 cycles next time */
-        } else {
-            hd6309.cc |= CC_E;
-            /* save entire state */
-            PUSHWORD(hd6309.pc);
-            PUSHWORD(hd6309.u);
-            PUSHWORD(hd6309.y);
-            PUSHWORD(hd6309.x);
-            PUSHBYTE(hd6309.dp);
-            PUSHBYTE(hd6309.b);
-            PUSHBYTE(hd6309.a);
-            PUSHBYTE(hd6309.cc);
-            hd6309.extra_cycles += 19;
-            /* subtract +19 cycles next time */
-        }
-        hd6309.cc |= CC_IF | CC_II;
-        /* inhibit FIRQ and IRQ */
-        hd6309.pc = RM16(0xfffc) & 0xFFFF;
-        CHANGE_PC();
-        }
-        
-	public static void hd6309_set_nmi_line(int state)
+       public static void hd6309_set_nmi_line(int state)
 	{
 		if (hd6309.nmi_state == state) return;
 		hd6309.nmi_state = state;
