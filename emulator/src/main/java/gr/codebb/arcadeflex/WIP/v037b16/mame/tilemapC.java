@@ -1017,13 +1017,13 @@ static void memsetbitmask8(UBytePtr dest, int value, UBytePtr bitmask, int count
     	}
     }
     
-/*TODO*////***********************************************************************************/
-/*TODO*///
-/*TODO*///void tilemap_set_enable( struct tilemap *tilemap, int enable )
-/*TODO*///{
-/*TODO*///	tilemap->enable = enable?1:0;
-/*TODO*///}
-/*TODO*///
+    /***********************************************************************************/
+
+    public static void tilemap_set_enable( struct_tilemap tilemap, int enable )
+    {
+            tilemap.enable = enable!=0?1:0;
+    }
+
     public static void tilemap_set_flip(struct_tilemap tilemap, int attributes) {
         
         if( tilemap==ALL_TILEMAPS )

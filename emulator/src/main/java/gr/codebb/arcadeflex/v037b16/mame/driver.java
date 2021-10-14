@@ -81,6 +81,14 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.lkage.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.mexico86.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.lsasquad.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.fastfred.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.fastlane.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.battlnts.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.labyrunr.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.combatsc.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.spy.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.rockrage.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.bladestl.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.dec8.*;
 
 public class driver {
 
@@ -2370,27 +2378,27 @@ public class driver {
         /*TODO*///	driver_actfanc1,	/* (c) 1989 Data East Corporation (World) */
         /*TODO*///	driver_actfancj,	/* (c) 1989 Data East Corporation (Japan) */
         /*TODO*///	driver_triothep,	/* (c) 1989 Data East Corporation (Japan) */
-        /*TODO*///
-        /*TODO*///	/* Data East 8-bit games */
-        /*TODO*///	driver_lastmiss,	/* (c) 1986 Data East USA (US) */
-        /*TODO*///	driver_lastmss2,	/* (c) 1986 Data East USA (US) */
-        /*TODO*///	driver_shackled,	/* (c) 1986 Data East USA (US) */
-        /*TODO*///	driver_breywood,	/* (c) 1986 Data East Corporation (Japan) */
-        /*TODO*///	driver_csilver,	/* (c) 1987 Data East Corporation (Japan) */
-        /*TODO*///	driver_ghostb,	/* (c) 1987 Data East USA (US) */
-        /*TODO*///	driver_ghostb3,	/* (c) 1987 Data East USA (US) */
-        /*TODO*///	driver_meikyuh,	/* (c) 1987 Data East Corporation (Japan) */
-        /*TODO*///	driver_srdarwin,	/* (c) 1987 Data East Corporation (Japan) */
-        /*TODO*///	driver_gondo,		/* (c) 1987 Data East USA (US) */
-        /*TODO*///	driver_makyosen,	/* (c) 1987 Data East Corporation (Japan) */
-        /*TODO*///	driver_garyoret,	/* (c) 1987 Data East Corporation (Japan) */
-        /*TODO*///	driver_cobracom,	/* (c) 1988 Data East Corporation (World) */
-        /*TODO*///	driver_cobracmj,	/* (c) 1988 Data East Corporation (Japan) */
-        /*TODO*///	driver_oscar,		/* (c) 1988 Data East USA (US) */
-        /*TODO*///	driver_oscarj,	/* (c) 1987 Data East Corporation (Japan) */
-        /*TODO*///	driver_oscarj1,	/* (c) 1987 Data East Corporation (Japan) */
-        /*TODO*///	driver_oscarj0,	/* (c) 1987 Data East Corporation (Japan) */
-        /*TODO*///
+        
+        /* Data East 8-bit games */
+        driver_lastmiss,	/* (c) 1986 Data East USA (US) */
+        driver_lastmss2,	/* (c) 1986 Data East USA (US) */
+        driver_shackled,	/* (c) 1986 Data East USA (US) */
+        driver_breywood,	/* (c) 1986 Data East Corporation (Japan) */
+        driver_csilver,	/* (c) 1987 Data East Corporation (Japan) */
+        driver_ghostb,	/* (c) 1987 Data East USA (US) */
+        driver_ghostb3,	/* (c) 1987 Data East USA (US) */
+        driver_meikyuh,	/* (c) 1987 Data East Corporation (Japan) */
+        driver_srdarwin,	/* (c) 1987 Data East Corporation (Japan) */
+        driver_gondo,		/* (c) 1987 Data East USA (US) */
+        driver_makyosen,	/* (c) 1987 Data East Corporation (Japan) */
+        driver_garyoret,	/* (c) 1987 Data East Corporation (Japan) */
+        driver_cobracom,	/* (c) 1988 Data East Corporation (World) */
+        driver_cobracmj,	/* (c) 1988 Data East Corporation (Japan) */
+        driver_oscar,		/* (c) 1988 Data East USA (US) */
+        driver_oscarj,	/* (c) 1987 Data East Corporation (Japan) */
+        driver_oscarj1,	/* (c) 1987 Data East Corporation (Japan) */
+        driver_oscarj0,	/* (c) 1987 Data East Corporation (Japan) */
+        
         /*TODO*///	/* Data East 16-bit games */
         /*TODO*///	driver_karnov,	/* (c) 1987 Data East USA (US) */
         /*TODO*///	driver_karnovj,	/* (c) 1987 Data East Corporation (Japan) */
@@ -2563,25 +2571,25 @@ public class driver {
         /*TODO*///	driver_contraj,	/* GX633 (c) 1987 (Japan) */
         /*TODO*///	driver_contrajb,	/* bootleg */
         /*TODO*///	driver_gryzor,	/* GX633 (c) 1987 */
-        /*TODO*///	driver_combasc,	/* GX611 (c) 1988 */
-        /*TODO*///	driver_combasct,	/* GX611 (c) 1987 */
-        /*TODO*///	driver_combascj,	/* GX611 (c) 1987 (Japan) */
-        /*TODO*///	driver_bootcamp,	/* GX611 (c) 1987 */
-        /*TODO*///	driver_combascb,	/* bootleg */
-        /*TODO*///	driver_rockrage,	/* GX620 (c) 1986 (World?) */
-        /*TODO*///	driver_rockragj,	/* GX620 (c) 1986 (Japan) */
+        driver_combasc,	/* GX611 (c) 1988 */
+        driver_combasct,	/* GX611 (c) 1987 */
+        driver_combascj,	/* GX611 (c) 1987 (Japan) */
+        driver_bootcamp,	/* GX611 (c) 1987 */
+        driver_combascb,	/* bootleg */
+        driver_rockrage,	/* GX620 (c) 1986 (World?) */
+        driver_rockragj,	/* GX620 (c) 1986 (Japan) */
         /*TODO*///	driver_mx5000,	/* GX669 (c) 1987 */
         /*TODO*///	driver_flkatck,	/* GX669 (c) 1987 (Japan) */
-        /*TODO*///	driver_fastlane,	/* GX752 (c) 1987 */
-        /*TODO*///	driver_tricktrp,	/* GX771 (c) 1987 */
-        /*TODO*///	driver_labyrunr,	/* GX771 (c) 1987 (Japan) */
-        /*TODO*///	driver_thehustl,	/* GX765 (c) 1987 (Japan) */
-        /*TODO*///	driver_thehustj,	/* GX765 (c) 1987 (Japan) */
-        /*TODO*///	driver_rackemup,	/* GX765 (c) 1987 */
-        /*TODO*///	driver_battlnts,	/* GX777 (c) 1987 */
-        /*TODO*///	driver_battlntj,	/* GX777 (c) 1987 (Japan) */
-        /*TODO*///	driver_bladestl,	/* GX797 (c) 1987 */
-        /*TODO*///	driver_bladstle,	/* GX797 (c) 1987 */
+        driver_fastlane,	/* GX752 (c) 1987 */
+        driver_tricktrp,	/* GX771 (c) 1987 */
+        driver_labyrunr,	/* GX771 (c) 1987 (Japan) */
+        driver_thehustl,	/* GX765 (c) 1987 (Japan) */
+        driver_thehustj,	/* GX765 (c) 1987 (Japan) */
+        driver_rackemup,	/* GX765 (c) 1987 */
+        driver_battlnts,	/* GX777 (c) 1987 */
+        driver_battlntj,	/* GX777 (c) 1987 (Japan) */
+        driver_bladestl,	/* GX797 (c) 1987 */
+        driver_bladstle,	/* GX797 (c) 1987 */
         /*TODO*///	driver_hcastle,	/* GX768 (c) 1988 */
         /*TODO*///	driver_hcastlea,	/* GX768 (c) 1988 */
         /*TODO*///	driver_hcastlej,	/* GX768 (c) 1988 (Japan) */
@@ -2606,7 +2614,7 @@ public class driver {
         /*TODO*///	driver_crimfght,	/* GX821 (c) 1989 (US) */
         /*TODO*///	driver_crimfgt2,	/* GX821 (c) 1989 (World) */
         /*TODO*///	driver_crimfgtj,	/* GX821 (c) 1989 (Japan) */
-        /*TODO*///	driver_spy,		/* GX857 (c) 1989 (US) */
+        driver_spy,		/* GX857 (c) 1989 (US) */
         /*TODO*///	driver_bottom9,	/* GX891 (c) 1989 */
         /*TODO*///	driver_bottom9n,	/* GX891 (c) 1989 */
         /*TODO*///	driver_mstadium,	/* GX891 (c) 1989 (Japan) */
