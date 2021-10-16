@@ -90,6 +90,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.rockrage.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.bladestl.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.dec8.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.baraduke.*;
+import static gr.codebb.arcadeflex.v037b16.drivers.skykid.*;
 
 public class driver {
 
@@ -479,9 +480,9 @@ public class driver {
         /*TODO*///	driver_pacland2,	/* (c) 1984 */
         /*TODO*///	driver_pacland3,	/* (c) 1984 */
         /*TODO*///	driver_paclandm,	/* (c) 1984 Midway */
-        /*TODO*///	driver_drgnbstr,	/* (c) 1984 */
-        /*TODO*///	driver_skykid,	/* (c) 1985 */
-        /*TODO*///	driver_skykidb,	/* (c) 1985 */
+        driver_drgnbstr, /* (c) 1984 */
+        driver_skykid, /* (c) 1985 */
+        driver_skykidb, /* (c) 1985 */
         driver_baraduke, /* (c) 1985 */
         driver_metrocrs, /* (c) 1985 */
         /*TODO*///
