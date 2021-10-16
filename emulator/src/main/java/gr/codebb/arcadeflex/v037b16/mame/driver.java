@@ -89,6 +89,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.spy.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.rockrage.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.bladestl.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.dec8.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.baraduke.*;
 
 public class driver {
 
@@ -244,11 +245,10 @@ public class driver {
         driver_turtles, /* (c) 1981 Stern */
         driver_turpin, /* (c) 1981 Sega */
         driver_600, /* GX353 (c) 1981 Konami */
-        driver_flyboy,	/* (c) 1982 Kaneko */
-        driver_flyboyb,	/* bootleg */
-        driver_fastfred,	/* (c) 1982 Atari */
-        driver_jumpcoas,	/* (c) 1983 Kaneko */
-        
+        driver_flyboy, /* (c) 1982 Kaneko */
+        driver_flyboyb, /* bootleg */
+        driver_fastfred, /* (c) 1982 Atari */
+        driver_jumpcoas, /* (c) 1983 Kaneko */
         /*TODO*///	/* "Crazy Climber hardware" games */
         /*TODO*///	driver_cclimber,	/* (c) 1980 Nichibutsu */
         /*TODO*///	driver_cclimbrj,	/* (c) 1980 Nichibutsu */
@@ -482,8 +482,8 @@ public class driver {
         /*TODO*///	driver_drgnbstr,	/* (c) 1984 */
         /*TODO*///	driver_skykid,	/* (c) 1985 */
         /*TODO*///	driver_skykidb,	/* (c) 1985 */
-        /*TODO*///	driver_baraduke,	/* (c) 1985 */
-        /*TODO*///	driver_metrocrs,	/* (c) 1985 */
+        driver_baraduke, /* (c) 1985 */
+        driver_metrocrs, /* (c) 1985 */
         /*TODO*///
         /*TODO*///	/* Namco System 86 games */
         /*TODO*///	driver_hopmappy,	/* (c) 1986 */
@@ -1083,28 +1083,27 @@ public class driver {
         /*TODO*///	driver_zookeep3,	/* ZA  (c) 1982 Taito America Corporation */
         /*TODO*///	driver_slither,	/* (c) 1982 Century II */
         /*TODO*///	driver_slithera,	/* (c) 1982 Century II */
-        
-        	/* Taito SJ System games */
-        	driver_spaceskr,	/* EB  (c) 1981 Taito Corporation */
-        	driver_junglek,	/* KN  (c) 1982 Taito Corporation */
-        	driver_junglkj2,	/* KN  (c) 1982 Taito Corporation */
-        	driver_jungleh,	/* KN  (c) 1982 Taito America Corporation */
-        	driver_junglhbr,	/* KN  (c) 1982 Taito do Brasil */
-        	driver_alpine,	/* RH  (c) 1982 Taito Corporation */
-        	driver_alpinea,	/* RH  (c) 1982 Taito Corporation */
-        	driver_timetunl,	/* UN  (c) 1982 Taito Corporation */
-        	driver_wwestern,	/* WW  (c) 1982 Taito Corporation */
-        	driver_wwester1,	/* WW  (c) 1982 Taito Corporation */
-        	driver_frontlin,	/* FL  (c) 1982 Taito Corporation */
-        	driver_elevator,	/* EA  (c) 1983 Taito Corporation */
-        	driver_elevatob,	/* bootleg */
-        	driver_tinstar,	/* A10 (c) 1983 Taito Corporation */
-        	driver_waterski,	/* A03 (c) 1983 Taito Corporation */
-        	driver_bioatack,	/* AA8 (c) 1983 Taito Corporation + Fox Video Games license */
-        	driver_hwrace,	/* AC4 (c) 1983 Taito Corporation */
-        	driver_sfposeid,	/* A14 (c) 1984 Taito Corporation */
-        	driver_kikstart,	/* A20 */
-        
+
+        /* Taito SJ System games */
+        driver_spaceskr, /* EB  (c) 1981 Taito Corporation */
+        driver_junglek, /* KN  (c) 1982 Taito Corporation */
+        driver_junglkj2, /* KN  (c) 1982 Taito Corporation */
+        driver_jungleh, /* KN  (c) 1982 Taito America Corporation */
+        driver_junglhbr, /* KN  (c) 1982 Taito do Brasil */
+        driver_alpine, /* RH  (c) 1982 Taito Corporation */
+        driver_alpinea, /* RH  (c) 1982 Taito Corporation */
+        driver_timetunl, /* UN  (c) 1982 Taito Corporation */
+        driver_wwestern, /* WW  (c) 1982 Taito Corporation */
+        driver_wwester1, /* WW  (c) 1982 Taito Corporation */
+        driver_frontlin, /* FL  (c) 1982 Taito Corporation */
+        driver_elevator, /* EA  (c) 1983 Taito Corporation */
+        driver_elevatob, /* bootleg */
+        driver_tinstar, /* A10 (c) 1983 Taito Corporation */
+        driver_waterski, /* A03 (c) 1983 Taito Corporation */
+        driver_bioatack, /* AA8 (c) 1983 Taito Corporation + Fox Video Games license */
+        driver_hwrace, /* AC4 (c) 1983 Taito Corporation */
+        driver_sfposeid, /* A14 (c) 1984 Taito Corporation */
+        driver_kikstart, /* A20 */
         /*TODO*///	/* other Taito games */
         /*TODO*///	driver_crbaloon,	/* CL  (c) 1980 Taito Corporation */
         /*TODO*///	driver_crbalon2,	/* CL  (c) 1980 Taito Corporation */
@@ -1112,13 +1111,13 @@ public class driver {
         driver_bking2, /* AD6 (c) 1983 Taito Corporation */
         /*TODO*///TESTdriver_josvolly,	/* ??? (c) 1983 Taito Corporation */
         /*TODO*///	driver_gsword,	/* ??? (c) 1984 Taito Corporation */
-        driver_lkage,		/* A54 (c) 1984 Taito Corporation */
-        driver_lkageb,	/* bootleg */
-        driver_lkageb2,	/* bootleg */
-        driver_lkageb3,	/* bootleg */
-        driver_retofinv,	/* A37 (c) 1985 Taito Corporation */
-        driver_retofin1,	/* bootleg */
-        driver_retofin2,	/* bootleg */
+        driver_lkage, /* A54 (c) 1984 Taito Corporation */
+        driver_lkageb, /* bootleg */
+        driver_lkageb2, /* bootleg */
+        driver_lkageb3, /* bootleg */
+        driver_retofinv, /* A37 (c) 1985 Taito Corporation */
+        driver_retofin1, /* bootleg */
+        driver_retofin2, /* bootleg */
         /*TODO*///	driver_fightrol,	/* (c) 1983 Taito */
         /*TODO*///	driver_rollrace,	/* (c) 1983 Williams */
         /*TODO*///	driver_vsgongf,	/* (c) 1984 Kaneko */
@@ -1129,25 +1128,25 @@ public class driver {
         /*TODO*///	driver_m660,      /* ??? (c) 1986 Taito */
         /*TODO*///	driver_m660b,     /* bootleg */
         /*TODO*///	driver_alphaxz,   /* ??? (c) 1986 Ed/Wood Place */
-        driver_buggychl,	/* A22 (c) 1984 Taito Corporation */
-        driver_buggycht,	/* A22 (c) 1984 Taito Corporation + Tefri license */
-        driver_flstory,	/* A45 (c) 1985 Taito Corporation */
-        driver_flstoryj,	/* A45 (c) 1985 Taito Corporation (Japan) */
+        driver_buggychl, /* A22 (c) 1984 Taito Corporation */
+        driver_buggycht, /* A22 (c) 1984 Taito Corporation + Tefri license */
+        driver_flstory, /* A45 (c) 1985 Taito Corporation */
+        driver_flstoryj, /* A45 (c) 1985 Taito Corporation (Japan) */
         /*TODO*///TESTdriver_onna34ro,	/* A52 */
         /*TODO*///	driver_gladiatr,	/* ??? (c) 1986 Taito America Corporation (US) */
         /*TODO*///	driver_ogonsiro,	/* ??? (c) 1986 Taito Corporation (Japan) */
-        driver_lsasquad,	/* A64 (c) 1986 Taito Corporation / Taito America (dip switch) */
-        driver_storming,	/* A64 (c) 1986 Taito Corporation */
-        driver_tokio,		/* A71 1986 */
-        driver_tokiob,	/* bootleg */
-        driver_bublbobl,	/* A78 (c) 1986 Taito Corporation */
-        driver_bublbobr,	/* A78 (c) 1986 Taito America Corporation + Romstar license */
-        driver_bubbobr1,	/* A78 (c) 1986 Taito America Corporation + Romstar license */
-        driver_boblbobl,	/* bootleg */
-        driver_sboblbob,	/* bootleg */
-        driver_kikikai,	/* A85 (c) 1986 Taito Corporation */
-        driver_kicknrun,	/* A87 (c) 1986 Taito Corporation */
-        driver_mexico86,	/* bootleg (Micro Research) */
+        driver_lsasquad, /* A64 (c) 1986 Taito Corporation / Taito America (dip switch) */
+        driver_storming, /* A64 (c) 1986 Taito Corporation */
+        driver_tokio, /* A71 1986 */
+        driver_tokiob, /* bootleg */
+        driver_bublbobl, /* A78 (c) 1986 Taito Corporation */
+        driver_bublbobr, /* A78 (c) 1986 Taito America Corporation + Romstar license */
+        driver_bubbobr1, /* A78 (c) 1986 Taito America Corporation + Romstar license */
+        driver_boblbobl, /* bootleg */
+        driver_sboblbob, /* bootleg */
+        driver_kikikai, /* A85 (c) 1986 Taito Corporation */
+        driver_kicknrun, /* A87 (c) 1986 Taito Corporation */
+        driver_mexico86, /* bootleg (Micro Research) */
         /*TODO*///	driver_darius,	/* A96 (c) 1986 Taito Corporation Japan (World) */
         /*TODO*///	driver_dariusj,	/* A96 (c) 1986 Taito Corporation (Japan) */
         /*TODO*///	driver_dariuso,	/* A96 (c) 1986 Taito Corporation (Japan) */
@@ -1167,16 +1166,16 @@ public class driver {
         /*TODO*///	driver_rainbowa,	/* B22 (c) 1987 Taito Corporation */
         /*TODO*///	driver_rainbowe,	/* ??? (c) 1988 Taito Corporation */
         /*TODO*///	driver_jumping,	/* bootleg */
-        driver_arkanoid,	/* A75 (c) 1986 Taito Corporation Japan (World) */
-        driver_arknoidu,	/* A75 (c) 1986 Taito America Corporation + Romstar license (US) */
-        driver_arknoidj,	/* A75 (c) 1986 Taito Corporation (Japan) */
-        driver_arkbl2,	/* bootleg */
+        driver_arkanoid, /* A75 (c) 1986 Taito Corporation Japan (World) */
+        driver_arknoidu, /* A75 (c) 1986 Taito America Corporation + Romstar license (US) */
+        driver_arknoidj, /* A75 (c) 1986 Taito Corporation (Japan) */
+        driver_arkbl2, /* bootleg */
         /*TODO*///TESTdriver_arkbl3,	/* bootleg */
-        driver_arkatayt,	/* bootleg */
+        driver_arkatayt, /* bootleg */
         /*TODO*///TESTdriver_arkblock,	/* bootleg */
-        driver_arkbloc2,	/* bootleg */
-        driver_arkangc,	/* bootleg */
-        driver_arkatour,	/* ??? (c) 1987 Taito America Corporation + Romstar license (US) */
+        driver_arkbloc2, /* bootleg */
+        driver_arkangc, /* bootleg */
+        driver_arkatour, /* ??? (c) 1987 Taito America Corporation + Romstar license (US) */
         /*TODO*///	driver_superqix,	/* B03 1987 */
         /*TODO*///	driver_sqixbl,	/* bootleg? but (c) 1987 */
         /*TODO*///	driver_exzisus,	/* B23 (c) 1987 Taito Corporation (Japan) */
@@ -2378,27 +2377,26 @@ public class driver {
         /*TODO*///	driver_actfanc1,	/* (c) 1989 Data East Corporation (World) */
         /*TODO*///	driver_actfancj,	/* (c) 1989 Data East Corporation (Japan) */
         /*TODO*///	driver_triothep,	/* (c) 1989 Data East Corporation (Japan) */
-        
+
         /* Data East 8-bit games */
-        driver_lastmiss,	/* (c) 1986 Data East USA (US) */
-        driver_lastmss2,	/* (c) 1986 Data East USA (US) */
-        driver_shackled,	/* (c) 1986 Data East USA (US) */
-        driver_breywood,	/* (c) 1986 Data East Corporation (Japan) */
-        driver_csilver,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_ghostb,	/* (c) 1987 Data East USA (US) */
-        driver_ghostb3,	/* (c) 1987 Data East USA (US) */
-        driver_meikyuh,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_srdarwin,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_gondo,		/* (c) 1987 Data East USA (US) */
-        driver_makyosen,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_garyoret,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_cobracom,	/* (c) 1988 Data East Corporation (World) */
-        driver_cobracmj,	/* (c) 1988 Data East Corporation (Japan) */
-        driver_oscar,		/* (c) 1988 Data East USA (US) */
-        driver_oscarj,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_oscarj1,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_oscarj0,	/* (c) 1987 Data East Corporation (Japan) */
-        
+        driver_lastmiss, /* (c) 1986 Data East USA (US) */
+        driver_lastmss2, /* (c) 1986 Data East USA (US) */
+        driver_shackled, /* (c) 1986 Data East USA (US) */
+        driver_breywood, /* (c) 1986 Data East Corporation (Japan) */
+        driver_csilver, /* (c) 1987 Data East Corporation (Japan) */
+        driver_ghostb, /* (c) 1987 Data East USA (US) */
+        driver_ghostb3, /* (c) 1987 Data East USA (US) */
+        driver_meikyuh, /* (c) 1987 Data East Corporation (Japan) */
+        driver_srdarwin, /* (c) 1987 Data East Corporation (Japan) */
+        driver_gondo, /* (c) 1987 Data East USA (US) */
+        driver_makyosen, /* (c) 1987 Data East Corporation (Japan) */
+        driver_garyoret, /* (c) 1987 Data East Corporation (Japan) */
+        driver_cobracom, /* (c) 1988 Data East Corporation (World) */
+        driver_cobracmj, /* (c) 1988 Data East Corporation (Japan) */
+        driver_oscar, /* (c) 1988 Data East USA (US) */
+        driver_oscarj, /* (c) 1987 Data East Corporation (Japan) */
+        driver_oscarj1, /* (c) 1987 Data East Corporation (Japan) */
+        driver_oscarj0, /* (c) 1987 Data East Corporation (Japan) */
         /*TODO*///	/* Data East 16-bit games */
         /*TODO*///	driver_karnov,	/* (c) 1987 Data East USA (US) */
         /*TODO*///	driver_karnovj,	/* (c) 1987 Data East Corporation (Japan) */
@@ -2571,25 +2569,25 @@ public class driver {
         /*TODO*///	driver_contraj,	/* GX633 (c) 1987 (Japan) */
         /*TODO*///	driver_contrajb,	/* bootleg */
         /*TODO*///	driver_gryzor,	/* GX633 (c) 1987 */
-        driver_combasc,	/* GX611 (c) 1988 */
-        driver_combasct,	/* GX611 (c) 1987 */
-        driver_combascj,	/* GX611 (c) 1987 (Japan) */
-        driver_bootcamp,	/* GX611 (c) 1987 */
-        driver_combascb,	/* bootleg */
-        driver_rockrage,	/* GX620 (c) 1986 (World?) */
-        driver_rockragj,	/* GX620 (c) 1986 (Japan) */
+        driver_combasc, /* GX611 (c) 1988 */
+        driver_combasct, /* GX611 (c) 1987 */
+        driver_combascj, /* GX611 (c) 1987 (Japan) */
+        driver_bootcamp, /* GX611 (c) 1987 */
+        driver_combascb, /* bootleg */
+        driver_rockrage, /* GX620 (c) 1986 (World?) */
+        driver_rockragj, /* GX620 (c) 1986 (Japan) */
         /*TODO*///	driver_mx5000,	/* GX669 (c) 1987 */
         /*TODO*///	driver_flkatck,	/* GX669 (c) 1987 (Japan) */
-        driver_fastlane,	/* GX752 (c) 1987 */
-        driver_tricktrp,	/* GX771 (c) 1987 */
-        driver_labyrunr,	/* GX771 (c) 1987 (Japan) */
-        driver_thehustl,	/* GX765 (c) 1987 (Japan) */
-        driver_thehustj,	/* GX765 (c) 1987 (Japan) */
-        driver_rackemup,	/* GX765 (c) 1987 */
-        driver_battlnts,	/* GX777 (c) 1987 */
-        driver_battlntj,	/* GX777 (c) 1987 (Japan) */
-        driver_bladestl,	/* GX797 (c) 1987 */
-        driver_bladstle,	/* GX797 (c) 1987 */
+        driver_fastlane, /* GX752 (c) 1987 */
+        driver_tricktrp, /* GX771 (c) 1987 */
+        driver_labyrunr, /* GX771 (c) 1987 (Japan) */
+        driver_thehustl, /* GX765 (c) 1987 (Japan) */
+        driver_thehustj, /* GX765 (c) 1987 (Japan) */
+        driver_rackemup, /* GX765 (c) 1987 */
+        driver_battlnts, /* GX777 (c) 1987 */
+        driver_battlntj, /* GX777 (c) 1987 (Japan) */
+        driver_bladestl, /* GX797 (c) 1987 */
+        driver_bladstle, /* GX797 (c) 1987 */
         /*TODO*///	driver_hcastle,	/* GX768 (c) 1988 */
         /*TODO*///	driver_hcastlea,	/* GX768 (c) 1988 */
         /*TODO*///	driver_hcastlej,	/* GX768 (c) 1988 (Japan) */
@@ -2606,15 +2604,15 @@ public class driver {
         /*TODO*///	driver_devstor2,	/* GX890 (c) 1988 */
         /*TODO*///	driver_devstor3,	/* GX890 (c) 1988 */
         /*TODO*///	driver_garuka,	/* GX890 (c) 1988 (Japan) */
-        driver_88games,	/* GX861 (c) 1988 */
-        driver_konami88,	/* GX861 (c) 1988 */
-        driver_hypsptsp,	/* GX861 (c) 1988 (Japan) */
+        driver_88games, /* GX861 (c) 1988 */
+        driver_konami88, /* GX861 (c) 1988 */
+        driver_hypsptsp, /* GX861 (c) 1988 (Japan) */
         driver_gbusters, /* GX878 (c) 1988 */
         driver_crazycop, /* GX878 (c) 1988 (Japan) */
         /*TODO*///	driver_crimfght,	/* GX821 (c) 1989 (US) */
         /*TODO*///	driver_crimfgt2,	/* GX821 (c) 1989 (World) */
         /*TODO*///	driver_crimfgtj,	/* GX821 (c) 1989 (Japan) */
-        driver_spy,		/* GX857 (c) 1989 (US) */
+        driver_spy, /* GX857 (c) 1989 (US) */
         /*TODO*///	driver_bottom9,	/* GX891 (c) 1989 */
         /*TODO*///	driver_bottom9n,	/* GX891 (c) 1989 */
         /*TODO*///	driver_mstadium,	/* GX891 (c) 1989 (Japan) */
@@ -3078,10 +3076,10 @@ public class driver {
         /*TODO*///	driver_mystston,	/* TA-0010 (c) 1984 */
         /*TODO*///	/* TA-0011 Dog Fight (Data East) / Batten O'hara no Sucha-Raka Kuuchuu Sen 1985 */
         /*TODO*///	driver_bogeyman,	/* X-0204-0 (Data East part number) (c) [1985?] */
-        driver_matmania,	/* TA-0015 (c) 1985 + Taito America license */
-        driver_excthour,	/* TA-0015 (c) 1985 + Taito license */
-        driver_maniach,	/* TA-0017 (c) 1986 + Taito America license */
-        driver_maniach2,	/* TA-0017 (c) 1986 + Taito America license */
+        driver_matmania, /* TA-0015 (c) 1985 + Taito America license */
+        driver_excthour, /* TA-0015 (c) 1985 + Taito license */
+        driver_maniach, /* TA-0017 (c) 1986 + Taito America license */
+        driver_maniach2, /* TA-0017 (c) 1986 + Taito America license */
         /*TODO*///	driver_renegade,	/* TA-0018 (c) 1986 + Taito America license */
         /*TODO*///	driver_kuniokun,	/* TA-0018 (c) 1986 */
         /*TODO*///	driver_kuniokub,	/* bootleg */
