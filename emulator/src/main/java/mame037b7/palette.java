@@ -351,10 +351,10 @@ public class palette {
             case PALETTIZED_8BIT:
                 palette_change_color_8(color, red & 0xFF, green & 0xFF, blue & 0xFF);
                 break;
-            /*case STATIC_16BIT:
+            case STATIC_16BIT:
                 palette_change_color_16_static(color, red & 0xFF, green & 0xFF, blue & 0xFF);
                 break;
-            case PALETTIZED_16BIT:
+            /*case PALETTIZED_16BIT:
                 palette_change_color_16_palettized(color, red & 0xFF, green & 0xFF, blue & 0xFF);
                 break;*/
         }

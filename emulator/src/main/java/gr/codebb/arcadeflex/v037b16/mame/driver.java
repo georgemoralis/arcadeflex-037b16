@@ -91,6 +91,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.bladestl.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.dec8.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.baraduke.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.skykid.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.capbowl.*;
 
 public class driver {
 
@@ -1922,10 +1923,10 @@ public class driver {
         /*TODO*///
         /*TODO*///	/* Incredible Technologies games */
         /*TODO*///	/* http://www.itsgames.com */
-        /*TODO*///	driver_capbowl,	/* (c) 1988 Incredible Technologies */
-        /*TODO*///	driver_capbowl2,	/* (c) 1988 Incredible Technologies */
-        /*TODO*///	driver_clbowl,	/* (c) 1989 Incredible Technologies */
-        /*TODO*///	driver_bowlrama,	/* (c) 1991 P & P Marketing */
+        driver_capbowl, /* (c) 1988 Incredible Technologies */
+        driver_capbowl2, /* (c) 1988 Incredible Technologies */
+        driver_clbowl, /* (c) 1989 Incredible Technologies */
+        driver_bowlrama, /* (c) 1991 P & P Marketing */
         /*TODO*///	driver_wfortune,	/* (c) 1989 GameTek */
         /*TODO*///	driver_wfortuna,	/* (c) 1989 GameTek */
         /*TODO*///	driver_stratab,	/* (c) 1990 Strata/Incredible Technologies */

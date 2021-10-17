@@ -60,10 +60,12 @@ public class palette {
 /*TODO*///#define PALETTE_COLOR_NEEDS_REMAP 0x80
 /*TODO*///
 /*TODO*////* helper macro for 16-bit mode */
-    public static int rgbpenindex(int r, int g, int b){ return ((Machine.scrbitmap.depth==16) ? ((((r)>>3)<<10)+(((g)>>3)<<5)+((b)>>3)) : ((((r)>>5)<<5)+(((g)>>5)<<2)+((b)>>6))); }
+    public static int rgbpenindex(int r, int g, int b) {
+        return ((Machine.scrbitmap.depth == 16) ? ((((r) >> 3) << 10) + (((g) >> 3) << 5) + ((b) >> 3)) : ((((r) >> 5) << 5) + (((g) >> 5) << 2) + ((b) >> 6)));
+    }
 
 
-/*TODO*///UINT16 *palette_shadow_table;
+    /*TODO*///UINT16 *palette_shadow_table;
 /*TODO*///
 /*TODO*///
 /*TODO*///static void palette_reset_32_direct(void);
@@ -601,22 +603,23 @@ public class palette {
 /*TODO*///	memset(just_remapped, 1, Machine.drv.total_colors);
 /*TODO*///}
 /*TODO*///
-/*TODO*///INLINE void palette_change_color_16_static(int color,UINT8 red,UINT8 green,UINT8 blue)
-/*TODO*///{
-/*TODO*///	if (	game_palette[3*color + 0] == red &&
-/*TODO*///			game_palette[3*color + 1] == green &&
-/*TODO*///			game_palette[3*color + 2] == blue)
-/*TODO*///		return;
-/*TODO*///
-/*TODO*///	game_palette[3*color + 0] = red;
-/*TODO*///	game_palette[3*color + 1] = green;
-/*TODO*///	game_palette[3*color + 2] = blue;
-/*TODO*///
-/*TODO*///	if (old_used_colors[color] & PALETTE_COLOR_VISIBLE)
-/*TODO*///		/* we'll have to reassign the color in palette_recalc() */
-/*TODO*///		old_used_colors[color] |= PALETTE_COLOR_NEEDS_REMAP;
-/*TODO*///}
-/*TODO*///
+    public static void palette_change_color_16_static(int color,/*UINT8*/ int red, int/*UINT8*/ green, int/*UINT8*/ blue) {
+        if (game_palette[3 * color + 0] == red
+                && game_palette[3 * color + 1] == green
+                && game_palette[3 * color + 2] == blue) {
+            return;
+        }
+
+        game_palette[3 * color + 0] = (char) (red & 0xFF);
+        game_palette[3 * color + 1] = (char) (green & 0xFF);
+        game_palette[3 * color + 2] = (char) (blue & 0xFF);
+
+        if ((old_used_colors.read(color) & PALETTE_COLOR_VISIBLE) != 0) /* we'll have to reassign the color in palette_recalc() */ {
+            old_used_colors.or(color, PALETTE_COLOR_NEEDS_REMAP);
+        }
+    }
+
+    /*TODO*///
 /*TODO*///static void palette_reset_16_static(void)
 /*TODO*///{
 /*TODO*///	int color;
@@ -909,61 +912,56 @@ public class palette {
         return saved;
     }
 
-    static UBytePtr palette_recalc_16_static()
-{
-	int i,color;
-	int did_remap = 0;
-	int need_refresh = 0;
+    static UBytePtr palette_recalc_16_static() {
+        int i, color;
+        int did_remap = 0;
+        int need_refresh = 0;
 
+        memset(just_remapped, 0, Machine.drv.total_colors);
 
-	memset(just_remapped,0,Machine.drv.total_colors);
+        for (color = 0; color < Machine.drv.total_colors; color++) {
+            /* the comparison between palette_used_colors and old_used_colors also includes */
+ /* PALETTE_COLOR_NEEDS_REMAP which might have been set by palette_change_color() */
+            if (((palette_used_colors.read(color) & PALETTE_COLOR_VISIBLE) != 0)
+                    && palette_used_colors.read(color) != old_used_colors.read(color)) {
+                int r, g, b;
 
-	for (color = 0;color < Machine.drv.total_colors;color++)
-	{
-		/* the comparison between palette_used_colors and old_used_colors also includes */
-		/* PALETTE_COLOR_NEEDS_REMAP which might have been set by palette_change_color() */
-		if (((palette_used_colors.read(color) & PALETTE_COLOR_VISIBLE)!=0) &&
-				palette_used_colors.read(color) != old_used_colors.read(color))
-		{
-			int r,g,b;
+                did_remap = 1;
+                if ((old_used_colors.read(color) & palette_used_colors.read(color) & PALETTE_COLOR_CACHED) != 0) {
+                    /* the color was and still is cached, we'll have to redraw everything */
+                    need_refresh = 1;
+                    just_remapped.write(color, 1);
+                }
 
+                if ((palette_used_colors.read(color) & PALETTE_COLOR_TRANSPARENT_FLAG) != 0) {
+                    Machine.pens[color] = palette_transparent_pen;
+                } else {
+                    r = game_palette[3 * color + 0];
+                    g = game_palette[3 * color + 1];
+                    b = game_palette[3 * color + 2];
 
-			did_remap = 1;
-			if ((old_used_colors.read(color) & palette_used_colors.read(color) & PALETTE_COLOR_CACHED) != 0)
-			{
-				/* the color was and still is cached, we'll have to redraw everything */
-				need_refresh = 1;
-				just_remapped.write(color, 1);
-			}
+                    Machine.pens[color] = shrinked_pens[rgbpenindex(r, g, b)];
+                }
+            }
 
-			if ((palette_used_colors.read(color) & PALETTE_COLOR_TRANSPARENT_FLAG) != 0)
-				Machine.pens[color] = palette_transparent_pen;
-			else
-			{
-				r = game_palette[3*color + 0];
-				g = game_palette[3*color + 1];
-				b = game_palette[3*color + 2];
+            old_used_colors.write(color, palette_used_colors.read(color));
+        }
 
-				Machine.pens[color] = shrinked_pens[rgbpenindex(r,g,b)];
-			}
-		}
+        if (did_remap != 0) {
+            /* rebuild the color lookup table */
+            for (i = 0; i < Machine.drv.color_table_len; i++) {
+                Machine.remapped_colortable.write(i, Machine.pens[Machine.game_colortable[i]]);
+            }
+        }
 
-		old_used_colors.write(color, palette_used_colors.read(color));
-	}
+        if (need_refresh != 0) {
+            return just_remapped;
+        } else {
+            return null;
+        }
+    }
 
-
-	if (did_remap != 0)
-	{
-		/* rebuild the color lookup table */
-		for (i = 0;i < Machine.drv.color_table_len;i++)
-			Machine.remapped_colortable.write(i, Machine.pens[Machine.game_colortable[i]]);
-	}
-
-	if (need_refresh != 0) return just_remapped;
-	else return null;
-}
-
-/*TODO*///static const UINT8 *palette_recalc_16_palettized(void)
+    /*TODO*///static const UINT8 *palette_recalc_16_palettized(void)
 /*TODO*///{
 /*TODO*///	int i,color;
 /*TODO*///	int did_remap = 0;
@@ -1335,9 +1333,10 @@ public class palette {
                 break;
             case STATIC_16BIT:
                 //throw new UnsupportedOperationException("Unsupported");
-            	if (palette_used_colors != null)
-			ret = palette_recalc_16_static();
-		break;
+                if (palette_used_colors != null) {
+                    ret = palette_recalc_16_static();
+                }
+                break;
             case PALETTIZED_16BIT:
                 throw new UnsupportedOperationException("Unsupported");
             /*TODO*///		if (palette_used_colors != 0)
@@ -1566,7 +1565,7 @@ public class palette {
         @Override
         public void handler(int offset, int data) {
             paletteram.write(offset, data);
-            changecolor_xxxxBBBBGGGGRRRR(offset,paletteram.read(offset) | (paletteram_2.read(offset) << 8));
+            changecolor_xxxxBBBBGGGGRRRR(offset, paletteram.read(offset) | (paletteram_2.read(offset) << 8));
         }
     };
 
@@ -1574,11 +1573,11 @@ public class palette {
         @Override
         public void handler(int offset, int data) {
             paletteram_2.write(offset, data);
-            changecolor_xxxxBBBBGGGGRRRR(offset,paletteram.read(offset) | (paletteram_2.read(offset) << 8));
+            changecolor_xxxxBBBBGGGGRRRR(offset, paletteram.read(offset) | (paletteram_2.read(offset) << 8));
         }
     };
 
-/*TODO*///WRITE16_HANDLER( paletteram16_xxxxBBBBGGGGRRRR_word_w )
+    /*TODO*///WRITE16_HANDLER( paletteram16_xxxxBBBBGGGGRRRR_word_w )
 /*TODO*///{
 /*TODO*///	COMBINE_DATA(&paletteram16[offset]);
 /*TODO*///	changecolor_xxxxBBBBGGGGRRRR(offset,paletteram16[offset]);
@@ -1769,29 +1768,25 @@ public class palette {
 /*TODO*///	COMBINE_DATA(&paletteram16[offset]);
 /*TODO*///	changecolor_BBBBGGGGRRRRxxxx(offset,paletteram16[offset]);
 /*TODO*///}
+    static void changecolor_xBBBBBGGGGGRRRRR(int color, int data) {
+        int r, g, b;
 
+        r = (data >> 0) & 0x1f;
+        g = (data >> 5) & 0x1f;
+        b = (data >> 10) & 0x1f;
 
-static void changecolor_xBBBBBGGGGGRRRRR(int color,int data)
-{
-	int r,g,b;
+        r = (r << 3) | (r >> 2);
+        g = (g << 3) | (g >> 2);
+        b = (b << 3) | (b >> 2);
 
-
-	r = (data >>  0) & 0x1f;
-	g = (data >>  5) & 0x1f;
-	b = (data >> 10) & 0x1f;
-
-	r = (r << 3) | (r >> 2);
-	g = (g << 3) | (g >> 2);
-	b = (b << 3) | (b >> 2);
-
-	palette_change_color(color,r,g,b);
-}
+        palette_change_color(color, r, g, b);
+    }
 
     public static WriteHandlerPtr paletteram_xBBBBBGGGGGRRRRR_w = new WriteHandlerPtr() {
-            @Override
-            public void handler(int offset, int data) {
-                paletteram.write(offset, data);
-                changecolor_xBBBBBGGGGGRRRRR(offset / 2,paletteram.read(offset & ~1) | (paletteram.read(offset | 1) << 8));
+        @Override
+        public void handler(int offset, int data) {
+            paletteram.write(offset, data);
+            changecolor_xBBBBBGGGGGRRRRR(offset / 2, paletteram.read(offset & ~1) | (paletteram.read(offset | 1) << 8));
         }
     };
 
@@ -1799,11 +1794,11 @@ static void changecolor_xBBBBBGGGGGRRRRR(int color,int data)
         @Override
         public void handler(int offset, int data) {
             paletteram.write(offset, data);
-            changecolor_xBBBBBGGGGGRRRRR(offset / 2,paletteram.read(offset | 1) | (paletteram.read(offset & ~1) << 8));            
+            changecolor_xBBBBBGGGGGRRRRR(offset / 2, paletteram.read(offset | 1) | (paletteram.read(offset & ~1) << 8));
         }
     };
 
-/*TODO*///WRITE16_HANDLER( paletteram16_xBBBBBGGGGGRRRRR_word_w )
+    /*TODO*///WRITE16_HANDLER( paletteram16_xBBBBBGGGGGRRRRR_word_w )
 /*TODO*///{
 /*TODO*///	COMBINE_DATA(&paletteram16[offset]);
 /*TODO*///	changecolor_xBBBBBGGGGGRRRRR(offset,paletteram16[offset]);
