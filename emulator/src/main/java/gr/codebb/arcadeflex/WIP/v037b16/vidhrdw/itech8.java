@@ -641,47 +641,50 @@ public class itech8 {
 /*TODO*///	}
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Blitter I/O
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr itech8_blitter_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		int result = u8_blitter_data[offset / 2];
-/*TODO*///	
-/*TODO*///		/* debugging */
-/*TODO*///		if (FULL_LOGGING != 0) logerror("%04x:blitter_r(%02x)\n", cpu_getpreviouspc(), offset / 2);
-/*TODO*///	
-/*TODO*///		/* low bit seems to be ignored */
-/*TODO*///		offset /= 2;
-/*TODO*///	
-/*TODO*///		/* a read from offset 3 clears the interrupt and returns the status */
-/*TODO*///		if (offset == 3)
-/*TODO*///		{
-/*TODO*///			itech8_update_interrupts(-1, -1, 0);
-/*TODO*///			if (blit_in_progress != 0)
-/*TODO*///				result |= 0x80;
-/*TODO*///			else
-/*TODO*///				result &= 0x7f;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		return result;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr itech8_blitter_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		/* low bit seems to be ignored */
-/*TODO*///		offset /= 2;
-/*TODO*///		u8_blitter_data[offset] = data&0xFF;
-/*TODO*///	
-/*TODO*///		/* a write to offset 3 starts things going */
-/*TODO*///		if (offset == 3)
-/*TODO*///		{
-/*TODO*///			int pixels;
+
+    /**
+     * ***********************************
+     *
+     * Blitter I/O
+     *
+     ************************************
+     */
+    public static ReadHandlerPtr itech8_blitter_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            int result = u8_blitter_data[offset / 2];
+
+            /* debugging */
+            if (FULL_LOGGING != 0) {
+                logerror("%04x:blitter_r(%02x)\n", cpu_getpreviouspc(), offset / 2);
+            }
+
+            /* low bit seems to be ignored */
+            offset /= 2;
+
+            /* a read from offset 3 clears the interrupt and returns the status */
+            if (offset == 3) {
+                itech8_update_interrupts(-1, -1, 0);
+                if (blit_in_progress != 0) {
+                    result |= 0x80;
+                } else {
+                    result &= 0x7f;
+                }
+            }
+
+            return result;
+        }
+    };
+
+    public static WriteHandlerPtr itech8_blitter_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            /* low bit seems to be ignored */
+            offset /= 2;
+            u8_blitter_data[offset] = data & 0xFF;
+
+            /* a write to offset 3 starts things going */
+            if (offset == 3) {
+                throw new UnsupportedOperationException("Unsupported");
+                /*TODO*///			int pixels;
 /*TODO*///	
 /*TODO*///			/* log to the blitter file */
 /*TODO*///			if (BLIT_LOGGING != 0)
@@ -713,52 +716,55 @@ public class itech8 {
 /*TODO*///				blitter_done(0);
 /*TODO*///			else
 /*TODO*///				timer_set((double)pixels * TIME_IN_HZ(12000000), 0, blitter_done);
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* debugging */
-/*TODO*///		if (FULL_LOGGING != 0) logerror("%04x:blitter_w(%02x)=%02x\n", cpu_getpreviouspc(), offset, data);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	TMS34061 I/O
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr itech8_tms34061_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		int func = (offset >> 9) & 7;
-/*TODO*///		int col = offset & 0xff;
-/*TODO*///	
-/*TODO*///		/* Column address (CA0-CA8) is hooked up the A0-A7, with A1 being inverted
-/*TODO*///		   during register access. CA8 is ignored */
-/*TODO*///		if (func == 0 || func == 2)
-/*TODO*///			col ^= 2;
-/*TODO*///	
-/*TODO*///		/* Row address (RA0-RA8) is not dependent on the offset */
-/*TODO*///		tms34061_w(col, 0xff, func, data);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr itech8_tms34061_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		int func = (offset >> 9) & 7;
-/*TODO*///		int col = offset & 0xff;
-/*TODO*///	
-/*TODO*///		/* Column address (CA0-CA8) is hooked up the A0-A7, with A1 being inverted
-/*TODO*///		   during register access. CA8 is ignored */
-/*TODO*///		if (func == 0 || func == 2)
-/*TODO*///			col ^= 2;
-/*TODO*///	
-/*TODO*///		/* Row address (RA0-RA8) is not dependent on the offset */
-/*TODO*///		return tms34061_r(col, 0xff, func);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
+            }
+
+            /* debugging */
+            if (FULL_LOGGING != 0) {
+                logerror("%04x:blitter_w(%02x)=%02x\n", cpu_getpreviouspc(), offset, data);
+            }
+        }
+    };
+
+    /**
+     * ***********************************
+     *
+     * TMS34061 I/O
+     *
+     ************************************
+     */
+    public static WriteHandlerPtr itech8_tms34061_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            int func = (offset >> 9) & 7;
+            int col = offset & 0xff;
+
+            /* Column address (CA0-CA8) is hooked up the A0-A7, with A1 being inverted
+		   during register access. CA8 is ignored */
+            if (func == 0 || func == 2) {
+                col ^= 2;
+            }
+
+            /* Row address (RA0-RA8) is not dependent on the offset */
+            tms34061_w(col, 0xff, func, data);
+        }
+    };
+
+    public static ReadHandlerPtr itech8_tms34061_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            int func = (offset >> 9) & 7;
+            int col = offset & 0xff;
+
+            /* Column address (CA0-CA8) is hooked up the A0-A7, with A1 being inverted
+		   during register access. CA8 is ignored */
+            if (func == 0 || func == 2) {
+                col ^= 2;
+            }
+
+            /* Row address (RA0-RA8) is not dependent on the offset */
+            return tms34061_r(col, 0xff, func);
+        }
+    };
+
+    /*TODO*///	/*************************************
 /*TODO*///	 *
 /*TODO*///	 *	Main refresh
 /*TODO*///	 *

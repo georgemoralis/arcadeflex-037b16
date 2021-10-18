@@ -10,37 +10,24 @@ import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
-import static gr.codebb.arcadeflex.v037b16.mame.driverH.*;
-import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
-import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inptport.*;
-import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
-//sound imports
-//to be organized
-import static arcadeflex056.fileio.osd_fread;
-import static arcadeflex056.fileio.osd_fwrite;
-import static common.libc.cstring.memset;
-import common.ptr.UBytePtr;
 import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.itech8.*;
 import static gr.codebb.arcadeflex.v037b16.cpu.m6809.m6809H.M6809_FIRQ_LINE;
-import static gr.codebb.arcadeflex.v037b16.cpu.m6809.m6809H.M6809_INT_IRQ;
 import static gr.codebb.arcadeflex.v037b16.cpu.m6809.m6809H.M6809_IRQ_LINE;
-import gr.codebb.arcadeflex.v037b16.mame.drawgfxH.rectangle;
-import static gr.codebb.arcadeflex.v037b16.mame.inputH.KEYCODE_F2;
-import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.soundlatch_r;
-import static gr.codebb.arcadeflex.v037b16.mame.sndintrf.soundlatch_w;
-import static gr.codebb.arcadeflex.v037b16.sound._2203intf.YM2203_control_port_0_w;
-import static gr.codebb.arcadeflex.v037b16.sound._2203intf.YM2203_read_port_0_r;
-import static gr.codebb.arcadeflex.v037b16.sound._2203intf.YM2203_status_port_0_r;
-import static gr.codebb.arcadeflex.v037b16.sound._2203intf.YM2203_write_port_0_w;
-import static gr.codebb.arcadeflex.v037b16.sound._2203intfH.YM2203_VOL;
-import gr.codebb.arcadeflex.v037b16.sound._2203intfH.YM2203interface;
-import static gr.codebb.arcadeflex.v037b16.sound.dac.DAC_0_data_w;
-import gr.codebb.arcadeflex.v037b16.sound.dacH.DACinterface;
-import static gr.codebb.arcadeflex.v056.machine.ticket.ticket_dispenser_r;
-import static gr.codebb.arcadeflex.v056.machine.ticket.ticket_dispenser_w;
 import static mame037b16.mame.Machine;
 import static arcadeflex036.osdepend.logerror;
+import common.ptr.UBytePtr;
+import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.tms34061.tms34061_latch_w;
+import static gr.codebb.arcadeflex.v037b16.mame.common.*;
+import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.inputH.*;
+import static gr.codebb.arcadeflex.v037b16.sound._2203intf.*;
+import static gr.codebb.arcadeflex.v037b16.sound.okim6295.*;
+import static gr.codebb.arcadeflex.v056.machine.ticket.ticket_dispenser_w;
+import gr.codebb.arcadeflex.v056.mame.timer.timer_callback;
+import static gr.codebb.arcadeflex.v056.mame.timer.timer_set;
+import static gr.codebb.arcadeflex.v056.mame.timerH.TIME_NOW;
 
 public class itech8 {
 
@@ -49,24 +36,6 @@ public class itech8 {
     public static final int CLOCK_8MHz = (8000000);
     public static final int CLOCK_12MHz = (12000000);
 
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	External definitions
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	/* machine functions */
-/*TODO*///	
-/*TODO*///	/* video driver data & functions */
-/*TODO*///	extern UINT8 *itech8_grom_bank;
-/*TODO*///	extern UINT8 *itech8_display_page;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
     /**
      * ***********************************
      *
@@ -78,20 +47,21 @@ public class itech8 {
     static int/*UINT8*/ tms34061_int;
     static int/*UINT8*/ periodic_int;
 
+    static int/*data8_t*/ u8_sound_data;
+    
+    static int/*data8_t*/ u8_pia_porta_data;
+    static int/*data8_t*/ u8_pia_portb_data;
+
     /*TODO*///	
-/*TODO*///	static data8_t sound_data;
-/*TODO*///	
-/*TODO*///	static data8_t pia_porta_data;
-/*TODO*///	static data8_t pia_portb_data;
-/*TODO*///	
 /*TODO*///	static data8_t *via6522;
 /*TODO*///	static data16_t via6522_timer_count[2];
 /*TODO*///	static void *via6522_timer[2];
 /*TODO*///	static data8_t via6522_int_state;
 /*TODO*///	
-/*TODO*///	static data8_t *main_ram;
-/*TODO*///	static size_t main_ram_size;
-/*TODO*///	
+    static UBytePtr main_ram = new UBytePtr();
+    static int[] main_ram_size = new int[1];
+
+    /*TODO*///	
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	/*************************************
@@ -223,24 +193,27 @@ public class itech8 {
 /*TODO*///	} };
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Bank switching
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr blitter_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		/* bit 0x20 on address 7 controls CPU banking */
-/*TODO*///		if (offset / 2 == 7)
-/*TODO*///			cpu_setbank(1, &memory_region(REGION_CPU1)[0x4000 + 0xc000 * ((data >> 5) & 1)]);
-/*TODO*///	
-/*TODO*///		/* the rest is handled by the video hardware */
-/*TODO*///		itech8_blitter_w(offset, data);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
+
+    /**
+     * ***********************************
+     *
+     * Bank switching
+     *
+     ************************************
+     */
+    public static WriteHandlerPtr blitter_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            /* bit 0x20 on address 7 controls CPU banking */
+            if (offset / 2 == 7) {
+                cpu_setbank(1, new UBytePtr(memory_region(REGION_CPU1), 0x4000 + 0xc000 * ((data >> 5) & 1)));
+            }
+
+            /* the rest is handled by the video hardware */
+            itech8_blitter_w.handler(offset, data);
+        }
+    };
+
+    /*TODO*///	
 /*TODO*///	public static WriteHandlerPtr rimrockn_bank_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 /*TODO*///	{
 /*TODO*///		/* banking is controlled here instead of by the blitter output */
@@ -248,83 +221,84 @@ public class itech8 {
 /*TODO*///	} };
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Input handling
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr special_port0_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		data8_t result = readinputport(0);
-/*TODO*///		result = (result & 0xfe) | (pia_portb_data & 0x01);
-/*TODO*///		return result;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	6821 PIA handling
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr pia_porta_out = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		logerror("PIA port A write = %02x\n", data);
-/*TODO*///		pia_porta_data = data;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr pia_portb_out = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		logerror("PIA port B write = %02x\n", data);
-/*TODO*///	
-/*TODO*///		/* bit 0 provides feedback to the main CPU */
-/*TODO*///		/* bit 4 controls the ticket dispenser */
-/*TODO*///		/* bit 5 controls the coin counter */
-/*TODO*///		/* bit 6 controls the diagnostic sound LED */
-/*TODO*///		pia_portb_data = data;
-/*TODO*///		ticket_dispenser_w(0, (data & 0x10) << 3);
-/*TODO*///		coin_counter_w.handler(0, (data & 0x20) >> 5);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr ym2203_portb_out = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		logerror("YM2203 port B write = %02x\n", data);
-/*TODO*///	
-/*TODO*///		/* bit 0 provides feedback to the main CPU */
-/*TODO*///		/* bit 5 controls the coin counter */
-/*TODO*///		/* bit 6 controls the diagnostic sound LED */
-/*TODO*///		/* bit 7 controls the ticket dispenser */
-/*TODO*///		pia_portb_data = data;
-/*TODO*///		ticket_dispenser_w(0, data & 0x80);
-/*TODO*///		coin_counter_w.handler(0, (data & 0x20) >> 5);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Sound communication
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	static void delayed_sound_data_w(int data)
-/*TODO*///	{
-/*TODO*///		sound_data = data;
-/*TODO*///		cpu_set_irq_line(1, M6809_IRQ_LINE, ASSERT_LINE);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr sound_data_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		timer_set(TIME_NOW, data, delayed_sound_data_w);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
+    /**
+     * ***********************************
+     *
+     * Input handling
+     *
+     ************************************
+     */
+    public static ReadHandlerPtr special_port0_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            int result = readinputport(0);
+            result = (result & 0xfe) | (u8_pia_portb_data & 0x01);
+            return result;
+        }
+    };
+
+    	
+	
+	/*************************************
+	 *
+	 *	6821 PIA handling
+	 *
+	 *************************************/
+	
+	public static WriteHandlerPtr pia_porta_out = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		logerror("PIA port A write = %02x\n", data);
+		u8_pia_porta_data = data&0xFF;
+	} };
+	
+	
+	public static WriteHandlerPtr pia_portb_out = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		logerror("PIA port B write = %02x\n", data);
+	
+		/* bit 0 provides feedback to the main CPU */
+		/* bit 4 controls the ticket dispenser */
+		/* bit 5 controls the coin counter */
+		/* bit 6 controls the diagnostic sound LED */
+		u8_pia_portb_data = data&0xFF;
+		ticket_dispenser_w.handler(0, (data & 0x10) << 3);
+		coin_counter_w(0, (data & 0x20) >> 5);
+	} };
+	
+	
+	public static WriteHandlerPtr ym2203_portb_out = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		logerror("YM2203 port B write = %02x\n", data);
+	
+		/* bit 0 provides feedback to the main CPU */
+		/* bit 5 controls the coin counter */
+		/* bit 6 controls the diagnostic sound LED */
+		/* bit 7 controls the ticket dispenser */
+		u8_pia_portb_data = data&0xFF;
+		ticket_dispenser_w.handler(0, data & 0x80);
+		coin_counter_w(0, (data & 0x20) >> 5);
+	} };
+	
+    /**
+     * ***********************************
+     *
+     * Sound communication
+     *
+     ************************************
+     */
+    public static timer_callback delayed_sound_data_w = new timer_callback() {
+        public void handler(int data) {
+            u8_sound_data = data & 0xFF;
+            cpu_set_irq_line(1, M6809_IRQ_LINE, ASSERT_LINE);
+        }
+    };
+
+    public static WriteHandlerPtr sound_data_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            timer_set(TIME_NOW, data, delayed_sound_data_w);
+        }
+    };
+
+    	
 /*TODO*///	public static WriteHandlerPtr gtg2_sound_data_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 /*TODO*///	{
 /*TODO*///		/* on the later GTG2 board, they swizzle the data lines */
@@ -335,13 +309,13 @@ public class itech8 {
 /*TODO*///		timer_set(TIME_NOW, data, delayed_sound_data_w);
 /*TODO*///	} };
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr sound_data_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		cpu_set_irq_line(1, M6809_IRQ_LINE, CLEAR_LINE);
-/*TODO*///		return sound_data;
-/*TODO*///	} };
-/*TODO*///	
+    public static ReadHandlerPtr sound_data_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            cpu_set_irq_line(1, M6809_IRQ_LINE, CLEAR_LINE);
+            return u8_sound_data & 0xFF;
+        }
+    };
+    /*TODO*///	
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	/*************************************
@@ -572,38 +546,40 @@ public class itech8 {
 /*TODO*///		new Memory_WriteAddress(MEMPORT_MARKER, 0)
 /*TODO*///	};
 /*TODO*///	
-/*TODO*///	/*------ common layout with TMS34061 at 1000 ------*/
-/*TODO*///	public static Memory_ReadAddress tmshi_readmem[]={
-/*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_ReadAddress( 0x1000, 0x1fff, itech8_tms34061_r ),
-/*TODO*///		new Memory_ReadAddress( 0x0140, 0x0140, special_port0_r ),
-/*TODO*///		new Memory_ReadAddress( 0x0160, 0x0160, input_port_1_r ),
-/*TODO*///		new Memory_ReadAddress( 0x0180, 0x0180, input_port_2_r ),
-/*TODO*///		new Memory_ReadAddress( 0x01c0, 0x01d7, itech8_blitter_r ),
-/*TODO*///		new Memory_ReadAddress( 0x01d8, 0x01d9, input_port_3_r ),
-/*TODO*///		new Memory_ReadAddress( 0x01da, 0x01db, input_port_4_r ),
-/*TODO*///		new Memory_ReadAddress( 0x01dc, 0x01dd, input_port_5_r ),
-/*TODO*///		new Memory_ReadAddress( 0x01de, 0x01df, input_port_6_r ),
-/*TODO*///		new Memory_ReadAddress( 0x2000, 0x3fff, MRA_RAM ),
-/*TODO*///		new Memory_ReadAddress( 0x4000, 0xffff, MRA_BANK1 ),
-/*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, 0)
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	public static Memory_WriteAddress tmshi_writemem[]={
-/*TODO*///		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_WriteAddress( 0x1000, 0x1fff, itech8_tms34061_w ),
-/*TODO*///		new Memory_WriteAddress( 0x0100, 0x0100, MWA_NOP ),
-/*TODO*///		new Memory_WriteAddress( 0x0120, 0x0120, sound_data_w ),
-/*TODO*///		new Memory_WriteAddress( 0x0140, 0x0140, MWA_RAM, &itech8_grom_bank ),
-/*TODO*///		new Memory_WriteAddress( 0x0160, 0x0160, MWA_RAM, &itech8_display_page ),
-/*TODO*///		new Memory_WriteAddress( 0x0180, 0x0180, tms34061_latch_w ),
-/*TODO*///		new Memory_WriteAddress( 0x01a0, 0x01a0, nmi_ack_w ),
-/*TODO*///		new Memory_WriteAddress( 0x01c0, 0x01df, blitter_w ),
-/*TODO*///		new Memory_WriteAddress( 0x01e0, 0x01e0, itech8_palette_address_w ),
-/*TODO*///		new Memory_WriteAddress( 0x01e2, 0x01e3, itech8_palette_data_w ),
-/*TODO*///		new Memory_WriteAddress( 0x2000, 0x3fff, MWA_RAM, &main_ram, &main_ram_size ),
-/*TODO*///		new Memory_WriteAddress( 0x4000, 0xffff, MWA_ROM ),
-/*TODO*///		new Memory_WriteAddress(MEMPORT_MARKER, 0)
-/*TODO*///	};
-/*TODO*///	
+    /*------ common layout with TMS34061 at 1000 ------*/
+    public static Memory_ReadAddress tmshi_readmem[] = {
+        new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+        new Memory_ReadAddress(0x1000, 0x1fff, itech8_tms34061_r),
+        new Memory_ReadAddress(0x0140, 0x0140, special_port0_r),
+        new Memory_ReadAddress(0x0160, 0x0160, input_port_1_r),
+        new Memory_ReadAddress(0x0180, 0x0180, input_port_2_r),
+        new Memory_ReadAddress(0x01c0, 0x01d7, itech8_blitter_r),
+        new Memory_ReadAddress(0x01d8, 0x01d9, input_port_3_r),
+        new Memory_ReadAddress(0x01da, 0x01db, input_port_4_r),
+        new Memory_ReadAddress(0x01dc, 0x01dd, input_port_5_r),
+        new Memory_ReadAddress(0x01de, 0x01df, input_port_6_r),
+        new Memory_ReadAddress(0x2000, 0x3fff, MRA_RAM),
+        new Memory_ReadAddress(0x4000, 0xffff, MRA_BANK1),
+        new Memory_ReadAddress(MEMPORT_MARKER, 0)
+    };
+
+    public static Memory_WriteAddress tmshi_writemem[] = {
+        new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+        new Memory_WriteAddress(0x1000, 0x1fff, itech8_tms34061_w),
+        new Memory_WriteAddress(0x0100, 0x0100, MWA_NOP),
+        new Memory_WriteAddress(0x0120, 0x0120, sound_data_w),
+        new Memory_WriteAddress(0x0140, 0x0140, MWA_RAM, itech8_grom_bank),
+        new Memory_WriteAddress(0x0160, 0x0160, MWA_RAM, itech8_display_page),
+        new Memory_WriteAddress(0x0180, 0x0180, tms34061_latch_w),
+        new Memory_WriteAddress(0x01a0, 0x01a0, nmi_ack_w),
+        new Memory_WriteAddress(0x01c0, 0x01df, blitter_w),
+        new Memory_WriteAddress(0x01e0, 0x01e0, itech8_palette_address_w),
+        new Memory_WriteAddress(0x01e2, 0x01e3, itech8_palette_data_w),
+        new Memory_WriteAddress(0x2000, 0x3fff, MWA_RAM, main_ram, main_ram_size),
+        new Memory_WriteAddress(0x4000, 0xffff, MWA_ROM),
+        new Memory_WriteAddress(MEMPORT_MARKER, 0)
+    };
+    /*TODO*///	
 /*TODO*///	/*------ Golden Tee Golf II 1992 layout ------*/
 /*TODO*///	public static Memory_ReadAddress gtg2_readmem[]={
 /*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_ReadAddress( 0x1000, 0x1fff, itech8_tms34061_r ),
@@ -663,36 +639,40 @@ public class itech8 {
 /*TODO*///	MEMORY_END
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Sound CPU memory handlers
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	/*------ YM2203-based sound board ------*/
-/*TODO*///	public static Memory_ReadAddress sound2203_readmem[]={
-/*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_ReadAddress( 0x1000, 0x1000, sound_data_r ),
-/*TODO*///		new Memory_ReadAddress( 0x2000, 0x2000, YM2203_status_port_0_r ),
-/*TODO*///		new Memory_ReadAddress( 0x2002, 0x2002, YM2203_status_port_0_r ),
-/*TODO*///		new Memory_ReadAddress( 0x3000, 0x37ff, MRA_RAM ),
-/*TODO*///		new Memory_ReadAddress( 0x4000, 0x4000, OKIM6295_status_0_r ),
-/*TODO*///		new Memory_ReadAddress( 0x8000, 0xffff, MRA_ROM ),
-/*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, 0)
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	public static Memory_WriteAddress sound2203_writemem[]={
-/*TODO*///		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_WriteAddress( 0x0000, 0x0000, MWA_NOP ),
-/*TODO*///		new Memory_WriteAddress( 0x2000, 0x2000, YM2203_control_port_0_w ),
-/*TODO*///		new Memory_WriteAddress( 0x2001, 0x2001, YM2203_write_port_0_w ),
-/*TODO*///		new Memory_WriteAddress( 0x2002, 0x2002, YM2203_control_port_0_w ),
-/*TODO*///		new Memory_WriteAddress( 0x2003, 0x2003, YM2203_write_port_0_w ),
-/*TODO*///		new Memory_WriteAddress( 0x3000, 0x37ff, MWA_RAM ),
-/*TODO*///		new Memory_WriteAddress( 0x4000, 0x4000, OKIM6295_data_0_w ),
-/*TODO*///		new Memory_WriteAddress( 0x8000, 0xffff, MWA_ROM ),
-/*TODO*///		new Memory_WriteAddress(MEMPORT_MARKER, 0)
-/*TODO*///	};
-/*TODO*///	
+
+    /**
+     * ***********************************
+     *
+     * Sound CPU memory handlers
+     *
+     ************************************
+     */
+    /*------ YM2203-based sound board ------*/
+    public static Memory_ReadAddress sound2203_readmem[] = {
+        new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+        new Memory_ReadAddress(0x1000, 0x1000, sound_data_r),
+        new Memory_ReadAddress(0x2000, 0x2000, YM2203_status_port_0_r),
+        new Memory_ReadAddress(0x2002, 0x2002, YM2203_status_port_0_r),
+        new Memory_ReadAddress(0x3000, 0x37ff, MRA_RAM),
+        new Memory_ReadAddress(0x4000, 0x4000, OKIM6295_status_0_r),
+        new Memory_ReadAddress(0x8000, 0xffff, MRA_ROM),
+        new Memory_ReadAddress(MEMPORT_MARKER, 0)
+    };
+
+    public static Memory_WriteAddress sound2203_writemem[] = {
+        new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+        new Memory_WriteAddress(0x0000, 0x0000, MWA_NOP),
+        new Memory_WriteAddress(0x2000, 0x2000, YM2203_control_port_0_w),
+        new Memory_WriteAddress(0x2001, 0x2001, YM2203_write_port_0_w),
+        new Memory_WriteAddress(0x2002, 0x2002, YM2203_control_port_0_w),
+        new Memory_WriteAddress(0x2003, 0x2003, YM2203_write_port_0_w),
+        new Memory_WriteAddress(0x3000, 0x37ff, MWA_RAM),
+        new Memory_WriteAddress(0x4000, 0x4000, OKIM6295_data_0_w),
+        new Memory_WriteAddress(0x8000, 0xffff, MWA_ROM),
+        new Memory_WriteAddress(MEMPORT_MARKER, 0)
+    };
+
+    /*TODO*///	
 /*TODO*///	/*------ YM3812-based sound board ------*/
 /*TODO*///	public static Memory_ReadAddress sound3812_readmem[]={
 /*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_ReadAddress( 0x1000, 0x1000, sound_data_r ),
@@ -748,40 +728,57 @@ public class itech8 {
 /*TODO*///	 *	Port definitions
 /*TODO*///	 *
 /*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	#define PORT_SERVICE_NO_TOGGLE(mask,default)	\
-/*TODO*///		PORT_BITX(    mask, mask & default, IPT_SERVICE1, DEF_STR( "Service_Mode") ); KEYCODE_F2, IP_JOY_NONE )
-/*TODO*///	
-/*TODO*///	#define UNUSED_ANALOG	\
-/*TODO*///		PORT_START(); 	\
-/*TODO*///		PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_stratab = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
-/*TODO*///		PORT_BIT( 0x06, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_DIPNAME( 0x08, 0x08, DEF_STR( "Cabinet") );
-/*TODO*///		PORT_DIPSETTING(    0x08, DEF_STR( "Upright") );
-/*TODO*///		PORT_DIPSETTING(    0x00, DEF_STR( "Cocktail") );
-/*TODO*///		PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_SERVICE_NO_TOGGLE( 0x80, IP_ACTIVE_LOW )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		PORT_BIT_NAME( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Right Hook" )
-/*TODO*///		PORT_BIT_NAME( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Left Hook" )
-/*TODO*///		PORT_BIT_NAME( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Right Hook" )
-/*TODO*///		PORT_BIT_NAME( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Left Hook" )
-/*TODO*///		PORT_BIT     ( 0x10, IP_ACTIVE_LOW, IPT_START2 );	PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_START1 );	PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_COIN2 );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_START(); 	/* analog C */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER1 | IPF_CENTER, 25, 32, 0x80, 0x7f );
-/*TODO*///		PORT_START(); 	/* analog D */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1 | IPF_REVERSE | IPF_CENTER, 25, 32, 0x80, 0x7f );
-/*TODO*///		PORT_START(); 	/* analog E */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2 | IPF_COCKTAIL | IPF_CENTER, 25, 32, 0x80, 0x7f );
-/*TODO*///		PORT_START(); 	/* analog F */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2 | IPF_COCKTAIL | IPF_REVERSE | IPF_CENTER, 25, 32, 0x80, 0x7f );INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
+    public static void PORT_SERVICE_NO_TOGGLE(int mask, int _default) {
+        PORT_BITX(mask, mask & _default, IPT_SERVICE1, DEF_STR("Service_Mode"), KEYCODE_F2, IP_JOY_NONE);
+    }
+
+    public static void UNUSED_ANALOG() {
+        PORT_START();
+        PORT_BIT(0xff, IP_ACTIVE_LOW, IPT_UNUSED);
+    }
+
+    static InputPortPtr input_ports_stratab = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SPECIAL);/* input from sound board */
+            PORT_BIT(0x06, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_DIPNAME(0x08, 0x08, DEF_STR("Cabinet"));
+            PORT_DIPSETTING(0x08, DEF_STR("Upright"));
+            PORT_DIPSETTING(0x00, DEF_STR("Cocktail"));
+            PORT_BIT(0x70, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_SERVICE_NO_TOGGLE(0x80, IP_ACTIVE_LOW);
+
+            PORT_START();
+            /* 60 */
+            PORT_BIT_NAME(0x01, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Right Hook");
+            PORT_BIT_NAME(0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Left Hook");
+            PORT_BIT_NAME(0x04, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Right Hook");
+            PORT_BIT_NAME(0x08, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Left Hook");
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_START2);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_START1);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_START();
+            /* 80 */
+            PORT_BIT(0xff, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_START();
+            /* analog C */
+            PORT_ANALOG(0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER1 | IPF_CENTER, 25, 32, 0x80, 0x7f);
+            PORT_START();
+            /* analog D */
+            PORT_ANALOG(0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1 | IPF_REVERSE | IPF_CENTER, 25, 32, 0x80, 0x7f);
+            PORT_START();
+            /* analog E */
+            PORT_ANALOG(0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2 | IPF_COCKTAIL | IPF_CENTER, 25, 32, 0x80, 0x7f);
+            PORT_START();
+            /* analog F */
+            PORT_ANALOG(0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2 | IPF_COCKTAIL | IPF_REVERSE | IPF_CENTER, 25, 32, 0x80, 0x7f);
+            INPUT_PORTS_END();
+        }
+    };
+
+    /*TODO*///	
 /*TODO*///	static InputPortPtr input_ports_sstrike = new InputPortPtr(){ public void handler() { 
 /*TODO*///	PORT_START(); 	/* 40 */
 /*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
@@ -803,32 +800,46 @@ public class itech8 {
 /*TODO*///		UNUSED_ANALOG	/* analog F */
 /*TODO*///	INPUT_PORTS_END(); }}; 
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_wfortune = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
-/*TODO*///		PORT_BIT( 0x06, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_DIPNAME( 0x08, 0x08, DEF_STR( "Cabinet") );
-/*TODO*///		PORT_DIPSETTING(    0x08, DEF_STR( "Upright") );
-/*TODO*///		PORT_DIPSETTING(    0x00, DEF_STR( "Cocktail") );
-/*TODO*///		PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_SERVICE_NO_TOGGLE( 0x80, IP_ACTIVE_LOW )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		PORT_BIT     ( 0x07, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT_NAME( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3, "Blue Player" )
-/*TODO*///		PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2, "Yellow Player" )
-/*TODO*///		PORT_BIT_NAME( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "Red Player" )
-/*TODO*///		PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_COIN1 );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_COIN2 );
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		UNUSED_ANALOG	/* analog C */
-/*TODO*///	
-/*TODO*///		PORT_START(); 		/* analog D */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_DIAL | IPF_PLAYER1, 75, 10, 0x00, 0xff );
-/*TODO*///		UNUSED_ANALOG	/* analog E */
-/*TODO*///	
-/*TODO*///		PORT_START(); 		/* analog F */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_DIAL | IPF_PLAYER2 | IPF_COCKTAIL, 75, 10, 0x00, 0xff );INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
+    static InputPortPtr input_ports_wfortune = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SPECIAL);/* input from sound board */
+            PORT_BIT(0x06, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_DIPNAME(0x08, 0x08, DEF_STR("Cabinet"));
+            PORT_DIPSETTING(0x08, DEF_STR("Upright"));
+            PORT_DIPSETTING(0x00, DEF_STR("Cocktail"));
+            PORT_BIT(0x70, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_SERVICE_NO_TOGGLE(0x80, IP_ACTIVE_LOW);
+
+            PORT_START();
+            /* 60 */
+            PORT_BIT(0x07, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT_NAME(0x08, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3, "Blue Player");
+            PORT_BIT_NAME(0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2, "Yellow Player");
+            PORT_BIT_NAME(0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "Red Player");
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_START();
+            /* 80 */
+            PORT_BIT(0xff, IP_ACTIVE_LOW, IPT_UNUSED);
+            UNUSED_ANALOG();
+            /* analog C */
+
+            PORT_START();
+            /* analog D */
+            PORT_ANALOG(0xff, 0x80, IPT_DIAL | IPF_PLAYER1, 75, 10, 0x00, 0xff);
+            UNUSED_ANALOG();
+            /* analog E */
+
+            PORT_START();
+            /* analog F */
+            PORT_ANALOG(0xff, 0x80, IPT_DIAL | IPF_PLAYER2 | IPF_COCKTAIL, 75, 10, 0x00, 0xff);
+            INPUT_PORTS_END();
+        }
+    };
+
+    /*TODO*///	
 /*TODO*///	static InputPortPtr input_ports_gtg = new InputPortPtr(){ public void handler() { 
 /*TODO*///	PORT_START(); 	/* 40 */
 /*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
@@ -1293,15 +1304,14 @@ public class itech8 {
 /*TODO*///		nvram_handler
 /*TODO*///	);
 /*TODO*///	
-	
-	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	ROM definitions
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_stratab = new RomLoadPtr(){ public void handler(){ 
+    /**
+     * ***********************************
+     *
+     * ROM definitions
+     *
+     ************************************
+     */
+    /*TODO*///	static RomLoadPtr rom_stratab = new RomLoadPtr(){ public void handler(){ 
 /*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "sbprogv3.bin", 0x08000, 0x8000, 0xa5ae728f );	ROM_COPY( REGION_CPU1,    0x8000, 0x14000, 0x8000 )
 /*TODO*///	
 /*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "sbsnds.bin", 0x08000, 0x8000, 0xb36c8f0a );
