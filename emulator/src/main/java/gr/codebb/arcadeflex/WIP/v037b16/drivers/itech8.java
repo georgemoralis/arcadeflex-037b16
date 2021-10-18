@@ -23,7 +23,11 @@ import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inputH.*;
 import static gr.codebb.arcadeflex.v037b16.sound._2203intf.*;
+import static gr.codebb.arcadeflex.v037b16.sound._2203intfH.YM2203_VOL;
+import gr.codebb.arcadeflex.v037b16.sound._2203intfH.YM2203interface;
+import gr.codebb.arcadeflex.v037b16.sound._3812intfH.YM3812interface;
 import static gr.codebb.arcadeflex.v037b16.sound.okim6295.*;
+import gr.codebb.arcadeflex.v037b16.sound.okim6295H.OKIM6295interface;
 import static gr.codebb.arcadeflex.v056.machine.ticket.ticket_dispenser_w;
 import gr.codebb.arcadeflex.v056.mame.timer.timer_callback;
 import static gr.codebb.arcadeflex.v056.mame.timer.timer_set;
@@ -48,7 +52,7 @@ public class itech8 {
     static int/*UINT8*/ periodic_int;
 
     static int/*data8_t*/ u8_sound_data;
-    
+
     static int/*data8_t*/ u8_pia_porta_data;
     static int/*data8_t*/ u8_pia_portb_data;
 
@@ -213,14 +217,13 @@ public class itech8 {
         }
     };
 
-    /*TODO*///	
-/*TODO*///	public static WriteHandlerPtr rimrockn_bank_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		/* banking is controlled here instead of by the blitter output */
-/*TODO*///		cpu_setbank(1, &memory_region(REGION_CPU1)[0x4000 + 0xc000 * (data & 3)]);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
+    public static WriteHandlerPtr rimrockn_bank_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            /* banking is controlled here instead of by the blitter output */
+            cpu_setbank(1, new UBytePtr(memory_region(REGION_CPU1), 0x4000 + 0xc000 * (data & 3)));
+        }
+    };
+
     /**
      * ***********************************
      *
@@ -236,48 +239,48 @@ public class itech8 {
         }
     };
 
-    	
-	
-	/*************************************
-	 *
-	 *	6821 PIA handling
-	 *
-	 *************************************/
-	
-	public static WriteHandlerPtr pia_porta_out = new WriteHandlerPtr() {public void handler(int offset, int data)
-	{
-		logerror("PIA port A write = %02x\n", data);
-		u8_pia_porta_data = data&0xFF;
-	} };
-	
-	
-	public static WriteHandlerPtr pia_portb_out = new WriteHandlerPtr() {public void handler(int offset, int data)
-	{
-		logerror("PIA port B write = %02x\n", data);
-	
-		/* bit 0 provides feedback to the main CPU */
-		/* bit 4 controls the ticket dispenser */
-		/* bit 5 controls the coin counter */
-		/* bit 6 controls the diagnostic sound LED */
-		u8_pia_portb_data = data&0xFF;
-		ticket_dispenser_w.handler(0, (data & 0x10) << 3);
-		coin_counter_w(0, (data & 0x20) >> 5);
-	} };
-	
-	
-	public static WriteHandlerPtr ym2203_portb_out = new WriteHandlerPtr() {public void handler(int offset, int data)
-	{
-		logerror("YM2203 port B write = %02x\n", data);
-	
-		/* bit 0 provides feedback to the main CPU */
-		/* bit 5 controls the coin counter */
-		/* bit 6 controls the diagnostic sound LED */
-		/* bit 7 controls the ticket dispenser */
-		u8_pia_portb_data = data&0xFF;
-		ticket_dispenser_w.handler(0, data & 0x80);
-		coin_counter_w(0, (data & 0x20) >> 5);
-	} };
-	
+    /**
+     * ***********************************
+     *
+     * 6821 PIA handling
+     *
+     ************************************
+     */
+    public static WriteHandlerPtr pia_porta_out = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            logerror("PIA port A write = %02x\n", data);
+            u8_pia_porta_data = data & 0xFF;
+        }
+    };
+
+    public static WriteHandlerPtr pia_portb_out = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            logerror("PIA port B write = %02x\n", data);
+
+            /* bit 0 provides feedback to the main CPU */
+ /* bit 4 controls the ticket dispenser */
+ /* bit 5 controls the coin counter */
+ /* bit 6 controls the diagnostic sound LED */
+            u8_pia_portb_data = data & 0xFF;
+            ticket_dispenser_w.handler(0, (data & 0x10) << 3);
+            coin_counter_w(0, (data & 0x20) >> 5);
+        }
+    };
+
+    public static WriteHandlerPtr ym2203_portb_out = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            logerror("YM2203 port B write = %02x\n", data);
+
+            /* bit 0 provides feedback to the main CPU */
+ /* bit 5 controls the coin counter */
+ /* bit 6 controls the diagnostic sound LED */
+ /* bit 7 controls the ticket dispenser */
+            u8_pia_portb_data = data & 0xFF;
+            ticket_dispenser_w.handler(0, data & 0x80);
+            coin_counter_w(0, (data & 0x20) >> 5);
+        }
+    };
+
     /**
      * ***********************************
      *
@@ -298,17 +301,17 @@ public class itech8 {
         }
     };
 
-    	
-/*TODO*///	public static WriteHandlerPtr gtg2_sound_data_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		/* on the later GTG2 board, they swizzle the data lines */
-/*TODO*///		data = ((data & 0x80) >> 7) |
-/*TODO*///		       ((data & 0x5d) << 1) |
-/*TODO*///		       ((data & 0x20) >> 3) |
-/*TODO*///		       ((data & 0x02) << 5);
-/*TODO*///		timer_set(TIME_NOW, data, delayed_sound_data_w);
-/*TODO*///	} };
-/*TODO*///	
+    public static WriteHandlerPtr gtg2_sound_data_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            /* on the later GTG2 board, they swizzle the data lines */
+            data = ((data & 0x80) >> 7)
+                    | ((data & 0x5d) << 1)
+                    | ((data & 0x20) >> 3)
+                    | ((data & 0x02) << 5);
+            timer_set(TIME_NOW, data, delayed_sound_data_w);
+        }
+    };
+
     public static ReadHandlerPtr sound_data_r = new ReadHandlerPtr() {
         public int handler(int offset) {
             cpu_set_irq_line(1, M6809_IRQ_LINE, CLEAR_LINE);
@@ -778,28 +781,43 @@ public class itech8 {
         }
     };
 
-    /*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_sstrike = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
-/*TODO*///		PORT_BIT( 0x7e, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_SERVICE_NO_TOGGLE( 0x80, IP_ACTIVE_LOW )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_COIN4 );	PORT_BIT     ( 0x02, IP_ACTIVE_LOW, IPT_COIN2 );	PORT_BIT     ( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL );	PORT_BIT_NAME( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1, "Left Hook" )
-/*TODO*///		PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2, "Right Hook" )
-/*TODO*///		PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_COIN3 );	PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_START1 );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT_NAME( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON3, "Roll" )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* analog C */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_X | IPF_PLAYER1, 50, 32, 0x80, 0x7f );
-/*TODO*///		PORT_START(); 	/* analog D */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_Y | IPF_PLAYER1 | IPF_REVERSE, 50, 32, 0x80, 0x7f );
-/*TODO*///		PORT_START(); 	/* analog E */
-/*TODO*///		PORT_ANALOG( 0xff, 0x60, IPT_PADDLE | IPF_PLAYER2, 100, 1, 0x28, 0x98 );
-/*TODO*///		UNUSED_ANALOG	/* analog F */
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
+    static InputPortPtr input_ports_sstrike = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SPECIAL);/* input from sound board */
+            PORT_BIT(0x7e, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_SERVICE_NO_TOGGLE(0x80, IP_ACTIVE_LOW);
+
+            PORT_START();
+            /* 60 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_COIN4);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_SPECIAL);
+            PORT_BIT_NAME(0x08, IP_ACTIVE_LOW, IPT_BUTTON1, "Left Hook");
+            PORT_BIT_NAME(0x10, IP_ACTIVE_LOW, IPT_BUTTON2, "Right Hook");
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_COIN3);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_START1);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_START();
+            /* 80 */
+            PORT_BIT_NAME(0x01, IP_ACTIVE_HIGH, IPT_BUTTON3, "Roll");
+
+            PORT_START();
+            /* analog C */
+            PORT_ANALOG(0xff, 0x00, IPT_AD_STICK_X | IPF_PLAYER1, 50, 32, 0x80, 0x7f);
+            PORT_START();
+            /* analog D */
+            PORT_ANALOG(0xff, 0x00, IPT_AD_STICK_Y | IPF_PLAYER1 | IPF_REVERSE, 50, 32, 0x80, 0x7f);
+            PORT_START();
+            /* analog E */
+            PORT_ANALOG(0xff, 0x60, IPT_PADDLE | IPF_PLAYER2, 100, 1, 0x28, 0x98);
+            UNUSED_ANALOG();
+            /* analog F */
+            INPUT_PORTS_END();
+        }
+    };
+
     static InputPortPtr input_ports_wfortune = new InputPortPtr() {
         public void handler() {
             PORT_START();
@@ -839,310 +857,520 @@ public class itech8 {
         }
     };
 
+    static InputPortPtr input_ports_gtg = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SPECIAL);/* input from sound board */
+            PORT_BIT(0x06, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_DIPNAME(0x08, 0x08, DEF_STR("Cabinet"));
+            PORT_DIPSETTING(0x08, DEF_STR("Upright"));
+            PORT_DIPSETTING(0x00, DEF_STR("Cocktail"));
+            PORT_BIT(0x70, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_SERVICE_NO_TOGGLE(0x80, IP_ACTIVE_LOW);
+
+            PORT_START();
+            /* 60 */
+ /* it is still unknown how the second player inputs are muxed in */
+ /* currently we map both sets of controls to the same inputs */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1);
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2 | IPF_COCKTAIL);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 | IPF_COCKTAIL);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 | IPF_COCKTAIL);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 | IPF_COCKTAIL);
+            PORT_BIT_NAME(0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P2 Swing");
+            PORT_BIT_NAME(0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Swing");
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_START1);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_START();
+            /* 80 */
+            PORT_BIT(0xff, IP_ACTIVE_LOW, IPT_UNUSED);
+            UNUSED_ANALOG();
+            /* analog C */
+            UNUSED_ANALOG();
+            /* analog D */
+            UNUSED_ANALOG();
+            /* analog E */
+            UNUSED_ANALOG();
+            /* analog F */
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_gtg2 = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_SERVICE_NO_TOGGLE(0x02, IP_ACTIVE_LOW);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0x30, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_DIPNAME(0x40, 0x40, DEF_STR("Cabinet"));
+            PORT_DIPSETTING(0x40, DEF_STR("Upright"));
+            PORT_DIPSETTING(0x00, DEF_STR("Cocktail"));
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_START();
+            /* 60 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT_NAME(0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Face Right");
+            PORT_BIT_NAME(0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Face Left");
+            PORT_BIT(0x78, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_START1);
+            PORT_START();
+            /* 80 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT_NAME(0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Face Right");
+            PORT_BIT_NAME(0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Face Left");
+            PORT_BIT(0x78, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_START2);
+            PORT_START();
+            /* analog C */
+            PORT_ANALOG(0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1 | IPF_CENTER, 25, 32, 0x80, 0x7f);
+            PORT_START();
+            /* analog D */
+            PORT_ANALOG(0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER1 | IPF_REVERSE | IPF_CENTER, 25, 32, 0x80, 0x7f);
+            PORT_START();
+            /* analog E */
+            PORT_ANALOG(0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2 | IPF_COCKTAIL | IPF_CENTER, 25, 32, 0x80, 0x7f);
+            PORT_START();
+            /* analog F */
+            PORT_ANALOG(0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2 | IPF_COCKTAIL | IPF_REVERSE | IPF_CENTER, 25, 32, 0x80, 0x7f);
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_gtg2t = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SPECIAL);/* input from sound board */
+            PORT_BIT(0x06, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_DIPNAME(0x08, 0x08, DEF_STR("Cabinet"));
+            PORT_DIPSETTING(0x08, DEF_STR("Upright"));
+            PORT_DIPSETTING(0x00, DEF_STR("Cocktail"));
+            PORT_BIT(0x70, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_SERVICE_NO_TOGGLE(0x80, IP_ACTIVE_LOW);
+
+            PORT_START();
+            /* 60 */
+            PORT_BIT_NAME(0x01, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Face Right");
+            PORT_BIT_NAME(0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Face Left");
+            PORT_BIT_NAME(0x04, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Face Right");
+            PORT_BIT_NAME(0x08, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Face Left");
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_START2);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_START1);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_START();
+            /* 80 */
+            PORT_BIT(0xff, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_START();
+            /* analog C */
+            PORT_ANALOG(0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1 | IPF_CENTER, 25, 32, 0x80, 0x7f);
+            PORT_START();
+            /* analog D */
+            PORT_ANALOG(0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER1 | IPF_REVERSE | IPF_CENTER, 25, 32, 0x80, 0x7f);
+            PORT_START();
+            /* analog E */
+            PORT_ANALOG(0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2 | IPF_COCKTAIL | IPF_CENTER, 25, 32, 0x80, 0x7f);
+            PORT_START();
+            /* analog F */
+            PORT_ANALOG(0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2 | IPF_COCKTAIL | IPF_REVERSE | IPF_CENTER, 25, 32, 0x80, 0x7f);
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_slikshot = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SPECIAL);/* input from sound board */
+            PORT_BIT(0x7e, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_SERVICE_NO_TOGGLE(0x80, IP_ACTIVE_LOW);
+
+            PORT_START();
+            /* 60 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_COIN4);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_SPECIAL);
+            PORT_BIT_NAME(0x08, IP_ACTIVE_LOW, IPT_BUTTON2, "Yellow");
+            PORT_BIT_NAME(0x10, IP_ACTIVE_LOW, IPT_BUTTON3, "Red");
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_COIN3);
+            PORT_BIT_NAME(0x40, IP_ACTIVE_LOW, IPT_BUTTON1, "Green");
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_START();
+            /* 80 */
+            PORT_BIT_NAME(0x01, IP_ACTIVE_HIGH, IPT_BUTTON4, "Shoot");
+
+            PORT_START();
+            /* analog C */
+            PORT_ANALOG(0xff, 0x00, IPT_AD_STICK_X | IPF_PLAYER1, 50, 32, 0x80, 0x7f);
+            PORT_START();
+            /* analog D */
+            PORT_ANALOG(0xff, 0x00, IPT_AD_STICK_Y | IPF_PLAYER1 | IPF_REVERSE, 50, 32, 0x80, 0x7f);
+            PORT_START();
+            /* analog E */
+            PORT_ANALOG(0xff, 0x60, IPT_PADDLE | IPF_PLAYER2, 100, 1, 0x28, 0x98);
+            UNUSED_ANALOG();
+            /* analog F */
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_arlingtn = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SPECIAL);/* input from sound board */
+            PORT_BIT(0x06, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_DIPNAME(0x08, 0x08, DEF_STR("Unknown"));
+            /* see code at e23c */
+            PORT_DIPSETTING(0x00, DEF_STR("Off"));
+            PORT_DIPSETTING(0x08, DEF_STR("On"));
+            PORT_BIT(0x70, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_SERVICE_NO_TOGGLE(0x80, IP_ACTIVE_LOW);
+
+            PORT_START();
+            /* 60 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_COIN3);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT_NAME(0x04, IP_ACTIVE_LOW, IPT_BUTTON2, "Place");
+            PORT_BIT_NAME(0x08, IP_ACTIVE_LOW, IPT_BUTTON1, "Win");
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_START();
+            /* 80 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_COIN4);
+            PORT_BIT(0x06, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT_NAME(0x08, IP_ACTIVE_LOW, IPT_BUTTON3, "Show");
+            PORT_BIT_NAME(0x10, IP_ACTIVE_LOW, IPT_START1, "Start Race");
+            PORT_BIT_NAME(0x20, IP_ACTIVE_LOW, IPT_BUTTON4, "Collect");
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN2);
+            UNUSED_ANALOG();
+            /* analog C */
+            UNUSED_ANALOG();
+            /* analog D */
+            UNUSED_ANALOG();
+            /* analog E */
+            UNUSED_ANALOG();
+            /* analog F */
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_neckneck = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SPECIAL);/* input from sound board */
+            PORT_BIT(0x06, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_DIPNAME(0x08, 0x00, DEF_STR("Unknown"));
+            /* see code at e23c */
+            PORT_DIPSETTING(0x00, DEF_STR("Off"));
+            PORT_DIPSETTING(0x08, DEF_STR("On"));
+            PORT_BIT(0x70, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_SERVICE_NO_TOGGLE(0x80, IP_ACTIVE_LOW);
+
+            PORT_START();
+            /* 60 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_COIN3);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT_NAME(0x04, IP_ACTIVE_LOW, IPT_BUTTON3, "Horse 3");
+            PORT_BIT_NAME(0x08, IP_ACTIVE_LOW, IPT_BUTTON2, "Horse 2");
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_START1);
+            PORT_BIT_NAME(0x20, IP_ACTIVE_LOW, IPT_BUTTON1, "Horse 1");
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_START();
+            /* 80 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_COIN4);
+            PORT_BIT(0x06, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT_NAME(0x08, IP_ACTIVE_LOW, IPT_BUTTON4, "Horse 4");
+            PORT_BIT_NAME(0x10, IP_ACTIVE_LOW, IPT_BUTTON6, "Horse 6");
+            PORT_BIT_NAME(0x20, IP_ACTIVE_LOW, IPT_BUTTON5, "Horse 5");
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN2);
+            UNUSED_ANALOG();
+            /* analog C */
+            UNUSED_ANALOG();
+            /* analog D */
+            UNUSED_ANALOG();
+            /* analog E */
+            UNUSED_ANALOG();
+            /* analog F */
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_peggle = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SPECIAL);/* input from sound board */
+            PORT_BIT(0x7e, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_SERVICE_NO_TOGGLE(0x80, IP_ACTIVE_LOW);
+
+            PORT_START();
+            /* 60 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_COIN3);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1);
+            PORT_BIT(0x30, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_START1);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_START();
+            /* 80 */
+            PORT_BIT(0xff, IP_ACTIVE_LOW, IPT_UNUSED);
+            UNUSED_ANALOG();
+            /* analog C */
+            UNUSED_ANALOG();
+            /* analog D */
+            UNUSED_ANALOG();
+            /* analog E */
+            UNUSED_ANALOG();
+            /* analog F */
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_pegglet = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SPECIAL);/* input from sound board */
+            PORT_BIT(0x7e, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_SERVICE_NO_TOGGLE(0x80, IP_ACTIVE_LOW);
+
+            PORT_START();
+            /* 60 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_COIN3);
+            PORT_BIT(0x3e, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_START1);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_START();
+            /* 80 */
+            PORT_BIT(0xff, IP_ACTIVE_LOW, IPT_UNUSED);
+            UNUSED_ANALOG();
+            /* analog C */
+
+            PORT_START();
+            /* analog D */
+            PORT_ANALOG(0xff, 0x00, IPT_DIAL | IPF_PLAYER1 | IPF_CENTER, 50, 10, 0x80, 0x7f);
+            UNUSED_ANALOG();
+            /* analog E */
+            UNUSED_ANALOG();
+            /* analog F */
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_hstennis = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SPECIAL);/* input from sound board */
+            PORT_BIT(0x06, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_DIPNAME(0x08, 0x08, DEF_STR("Cabinet"));
+            PORT_DIPSETTING(0x08, DEF_STR("Upright"));
+            PORT_DIPSETTING(0x00, DEF_STR("Cocktail"));
+            PORT_DIPNAME(0x10, 0x10, DEF_STR("Unknown"));
+            /* see code at fbb5 */
+            PORT_DIPSETTING(0x00, DEF_STR("Off"));
+            PORT_DIPSETTING(0x10, DEF_STR("On"));
+            PORT_BIT(0x60, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_SERVICE_NO_TOGGLE(0x80, IP_ACTIVE_LOW);
+
+            PORT_START();
+            /* 60 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_COIN3);
+            PORT_BIT_NAME(0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P2 Soft");
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1);
+            PORT_BIT_NAME(0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Hard");
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_START();
+            /* 80 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_COIN4);
+            PORT_BIT_NAME(0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2, "P2 Soft");
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2);
+            PORT_BIT_NAME(0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2, "P2 Hard");
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_COIN2);
+            UNUSED_ANALOG();
+            /* analog C */
+            UNUSED_ANALOG();
+            /* analog D */
+            UNUSED_ANALOG();
+            /* analog E */
+            UNUSED_ANALOG();
+            /* analog F */
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_rimrockn = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SPECIAL);/* input from sound board */
+            PORT_BIT(0xfe, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_START();
+            /* 60 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SERVICE1);
+            PORT_SERVICE_NO_TOGGLE(0x02, IP_ACTIVE_LOW);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_COIN3);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_COIN4);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_START();
+            /* 80 */
+            PORT_BIT(0xff, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_START();
+            /* special 161 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT_NAME(0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Pass");
+            PORT_BIT_NAME(0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Shoot");
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_START1);
+            PORT_START();
+            /* special 162 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT_NAME(0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2, "P2 Pass");
+            PORT_BIT_NAME(0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2, "P2 Shoot");
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_START2);
+            PORT_START();
+            /* special 163 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT_NAME(0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER3, "P3 Pass");
+            PORT_BIT_NAME(0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3, "P3 Shoot");
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER3);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER3);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER3);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER3);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_START3);
+            PORT_START();
+            /* special 164 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT_NAME(0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER4, "P4 Pass");
+            PORT_BIT_NAME(0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER4, "P4 Shoot");
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER4);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER4);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER4);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER4);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_START4);
+            PORT_START();
+            /* special 165 */
+            PORT_BIT(0xff, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_ninclown = new InputPortPtr() {
+        public void handler() {
+            PORT_START();
+            /* 40 */
+            PORT_BIT(0x0100, IP_ACTIVE_LOW, IPT_SERVICE1);
+            PORT_SERVICE_NO_TOGGLE(0x0200, IP_ACTIVE_LOW);
+            PORT_BIT(0x0c00, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_BIT(0x1000, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0x2000, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_BIT(0xc000, IP_ACTIVE_LOW, IPT_UNKNOWN);
+            PORT_START();
+            /* 60 */
+            PORT_BIT_NAME(0x0100, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1, "P1 Throw");
+            PORT_BIT(0x0200, IP_ACTIVE_LOW, IPT_START1);
+            PORT_BIT(0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1);
+            PORT_BIT(0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1);
+            PORT_BIT(0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1);
+            PORT_BIT(0x2000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1);
+            PORT_BIT_NAME(0x4000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Kick");
+            PORT_BIT_NAME(0x8000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Punch");
+
+            PORT_START();
+            /* 80 */
+            PORT_BIT_NAME(0x0100, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2, "P2 Throw");
+            PORT_BIT(0x0200, IP_ACTIVE_LOW, IPT_START2);
+            PORT_BIT(0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2);
+            PORT_BIT(0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2);
+            PORT_BIT(0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2);
+            PORT_BIT(0x2000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2);
+            PORT_BIT_NAME(0x4000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2, "P2 Kick");
+            PORT_BIT_NAME(0x8000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2, "P2 Punch");
+
+            UNUSED_ANALOG();
+            /* analog C */
+            UNUSED_ANALOG();
+            /* analog D */
+            UNUSED_ANALOG();
+            /* analog E */
+            UNUSED_ANALOG();
+            /* analog F */
+            INPUT_PORTS_END();
+        }
+    };
+
+    /**
+     * ***********************************
+     *
+     * Sound definitions
+     *
+     ************************************
+     */
+    static YM2203interface ym2203_interface = new YM2203interface(
+            1,
+            CLOCK_8MHz / 2,
+            new int[]{YM2203_VOL(75, 7)},
+            new ReadHandlerPtr[]{null},
+            new ReadHandlerPtr[]{null},
+            new WriteHandlerPtr[]{null},
+            new WriteHandlerPtr[]{ym2203_portb_out},
+            new WriteYmHandlerPtr[]{generate_sound_irq}
+    );
+
+    static YM3812interface ym3812_interface = new YM3812interface(
+            1,
+            CLOCK_8MHz / 2,
+            new int[]{75},
+            new WriteYmHandlerPtr[]{generate_sound_irq}
+    );
+
+    static OKIM6295interface oki6295_interface_low = new OKIM6295interface(
+            1,
+            new int[]{CLOCK_8MHz / 8 / 165},
+            new int[]{REGION_SOUND1},
+            new int[]{75}
+    );
+
+    static OKIM6295interface oki6295_interface_high = new OKIM6295interface(
+            1,
+            new int[]{CLOCK_8MHz / 8 / 128},
+            new int[]{REGION_SOUND1},
+            new int[]{75}
+    );
+
     /*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_gtg = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
-/*TODO*///		PORT_BIT( 0x06, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_DIPNAME( 0x08, 0x08, DEF_STR( "Cabinet") );
-/*TODO*///		PORT_DIPSETTING(    0x08, DEF_STR( "Upright") );
-/*TODO*///		PORT_DIPSETTING(    0x00, DEF_STR( "Cocktail") );
-/*TODO*///		PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_SERVICE_NO_TOGGLE( 0x80, IP_ACTIVE_LOW )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		/* it is still unknown how the second player inputs are muxed in */
-/*TODO*///		/* currently we map both sets of controls to the same inputs */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 );	PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 | IPF_COCKTAIL );	PORT_BIT     ( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 );	PORT_BIT     ( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 | IPF_COCKTAIL );	PORT_BIT     ( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 );	PORT_BIT     ( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 | IPF_COCKTAIL );	PORT_BIT     ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 );	PORT_BIT     ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 | IPF_COCKTAIL );	PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P2 Swing" )
-/*TODO*///		PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Swing" )
-/*TODO*///		PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_START1 );	PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_COIN2 );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		UNUSED_ANALOG	/* analog C */
-/*TODO*///		UNUSED_ANALOG	/* analog D */
-/*TODO*///		UNUSED_ANALOG	/* analog E */
-/*TODO*///		UNUSED_ANALOG	/* analog F */
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_gtg2 = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 );	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2 );	PORT_BIT( 0x30, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_DIPNAME( 0x40, 0x40, DEF_STR( "Cabinet") );
-/*TODO*///		PORT_DIPSETTING(    0x40, DEF_STR( "Upright") );
-/*TODO*///		PORT_DIPSETTING(    0x00, DEF_STR( "Cocktail") );
-/*TODO*///		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_BIT_NAME( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Face Right" )
-/*TODO*///		PORT_BIT_NAME( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Face Left" )
-/*TODO*///		PORT_BIT     ( 0x78, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_START1 );
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_BIT_NAME( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Face Right" )
-/*TODO*///		PORT_BIT_NAME( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Face Left" )
-/*TODO*///		PORT_BIT     ( 0x78, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_START2 );
-/*TODO*///		PORT_START(); 	/* analog C */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1 | IPF_CENTER, 25, 32, 0x80, 0x7f );
-/*TODO*///		PORT_START(); 	/* analog D */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER1 | IPF_REVERSE | IPF_CENTER, 25, 32, 0x80, 0x7f );
-/*TODO*///		PORT_START(); 	/* analog E */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2 | IPF_COCKTAIL | IPF_CENTER, 25, 32, 0x80, 0x7f );
-/*TODO*///		PORT_START(); 	/* analog F */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2 | IPF_COCKTAIL | IPF_REVERSE | IPF_CENTER, 25, 32, 0x80, 0x7f );INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_gtg2t = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
-/*TODO*///		PORT_BIT( 0x06, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_DIPNAME( 0x08, 0x08, DEF_STR( "Cabinet") );
-/*TODO*///		PORT_DIPSETTING(    0x08, DEF_STR( "Upright") );
-/*TODO*///		PORT_DIPSETTING(    0x00, DEF_STR( "Cocktail") );
-/*TODO*///		PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_SERVICE_NO_TOGGLE( 0x80, IP_ACTIVE_LOW )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		PORT_BIT_NAME( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Face Right" )
-/*TODO*///		PORT_BIT_NAME( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 | IPF_COCKTAIL, "P2 Face Left" )
-/*TODO*///		PORT_BIT_NAME( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1, "P1 Face Right" )
-/*TODO*///		PORT_BIT_NAME( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1, "P1 Face Left" )
-/*TODO*///		PORT_BIT     ( 0x10, IP_ACTIVE_LOW, IPT_START2 );	PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_START1 );	PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_COIN2 );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_START(); 	/* analog C */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1 | IPF_CENTER, 25, 32, 0x80, 0x7f );
-/*TODO*///		PORT_START(); 	/* analog D */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER1 | IPF_REVERSE | IPF_CENTER, 25, 32, 0x80, 0x7f );
-/*TODO*///		PORT_START(); 	/* analog E */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2 | IPF_COCKTAIL | IPF_CENTER, 25, 32, 0x80, 0x7f );
-/*TODO*///		PORT_START(); 	/* analog F */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2 | IPF_COCKTAIL | IPF_REVERSE | IPF_CENTER, 25, 32, 0x80, 0x7f );INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_slikshot = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
-/*TODO*///		PORT_BIT( 0x7e, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_SERVICE_NO_TOGGLE( 0x80, IP_ACTIVE_LOW )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_COIN4 );	PORT_BIT     ( 0x02, IP_ACTIVE_LOW, IPT_COIN2 );	PORT_BIT     ( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL );	PORT_BIT_NAME( 0x08, IP_ACTIVE_LOW, IPT_BUTTON2, "Yellow" )
-/*TODO*///		PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON3, "Red" )
-/*TODO*///		PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_COIN3 );	PORT_BIT_NAME( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1, "Green" )
-/*TODO*///		PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT_NAME( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON4, "Shoot" )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* analog C */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_X | IPF_PLAYER1, 50, 32, 0x80, 0x7f );
-/*TODO*///		PORT_START(); 	/* analog D */
-/*TODO*///	    PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_Y | IPF_PLAYER1 | IPF_REVERSE, 50, 32, 0x80, 0x7f );
-/*TODO*///		PORT_START(); 	/* analog E */
-/*TODO*///		PORT_ANALOG( 0xff, 0x60, IPT_PADDLE | IPF_PLAYER2, 100, 1, 0x28, 0x98 );
-/*TODO*///		UNUSED_ANALOG	/* analog F */
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_arlingtn = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
-/*TODO*///		PORT_BIT( 0x06, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_DIPNAME( 0x08, 0x08, DEF_STR( "Unknown") );	/* see code at e23c */
-/*TODO*///		PORT_DIPSETTING(    0x00, DEF_STR( "Off") );
-/*TODO*///		PORT_DIPSETTING(    0x08, DEF_STR( "On") );
-/*TODO*///		PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_SERVICE_NO_TOGGLE( 0x80, IP_ACTIVE_LOW )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_COIN3 );	PORT_BIT     ( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT_NAME( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2, "Place" )
-/*TODO*///		PORT_BIT_NAME( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1, "Win" )
-/*TODO*///		PORT_BIT     ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 );	PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 );	PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_COIN4 );	PORT_BIT     ( 0x06, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT_NAME( 0x08, IP_ACTIVE_LOW, IPT_BUTTON3, "Show" )
-/*TODO*///		PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_START1, "Start Race" )
-/*TODO*///		PORT_BIT_NAME( 0x20, IP_ACTIVE_LOW, IPT_BUTTON4, "Collect" )
-/*TODO*///		PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_COIN2 );
-/*TODO*///		UNUSED_ANALOG	/* analog C */
-/*TODO*///		UNUSED_ANALOG	/* analog D */
-/*TODO*///		UNUSED_ANALOG	/* analog E */
-/*TODO*///		UNUSED_ANALOG	/* analog F */
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_neckneck = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
-/*TODO*///		PORT_BIT( 0x06, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_DIPNAME( 0x08, 0x00, DEF_STR( "Unknown") );	/* see code at e23c */
-/*TODO*///		PORT_DIPSETTING(    0x00, DEF_STR( "Off") );
-/*TODO*///		PORT_DIPSETTING(    0x08, DEF_STR( "On") );
-/*TODO*///		PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_SERVICE_NO_TOGGLE( 0x80, IP_ACTIVE_LOW )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_COIN3 );	PORT_BIT     ( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT_NAME( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3, "Horse 3" )
-/*TODO*///		PORT_BIT_NAME( 0x08, IP_ACTIVE_LOW, IPT_BUTTON2, "Horse 2" )
-/*TODO*///		PORT_BIT     ( 0x10, IP_ACTIVE_LOW, IPT_START1 );	PORT_BIT_NAME( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1, "Horse 1" )
-/*TODO*///		PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_COIN4 );	PORT_BIT     ( 0x06, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT_NAME( 0x08, IP_ACTIVE_LOW, IPT_BUTTON4, "Horse 4" )
-/*TODO*///		PORT_BIT_NAME( 0x10, IP_ACTIVE_LOW, IPT_BUTTON6, "Horse 6" )
-/*TODO*///		PORT_BIT_NAME( 0x20, IP_ACTIVE_LOW, IPT_BUTTON5, "Horse 5" )
-/*TODO*///		PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_COIN2 );
-/*TODO*///		UNUSED_ANALOG	/* analog C */
-/*TODO*///		UNUSED_ANALOG	/* analog D */
-/*TODO*///		UNUSED_ANALOG	/* analog E */
-/*TODO*///		UNUSED_ANALOG	/* analog F */
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_peggle = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
-/*TODO*///		PORT_BIT( 0x7e, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_SERVICE_NO_TOGGLE( 0x80, IP_ACTIVE_LOW )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN3 );	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 );	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 );	PORT_BIT( 0x30, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START1 );	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		UNUSED_ANALOG	/* analog C */
-/*TODO*///		UNUSED_ANALOG	/* analog D */
-/*TODO*///		UNUSED_ANALOG	/* analog E */
-/*TODO*///		UNUSED_ANALOG	/* analog F */
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_pegglet = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
-/*TODO*///		PORT_BIT( 0x7e, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_SERVICE_NO_TOGGLE( 0x80, IP_ACTIVE_LOW )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN3 );	PORT_BIT( 0x3e, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START1 );	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		UNUSED_ANALOG	/* analog C */
-/*TODO*///	
-/*TODO*///		PORT_START(); 		/* analog D */
-/*TODO*///		PORT_ANALOG( 0xff, 0x00, IPT_DIAL | IPF_PLAYER1 | IPF_CENTER, 50, 10, 0x80, 0x7f );
-/*TODO*///		UNUSED_ANALOG	/* analog E */
-/*TODO*///		UNUSED_ANALOG	/* analog F */
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_hstennis = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
-/*TODO*///		PORT_BIT( 0x06, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_DIPNAME( 0x08, 0x08, DEF_STR( "Cabinet") );
-/*TODO*///		PORT_DIPSETTING(    0x08, DEF_STR( "Upright") );
-/*TODO*///		PORT_DIPSETTING(    0x00, DEF_STR( "Cocktail") );
-/*TODO*///		PORT_DIPNAME( 0x10, 0x10, DEF_STR( "Unknown") );	/* see code at fbb5 */
-/*TODO*///		PORT_DIPSETTING(    0x00, DEF_STR( "Off") );
-/*TODO*///		PORT_DIPSETTING(    0x10, DEF_STR( "On") );
-/*TODO*///		PORT_BIT( 0x60, IP_ACTIVE_LOW, IPT_UNUSED );	PORT_SERVICE_NO_TOGGLE( 0x80, IP_ACTIVE_LOW )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_COIN3 );	PORT_BIT_NAME( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1, "P2 Soft" )
-/*TODO*///		PORT_BIT     ( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 );	PORT_BIT     ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 );	PORT_BIT     ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 );	PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 );	PORT_BIT_NAME( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER1, "P1 Hard" )
-/*TODO*///		PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_COIN4 );	PORT_BIT_NAME( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2, "P2 Soft" )
-/*TODO*///		PORT_BIT     ( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 );	PORT_BIT     ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 );	PORT_BIT     ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 );	PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 );	PORT_BIT_NAME( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER2, "P2 Hard" )
-/*TODO*///		PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_COIN2 );
-/*TODO*///		UNUSED_ANALOG	/* analog C */
-/*TODO*///		UNUSED_ANALOG	/* analog D */
-/*TODO*///		UNUSED_ANALOG	/* analog E */
-/*TODO*///		UNUSED_ANALOG	/* analog F */
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_rimrockn = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL );/* input from sound board */
-/*TODO*///		PORT_BIT( 0xfe, IP_ACTIVE_LOW, IPT_UNKNOWN );
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 );	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 );	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2 );	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN3 );	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN4 );	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN );
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN );
-/*TODO*///		PORT_START(); 	/* special 161 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT_NAME( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1, "P1 Pass" )
-/*TODO*///		PORT_BIT_NAME( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER1, "P1 Shoot" )
-/*TODO*///		PORT_BIT     ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 );	PORT_BIT     ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 );	PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 );	PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_START1 );
-/*TODO*///		PORT_START(); 	/* special 162 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT_NAME( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2, "P2 Pass" )
-/*TODO*///		PORT_BIT_NAME( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER2, "P2 Shoot" )
-/*TODO*///		PORT_BIT     ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 );	PORT_BIT     ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 );	PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 );	PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_START2 );
-/*TODO*///		PORT_START(); 	/* special 163 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT_NAME( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER3, "P3 Pass" )
-/*TODO*///		PORT_BIT_NAME( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER3, "P3 Shoot" )
-/*TODO*///		PORT_BIT     ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER3 );	PORT_BIT     ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER3 );	PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER3 );	PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER3 );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_START3 );
-/*TODO*///		PORT_START(); 	/* special 164 */
-/*TODO*///		PORT_BIT     ( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT_NAME( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER4, "P4 Pass" )
-/*TODO*///		PORT_BIT_NAME( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER4, "P4 Shoot" )
-/*TODO*///		PORT_BIT     ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER4 );	PORT_BIT     ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER4 );	PORT_BIT     ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER4 );	PORT_BIT     ( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER4 );	PORT_BIT     ( 0x80, IP_ACTIVE_LOW, IPT_START4 );
-/*TODO*///		PORT_START(); 	/* special 165 */
-/*TODO*///		PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN );INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_ninclown = new InputPortPtr(){ public void handler() { 
-/*TODO*///	PORT_START(); 	/* 40 */
-/*TODO*///		PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_SERVICE1 );	PORT_SERVICE_NO_TOGGLE( 0x0200, IP_ACTIVE_LOW )
-/*TODO*///		PORT_BIT( 0x0c00, IP_ACTIVE_LOW, IPT_UNKNOWN );	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_COIN2 );	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_COIN1 );	PORT_BIT( 0xc000, IP_ACTIVE_LOW, IPT_UNKNOWN );
-/*TODO*///		PORT_START(); 	/* 60 */
-/*TODO*///		PORT_BIT_NAME( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1, "P1 Throw" )
-/*TODO*///		PORT_BIT     ( 0x0200, IP_ACTIVE_LOW, IPT_START1 );	PORT_BIT     ( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 );	PORT_BIT     ( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 );	PORT_BIT     ( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 );	PORT_BIT     ( 0x2000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 );	PORT_BIT_NAME( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1, "P1 Kick" )
-/*TODO*///		PORT_BIT_NAME( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER1, "P1 Punch" )
-/*TODO*///	
-/*TODO*///		PORT_START(); 	/* 80 */
-/*TODO*///		PORT_BIT_NAME( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2, "P2 Throw" )
-/*TODO*///		PORT_BIT     ( 0x0200, IP_ACTIVE_LOW, IPT_START2 );	PORT_BIT     ( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 );	PORT_BIT     ( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 );	PORT_BIT     ( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 );	PORT_BIT     ( 0x2000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 );	PORT_BIT_NAME( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2, "P2 Kick" )
-/*TODO*///		PORT_BIT_NAME( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER2, "P2 Punch" )
-/*TODO*///	
-/*TODO*///		UNUSED_ANALOG	/* analog C */
-/*TODO*///		UNUSED_ANALOG	/* analog D */
-/*TODO*///		UNUSED_ANALOG	/* analog E */
-/*TODO*///		UNUSED_ANALOG	/* analog F */
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Sound definitions
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	static YM2203interface ym2203_interface = new YM2203interface
-/*TODO*///	(
-/*TODO*///		1,
-/*TODO*///		CLOCK_8MHz/2,
-/*TODO*///		new int[] { YM2203_VOL(75,7) },
-/*TODO*///		new ReadHandlerPtr[] { 0 },
-/*TODO*///		new ReadHandlerPtr[] { 0 },
-/*TODO*///		new WriteHandlerPtr[] { 0 },
-/*TODO*///		new WriteHandlerPtr[] { ym2203_portb_out },
-/*TODO*///		new WriteYmHandlerPtr[] { generate_sound_irq }
-/*TODO*///	);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static YM3812interface ym3812_interface = new YM3812interface
-/*TODO*///	(
-/*TODO*///		1,
-/*TODO*///		CLOCK_8MHz/2,
-/*TODO*///		new int[] { 75 },
-/*TODO*///		new WriteYmHandlerPtr[] { generate_sound_irq }
-/*TODO*///	);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static OKIM6295interface oki6295_interface_low = new OKIM6295interface
-/*TODO*///	(
-/*TODO*///		1,
-/*TODO*///		new int[] { CLOCK_8MHz/8/165 },
-/*TODO*///		new int[] { REGION_SOUND1 },
-/*TODO*///		new int[] { 75 }
-/*TODO*///	);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static OKIM6295interface oki6295_interface_high = new OKIM6295interface
-/*TODO*///	(
-/*TODO*///		1,
-/*TODO*///		new int[] { CLOCK_8MHz/8/128 },
-/*TODO*///		new int[] { REGION_SOUND1 },
-/*TODO*///		new int[] { 75 }
-/*TODO*///	);
-/*TODO*///	
-/*TODO*///	
 /*TODO*///	
 /*TODO*///	/*************************************
 /*TODO*///	 *
@@ -1303,7 +1531,6 @@ public class itech8 {
 /*TODO*///		},
 /*TODO*///		nvram_handler
 /*TODO*///	);
-/*TODO*///	
     /**
      * ***********************************
      *
@@ -1311,174 +1538,424 @@ public class itech8 {
      *
      ************************************
      */
-    /*TODO*///	static RomLoadPtr rom_stratab = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "sbprogv3.bin", 0x08000, 0x8000, 0xa5ae728f );	ROM_COPY( REGION_CPU1,    0x8000, 0x14000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "sbsnds.bin", 0x08000, 0x8000, 0xb36c8f0a );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "grom0.bin", 0x00000, 0x20000, 0xa915b0bd );	ROM_LOAD( "grom1.bin", 0x20000, 0x20000, 0x340c661f );	ROM_LOAD( "grom2.bin", 0x40000, 0x20000, 0x5df9f1cf );
-/*TODO*///		ROM_REGION( 0x20000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0.bin", 0x00000, 0x20000, 0x6ff390b9 );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_wfortune = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "wofpgm", 0x04000, 0x4000, 0xbd984654 );	ROM_CONTINUE(       0x10000, 0xc000 );	ROM_COPY( REGION_CPU1, 0x14000, 0x8000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "wofsnd", 0x08000, 0x8000, 0x0a6aa5dc );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "wofgrom0", 0x00000, 0x10000, 0x9a157b2c );	ROM_LOAD( "wofgrom1", 0x10000, 0x10000, 0x5064739b );	ROM_LOAD( "wofgrom2", 0x20000, 0x10000, 0x3d393b2b );	ROM_LOAD( "wofgrom3", 0x30000, 0x10000, 0x117a2ce9 );
-/*TODO*///		ROM_REGION( 0x20000, REGION_SOUND1, 0 );	ROM_LOAD( "wofsbom0", 0x00000, 0x20000, 0x5c28c3fe );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_wfortuna = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "wofpgmr1.bin", 0x04000, 0x4000, 0xc3d3eb21 );	ROM_CONTINUE(             0x10000, 0xc000 );	ROM_COPY( REGION_CPU1, 0x14000, 0x8000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "wofsnd", 0x08000, 0x8000, 0x0a6aa5dc );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "wofgrom0", 0x00000, 0x10000, 0x9a157b2c );	ROM_LOAD( "wofgrom1", 0x10000, 0x10000, 0x5064739b );	ROM_LOAD( "wofgrom2", 0x20000, 0x10000, 0x3d393b2b );	ROM_LOAD( "wofgrom3", 0x30000, 0x10000, 0x117a2ce9 );
-/*TODO*///		ROM_REGION( 0x20000, REGION_SOUND1, 0 );	ROM_LOAD( "wofsbom0", 0x00000, 0x20000, 0x5c28c3fe );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_gtg = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "u5.bin", 0x04000, 0x4000, 0x61984272 );	ROM_CONTINUE(       0x10000, 0xc000 );	ROM_COPY( REGION_CPU1, 0x14000, 0x8000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "u27.bin", 0x08000, 0x8000, 0x358d2440 );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "grom0.bin", 0x00000, 0x20000, 0xa29c688a );	ROM_LOAD( "grom1.bin", 0x20000, 0x20000, 0xb52a23f6 );	ROM_LOAD( "grom2.bin", 0x40000, 0x20000, 0x9b8e3a61 );	ROM_LOAD( "grom3.bin", 0x60000, 0x20000, 0xb6e9fb15 );	ROM_LOAD( "grom4.bin", 0x80000, 0x20000, 0xfaa16729 );	ROM_LOAD( "grom5.bin", 0xa0000, 0x20000, 0x5b393314 );
-/*TODO*///		ROM_REGION( 0x20000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0.bin", 0x00000, 0x20000, 0x1cccbfdf );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_slikshot = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "pgm20.u5",  0x04000, 0x4000, 0x370a00eb );	ROM_CONTINUE(          0x10000, 0xc000 );	ROM_COPY( REGION_CPU1, 0x14000, 0x8000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "u27.bin", 0x08000, 0x8000, 0xa96ce0f7 );
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU3, 0 );	ROM_LOAD( "u53.bin", 0x00000, 0x0800, 0x04b85918 );	ROM_CONTINUE(        0x00000, 0x0800 );	ROM_CONTINUE(        0x00000, 0x0800 );	ROM_CONTINUE(        0x00000, 0x0800 );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "grom0.bin", 0x00000, 0x20000, 0xe60c2804 );	ROM_LOAD( "grom1.bin", 0x20000, 0x20000, 0xd764d542 );
-/*TODO*///		ROM_REGION( 0x10000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0.bin", 0x00000, 0x10000, 0x4b075f5e );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_sliksh17 = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "u5.bin", 0x04000, 0x4000, 0x09d70554 );	ROM_CONTINUE(       0x10000, 0xc000 );	ROM_COPY( REGION_CPU1, 0x14000, 0x8000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "u27.bin", 0x08000, 0x8000, 0xa96ce0f7 );
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU3, 0 );	ROM_LOAD( "u53.bin", 0x00000, 0x0800, 0x04b85918 );	ROM_CONTINUE(        0x00000, 0x0800 );	ROM_CONTINUE(        0x00000, 0x0800 );	ROM_CONTINUE(        0x00000, 0x0800 );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "grom0.bin", 0x00000, 0x20000, 0xe60c2804 );	ROM_LOAD( "grom1.bin", 0x20000, 0x20000, 0xd764d542 );
-/*TODO*///		ROM_REGION( 0x10000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0.bin", 0x00000, 0x10000, 0x4b075f5e );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_sstrike = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "sstrku5.bin", 0x08000, 0x8000, 0xaf00cddf );	ROM_COPY( REGION_CPU1,    0x8000, 0x14000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "sstrku27.bin", 0x08000, 0x8000, 0xefab7252 );
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU3, 0 );	ROM_LOAD( "spstku53.bin", 0x00000, 0x0800, 0x04b85918 );	ROM_CONTINUE(        0x00000, 0x0800 );	ROM_CONTINUE(        0x00000, 0x0800 );	ROM_CONTINUE(        0x00000, 0x0800 );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "sstgrom0.bin", 0x00000, 0x20000, 0x9cfb9849 );	ROM_LOAD( "sstgrom1.bin", 0x20000, 0x20000, 0xd9ea14e1 );	ROM_LOAD( "sstgrom2.bin", 0x40000, 0x20000, 0xdcd97bf7 );
-/*TODO*///		ROM_REGION( 0x20000, REGION_SOUND1, 0 );	ROM_LOAD( "sstsrom0.bin", 0x00000, 0x20000, 0x6ff390b9 );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_gtg2 = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		/* banks are loaded in the opposite order from the others, */
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "u5.2",   0x10000, 0x4000, 0x4a61580f );	ROM_CONTINUE(       0x04000, 0xc000 );	ROM_COPY( REGION_CPU1, 0x8000, 0x14000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "u27.2", 0x08000, 0x8000, 0x55734876 );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "grom0.bin", 0x00000, 0x20000, 0xa29c688a );	ROM_LOAD( "grom1.bin", 0x20000, 0x20000, 0xa4182776 );	ROM_LOAD( "grom2.bin", 0x40000, 0x20000, 0x0580bb99 );	ROM_LOAD( "grom3.bin", 0x60000, 0x20000, 0x89edb624 );	ROM_LOAD( "grom4.bin", 0x80000, 0x20000, 0xf6557950 );	ROM_LOAD( "grom5.bin", 0xa0000, 0x20000, 0xa680ce6a );
-/*TODO*///		ROM_REGION( 0x20000, REGION_SOUND1, 0 );	ROM_LOAD( "vr-srom0", 0x00000, 0x20000, 0x4dd4db42 );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_gtg2t = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		/* banks are loaded in the opposite order from the others, */
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "u5",     0x10000, 0x4000, 0xc7b3a9f3 );	ROM_CONTINUE(       0x04000, 0xc000 );	ROM_COPY( REGION_CPU1, 0x8000, 0x14000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "u27.bin", 0x08000, 0x8000, 0xdd2a5905 );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "grom0.bin", 0x00000, 0x20000, 0xa29c688a );	ROM_LOAD( "grom1.bin", 0x20000, 0x20000, 0xa4182776 );	ROM_LOAD( "grom2.bin", 0x40000, 0x20000, 0x0580bb99 );	ROM_LOAD( "grom3.bin", 0x60000, 0x20000, 0x89edb624 );	ROM_LOAD( "grom4.bin", 0x80000, 0x20000, 0xf6557950 );	ROM_LOAD( "grom5.bin", 0xa0000, 0x20000, 0xa680ce6a );
-/*TODO*///		ROM_REGION( 0x20000, REGION_SOUND1, 0 );	ROM_LOAD( "vr-srom0", 0x00000, 0x20000, 0x4dd4db42 );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_gtg2j = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "u5.bin", 0x04000, 0x4000, 0x9c95ceaa );	ROM_CONTINUE(       0x10000, 0xc000 );	ROM_COPY( REGION_CPU1, 0x14000, 0x8000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "u27.bin", 0x08000, 0x8000, 0xdd2a5905 );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "grom0.bin", 0x00000, 0x20000, 0xa29c688a );	ROM_LOAD( "grom1.bin", 0x20000, 0x20000, 0xa4182776 );	ROM_LOAD( "grom2.bin", 0x40000, 0x20000, 0x0580bb99 );	ROM_LOAD( "grom3.bin", 0x60000, 0x20000, 0x89edb624 );	ROM_LOAD( "grom4.bin", 0x80000, 0x20000, 0xf6557950 );	ROM_LOAD( "grom5.bin", 0xa0000, 0x20000, 0xa680ce6a );
-/*TODO*///		ROM_REGION( 0x20000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0.bin", 0x00000, 0x20000, 0x1cccbfdf );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_arlingtn = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		/* banks are loaded in the opposite order from the others, */
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "ahrd121.bin", 0x10000, 0x4000, 0x00aae02e );	ROM_CONTINUE(            0x04000, 0xc000 );	ROM_COPY( REGION_CPU1, 0x8000, 0x14000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "ahrsnd11.bin", 0x08000, 0x8000, 0xdec57dca );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "grom0.bin", 0x00000, 0x20000, 0x5ef57fe5 );	ROM_LOAD( "grom1.bin", 0x20000, 0x20000, 0x6aca95c0 );	ROM_LOAD( "grom2.bin", 0x40000, 0x10000, 0x6d6fde1b );
-/*TODO*///		ROM_REGION( 0x40000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0.bin", 0x00000, 0x40000, 0x56087f81 );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_neckneck = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		/* banks are loaded in the opposite order from the others, */
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "nn_prg12.u5", 0x04000, 0x4000, 0x8e51734a );	ROM_CONTINUE(            0x10000, 0xc000 );	ROM_COPY( REGION_CPU1, 0x14000, 0x8000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "nn_snd10.u27", 0x08000, 0x8000, 0x74771b2f );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "nn_grom0.bin", 0x00000, 0x20000, 0x064d1464 );	ROM_LOAD( "nn_grom1.bin", 0x20000, 0x20000, 0x622d9a0b );	ROM_LOAD( "nn_grom2.bin", 0x40000, 0x20000, 0xe7eb4020 );	ROM_LOAD( "nn_grom3.bin", 0x60000, 0x20000, 0x765c8593 );
-/*TODO*///		ROM_REGION( 0x40000, REGION_SOUND1, 0 );	ROM_LOAD( "nn_srom0.bin", 0x00000, 0x40000, 0x33687201 );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_peggle = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "j-stick.u5", 0x04000, 0x4000, 0x140d5a9c );	ROM_CONTINUE(           0x10000, 0xc000 );	ROM_COPY( REGION_CPU1, 0x14000, 0x8000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "sound.u27", 0x08000, 0x8000, 0xb99beb70 );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "grom0.bin", 0x00000, 0x20000, 0x5c02348d );	ROM_LOAD( "grom1.bin", 0x20000, 0x20000, 0x85a7a3a2 );	ROM_LOAD( "grom2.bin", 0x40000, 0x20000, 0xbfe11f18 );
-/*TODO*///		ROM_REGION( 0x20000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0", 0x00000, 0x20000, 0x001846ea );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_pegglet = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "trakball.u5", 0x04000, 0x4000, 0xd2694868 );	ROM_CONTINUE(            0x10000, 0xc000 );	ROM_COPY( REGION_CPU1, 0x14000, 0x8000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "sound.u27", 0x08000, 0x8000, 0xb99beb70 );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "grom0.bin", 0x00000, 0x20000, 0x5c02348d );	ROM_LOAD( "grom1.bin", 0x20000, 0x20000, 0x85a7a3a2 );	ROM_LOAD( "grom2.bin", 0x40000, 0x20000, 0xbfe11f18 );
-/*TODO*///		ROM_REGION( 0x20000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0", 0x00000, 0x20000, 0x001846ea );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_hstennis = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x1c000, REGION_CPU1, 0 );	ROM_LOAD( "ten_v1_1.bin", 0x04000, 0x4000, 0xfaffab5c );	ROM_CONTINUE(             0x10000, 0xc000 );	ROM_COPY( REGION_CPU1, 0x14000, 0x8000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "tensd_v1.bin", 0x08000, 0x8000, 0xf034a694 );
-/*TODO*///		ROM_REGION( 0xc0000, REGION_GFX1, 0 );	ROM_LOAD( "grom0.bin", 0x00000, 0x20000, 0x1e69ebae );	ROM_LOAD( "grom1.bin", 0x20000, 0x20000, 0x4e6a22d5 );	ROM_LOAD( "grom2.bin", 0x40000, 0x20000, 0xc0b643a9 );	ROM_LOAD( "grom3.bin", 0x60000, 0x20000, 0x54afb456 );	ROM_LOAD( "grom4.bin", 0x80000, 0x20000, 0xee09d645 );
-/*TODO*///		ROM_REGION( 0x20000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0.bin", 0x00000, 0x20000, 0xd9ce58c3 );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_rimrockn = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x34000, REGION_CPU1, 0 );	ROM_LOAD( "u5-2_2",    0x04000, 0x4000, 0x97777683 );	ROM_CONTINUE(          0x10000, 0x4000 );	ROM_CONTINUE(          0x1c000, 0x4000 );	ROM_CONTINUE(          0x28000, 0xc000 );	ROM_CONTINUE(          0x2c000, 0x8000 );	ROM_COPY( REGION_CPU1, 0x2c000, 0x08000, 0x8000 )
-/*TODO*///		ROM_COPY( REGION_CPU1, 0x2c000, 0x14000, 0x8000 )
-/*TODO*///		ROM_COPY( REGION_CPU1, 0x2c000, 0x20000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "u27", 0x08000, 0x8000, 0x59f87f0e );
-/*TODO*///		ROM_REGION( 0x100000, REGION_GFX1, 0 );	ROM_LOAD( "grom00",       0x00000, 0x40000, 0x3eacbad9 );	ROM_LOAD( "grom01",       0x40000, 0x40000, 0x864cc269 );	ROM_LOAD( "grom02-2.st2", 0x80000, 0x40000, 0x47904233 );	ROM_LOAD( "grom03-2.st2", 0xc0000, 0x40000, 0xf005f118 );
-/*TODO*///		ROM_REGION( 0x40000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0", 0x00000, 0x40000, 0x7ad42be0 );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_rimrck20 = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x34000, REGION_CPU1, 0 );	ROM_LOAD( "rrb.bin",   0x04000, 0x4000, 0x7e9d5545 );	ROM_CONTINUE(          0x10000, 0x4000 );	ROM_CONTINUE(          0x1c000, 0x4000 );	ROM_CONTINUE(          0x28000, 0xc000 );	ROM_CONTINUE(          0x2c000, 0x8000 );	ROM_COPY( REGION_CPU1, 0x2c000, 0x08000, 0x8000 )
-/*TODO*///		ROM_COPY( REGION_CPU1, 0x2c000, 0x14000, 0x8000 )
-/*TODO*///		ROM_COPY( REGION_CPU1, 0x2c000, 0x20000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "u27", 0x08000, 0x8000, 0x59f87f0e );
-/*TODO*///		ROM_REGION( 0x100000, REGION_GFX1, 0 );	ROM_LOAD( "grom00",       0x00000, 0x40000, 0x3eacbad9 );	ROM_LOAD( "grom01",       0x40000, 0x40000, 0x864cc269 );	ROM_LOAD( "grom02-2.st2", 0x80000, 0x40000, 0x47904233 );	ROM_LOAD( "grom03-2.st2", 0xc0000, 0x40000, 0xf005f118 );
-/*TODO*///		ROM_REGION( 0x40000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0", 0x00000, 0x40000, 0x7ad42be0 );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_rimrck16 = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x34000, REGION_CPU1, 0 );	ROM_LOAD( "rrbbv16.u5",0x04000, 0x4000, 0x999cd502 );	ROM_CONTINUE(          0x10000, 0x4000 );	ROM_CONTINUE(          0x1c000, 0x4000 );	ROM_CONTINUE(          0x28000, 0xc000 );	ROM_CONTINUE(          0x2c000, 0x8000 );	ROM_COPY( REGION_CPU1, 0x2c000, 0x08000, 0x8000 )
-/*TODO*///		ROM_COPY( REGION_CPU1, 0x2c000, 0x14000, 0x8000 )
-/*TODO*///		ROM_COPY( REGION_CPU1, 0x2c000, 0x20000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "u27", 0x08000, 0x8000, 0x59f87f0e );
-/*TODO*///		ROM_REGION( 0x100000, REGION_GFX1, 0 );	ROM_LOAD( "grom00", 0x00000, 0x40000, 0x3eacbad9 );	ROM_LOAD( "grom01", 0x40000, 0x40000, 0x864cc269 );	ROM_LOAD( "grom02", 0x80000, 0x40000, 0x34e567d5 );	ROM_LOAD( "grom03", 0xc0000, 0x40000, 0xfd18045d );
-/*TODO*///		ROM_REGION( 0x40000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0", 0x00000, 0x40000, 0x7ad42be0 );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_rimrck12 = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x34000, REGION_CPU1, 0 );	ROM_LOAD( "rrbbv12.u5",0x04000, 0x4000, 0x661761a6 );	ROM_CONTINUE(          0x10000, 0x4000 );	ROM_CONTINUE(          0x1c000, 0x4000 );	ROM_CONTINUE(          0x28000, 0xc000 );	ROM_CONTINUE(          0x2c000, 0x8000 );	ROM_COPY( REGION_CPU1, 0x2c000, 0x08000, 0x8000 )
-/*TODO*///		ROM_COPY( REGION_CPU1, 0x2c000, 0x14000, 0x8000 )
-/*TODO*///		ROM_COPY( REGION_CPU1, 0x2c000, 0x20000, 0x8000 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x10000, REGION_CPU2, 0 );	ROM_LOAD( "rrbsndv1.u27", 0x08000, 0x8000, 0x8eda5f53 );
-/*TODO*///		ROM_REGION( 0x100000, REGION_GFX1, 0 );	ROM_LOAD( "grom00", 0x00000, 0x40000, 0x3eacbad9 );	ROM_LOAD( "grom01", 0x40000, 0x40000, 0x864cc269 );	ROM_LOAD( "grom02", 0x80000, 0x40000, 0x34e567d5 );	ROM_LOAD( "grom03", 0xc0000, 0x40000, 0xfd18045d );
-/*TODO*///		ROM_REGION( 0x40000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0", 0x00000, 0x40000, 0x7ad42be0 );ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_ninclown = new RomLoadPtr(){ public void handler(){ 
+    static RomLoadPtr rom_stratab = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("sbprogv3.bin", 0x08000, 0x8000, 0xa5ae728f);
+            ROM_COPY(REGION_CPU1, 0x8000, 0x14000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("sbsnds.bin", 0x08000, 0x8000, 0xb36c8f0a);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("grom0.bin", 0x00000, 0x20000, 0xa915b0bd);
+            ROM_LOAD("grom1.bin", 0x20000, 0x20000, 0x340c661f);
+            ROM_LOAD("grom2.bin", 0x40000, 0x20000, 0x5df9f1cf);
+            ROM_REGION(0x20000, REGION_SOUND1, 0);
+            ROM_LOAD("srom0.bin", 0x00000, 0x20000, 0x6ff390b9);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_wfortune = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("wofpgm", 0x04000, 0x4000, 0xbd984654);
+            ROM_CONTINUE(0x10000, 0xc000);
+            ROM_COPY(REGION_CPU1, 0x14000, 0x8000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("wofsnd", 0x08000, 0x8000, 0x0a6aa5dc);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("wofgrom0", 0x00000, 0x10000, 0x9a157b2c);
+            ROM_LOAD("wofgrom1", 0x10000, 0x10000, 0x5064739b);
+            ROM_LOAD("wofgrom2", 0x20000, 0x10000, 0x3d393b2b);
+            ROM_LOAD("wofgrom3", 0x30000, 0x10000, 0x117a2ce9);
+            ROM_REGION(0x20000, REGION_SOUND1, 0);
+            ROM_LOAD("wofsbom0", 0x00000, 0x20000, 0x5c28c3fe);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_wfortuna = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("wofpgmr1.bin", 0x04000, 0x4000, 0xc3d3eb21);
+            ROM_CONTINUE(0x10000, 0xc000);
+            ROM_COPY(REGION_CPU1, 0x14000, 0x8000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("wofsnd", 0x08000, 0x8000, 0x0a6aa5dc);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("wofgrom0", 0x00000, 0x10000, 0x9a157b2c);
+            ROM_LOAD("wofgrom1", 0x10000, 0x10000, 0x5064739b);
+            ROM_LOAD("wofgrom2", 0x20000, 0x10000, 0x3d393b2b);
+            ROM_LOAD("wofgrom3", 0x30000, 0x10000, 0x117a2ce9);
+            ROM_REGION(0x20000, REGION_SOUND1, 0);
+            ROM_LOAD("wofsbom0", 0x00000, 0x20000, 0x5c28c3fe);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_gtg = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("u5.bin", 0x04000, 0x4000, 0x61984272);
+            ROM_CONTINUE(0x10000, 0xc000);
+            ROM_COPY(REGION_CPU1, 0x14000, 0x8000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("u27.bin", 0x08000, 0x8000, 0x358d2440);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("grom0.bin", 0x00000, 0x20000, 0xa29c688a);
+            ROM_LOAD("grom1.bin", 0x20000, 0x20000, 0xb52a23f6);
+            ROM_LOAD("grom2.bin", 0x40000, 0x20000, 0x9b8e3a61);
+            ROM_LOAD("grom3.bin", 0x60000, 0x20000, 0xb6e9fb15);
+            ROM_LOAD("grom4.bin", 0x80000, 0x20000, 0xfaa16729);
+            ROM_LOAD("grom5.bin", 0xa0000, 0x20000, 0x5b393314);
+            ROM_REGION(0x20000, REGION_SOUND1, 0);
+            ROM_LOAD("srom0.bin", 0x00000, 0x20000, 0x1cccbfdf);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_slikshot = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("pgm20.u5", 0x04000, 0x4000, 0x370a00eb);
+            ROM_CONTINUE(0x10000, 0xc000);
+            ROM_COPY(REGION_CPU1, 0x14000, 0x8000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("u27.bin", 0x08000, 0x8000, 0xa96ce0f7);
+            ROM_REGION(0x10000, REGION_CPU3, 0);
+            ROM_LOAD("u53.bin", 0x00000, 0x0800, 0x04b85918);
+            ROM_CONTINUE(0x00000, 0x0800);
+            ROM_CONTINUE(0x00000, 0x0800);
+            ROM_CONTINUE(0x00000, 0x0800);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("grom0.bin", 0x00000, 0x20000, 0xe60c2804);
+            ROM_LOAD("grom1.bin", 0x20000, 0x20000, 0xd764d542);
+            ROM_REGION(0x10000, REGION_SOUND1, 0);
+            ROM_LOAD("srom0.bin", 0x00000, 0x10000, 0x4b075f5e);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_sliksh17 = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("u5.bin", 0x04000, 0x4000, 0x09d70554);
+            ROM_CONTINUE(0x10000, 0xc000);
+            ROM_COPY(REGION_CPU1, 0x14000, 0x8000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("u27.bin", 0x08000, 0x8000, 0xa96ce0f7);
+            ROM_REGION(0x10000, REGION_CPU3, 0);
+            ROM_LOAD("u53.bin", 0x00000, 0x0800, 0x04b85918);
+            ROM_CONTINUE(0x00000, 0x0800);
+            ROM_CONTINUE(0x00000, 0x0800);
+            ROM_CONTINUE(0x00000, 0x0800);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("grom0.bin", 0x00000, 0x20000, 0xe60c2804);
+            ROM_LOAD("grom1.bin", 0x20000, 0x20000, 0xd764d542);
+            ROM_REGION(0x10000, REGION_SOUND1, 0);
+            ROM_LOAD("srom0.bin", 0x00000, 0x10000, 0x4b075f5e);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_sstrike = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("sstrku5.bin", 0x08000, 0x8000, 0xaf00cddf);
+            ROM_COPY(REGION_CPU1, 0x8000, 0x14000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("sstrku27.bin", 0x08000, 0x8000, 0xefab7252);
+            ROM_REGION(0x10000, REGION_CPU3, 0);
+            ROM_LOAD("spstku53.bin", 0x00000, 0x0800, 0x04b85918);
+            ROM_CONTINUE(0x00000, 0x0800);
+            ROM_CONTINUE(0x00000, 0x0800);
+            ROM_CONTINUE(0x00000, 0x0800);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("sstgrom0.bin", 0x00000, 0x20000, 0x9cfb9849);
+            ROM_LOAD("sstgrom1.bin", 0x20000, 0x20000, 0xd9ea14e1);
+            ROM_LOAD("sstgrom2.bin", 0x40000, 0x20000, 0xdcd97bf7);
+            ROM_REGION(0x20000, REGION_SOUND1, 0);
+            ROM_LOAD("sstsrom0.bin", 0x00000, 0x20000, 0x6ff390b9);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_gtg2 = new RomLoadPtr() {
+        public void handler() {
+            /* banks are loaded in the opposite order from the others, */
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("u5.2", 0x10000, 0x4000, 0x4a61580f);
+            ROM_CONTINUE(0x04000, 0xc000);
+            ROM_COPY(REGION_CPU1, 0x8000, 0x14000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("u27.2", 0x08000, 0x8000, 0x55734876);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("grom0.bin", 0x00000, 0x20000, 0xa29c688a);
+            ROM_LOAD("grom1.bin", 0x20000, 0x20000, 0xa4182776);
+            ROM_LOAD("grom2.bin", 0x40000, 0x20000, 0x0580bb99);
+            ROM_LOAD("grom3.bin", 0x60000, 0x20000, 0x89edb624);
+            ROM_LOAD("grom4.bin", 0x80000, 0x20000, 0xf6557950);
+            ROM_LOAD("grom5.bin", 0xa0000, 0x20000, 0xa680ce6a);
+            ROM_REGION(0x20000, REGION_SOUND1, 0);
+            ROM_LOAD("vr-srom0", 0x00000, 0x20000, 0x4dd4db42);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_gtg2t = new RomLoadPtr() {
+        public void handler() {
+            /* banks are loaded in the opposite order from the others, */
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("u5", 0x10000, 0x4000, 0xc7b3a9f3);
+            ROM_CONTINUE(0x04000, 0xc000);
+            ROM_COPY(REGION_CPU1, 0x8000, 0x14000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("u27.bin", 0x08000, 0x8000, 0xdd2a5905);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("grom0.bin", 0x00000, 0x20000, 0xa29c688a);
+            ROM_LOAD("grom1.bin", 0x20000, 0x20000, 0xa4182776);
+            ROM_LOAD("grom2.bin", 0x40000, 0x20000, 0x0580bb99);
+            ROM_LOAD("grom3.bin", 0x60000, 0x20000, 0x89edb624);
+            ROM_LOAD("grom4.bin", 0x80000, 0x20000, 0xf6557950);
+            ROM_LOAD("grom5.bin", 0xa0000, 0x20000, 0xa680ce6a);
+            ROM_REGION(0x20000, REGION_SOUND1, 0);
+            ROM_LOAD("vr-srom0", 0x00000, 0x20000, 0x4dd4db42);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_gtg2j = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("u5.bin", 0x04000, 0x4000, 0x9c95ceaa);
+            ROM_CONTINUE(0x10000, 0xc000);
+            ROM_COPY(REGION_CPU1, 0x14000, 0x8000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("u27.bin", 0x08000, 0x8000, 0xdd2a5905);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("grom0.bin", 0x00000, 0x20000, 0xa29c688a);
+            ROM_LOAD("grom1.bin", 0x20000, 0x20000, 0xa4182776);
+            ROM_LOAD("grom2.bin", 0x40000, 0x20000, 0x0580bb99);
+            ROM_LOAD("grom3.bin", 0x60000, 0x20000, 0x89edb624);
+            ROM_LOAD("grom4.bin", 0x80000, 0x20000, 0xf6557950);
+            ROM_LOAD("grom5.bin", 0xa0000, 0x20000, 0xa680ce6a);
+            ROM_REGION(0x20000, REGION_SOUND1, 0);
+            ROM_LOAD("srom0.bin", 0x00000, 0x20000, 0x1cccbfdf);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_arlingtn = new RomLoadPtr() {
+        public void handler() {
+            /* banks are loaded in the opposite order from the others, */
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("ahrd121.bin", 0x10000, 0x4000, 0x00aae02e);
+            ROM_CONTINUE(0x04000, 0xc000);
+            ROM_COPY(REGION_CPU1, 0x8000, 0x14000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("ahrsnd11.bin", 0x08000, 0x8000, 0xdec57dca);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("grom0.bin", 0x00000, 0x20000, 0x5ef57fe5);
+            ROM_LOAD("grom1.bin", 0x20000, 0x20000, 0x6aca95c0);
+            ROM_LOAD("grom2.bin", 0x40000, 0x10000, 0x6d6fde1b);
+            ROM_REGION(0x40000, REGION_SOUND1, 0);
+            ROM_LOAD("srom0.bin", 0x00000, 0x40000, 0x56087f81);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_neckneck = new RomLoadPtr() {
+        public void handler() {
+            /* banks are loaded in the opposite order from the others, */
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("nn_prg12.u5", 0x04000, 0x4000, 0x8e51734a);
+            ROM_CONTINUE(0x10000, 0xc000);
+            ROM_COPY(REGION_CPU1, 0x14000, 0x8000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("nn_snd10.u27", 0x08000, 0x8000, 0x74771b2f);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("nn_grom0.bin", 0x00000, 0x20000, 0x064d1464);
+            ROM_LOAD("nn_grom1.bin", 0x20000, 0x20000, 0x622d9a0b);
+            ROM_LOAD("nn_grom2.bin", 0x40000, 0x20000, 0xe7eb4020);
+            ROM_LOAD("nn_grom3.bin", 0x60000, 0x20000, 0x765c8593);
+            ROM_REGION(0x40000, REGION_SOUND1, 0);
+            ROM_LOAD("nn_srom0.bin", 0x00000, 0x40000, 0x33687201);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_peggle = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("j-stick.u5", 0x04000, 0x4000, 0x140d5a9c);
+            ROM_CONTINUE(0x10000, 0xc000);
+            ROM_COPY(REGION_CPU1, 0x14000, 0x8000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("sound.u27", 0x08000, 0x8000, 0xb99beb70);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("grom0.bin", 0x00000, 0x20000, 0x5c02348d);
+            ROM_LOAD("grom1.bin", 0x20000, 0x20000, 0x85a7a3a2);
+            ROM_LOAD("grom2.bin", 0x40000, 0x20000, 0xbfe11f18);
+            ROM_REGION(0x20000, REGION_SOUND1, 0);
+            ROM_LOAD("srom0", 0x00000, 0x20000, 0x001846ea);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_pegglet = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("trakball.u5", 0x04000, 0x4000, 0xd2694868);
+            ROM_CONTINUE(0x10000, 0xc000);
+            ROM_COPY(REGION_CPU1, 0x14000, 0x8000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("sound.u27", 0x08000, 0x8000, 0xb99beb70);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("grom0.bin", 0x00000, 0x20000, 0x5c02348d);
+            ROM_LOAD("grom1.bin", 0x20000, 0x20000, 0x85a7a3a2);
+            ROM_LOAD("grom2.bin", 0x40000, 0x20000, 0xbfe11f18);
+            ROM_REGION(0x20000, REGION_SOUND1, 0);
+            ROM_LOAD("srom0", 0x00000, 0x20000, 0x001846ea);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_hstennis = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x1c000, REGION_CPU1, 0);
+            ROM_LOAD("ten_v1_1.bin", 0x04000, 0x4000, 0xfaffab5c);
+            ROM_CONTINUE(0x10000, 0xc000);
+            ROM_COPY(REGION_CPU1, 0x14000, 0x8000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("tensd_v1.bin", 0x08000, 0x8000, 0xf034a694);
+            ROM_REGION(0xc0000, REGION_GFX1, 0);
+            ROM_LOAD("grom0.bin", 0x00000, 0x20000, 0x1e69ebae);
+            ROM_LOAD("grom1.bin", 0x20000, 0x20000, 0x4e6a22d5);
+            ROM_LOAD("grom2.bin", 0x40000, 0x20000, 0xc0b643a9);
+            ROM_LOAD("grom3.bin", 0x60000, 0x20000, 0x54afb456);
+            ROM_LOAD("grom4.bin", 0x80000, 0x20000, 0xee09d645);
+            ROM_REGION(0x20000, REGION_SOUND1, 0);
+            ROM_LOAD("srom0.bin", 0x00000, 0x20000, 0xd9ce58c3);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_rimrockn = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x34000, REGION_CPU1, 0);
+            ROM_LOAD("u5-2_2", 0x04000, 0x4000, 0x97777683);
+            ROM_CONTINUE(0x10000, 0x4000);
+            ROM_CONTINUE(0x1c000, 0x4000);
+            ROM_CONTINUE(0x28000, 0xc000);
+            ROM_CONTINUE(0x2c000, 0x8000);
+            ROM_COPY(REGION_CPU1, 0x2c000, 0x08000, 0x8000);
+            ROM_COPY(REGION_CPU1, 0x2c000, 0x14000, 0x8000);
+            ROM_COPY(REGION_CPU1, 0x2c000, 0x20000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("u27", 0x08000, 0x8000, 0x59f87f0e);
+            ROM_REGION(0x100000, REGION_GFX1, 0);
+            ROM_LOAD("grom00", 0x00000, 0x40000, 0x3eacbad9);
+            ROM_LOAD("grom01", 0x40000, 0x40000, 0x864cc269);
+            ROM_LOAD("grom02-2.st2", 0x80000, 0x40000, 0x47904233);
+            ROM_LOAD("grom03-2.st2", 0xc0000, 0x40000, 0xf005f118);
+            ROM_REGION(0x40000, REGION_SOUND1, 0);
+            ROM_LOAD("srom0", 0x00000, 0x40000, 0x7ad42be0);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_rimrck20 = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x34000, REGION_CPU1, 0);
+            ROM_LOAD("rrb.bin", 0x04000, 0x4000, 0x7e9d5545);
+            ROM_CONTINUE(0x10000, 0x4000);
+            ROM_CONTINUE(0x1c000, 0x4000);
+            ROM_CONTINUE(0x28000, 0xc000);
+            ROM_CONTINUE(0x2c000, 0x8000);
+            ROM_COPY(REGION_CPU1, 0x2c000, 0x08000, 0x8000);
+            ROM_COPY(REGION_CPU1, 0x2c000, 0x14000, 0x8000);
+            ROM_COPY(REGION_CPU1, 0x2c000, 0x20000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("u27", 0x08000, 0x8000, 0x59f87f0e);
+            ROM_REGION(0x100000, REGION_GFX1, 0);
+            ROM_LOAD("grom00", 0x00000, 0x40000, 0x3eacbad9);
+            ROM_LOAD("grom01", 0x40000, 0x40000, 0x864cc269);
+            ROM_LOAD("grom02-2.st2", 0x80000, 0x40000, 0x47904233);
+            ROM_LOAD("grom03-2.st2", 0xc0000, 0x40000, 0xf005f118);
+            ROM_REGION(0x40000, REGION_SOUND1, 0);
+            ROM_LOAD("srom0", 0x00000, 0x40000, 0x7ad42be0);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_rimrck16 = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x34000, REGION_CPU1, 0);
+            ROM_LOAD("rrbbv16.u5", 0x04000, 0x4000, 0x999cd502);
+            ROM_CONTINUE(0x10000, 0x4000);
+            ROM_CONTINUE(0x1c000, 0x4000);
+            ROM_CONTINUE(0x28000, 0xc000);
+            ROM_CONTINUE(0x2c000, 0x8000);
+            ROM_COPY(REGION_CPU1, 0x2c000, 0x08000, 0x8000);
+            ROM_COPY(REGION_CPU1, 0x2c000, 0x14000, 0x8000);
+            ROM_COPY(REGION_CPU1, 0x2c000, 0x20000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("u27", 0x08000, 0x8000, 0x59f87f0e);
+            ROM_REGION(0x100000, REGION_GFX1, 0);
+            ROM_LOAD("grom00", 0x00000, 0x40000, 0x3eacbad9);
+            ROM_LOAD("grom01", 0x40000, 0x40000, 0x864cc269);
+            ROM_LOAD("grom02", 0x80000, 0x40000, 0x34e567d5);
+            ROM_LOAD("grom03", 0xc0000, 0x40000, 0xfd18045d);
+            ROM_REGION(0x40000, REGION_SOUND1, 0);
+            ROM_LOAD("srom0", 0x00000, 0x40000, 0x7ad42be0);
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_rimrck12 = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x34000, REGION_CPU1, 0);
+            ROM_LOAD("rrbbv12.u5", 0x04000, 0x4000, 0x661761a6);
+            ROM_CONTINUE(0x10000, 0x4000);
+            ROM_CONTINUE(0x1c000, 0x4000);
+            ROM_CONTINUE(0x28000, 0xc000);
+            ROM_CONTINUE(0x2c000, 0x8000);
+            ROM_COPY(REGION_CPU1, 0x2c000, 0x08000, 0x8000);
+            ROM_COPY(REGION_CPU1, 0x2c000, 0x14000, 0x8000);
+            ROM_COPY(REGION_CPU1, 0x2c000, 0x20000, 0x8000);
+
+            ROM_REGION(0x10000, REGION_CPU2, 0);
+            ROM_LOAD("rrbsndv1.u27", 0x08000, 0x8000, 0x8eda5f53);
+            ROM_REGION(0x100000, REGION_GFX1, 0);
+            ROM_LOAD("grom00", 0x00000, 0x40000, 0x3eacbad9);
+            ROM_LOAD("grom01", 0x40000, 0x40000, 0x864cc269);
+            ROM_LOAD("grom02", 0x80000, 0x40000, 0x34e567d5);
+            ROM_LOAD("grom03", 0xc0000, 0x40000, 0xfd18045d);
+            ROM_REGION(0x40000, REGION_SOUND1, 0);
+            ROM_LOAD("srom0", 0x00000, 0x40000, 0x7ad42be0);
+            ROM_END();
+        }
+    };
+
+    /*TODO*///	static RomLoadPtr rom_ninclown = new RomLoadPtr(){ public void handler(){ 
 /*TODO*///		ROM_REGION( 0x80000, REGION_CPU1, 0 );	ROM_LOAD16_BYTE( "prog1", 0x00000, 0x20000, 0xfabfdcd2 )
 /*TODO*///		ROM_LOAD16_BYTE( "prog0", 0x00001, 0x20000, 0xeca63db5 )
 /*TODO*///		ROM_COPY(    REGION_CPU1, 0x08000, 0x40000, 0x38000 )
