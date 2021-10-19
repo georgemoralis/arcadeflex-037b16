@@ -28,6 +28,7 @@ import static arcadeflex056.fileio.osd_fopen;
 import static arcadeflex056.fileio.osd_fread;
 import static arcadeflex056.fileio.osd_fseek;
 import static arcadeflex056.fileio.osd_fsize;
+import static common.libc.cstring.memcpy;
 import static common.libc.expressions.sizeof;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapH.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.mame.tilemapC.*;
@@ -1118,54 +1119,47 @@ public class common {
 /*TODO*///	return 1;
 /*TODO*///}
 /*TODO*///
-/*TODO*///
-/*TODO*////*-------------------------------------------------
-/*TODO*///	copy_rom_data - copy a region of ROM space
-/*TODO*///-------------------------------------------------*/
-/*TODO*///
-/*TODO*///static int copy_rom_data(struct rom_load_data *romdata, const struct RomModule *romp)
-/*TODO*///{
-/*TODO*///	UINT8 *base = romdata->regionbase + ROM_GETOFFSET(romp);
-/*TODO*///	int srcregion = ROM_GETFLAGS(romp) >> 24;
-/*TODO*///	UINT32 numbytes = ROM_GETLENGTH(romp);
-/*TODO*///	UINT32 srcoffs = ROM_GETCRC(romp);
-/*TODO*///	UINT8 *srcbase;
-/*TODO*///
-/*TODO*///	/* make sure we copy within the region space */
-/*TODO*///	if (ROM_GETOFFSET(romp) + numbytes > romdata->regionlength)
-/*TODO*///	{
-/*TODO*///		printf("Error in RomModule definition: COPY out of target memory region space\n");
-/*TODO*///		return 0;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	/* make sure the length was valid */
-/*TODO*///	if (numbytes == 0)
-/*TODO*///	{
-/*TODO*///		printf("Error in RomModule definition: COPY has an invalid length\n");
-/*TODO*///		return 0;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	/* make sure the source was valid */
-/*TODO*///	srcbase = memory_region(srcregion);
-/*TODO*///	if (!srcbase)
-/*TODO*///	{
-/*TODO*///		printf("Error in RomModule definition: COPY from an invalid region\n");
-/*TODO*///		return 0;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	/* make sure we find within the region space */
-/*TODO*///	if (srcoffs + numbytes > memory_region_length(srcregion))
-/*TODO*///	{
-/*TODO*///		printf("Error in RomModule definition: COPY out of source memory region space\n");
-/*TODO*///		return 0;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	/* fill the data */
-/*TODO*///	memcpy(base, srcbase + srcoffs, numbytes);
-/*TODO*///	return 1;
-/*TODO*///}
-/*TODO*///
-/*TODO*///
+
+    /*-------------------------------------------------
+	copy_rom_data - copy a region of ROM space
+-------------------------------------------------*/
+    static int copy_rom_data(rom_load_data romdata, RomModule[] romp, int rom_ptr) {
+        UBytePtr base = new UBytePtr(romdata.regionbase, ROM_GETOFFSET(romp, rom_ptr));
+        int srcregion = ROM_GETFLAGS(romp, rom_ptr) >> 24 &0xFF;//shadow : TODO is this 8-bit??? to check
+        int numbytes = ROM_GETLENGTH(romp, rom_ptr);
+        int srcoffs = ROM_GETCRC(romp, rom_ptr);
+        UBytePtr srcbase;
+
+        /* make sure we copy within the region space */
+        if (ROM_GETOFFSET(romp, rom_ptr) + numbytes > romdata.regionlength) {
+            printf("Error in RomModule definition: COPY out of target memory region space\n");
+            return 0;
+        }
+
+        /* make sure the length was valid */
+        if (numbytes == 0) {
+            printf("Error in RomModule definition: COPY has an invalid length\n");
+            return 0;
+        }
+
+        /* make sure the source was valid */
+        srcbase = new UBytePtr(memory_region(srcregion));
+        if (srcbase == null) {
+            printf("Error in RomModule definition: COPY from an invalid region\n");
+            return 0;
+        }
+
+        /* make sure we find within the region space */
+        if (srcoffs + numbytes > memory_region_length(srcregion)) {
+            printf("Error in RomModule definition: COPY out of source memory region space\n");
+            return 0;
+        }
+
+        /* fill the data */
+        memcpy(base, srcbase, srcoffs, numbytes);
+        return 1;
+    }
+
     /*-------------------------------------------------
             process_rom_entries - process all ROM entries
             for a region
@@ -1201,9 +1195,10 @@ public class common {
                 /*TODO*///			if (!fill_rom_data(romdata, romp++))
 /*TODO*///				goto fatalerror;
             } /* handle copies */ else if (ROMENTRY_ISCOPY(romp, rom_ptr)) {
-                throw new UnsupportedOperationException("Unimplemented");
-                /*TODO*///			if (!copy_rom_data(romdata, romp++))
-/*TODO*///				goto fatalerror;
+                if (copy_rom_data(romdata, romp, rom_ptr++) == 0) {
+                    /*TODO*///				goto fatalerror;
+                    throw new UnsupportedOperationException("Unimplemented");
+                }
             } /* handle files */ else if (ROMENTRY_ISFILE(romp, rom_ptr)) {
                 int baserom = rom_ptr;
                 int explength = 0;

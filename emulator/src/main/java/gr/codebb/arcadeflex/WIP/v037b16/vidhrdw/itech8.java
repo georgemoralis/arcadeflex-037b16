@@ -17,16 +17,24 @@ import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.tms34061.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.tms34061H.*;
 //to be organized
 import static arcadeflex036.osdepend.logerror;
+import common.libc.cstdio.FILE;
+import static common.libc.cstdio.fopen;
+import static common.libc.cstdio.fprintf;
 import static common.libc.cstring.memset;
 import common.ptr.UBytePtr;
+import common.subArrays.IntArray;
 import static gr.codebb.arcadeflex.v037b16.mame.common.memory_region;
 import static gr.codebb.arcadeflex.v037b16.mame.common.memory_region_length;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.REGION_GFX1;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.cpu_getpreviouspc;
 import gr.codebb.arcadeflex.v037b16.mame.osdependH.osd_bitmap;
+import gr.codebb.arcadeflex.v056.mame.timer.timer_callback;
+import static gr.codebb.arcadeflex.v056.mame.timer.timer_set;
+import static gr.codebb.arcadeflex.v056.mame.timerH.TIME_IN_HZ;
 import static mame037b16.drawgfx.fillbitmap;
 import static mame037b16.mame.Machine;
 import static mame037b7.palette.palette_change_color;
+import static gr.codebb.arcadeflex.v037b16.mame.drawgfx_modes8.*;
 
 public class itech8 {
 
@@ -246,6 +254,7 @@ public class itech8 {
             tms_state.latchram.write(addr + 1, (tms_state.latchram.read(addr + 1) & 0x0f) | (latch << 4));
         }
     }
+
     /*TODO*///	INLINE void draw_byte_shift_trans8(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 /*TODO*///	{
 /*TODO*///		if (val != 0) draw_byte_shift(addr, val, mask, latch);
@@ -603,11 +612,9 @@ public class itech8 {
 /*TODO*///	 *	Blitter operations
 /*TODO*///	 *
 /*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	static int perform_blit()
-/*TODO*///	{
-/*TODO*///		/* debugging */
-/*TODO*///		if (FULL_LOGGING != 0)
+    static int perform_blit() {
+        /* debugging */
+ /*TODO*///		if (FULL_LOGGING != 0)
 /*TODO*///			logerror("Blit: scan=%d  src=%06x @ (%05x) for %dx%d ... flags=%02x\n",
 /*TODO*///					cpu_getscanline(),
 /*TODO*///					(itech8_grom_bank.read() << 16) | (u8_blitter_data[0] << 8) | u8_blitter_data[1],
@@ -624,21 +631,21 @@ public class itech8 {
 /*TODO*///		else
 /*TODO*///			(*blit_table8[u8_blitter_data[2] & 0x1f])();
 /*TODO*///	
-/*TODO*///		/* return the number of bytes processed */
-/*TODO*///		return u8_blitter_data[4] * u8_blitter_data[5];
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static void blitter_done(int param)
-/*TODO*///	{
-/*TODO*///		/* turn off blitting and generate an interrupt */
-/*TODO*///		blit_in_progress = 0;
-/*TODO*///		itech8_update_interrupts(-1, -1, 1);
-/*TODO*///	
-/*TODO*///		if (FULL_LOGGING != 0) logerror("------------ BLIT DONE (%d) --------------\n", cpu_getscanline());
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
+        /* return the number of bytes processed */
+        return u8_blitter_data[4] * u8_blitter_data[5];
+    }
+
+    public static timer_callback blitter_done = new timer_callback() {
+        public void handler(int param) {
+            /* turn off blitting and generate an interrupt */
+            blit_in_progress = 0;
+            itech8_update_interrupts(-1, -1, 1);
+
+            if (FULL_LOGGING != 0) {
+                logerror("------------ BLIT DONE (%d) --------------\n", cpu_getscanline());
+            }
+        }
+    };
 
     /**
      * ***********************************
@@ -673,6 +680,7 @@ public class itech8 {
         }
     };
 
+    static FILE blitlog;
     public static WriteHandlerPtr itech8_blitter_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
             /* low bit seems to be ignored */
@@ -681,39 +689,44 @@ public class itech8 {
 
             /* a write to offset 3 starts things going */
             if (offset == 3) {
-                throw new UnsupportedOperationException("Unsupported");
-                /*TODO*///			int pixels;
-/*TODO*///	
-/*TODO*///			/* log to the blitter file */
-/*TODO*///			if (BLIT_LOGGING != 0)
-/*TODO*///			{
-/*TODO*///				static FILE *blitlog;
-/*TODO*///				if (!blitlog) blitlog = fopen("blitter.log", "w");
-/*TODO*///				if (blitlog != 0) fprintf(blitlog, "Blit: XY=%1X%02X%02X SRC=%02X%02X%02X SIZE=%3dx%3d FLAGS=%02x",
-/*TODO*///							tms34061_r(14*4+2, 0, 0) & 0x0f, tms34061_r(15*4+2, 0, 0), tms34061_r(15*4+0, 0, 0),
-/*TODO*///							itech8_grom_bank.read(), u8_blitter_data[0], u8_blitter_data[1],
-/*TODO*///							u8_blitter_data[4], u8_blitter_data[5],
-/*TODO*///							u8_blitter_data[2]);
-/*TODO*///				if (blitlog != 0) fprintf(blitlog, "   %02X %02X %02X [%02X] %02X %02X %02X [%02X]-%02X %02X %02X %02X [%02X %02X %02X %02X]\n",
-/*TODO*///							u8_blitter_data[0], u8_blitter_data[1],
-/*TODO*///							u8_blitter_data[2], u8_blitter_data[3],
-/*TODO*///							u8_blitter_data[4], u8_blitter_data[5],
-/*TODO*///							u8_blitter_data[6], u8_blitter_data[7],
-/*TODO*///							u8_blitter_data[8], u8_blitter_data[9],
-/*TODO*///							u8_blitter_data[10], u8_blitter_data[11],
-/*TODO*///							u8_blitter_data[12], u8_blitter_data[13],
-/*TODO*///							u8_blitter_data[14], u8_blitter_data[15]);
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			/* perform the blit */
-/*TODO*///			pixels = perform_blit();
-/*TODO*///			blit_in_progress = 1;
-/*TODO*///	
-/*TODO*///			/* set a timer to go off when we're done */
-/*TODO*///			if (INSTANT_BLIT != 0)
-/*TODO*///				blitter_done(0);
-/*TODO*///			else
-/*TODO*///				timer_set((double)pixels * TIME_IN_HZ(12000000), 0, blitter_done);
+                int pixels;
+
+                /* log to the blitter file */
+                if (BLIT_LOGGING != 0) {
+
+                    if (blitlog == null) {
+                        blitlog = fopen("blitter.log", "w");
+                    }
+                    if (blitlog != null) {
+                        fprintf(blitlog, "Blit: XY=%1X%02X%02X SRC=%02X%02X%02X SIZE=%3dx%3d FLAGS=%02x",
+                                tms34061_r(14 * 4 + 2, 0, 0) & 0x0f, tms34061_r(15 * 4 + 2, 0, 0), tms34061_r(15 * 4 + 0, 0, 0),
+                                itech8_grom_bank.read(), u8_blitter_data[0], u8_blitter_data[1],
+                                u8_blitter_data[4], u8_blitter_data[5],
+                                u8_blitter_data[2]);
+                    }
+                    if (blitlog != null) {
+                        fprintf(blitlog, "   %02X %02X %02X [%02X] %02X %02X %02X [%02X]-%02X %02X %02X %02X [%02X %02X %02X %02X]\n",
+                                u8_blitter_data[0], u8_blitter_data[1],
+                                u8_blitter_data[2], u8_blitter_data[3],
+                                u8_blitter_data[4], u8_blitter_data[5],
+                                u8_blitter_data[6], u8_blitter_data[7],
+                                u8_blitter_data[8], u8_blitter_data[9],
+                                u8_blitter_data[10], u8_blitter_data[11],
+                                u8_blitter_data[12], u8_blitter_data[13],
+                                u8_blitter_data[14], u8_blitter_data[15]);
+                    }
+                }
+
+                /* perform the blit */
+                pixels = perform_blit();
+                blit_in_progress = 1;
+
+                /* set a timer to go off when we're done */
+                if (INSTANT_BLIT != 0) {
+                    blitter_done.handler(0);
+                } else {
+                    timer_set((double) pixels * TIME_IN_HZ(12000000), 0, blitter_done);
+                }
             }
 
             /* debugging */
@@ -812,15 +825,13 @@ public class itech8 {
 /*TODO*///				draw_scanline8(bitmap, 0, y, 2 * halfwidth, scanline, Machine.pens, -1);
 /*TODO*///			}
             } /* blit mode one: 8bpp in the TMS34061 RAM */ /* two planes are available, at 0x00000 and 0x20000 */ /* both planes are rendered; with 0x20000 transparent via color 0 */ /* width can be up to 256 pixels */ else {
-                throw new UnsupportedOperationException("Unsupported");
-                /*TODO*///			UINT8 *base = &tms_state.vram[tms_state.dispstart & ~0x30000];
-/*TODO*///	
-/*TODO*///			/* now regenerate the bitmap */
-/*TODO*///			for (ty = 0, y = Machine.visible_area.min_y; y <= Machine.visible_area.max_y; y++, ty++)
-/*TODO*///			{
-/*TODO*///				draw_scanline8(bitmap, 0, y, 256, &base[0x20000 + 256 * ty], Machine.pens, -1);
-/*TODO*///				draw_scanline8(bitmap, 0, y, 256, &base[0x00000 + 256 * ty], Machine.pens, 0);
-/*TODO*///			}
+                UBytePtr base = new UBytePtr(tms_state.vram, tms_state.dispstart & ~0x30000);
+
+                /* now regenerate the bitmap */
+                for (ty = 0, y = Machine.visible_area.min_y; y <= Machine.visible_area.max_y; y++, ty++) {
+                    draw_scanline8(bitmap, 0, y, 256, new UBytePtr(base, 0x20000 + 256 * ty), new IntArray(Machine.pens), -1);
+                    draw_scanline8(bitmap, 0, y, 256, new UBytePtr(base, 0x00000 + 256 * ty), new IntArray(Machine.pens), 0);
+                }
             }
 
             /*TODO*///		/* extra rendering for slikshot */
