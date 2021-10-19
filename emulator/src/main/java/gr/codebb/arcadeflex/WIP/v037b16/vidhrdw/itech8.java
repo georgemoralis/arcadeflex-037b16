@@ -17,17 +17,15 @@ import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.tms34061.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.tms34061H.*;
 //to be organized
 import static arcadeflex036.osdepend.logerror;
-import common.libc.cstdio.FILE;
-import static common.libc.cstdio.fopen;
 import static common.libc.cstring.memset;
 import common.ptr.UBytePtr;
-import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.avgdvg.height;
-import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.avgdvg.width;
-import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.capbowl.tms34061intf;
 import static gr.codebb.arcadeflex.v037b16.mame.common.memory_region;
 import static gr.codebb.arcadeflex.v037b16.mame.common.memory_region_length;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.REGION_GFX1;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.cpu_getpreviouspc;
+import gr.codebb.arcadeflex.v037b16.mame.osdependH.osd_bitmap;
+import static mame037b16.drawgfx.fillbitmap;
+import static mame037b16.mame.Machine;
 import static mame037b7.palette.palette_change_color;
 
 public class itech8 {
@@ -764,40 +762,39 @@ public class itech8 {
         }
     };
 
-    /*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Main refresh
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	public static VhUpdatePtr itech8_vh_screenrefresh = new VhUpdatePtr() { public void handler(osd_bitmap bitmap,int full_refresh) 
-/*TODO*///	{
-/*TODO*///		int y, ty;
-/*TODO*///	
-/*TODO*///		/* first get the current display state */
-/*TODO*///		tms34061_get_display_state(&tms_state);
-/*TODO*///	
-/*TODO*///		/* if we're blanked, just fill with black */
-/*TODO*///		if (tms_state.blanked)
-/*TODO*///		{
-/*TODO*///			fillbitmap(bitmap, palette_transparent_pen, &Machine.visible_area);
-/*TODO*///			return;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* recalc the palette */
-/*TODO*///		palette_recalc();
-/*TODO*///	
-/*TODO*///		/* perform one of two types of blitting; I'm not sure if bit 40 in */
-/*TODO*///		/* the blitter mode register really controls this type of behavior, but */
-/*TODO*///		/* it is set consistently enough that we can use it */
-/*TODO*///	
-/*TODO*///		/* blit mode one: 4bpp in the TMS34061 RAM, plus 4bpp of latched data */
-/*TODO*///		/* two pages are available, at 0x00000 and 0x20000 */
-/*TODO*///		/* pages are selected via the display page register */
-/*TODO*///		/* width can be up to 512 pixels */
-/*TODO*///		if ((u8_blitter_data[7] & 0x40) != 0)
-/*TODO*///		{
-/*TODO*///			int halfwidth = (Machine.visible_area.max_x + 2) / 2;
+    /**
+     * ***********************************
+     *
+     * Main refresh
+     *
+     ************************************
+     */
+    public static VhUpdatePtr itech8_vh_screenrefresh = new VhUpdatePtr() {
+        public void handler(osd_bitmap bitmap, int full_refresh) {
+            int y, ty;
+
+            /* first get the current display state */
+            tms34061_get_display_state(tms_state);
+
+            /* if we're blanked, just fill with black */
+            if (tms_state.blanked != 0) {
+                fillbitmap(bitmap, palette_transparent_pen, Machine.visible_area);
+                return;
+            }
+
+            /* recalc the palette */
+            palette_recalc();
+
+            /* perform one of two types of blitting; I'm not sure if bit 40 in */
+ /* the blitter mode register really controls this type of behavior, but */
+ /* it is set consistently enough that we can use it */
+ /* blit mode one: 4bpp in the TMS34061 RAM, plus 4bpp of latched data */
+ /* two pages are available, at 0x00000 and 0x20000 */
+ /* pages are selected via the display page register */
+ /* width can be up to 512 pixels */
+            if ((u8_blitter_data[7] & 0x40) != 0) {
+                throw new UnsupportedOperationException("Unsupported");
+                /*TODO*///			int halfwidth = (Machine.visible_area.max_x + 2) / 2;
 /*TODO*///			UINT8 *base = &tms_state.vram[(~itech8_display_page.read() & 0x80) << 10];
 /*TODO*///			UINT8 *latch = &tms_state.latchram[(~itech8_display_page.read() & 0x80) << 10];
 /*TODO*///	
@@ -814,15 +811,9 @@ public class itech8 {
 /*TODO*///				}
 /*TODO*///				draw_scanline8(bitmap, 0, y, 2 * halfwidth, scanline, Machine.pens, -1);
 /*TODO*///			}
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* blit mode one: 8bpp in the TMS34061 RAM */
-/*TODO*///		/* two planes are available, at 0x00000 and 0x20000 */
-/*TODO*///		/* both planes are rendered; with 0x20000 transparent via color 0 */
-/*TODO*///		/* width can be up to 256 pixels */
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			UINT8 *base = &tms_state.vram[tms_state.dispstart & ~0x30000];
+            } /* blit mode one: 8bpp in the TMS34061 RAM */ /* two planes are available, at 0x00000 and 0x20000 */ /* both planes are rendered; with 0x20000 transparent via color 0 */ /* width can be up to 256 pixels */ else {
+                throw new UnsupportedOperationException("Unsupported");
+                /*TODO*///			UINT8 *base = &tms_state.vram[tms_state.dispstart & ~0x30000];
 /*TODO*///	
 /*TODO*///			/* now regenerate the bitmap */
 /*TODO*///			for (ty = 0, y = Machine.visible_area.min_y; y <= Machine.visible_area.max_y; y++, ty++)
@@ -830,10 +821,11 @@ public class itech8 {
 /*TODO*///				draw_scanline8(bitmap, 0, y, 256, &base[0x20000 + 256 * ty], Machine.pens, -1);
 /*TODO*///				draw_scanline8(bitmap, 0, y, 256, &base[0x00000 + 256 * ty], Machine.pens, 0);
 /*TODO*///			}
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* extra rendering for slikshot */
+            }
+
+            /*TODO*///		/* extra rendering for slikshot */
 /*TODO*///		if (slikshot != 0)
 /*TODO*///			slikshot_extra_draw(bitmap);
-/*TODO*///	} };
+        }
+    };
 }

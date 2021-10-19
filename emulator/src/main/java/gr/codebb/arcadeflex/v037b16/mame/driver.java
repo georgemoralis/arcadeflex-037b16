@@ -92,6 +92,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.dec8.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.baraduke.*;
 import static gr.codebb.arcadeflex.v037b16.drivers.skykid.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.capbowl.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.itech8.*;
 
 public class driver {
 
@@ -1927,10 +1928,10 @@ public class driver {
         driver_capbowl2, /* (c) 1988 Incredible Technologies */
         driver_clbowl, /* (c) 1989 Incredible Technologies */
         driver_bowlrama, /* (c) 1991 P & P Marketing */
-        /*TODO*///	driver_wfortune,	/* (c) 1989 GameTek */
-        /*TODO*///	driver_wfortuna,	/* (c) 1989 GameTek */
-        /*TODO*///	driver_stratab,	/* (c) 1990 Strata/Incredible Technologies */
-        /*TODO*///	driver_gtg,		/* (c) 1990 Strata/Incredible Technologies */
+        driver_wfortune, /* (c) 1989 GameTek */
+        driver_wfortuna, /* (c) 1989 GameTek */
+        driver_stratab, /* (c) 1990 Strata/Incredible Technologies */
+        driver_gtg, /* (c) 1990 Strata/Incredible Technologies */
         /*TODO*///	driver_hstennis,	/* (c) 1990 Strata/Incredible Technologies */
         /*TODO*///	driver_slikshot,	/* (c) 1990 Grand Products/Incredible Technologies */
         /*TODO*///	driver_sliksh17,	/* (c) 1990 Grand Products/Incredible Technologies */

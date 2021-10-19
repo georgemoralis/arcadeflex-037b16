@@ -16,19 +16,42 @@ import static gr.codebb.arcadeflex.v037b16.cpu.m6809.m6809H.M6809_FIRQ_LINE;
 import static gr.codebb.arcadeflex.v037b16.cpu.m6809.m6809H.M6809_IRQ_LINE;
 import static mame037b16.mame.Machine;
 import static arcadeflex036.osdepend.logerror;
+import static arcadeflex056.fileio.osd_fread;
+import static arcadeflex056.fileio.osd_fwrite;
+import static common.libc.cstdlib.rand;
 import common.ptr.UBytePtr;
+import static gr.codebb.arcadeflex.WIP.v037b16.machine._6821pia.pia_config;
+import static gr.codebb.arcadeflex.WIP.v037b16.machine._6821pia.pia_reset;
+import static gr.codebb.arcadeflex.WIP.v037b16.machine._6821pia.pia_unconfig;
+import static gr.codebb.arcadeflex.WIP.v037b16.machine._6821piaH.PIA_STANDARD_ORDERING;
+import gr.codebb.arcadeflex.WIP.v037b16.machine._6821piaH.pia6821_interface;
 import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.tms34061.tms34061_latch_w;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
+import gr.codebb.arcadeflex.v037b16.mame.drawgfxH.rectangle;
+import gr.codebb.arcadeflex.v037b16.mame.driverH.GameDriver;
+import gr.codebb.arcadeflex.v037b16.mame.driverH.MachineDriver;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.ROT0;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.ROT270;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.VIDEO_MODIFIES_PALETTE;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.VIDEO_TYPE_RASTER;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.VIDEO_UPDATE_BEFORE_VBLANK;
 import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inputH.*;
+import gr.codebb.arcadeflex.v037b16.mame.sndintrfH.MachineSound;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.SOUND_OKIM6295;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.SOUND_YM2203;
 import static gr.codebb.arcadeflex.v037b16.sound._2203intf.*;
 import static gr.codebb.arcadeflex.v037b16.sound._2203intfH.YM2203_VOL;
 import gr.codebb.arcadeflex.v037b16.sound._2203intfH.YM2203interface;
 import gr.codebb.arcadeflex.v037b16.sound._3812intfH.YM3812interface;
 import static gr.codebb.arcadeflex.v037b16.sound.okim6295.*;
 import gr.codebb.arcadeflex.v037b16.sound.okim6295H.OKIM6295interface;
+import static gr.codebb.arcadeflex.v056.machine.ticket.ticket_dispenser_init;
+import static gr.codebb.arcadeflex.v056.machine.ticket.ticket_dispenser_r;
 import static gr.codebb.arcadeflex.v056.machine.ticket.ticket_dispenser_w;
+import static gr.codebb.arcadeflex.v056.machine.ticketH.TICKET_MOTOR_ACTIVE_HIGH;
+import static gr.codebb.arcadeflex.v056.machine.ticketH.TICKET_STATUS_ACTIVE_LOW;
 import gr.codebb.arcadeflex.v056.mame.timer.timer_callback;
 import static gr.codebb.arcadeflex.v056.mame.timer.timer_set;
 import static gr.codebb.arcadeflex.v056.mame.timerH.TIME_NOW;
@@ -65,24 +88,6 @@ public class itech8 {
     static UBytePtr main_ram = new UBytePtr();
     static int[] main_ram_size = new int[1];
 
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	6821 PIA interface
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static struct pia6821_interface pia_interface =
-/*TODO*///	{
-/*TODO*///		0, ticket_dispenser_r, 0, 0, 0, 0,			/* PIA inputs: A, B, CA1, CB1, CA2, CB2 */
-/*TODO*///		pia_porta_out, pia_portb_out, 0, 0,		/* PIA outputs: A, B, CA2, CB2 */
-/*TODO*///		0, 0									/* PIA IRQs: A, B */
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	
     /**
      * ***********************************
      *
@@ -167,36 +172,35 @@ public class itech8 {
             cpu_set_irq_line(1, M6809_FIRQ_LINE, state != 0 ? ASSERT_LINE : CLEAR_LINE);
         }
     };
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Machine initialization
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	static public static InitMachinePtr init_machine = new InitMachinePtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		/* make sure bank 0 is selected */
-/*TODO*///		if ((Machine.drv.cpu[0].cpu_type & ~CPU_FLAGS_MASK) == CPU_M6809)
-/*TODO*///			cpu_setbank(1, &memory_region(REGION_CPU1)[0x4000]);
-/*TODO*///	
-/*TODO*///		/* reset the PIA (if used) */
-/*TODO*///		pia_unconfig();
-/*TODO*///		pia_config(0, PIA_STANDARD_ORDERING, &pia_interface);
-/*TODO*///		pia_reset();
-/*TODO*///	
-/*TODO*///		/* reset the VIA chip (if used) */
+
+    /**
+     * ***********************************
+     *
+     * Machine initialization
+     *
+     ************************************
+     */
+    public static InitMachinePtr init_machine = new InitMachinePtr() {
+        public void handler() {
+            /* make sure bank 0 is selected */
+            if ((Machine.drv.cpu[0].cpu_type & ~CPU_FLAGS_MASK) == CPU_M6809) {
+                cpu_setbank(1, new UBytePtr(memory_region(REGION_CPU1), 0x4000));
+            }
+
+            /* reset the PIA (if used) */
+            pia_unconfig();
+            pia_config(0, PIA_STANDARD_ORDERING, pia_interface);
+            pia_reset();
+            	
+            /*TODO*///		/* reset the VIA chip (if used) */
 /*TODO*///		via6522_timer_count[0] = via6522_timer_count[1] = 0;
 /*TODO*///		via6522_timer[0] = via6522_timer[1] = 0;
 /*TODO*///		via6522_int_state = 0;
 /*TODO*///	
-/*TODO*///		/* reset the ticket dispenser */
-/*TODO*///		ticket_dispenser_init(200, TICKET_MOTOR_ACTIVE_HIGH, TICKET_STATUS_ACTIVE_LOW);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
+            /* reset the ticket dispenser */
+            ticket_dispenser_init(200, TICKET_MOTOR_ACTIVE_HIGH, TICKET_STATUS_ACTIVE_LOW);
+        }
+    };
 
     /**
      * ***********************************
@@ -266,6 +270,19 @@ public class itech8 {
             coin_counter_w(0, (data & 0x20) >> 5);
         }
     };
+    /**
+     * ***********************************
+     *
+     * 6821 PIA interface
+     *
+     ************************************
+     */
+
+    public static pia6821_interface pia_interface = new pia6821_interface(
+            null, ticket_dispenser_r, null, null, null, null, /* PIA inputs: A, B, CA1, CB1, CA2, CB2 */
+            pia_porta_out, pia_portb_out, null, null, /* PIA outputs: A, B, CA2, CB2 */
+            null, null /* PIA IRQs: A, B */
+    );
 
     public static WriteHandlerPtr ym2203_portb_out = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
@@ -487,68 +504,71 @@ public class itech8 {
 /*TODO*///		else if (ACCESSING_LSB != 0)
 /*TODO*///			itech8_tms34061_w(offset * 2 + 1, data);
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	NVRAM read/write
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	static public static nvramPtr nvram_handler  = new nvramPtr() { public void handler(Object file, int read_or_write) 
-/*TODO*///	{
-/*TODO*///		int i;
-/*TODO*///	
-/*TODO*///		if (read_or_write != 0)
-/*TODO*///			osd_fwrite(file, main_ram, main_ram_size);
-/*TODO*///		else if (file != 0)
-/*TODO*///			osd_fread(file, main_ram, main_ram_size);
-/*TODO*///		else
-/*TODO*///			for (i = 0; i < main_ram_size; i++)
-/*TODO*///				main_ram[i] = rand();
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Main CPU memory handlers
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	/*------ common layout with TMS34061 at 0000 ------*/
-/*TODO*///	public static Memory_ReadAddress tmslo_readmem[]={
-/*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_ReadAddress( 0x0000, 0x0fff, itech8_tms34061_r ),
-/*TODO*///		new Memory_ReadAddress( 0x1140, 0x1140, special_port0_r ),
-/*TODO*///		new Memory_ReadAddress( 0x1160, 0x1160, input_port_1_r ),
-/*TODO*///		new Memory_ReadAddress( 0x1180, 0x1180, input_port_2_r ),
-/*TODO*///		new Memory_ReadAddress( 0x11c0, 0x11d7, itech8_blitter_r ),
-/*TODO*///		new Memory_ReadAddress( 0x11d8, 0x11d9, input_port_3_r ),
-/*TODO*///		new Memory_ReadAddress( 0x11da, 0x11db, input_port_4_r ),
-/*TODO*///		new Memory_ReadAddress( 0x11dc, 0x11dd, input_port_5_r ),
-/*TODO*///		new Memory_ReadAddress( 0x11de, 0x11df, input_port_6_r ),
-/*TODO*///		new Memory_ReadAddress( 0x2000, 0x3fff, MRA_RAM ),
-/*TODO*///		new Memory_ReadAddress( 0x4000, 0xffff, MRA_BANK1 ),
-/*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, 0)
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	public static Memory_WriteAddress tmslo_writemem[]={
-/*TODO*///		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_WriteAddress( 0x0000, 0x0fff, itech8_tms34061_w ),
-/*TODO*///		new Memory_WriteAddress( 0x1100, 0x1100, MWA_NOP ),
-/*TODO*///		new Memory_WriteAddress( 0x1120, 0x1120, sound_data_w ),
-/*TODO*///		new Memory_WriteAddress( 0x1140, 0x1140, MWA_RAM, &itech8_grom_bank ),
-/*TODO*///		new Memory_WriteAddress( 0x1160, 0x1160, MWA_RAM, &itech8_display_page ),
-/*TODO*///		new Memory_WriteAddress( 0x1180, 0x1180, tms34061_latch_w ),
-/*TODO*///		new Memory_WriteAddress( 0x11a0, 0x11a0, nmi_ack_w ),
-/*TODO*///		new Memory_WriteAddress( 0x11c0, 0x11df, blitter_w ),
-/*TODO*///		new Memory_WriteAddress( 0x11e0, 0x11e0, itech8_palette_address_w ),
-/*TODO*///		new Memory_WriteAddress( 0x11e2, 0x11e3, itech8_palette_data_w ),
-/*TODO*///		new Memory_WriteAddress( 0x2000, 0x3fff, MWA_RAM, &main_ram, &main_ram_size ),
-/*TODO*///		new Memory_WriteAddress( 0x4000, 0xffff, MWA_ROM ),
-/*TODO*///		new Memory_WriteAddress(MEMPORT_MARKER, 0)
-/*TODO*///	};
-/*TODO*///	
+
+    /**
+     * ***********************************
+     *
+     * NVRAM read/write
+     *
+     ************************************
+     */
+    public static nvramPtr nvram_handler = new nvramPtr() {
+        public void handler(Object file, int read_or_write) {
+            int i;
+
+            if (read_or_write != 0) {
+                osd_fwrite(file, main_ram, main_ram_size[0]);
+            } else if (file != null) {
+                osd_fread(file, main_ram, main_ram_size[0]);
+            } else {
+                for (i = 0; i < main_ram_size[0]; i++) {
+                    main_ram.write(i, rand());
+                }
+            }
+        }
+    };
+
+    /**
+     * ***********************************
+     *
+     * Main CPU memory handlers
+     *
+     ************************************
+     */
+    /*------ common layout with TMS34061 at 0000 ------*/
+    public static Memory_ReadAddress tmslo_readmem[] = {
+        new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+        new Memory_ReadAddress(0x0000, 0x0fff, itech8_tms34061_r),
+        new Memory_ReadAddress(0x1140, 0x1140, special_port0_r),
+        new Memory_ReadAddress(0x1160, 0x1160, input_port_1_r),
+        new Memory_ReadAddress(0x1180, 0x1180, input_port_2_r),
+        new Memory_ReadAddress(0x11c0, 0x11d7, itech8_blitter_r),
+        new Memory_ReadAddress(0x11d8, 0x11d9, input_port_3_r),
+        new Memory_ReadAddress(0x11da, 0x11db, input_port_4_r),
+        new Memory_ReadAddress(0x11dc, 0x11dd, input_port_5_r),
+        new Memory_ReadAddress(0x11de, 0x11df, input_port_6_r),
+        new Memory_ReadAddress(0x2000, 0x3fff, MRA_RAM),
+        new Memory_ReadAddress(0x4000, 0xffff, MRA_BANK1),
+        new Memory_ReadAddress(MEMPORT_MARKER, 0)
+    };
+
+    public static Memory_WriteAddress tmslo_writemem[] = {
+        new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+        new Memory_WriteAddress(0x0000, 0x0fff, itech8_tms34061_w),
+        new Memory_WriteAddress(0x1100, 0x1100, MWA_NOP),
+        new Memory_WriteAddress(0x1120, 0x1120, sound_data_w),
+        new Memory_WriteAddress(0x1140, 0x1140, MWA_RAM, itech8_grom_bank),
+        new Memory_WriteAddress(0x1160, 0x1160, MWA_RAM, itech8_display_page),
+        new Memory_WriteAddress(0x1180, 0x1180, tms34061_latch_w),
+        new Memory_WriteAddress(0x11a0, 0x11a0, nmi_ack_w),
+        new Memory_WriteAddress(0x11c0, 0x11df, blitter_w),
+        new Memory_WriteAddress(0x11e0, 0x11e0, itech8_palette_address_w),
+        new Memory_WriteAddress(0x11e2, 0x11e3, itech8_palette_data_w),
+        new Memory_WriteAddress(0x2000, 0x3fff, MWA_RAM, main_ram, main_ram_size),
+        new Memory_WriteAddress(0x4000, 0xffff, MWA_ROM),
+        new Memory_WriteAddress(MEMPORT_MARKER, 0)
+    };
+
     /*------ common layout with TMS34061 at 1000 ------*/
     public static Memory_ReadAddress tmshi_readmem[] = {
         new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
@@ -725,12 +745,13 @@ public class itech8 {
 /*TODO*///	MEMORY_END
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Port definitions
-/*TODO*///	 *
-/*TODO*///	 *************************************/
+    /**
+     * ***********************************
+     *
+     * Port definitions
+     *
+     ************************************
+     */
     public static void PORT_SERVICE_NO_TOGGLE(int mask, int _default) {
         PORT_BITX(mask, mask & _default, IPT_SERVICE1, DEF_STR("Service_Mode"), KEYCODE_F2, IP_JOY_NONE);
     }
@@ -1370,62 +1391,98 @@ public class itech8 {
             new int[]{75}
     );
 
+    /**
+     * ***********************************
+     *
+     * Machine driver
+     *
+     ************************************
+     */
     /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Machine driver
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	#define ITECH_DRIVER(NAME, CPUTYPE, CPUCLOCK, MAINMEM, YMTYPE, OKISPEED, XMIN, XMAX)	\
-/*TODO*///	static MachineDriver machine_driver_##NAME = new MachineDriver\
-/*TODO*///	(																				\
-/*TODO*///		/* basic machine hardware */												\
-/*TODO*///		new MachineCPU[] {																			\
-/*TODO*///			new MachineCPU(																		\
-/*TODO*///				CPU_##CPUTYPE,														\
-/*TODO*///				CPUCLOCK,															\
-/*TODO*///				MAINMEM##_readmem,MAINMEM##_writemem,null,null,							\
-/*TODO*///				generate_nmi,1														\
-/*TODO*///			),																		\
-/*TODO*///			new MachineCPU(																		\
-/*TODO*///				CPU_M6809,															\
-/*TODO*///				CLOCK_8MHz/4,														\
-/*TODO*///				sound##YMTYPE##_readmem,sound##YMTYPE##_writemem,null,null,				\
-/*TODO*///				ignore_interrupt,1													\
-/*TODO*///			)																		\
-/*TODO*///		},																			\
-/*TODO*///		60,(int)(((263. - 240.) / 263.) * 1000000. / 60.),							\
-/*TODO*///		1,																			\
-/*TODO*///		init_machine,																\
-/*TODO*///																					\
-/*TODO*///		/* video hardware */														\
-/*TODO*///		512, 263, new rectangle( XMIN, XMAX, 0, 239 ),											\
-/*TODO*///		null,																			\
-/*TODO*///		256,256,																	\
-/*TODO*///		null,																			\
-/*TODO*///																					\
-/*TODO*///		VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,	\
-/*TODO*///		null,																			\
-/*TODO*///		itech8_vh_start,															\
-/*TODO*///		itech8_vh_stop,																\
-/*TODO*///		itech8_vh_screenrefresh,													\
-/*TODO*///																					\
-/*TODO*///		/* sound hardware */														\
-/*TODO*///		0,0,0,0,																	\
-/*TODO*///		new MachineSound[] {																			\
-/*TODO*///			new MachineSound( SOUND_YM##YMTYPE, ym##YMTYPE##_interface ),							\
-/*TODO*///			new MachineSound( SOUND_OKIM6295, oki6295_interface_##OKISPEED ),						\
-/*TODO*///		},																			\
-/*TODO*///		nvram_handler																\
+/*TODO*///	#define ITECH_DRIVER(NAME, CPUTYPE, CPUCLOCK, MAINMEM, YMTYPE, OKISPEED, XMIN, XMAX)	
+/*TODO*///	static MachineDriver machine_driver_##NAME = new MachineDriver
+/*TODO*///	(																				
+/*TODO*///		/* basic machine hardware */												
+/*TODO*///		new MachineCPU[] {																			
+/*TODO*///			new MachineCPU(																		
+/*TODO*///				CPU_##CPUTYPE,														
+/*TODO*///				CPUCLOCK,															
+/*TODO*///				MAINMEM##_readmem,MAINMEM##_writemem,null,null,							
+/*TODO*///				generate_nmi,1														
+/*TODO*///			),																		
+/*TODO*///			new MachineCPU(																		
+/*TODO*///				CPU_M6809,															
+/*TODO*///				CLOCK_8MHz/4,														
+/*TODO*///				sound##YMTYPE##_readmem,sound##YMTYPE##_writemem,null,null,				
+/*TODO*///				ignore_interrupt,1													
+/*TODO*///			)																		
+/*TODO*///		},																			
+/*TODO*///		60,(int)(((263. - 240.) / 263.) * 1000000. / 60.),							
+/*TODO*///		1,																			
+/*TODO*///		init_machine,																
+/*TODO*///																					
+/*TODO*///		/* video hardware */														
+/*TODO*///		512, 263, new rectangle( XMIN, XMAX, 0, 239 ),											
+/*TODO*///		null,																			
+/*TODO*///		256,256,																	
+/*TODO*///		null,																			
+/*TODO*///																					
+/*TODO*///		VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,	
+/*TODO*///		null,																			
+/*TODO*///		itech8_vh_start,															
+/*TODO*///		itech8_vh_stop,																
+/*TODO*///		itech8_vh_screenrefresh,													
+/*TODO*///																					
+/*TODO*///		/* sound hardware */														
+/*TODO*///		0,0,0,0,																	
+/*TODO*///		new MachineSound[] {																			
+/*TODO*///			new MachineSound( SOUND_YM##YMTYPE, ym##YMTYPE##_interface ),							
+/*TODO*///			new MachineSound( SOUND_OKIM6295, oki6295_interface_##OKISPEED ),						
+/*TODO*///		},																			
+/*TODO*///		nvram_handler																
 /*TODO*///	)
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	/*           NAME,      CPU,    CPUCLOCK,      MAINMEM,  YMTYPE, OKISPEED, XMIN, XMAX) */
 /*TODO*///	ITECH_DRIVER(tmslo2203, M6809,  CLOCK_8MHz/4,  tmslo,    2203,   high,     0,    255);
-/*TODO*///	ITECH_DRIVER(tmshi2203, M6809,  CLOCK_8MHz/4,  tmshi,    2203,   high,     0,    255);
-/*TODO*///	ITECH_DRIVER(gtg2,      M6809,  CLOCK_8MHz/4,  gtg2,     3812,   high,     0,    255);
+    static MachineDriver machine_driver_tmshi2203 = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        tmshi_readmem, tmshi_writemem, null, null,
+                        generate_nmi, 1
+                ),
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        sound2203_readmem, sound2203_writemem, null, null,
+                        ignore_interrupt, 1
+                )
+            },
+            60, (int) (((263. - 240.) / 263.) * 1000000. / 60.),
+            1,
+            init_machine,
+            /* video hardware */
+            512, 263, new rectangle(0, 255, 0, 239),
+            null,
+            256, 256,
+            null,
+            VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,
+            null,
+            itech8_vh_start,
+            itech8_vh_stop,
+            itech8_vh_screenrefresh,
+            /* sound hardware */
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(SOUND_YM2203, ym2203_interface),
+                new MachineSound(SOUND_OKIM6295, oki6295_interface_high)
+            },
+            nvram_handler
+    );
+    /*TODO*///	ITECH_DRIVER(gtg2,      M6809,  CLOCK_8MHz/4,  gtg2,     3812,   high,     0,    255);
 /*TODO*///	ITECH_DRIVER(peggle,    M6809,  CLOCK_8MHz/4,  tmslo,    3812,   high,     18,   367);
 /*TODO*///	ITECH_DRIVER(arlingtn,  M6809,  CLOCK_8MHz/4,  tmshi,    3812,   low,      16,   389);
 /*TODO*///	ITECH_DRIVER(neckneck,  M6809,  CLOCK_8MHz/4,  tmslo,    3812,   high,     8,    375);
@@ -2021,11 +2078,11 @@ public class itech8 {
 /*TODO*///	 *
 /*TODO*///	 *************************************/
 /*TODO*///	
-/*TODO*///	public static GameDriver driver_wfortune	   = new GameDriver("1989"	,"wfortune"	,"itech8.java"	,rom_wfortune,null	,machine_driver_tmshi2203	,input_ports_wfortune	,null	,ROT0	,	"GameTek", "Wheel Of Fortune" )
-/*TODO*///	public static GameDriver driver_wfortuna	   = new GameDriver("1989"	,"wfortuna"	,"itech8.java"	,rom_wfortuna,driver_wfortune	,machine_driver_tmshi2203	,input_ports_wfortune	,null	,ROT0	,	"GameTek", "Wheel Of Fortune (alternate)" )
-/*TODO*///	public static GameDriver driver_stratab	   = new GameDriver("1990"	,"stratab"	,"itech8.java"	,rom_stratab,null	,machine_driver_tmshi2203	,input_ports_stratab	,null	,ROT270	,	"Strata/Incredible Technologies", "Strata Bowling" )
+	public static GameDriver driver_wfortune	   = new GameDriver("1989"	,"wfortune"	,"itech8.java"	,rom_wfortune,null	,machine_driver_tmshi2203	,input_ports_wfortune	,null	,ROT0	,	"GameTek", "Wheel Of Fortune" );
+	public static GameDriver driver_wfortuna	   = new GameDriver("1989"	,"wfortuna"	,"itech8.java"	,rom_wfortuna,driver_wfortune	,machine_driver_tmshi2203	,input_ports_wfortune	,null	,ROT0	,	"GameTek", "Wheel Of Fortune (alternate)" );
+	public static GameDriver driver_stratab	   = new GameDriver("1990"	,"stratab"	,"itech8.java"	,rom_stratab,null	,machine_driver_tmshi2203	,input_ports_stratab	,null	,ROT270	,	"Strata/Incredible Technologies", "Strata Bowling" );
 /*TODO*///	public static GameDriver driver_sstrike	   = new GameDriver("1990"	,"sstrike"	,"itech8.java"	,rom_sstrike,null	,machine_driver_sstrike	,input_ports_sstrike	,init_sstrike	,ROT270	,	"Strata/Incredible Technologies", "Super Strike Bowling", GAME_NOT_WORKING )
-/*TODO*///	public static GameDriver driver_gtg	   = new GameDriver("1990"	,"gtg"	,"itech8.java"	,rom_gtg,null	,machine_driver_tmshi2203	,input_ports_gtg	,null	,ROT0	,	"Strata/Incredible Technologies", "Golden Tee Golf" )
+	public static GameDriver driver_gtg	   = new GameDriver("1990"	,"gtg"	,"itech8.java"	,rom_gtg,null	,machine_driver_tmshi2203	,input_ports_gtg	,null	,ROT0	,	"Strata/Incredible Technologies", "Golden Tee Golf" );
 /*TODO*///	public static GameDriver driver_slikshot	   = new GameDriver("1990"	,"slikshot"	,"itech8.java"	,rom_slikshot,null	,machine_driver_slikshot	,input_ports_slikshot	,init_slikshot	,ROT90	,	"Grand Products/Incredible Technologies", "Slick Shot (V2.2)" )
 /*TODO*///	public static GameDriver driver_sliksh17	   = new GameDriver("1990"	,"sliksh17"	,"itech8.java"	,rom_sliksh17,driver_slikshot	,machine_driver_slikshot	,input_ports_slikshot	,init_slikshot	,ROT90	,	"Grand Products/Incredible Technologies", "Slick Shot (V1.7)" )
 /*TODO*///	public static GameDriver driver_hstennis	   = new GameDriver("1990"	,"hstennis"	,"itech8.java"	,rom_hstennis,null	,machine_driver_hstennis	,input_ports_hstennis	,null	,ROT90	,	"Strata/Incredible Technologies", "Hot Shots Tennis" )
