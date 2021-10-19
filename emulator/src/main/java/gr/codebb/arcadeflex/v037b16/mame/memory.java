@@ -2544,7 +2544,10 @@ public class memory {
             return cpu_bankbase[STATIC_RAM].read(address);
         } /* fall back to the handler */ else {
             ReadHandlerPtr handler = (ReadHandlerPtr) rmemhandler8[entry].handler;
-            return handler.handler(address - rmemhandler8[entry].offset);
+            if (handler!=null)
+                return handler.handler(address - rmemhandler8[entry].offset);
+            else
+                return 0;
         }
         //return 0;
     }
@@ -2595,6 +2598,84 @@ public class memory {
         entry = writeport_lookup.read(LEVEL1_INDEX(address, 16, 0));
         if (entry >= SUBTABLE_BASE) {
             entry = writeport_lookup.read(LEVEL2_INDEX(entry, address, 16, 0));
+        }
+
+        /* for compatibility with setbankhandler, 8-bit systems */
+ /* must call handlers for banks */
+        if (entry == MRA_RAM) {
+            cpu_bankbase[STATIC_RAM].write(address, data);
+        } /* fall back to the handler */ else {
+            WriteHandlerPtr handler = (WriteHandlerPtr) wporthandler8[entry].handler;
+            handler.handler(address - wporthandler8[entry].offset, data);
+        }
+    }
+    
+    public static int cpu_readmem21(int address) {
+        int entry;
+        /* perform lookup */
+        address &= mem_amask;
+        entry = readmem_lookup.read(LEVEL1_INDEX(address, 21, 0));
+        if (entry >= SUBTABLE_BASE) {
+            entry = readmem_lookup.read(LEVEL2_INDEX(entry, address, 21, 0));
+        }
+
+        /* for compatibility with setbankhandler, 8-bit systems */
+ /* must call handlers for banks */
+        if (entry == STATIC_RAM) {
+            return cpu_bankbase[STATIC_RAM].read(address);
+        } /* fall back to the handler */ else {
+            ReadHandlerPtr handler = (ReadHandlerPtr) rmemhandler8[entry].handler;
+            return handler.handler(address - rmemhandler8[entry].offset);
+        }
+        //return 0;
+    }
+
+    public static void cpu_writemem21(int address, int data) {
+        int entry;
+
+        /* perform lookup */
+        address &= mem_amask;
+        entry = writemem_lookup.read(LEVEL1_INDEX(address, 21, 0));
+        if (entry >= SUBTABLE_BASE) {
+            entry = writemem_lookup.read(LEVEL2_INDEX(entry, address, 21, 0));
+        }
+
+        /* for compatibility with setbankhandler, 8-bit systems */
+ /* must call handlers for banks */
+        if (entry == MRA_RAM) {
+            cpu_bankbase[STATIC_RAM].write(address, data);
+        } /* fall back to the handler */ else {
+            WriteHandlerPtr handler = (WriteHandlerPtr) wmemhandler8[entry].handler;
+            handler.handler(address - wmemhandler8[entry].offset, data);
+        }
+    }
+
+    public static int cpu_readport21(int address) {
+        int entry;
+        /* perform lookup */
+        address &= port_amask;
+        entry = readport_lookup.read(LEVEL1_INDEX(address, 21, 0));
+        if (entry >= SUBTABLE_BASE) {
+            entry = readport_lookup.read(LEVEL2_INDEX(entry, address, 21, 0));
+        }
+
+        /* for compatibility with setbankhandler, 8-bit systems */
+ /* must call handlers for banks */
+        if (entry == STATIC_RAM) {
+            return cpu_bankbase[STATIC_RAM].read(address);
+        } /* fall back to the handler */ else {
+            ReadHandlerPtr handler = (ReadHandlerPtr) rporthandler8[entry].handler;
+            return handler.handler(address - rporthandler8[entry].offset);
+        }
+    }
+
+    public static void cpu_writeport21(int address, int data) {
+        int entry;
+        /* perform lookup */
+        address &= port_amask;
+        entry = writeport_lookup.read(LEVEL1_INDEX(address, 21, 0));
+        if (entry >= SUBTABLE_BASE) {
+            entry = writeport_lookup.read(LEVEL2_INDEX(entry, address, 21, 0));
         }
 
         /* for compatibility with setbankhandler, 8-bit systems */

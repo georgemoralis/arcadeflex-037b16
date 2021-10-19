@@ -5048,17 +5048,13 @@ public class hd6309ops {
         /* $c9 ADCB immediate ***** */
         public static opcode  adcb_im = new opcode() {
             public void handler() {
-                if (hd6309log != null) {
-                    fclose(hd6309log);
-                }
-                throw new UnsupportedOperationException("Unimplemented");
-        /*TODO*///	UINT16 t,r;
-        /*TODO*///	IMMBYTE(t);
-        /*TODO*///	r = B + t + (CC & CC_C);
-        /*TODO*///	CLR_HNZVC;
-        /*TODO*///	SET_FLAGS8(B,t,r);
-        /*TODO*///	SET_H(B,t,r);
-        /*TODO*///	B = r;
+                int t, r;
+                t = IMMBYTE();
+                r = (hd6309.b + t + (hd6309.cc & CC_C)) & 0xFFFF;
+                CLR_HNZVC();
+                SET_FLAGS8(hd6309.b, t, r);
+                SET_H(hd6309.b, t, r);
+                hd6309.b = r & 0xFF;
             }
         };
 
@@ -5628,14 +5624,10 @@ public class hd6309ops {
         /* $10dE LDS direct -**0- */
         public static opcode  lds_di = new opcode() {
             public void handler() {
-                if (hd6309log != null) {
-                    fclose(hd6309log);
-                }
-                throw new UnsupportedOperationException("Unimplemented");
-        /*TODO*///	DIRWORD(pS);
-        /*TODO*///	CLR_NZV;
-        /*TODO*///	SET_NZ16(S);
-        /*TODO*///	hd6309.int_state |= HD6309_LDS;
+                hd6309.s = DIRWORD();
+                CLR_NZV();
+                SET_NZ16(hd6309.s);
+                hd6309.int_state |= HD6309_LDS;
             }
         };
 
@@ -5879,15 +5871,12 @@ public class hd6309ops {
         /* $e5 BITB indexed -**0- */
         public static opcode  bitb_ix = new opcode() {
             public void handler() {
-                if (hd6309log != null) {
-                    fclose(hd6309log);
-                }
-                throw new UnsupportedOperationException("Unimplemented");
-        /*TODO*///	UINT8 r;
-        /*TODO*///	fetch_effective_address();
-        /*TODO*///	r = B & RM(EAD);
-        /*TODO*///	CLR_NZV;
-        /*TODO*///	SET_NZ8(r);
+                int t, r;
+                fetch_effective_address();
+                t = RM(ea);
+                r = (hd6309.b & t) & 0xFF;
+                CLR_NZV();
+                SET_NZ8(r);
             }
         };
 
@@ -6513,17 +6502,13 @@ public class hd6309ops {
         /* $f9 ADCB extended ***** */
         public static opcode  adcb_ex = new opcode() {
             public void handler() {
-                if (hd6309log != null) {
-                    fclose(hd6309log);
-                }
-                throw new UnsupportedOperationException("Unimplemented");
-        /*TODO*///	UINT16 t,r;
-        /*TODO*///	EXTBYTE(t);
-        /*TODO*///	r = B + t + (CC & CC_C);
-        /*TODO*///	CLR_HNZVC;
-        /*TODO*///	SET_FLAGS8(B,t,r);
-        /*TODO*///	SET_H(B,t,r);
-        /*TODO*///	B = r;
+                int t, r;
+                t = EXTBYTE();
+                r = (hd6309.b + t + (hd6309.cc & CC_C)) & 0xFFFF;
+                CLR_HNZVC();
+                SET_FLAGS8(hd6309.b, t, r);
+                SET_H(hd6309.b, t, r);
+                hd6309.b = r & 0xFF;
             }
         };
 

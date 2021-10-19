@@ -1290,61 +1290,62 @@ public class konamiic
 		}
 	}
 	
-/*TODO*///	void K007121_mark_sprites_colors(int chip,
-/*TODO*///			const UBytePtr source,int base_color,int bank_base)
-/*TODO*///	{
-/*TODO*///		int i,num,inc,offs[5];
-/*TODO*///		int is_flakatck = K007121_ctrlram[chip][0x06] & 0x04;	/* WRONG!!!! */
-/*TODO*///	
-/*TODO*///		unsigned short palette_map[512];
-/*TODO*///	
-/*TODO*///		if (is_flakatck != 0)
-/*TODO*///		{
-/*TODO*///			num = 0x40;
-/*TODO*///			inc = -0x20;
-/*TODO*///			source += 0x3f*0x20;
-/*TODO*///			offs[0] = 0x0e;
-/*TODO*///			offs[1] = 0x0f;
-/*TODO*///			offs[2] = 0x06;
-/*TODO*///			offs[3] = 0x04;
-/*TODO*///			offs[4] = 0x08;
-/*TODO*///		}
-/*TODO*///		else	/* all others */
-/*TODO*///		{
-/*TODO*///			num = (K007121_ctrlram[chip][0x03] & 0x40) ? 0x80 : 0x40;
-/*TODO*///			inc = 5;
-/*TODO*///			offs[0] = 0x00;
-/*TODO*///			offs[1] = 0x01;
-/*TODO*///			offs[2] = 0x02;
-/*TODO*///			offs[3] = 0x03;
-/*TODO*///			offs[4] = 0x04;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		memset (palette_map, 0, sizeof (palette_map));
-/*TODO*///	
-/*TODO*///		/* sprites */
-/*TODO*///		for (i = 0;i < num;i++)
-/*TODO*///		{
-/*TODO*///			int color;
-/*TODO*///	
-/*TODO*///			color = base_color + ((source[offs[1]] & 0xf0) >> 4);
-/*TODO*///			palette_map[color] |= 0xffff;
-/*TODO*///	
-/*TODO*///			source += inc;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* now build the final table */
-/*TODO*///		for (i = 0; i < 512; i++)
-/*TODO*///		{
-/*TODO*///			int usage = palette_map[i], j;
-/*TODO*///			if (usage != 0)
-/*TODO*///			{
-/*TODO*///				for (j = 0; j < 16; j++)
-/*TODO*///					if (usage & (1 << j))
-/*TODO*///						palette_used_colors[i * 16 + j] |= PALETTE_COLOR_VISIBLE;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
+	public static void K007121_mark_sprites_colors(int chip,
+			UBytePtr source,int base_color,int bank_base)
+	{
+		int i,num,inc;
+                int[] offs=new int[5];
+		int is_flakatck = K007121_ctrlram[chip][0x06] & 0x04;	/* WRONG!!!! */
+	
+		/*unsigned short*/ char[] palette_map = new char[512];
+	
+		if (is_flakatck != 0)
+		{
+			num = 0x40;
+			inc = -0x20;
+			source.offset += 0x3f*0x20;
+			offs[0] = 0x0e;
+			offs[1] = 0x0f;
+			offs[2] = 0x06;
+			offs[3] = 0x04;
+			offs[4] = 0x08;
+		}
+		else	/* all others */
+		{
+			num = (K007121_ctrlram[chip][0x03] & 0x40)!=0 ? 0x80 : 0x40;
+			inc = 5;
+			offs[0] = 0x00;
+			offs[1] = 0x01;
+			offs[2] = 0x02;
+			offs[3] = 0x03;
+			offs[4] = 0x04;
+		}
+	
+		memset (palette_map, 0, palette_map.length);
+	
+		/* sprites */
+		for (i = 0;i < num;i++)
+		{
+			int color;
+	
+			color = base_color + ((source.read(offs[1]) & 0xf0) >> 4);
+			palette_map[color] |= 0xffff;
+	
+			source.offset += inc;
+		}
+	
+		/* now build the final table */
+		for (i = 0; i < 512; i++)
+		{
+			int usage = palette_map[i], j;
+			if (usage != 0)
+			{
+				for (j = 0; j < 16; j++)
+					if ((usage & (1 << j)) != 0)
+						palette_used_colors.write(i * 16 + j, palette_used_colors.read(i * 16 + j) | PALETTE_COLOR_VISIBLE);
+			}
+		}
+	}
 	
 	
 	

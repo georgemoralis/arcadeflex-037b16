@@ -2247,7 +2247,11 @@ public class hd6309 extends cpu_interface {
                     break;
 /*TODO*///		case 0xb2: Y--; 	EA=Y;						EAD=RM16(EAD);		break;
 /*TODO*///		case 0xb3: Y-=2;	EA=Y;						EAD=RM16(EAD);		break;
-/*TODO*///		case 0xb4: EA=Y;								EAD=RM16(EAD);		break;
+		case 0xb4: 
+                    ea = hd6309.y & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 3;
+                    break;
 		case 0xb5: 
                     ea = (hd6309.y + SIGNED(hd6309.b)) & 0xFFFF;
                     ea = RM16(ea);
@@ -2263,7 +2267,12 @@ public class hd6309 extends cpu_interface {
                     ea = RM16(ea);
                     hd6309_ICount[0] -= 4;
                     break;
-/*TODO*///		case 0xb8: IMMBYTE(EA); 	EA=Y+SIGNED(EA);	EAD=RM16(EAD);		break;
+		case 0xb8:		
+                    ea = IMMBYTE();
+                    ea = (hd6309.y + SIGNED(ea)) & 0xFFFF;
+                    ea = RM16(ea);
+                    hd6309_ICount[0] -= 4;
+                    break;
 /*TODO*///		case 0xb9: IMMWORD(ea); 	EA+=Y;				EAD=RM16(EAD);		break;
 		case 0xba: 
                     ea = (hd6309.y + SIGNED(hd6309.f)) & 0xFFFF;
