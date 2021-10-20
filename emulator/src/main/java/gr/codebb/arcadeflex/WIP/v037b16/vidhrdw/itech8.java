@@ -196,10 +196,17 @@ public class itech8 {
      *
      ************************************
      */
-    public static void draw_byte(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch) {
-        tms_state.vram.write(addr, val & mask);
-        tms_state.latchram.write(addr, latch);
+    public static abstract interface operation_Ptr {
+
+        public abstract void handler(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch);
     }
+    public static operation_Ptr draw_byte = new operation_Ptr() {
+        @Override
+        public void handler(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch) {
+            tms_state.vram.write(addr, val & mask);
+            tms_state.latchram.write(addr, latch);
+        }
+    };
 
     public static void draw_byte_trans4(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch) {
         if (val == 0) {
@@ -220,11 +227,14 @@ public class itech8 {
         }
     }
 
-    public static void draw_byte_trans8(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch) {
-        if (val != 0) {
-            draw_byte(addr, val & 0xFF, mask & 0xFF, latch & 0xFF);
+    public static operation_Ptr draw_byte_trans8 = new operation_Ptr() {
+        @Override
+        public void handler(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch) {
+            if (val != 0) {
+                draw_byte.handler(addr, val & 0xFF, mask & 0xFF, latch & 0xFF);
+            }
         }
-    }
+    };
 
     /**
      * ***********************************
@@ -383,160 +393,159 @@ public class itech8 {
 /*TODO*///	 *
 /*TODO*///	 *************************************/
 /*TODO*///	
-/*TODO*///	#define DRAW_RLE_MACRO(NAME, TRANSPARENT, OPERATION) 										\
-/*TODO*///	static void NAME(void)																		\
-/*TODO*///	{																							\
-/*TODO*///		UINT8 *src = &grom_base[((itech8_grom_bank.read() << 16) | (u8_blitter_data[0] << 8) | u8_blitter_data[1]) % grom_size];\
-/*TODO*///		offs_t addr = tms_state.regs[TMS34061_XYADDRESS] | ((tms_state.regs[TMS34061_XYOFFSET] & 0x300) << 8);\
-/*TODO*///		int ydir = (u8_blitter_data[2] & BLITFLAG_YFLIP) ? -1 : 1;									\
-/*TODO*///		int xdir = (u8_blitter_data[2] & BLITFLAG_XFLIP) ? -1 : 1;									\
-/*TODO*///		int count = 0, val = -1, innercount;													\
-/*TODO*///		int color = tms34061_latch_r(0);														\
-/*TODO*///		int width = u8_blitter_data[4];																\
-/*TODO*///		int height = u8_blitter_data[5];															\
-/*TODO*///		UINT8 mask = u8_blitter_data[6];																\
-/*TODO*///		UINT8 skip[3];																			\
-/*TODO*///		int xleft, y;																			\
-/*TODO*///																								\
-/*TODO*///		/* skip past the double-0's */															\
-/*TODO*///		src += 2;																				\
-/*TODO*///																								\
-/*TODO*///		/* compute horiz skip counts */															\
-/*TODO*///		skip[0] = u8_blitter_data[8];																\
-/*TODO*///		skip[1] = (width <= u8_blitter_data[10]) ? 0 : width - 1 - u8_blitter_data[10];						\
-/*TODO*///		if (xdir == -1) { int temp = skip[0]; skip[0] = skip[1]; skip[1] = temp; }				\
-/*TODO*///		width -= skip[0] + skip[1];																\
-/*TODO*///																								\
-/*TODO*///		/* compute vertical skip counts */														\
-/*TODO*///		if (ydir == 1)																			\
-/*TODO*///		{																						\
-/*TODO*///			skip[2] = (height <= u8_blitter_data[9]) ? 0 : height - u8_blitter_data[9];					\
-/*TODO*///			if (u8_blitter_data[11] > 1) height -= u8_blitter_data[11] - 1;									\
-/*TODO*///		}																						\
-/*TODO*///		else																					\
-/*TODO*///		{																						\
-/*TODO*///			skip[2] = (height <= u8_blitter_data[11]) ? 0 : height - u8_blitter_data[11];					\
-/*TODO*///			if (u8_blitter_data[9] > 1) height -= u8_blitter_data[9] - 1;								\
-/*TODO*///		}																						\
-/*TODO*///																								\
-/*TODO*///		/* skip top */																			\
-/*TODO*///		for (y = 0; y < skip[2]; y++)															\
-/*TODO*///		{																						\
-/*TODO*///			/* skip dest */																		\
-/*TODO*///			addr += xdir * (width + skip[0] + skip[1]);											\
-/*TODO*///																								\
-/*TODO*///			/* scan RLE until done */															\
-/*TODO*///			for (xleft = width + skip[0] + skip[1]; xleft > 0; )								\
-/*TODO*///			{																					\
-/*TODO*///				/* load next RLE chunk if needed */												\
-/*TODO*///				if (!count)																		\
-/*TODO*///				{																				\
-/*TODO*///					count = *src++;																\
-/*TODO*///					val = (count & 0x80) ? -1 : *src++;											\
-/*TODO*///					count &= 0x7f;																\
-/*TODO*///				}																				\
-/*TODO*///																								\
-/*TODO*///				/* determine how much to bite off */											\
-/*TODO*///				innercount = (xleft > count) ? count : xleft;									\
-/*TODO*///				count -= innercount;															\
-/*TODO*///				xleft -= innercount;															\
-/*TODO*///																								\
-/*TODO*///				/* skip past the data */														\
-/*TODO*///				if (val == -1) src += innercount;												\
-/*TODO*///			}																					\
-/*TODO*///																								\
-/*TODO*///			/* back up one and reverse directions */											\
-/*TODO*///			addr -= xdir;																		\
-/*TODO*///			addr += ydir * 256;																	\
-/*TODO*///			addr &= 0x3ffff;																	\
-/*TODO*///			xdir = -xdir;																		\
-/*TODO*///		}																						\
-/*TODO*///																								\
-/*TODO*///		/* loop over height */																	\
-/*TODO*///		for (y = skip[2]; y < height; y++)														\
-/*TODO*///		{																						\
-/*TODO*///			/* skip left */																		\
-/*TODO*///			addr += xdir * skip[y & 1];															\
-/*TODO*///			for (xleft = skip[y & 1]; xleft > 0; )												\
-/*TODO*///			{																					\
-/*TODO*///				/* load next RLE chunk if needed */												\
-/*TODO*///				if (!count)																		\
-/*TODO*///				{																				\
-/*TODO*///					count = *src++;																\
-/*TODO*///					val = (count & 0x80) ? -1 : *src++;											\
-/*TODO*///					count &= 0x7f;																\
-/*TODO*///				}																				\
-/*TODO*///																								\
-/*TODO*///				/* determine how much to bite off */											\
-/*TODO*///				innercount = (xleft > count) ? count : xleft;									\
-/*TODO*///				count -= innercount;															\
-/*TODO*///				xleft -= innercount;															\
-/*TODO*///																								\
-/*TODO*///				/* skip past the data */														\
-/*TODO*///				if (val == -1) src += innercount;												\
-/*TODO*///			}																					\
-/*TODO*///																								\
-/*TODO*///			/* loop over width */																\
-/*TODO*///			for (xleft = width; xleft > 0; )													\
-/*TODO*///			{																					\
-/*TODO*///				/* load next RLE chunk if needed */												\
-/*TODO*///				if (!count)																		\
-/*TODO*///				{																				\
-/*TODO*///					count = *src++;																\
-/*TODO*///					val = (count & 0x80) ? -1 : *src++;											\
-/*TODO*///					count &= 0x7f;																\
-/*TODO*///				}																				\
-/*TODO*///																								\
-/*TODO*///				/* determine how much to bite off */											\
-/*TODO*///				innercount = (xleft > count) ? count : xleft;									\
-/*TODO*///				count -= innercount;															\
-/*TODO*///				xleft -= innercount;															\
-/*TODO*///																								\
-/*TODO*///				/* run of literals */															\
-/*TODO*///				if (val == -1)																	\
-/*TODO*///					for ( ; innercount--; addr += xdir)											\
-/*TODO*///						OPERATION(addr, *src++, mask, color);									\
-/*TODO*///																								\
-/*TODO*///				/* run of non-transparent repeats */											\
-/*TODO*///				else if (!TRANSPARENT || val)													\
-/*TODO*///					for ( ; innercount--; addr += xdir)											\
-/*TODO*///						OPERATION(addr, val, mask, color);										\
-/*TODO*///																								\
-/*TODO*///				/* run of transparent repeats */												\
-/*TODO*///				else																			\
-/*TODO*///					addr += xdir * innercount;													\
-/*TODO*///			}																					\
-/*TODO*///																								\
-/*TODO*///			/* skip right */																	\
-/*TODO*///			addr += xdir * skip[~y & 1];														\
-/*TODO*///			for (xleft = skip[~y & 1]; xleft > 0; )												\
-/*TODO*///			{																					\
-/*TODO*///				/* load next RLE chunk if needed */												\
-/*TODO*///				if (!count)																		\
-/*TODO*///				{																				\
-/*TODO*///					count = *src++;																\
-/*TODO*///					val = (count & 0x80) ? -1 : *src++;											\
-/*TODO*///					count &= 0x7f;																\
-/*TODO*///				}																				\
-/*TODO*///																								\
-/*TODO*///				/* determine how much to bite off */											\
-/*TODO*///				innercount = (xleft > count) ? count : xleft;									\
-/*TODO*///				count -= innercount;															\
-/*TODO*///				xleft -= innercount;															\
-/*TODO*///																								\
-/*TODO*///				/* skip past the data */														\
-/*TODO*///				if (val == -1) src += innercount;												\
-/*TODO*///			}																					\
-/*TODO*///																								\
-/*TODO*///			/* back up one and reverse directions */											\
-/*TODO*///			addr -= xdir;																		\
-/*TODO*///			addr += ydir * 256;																	\
-/*TODO*///			addr &= 0x3ffff;																	\
-/*TODO*///			xdir = -xdir;																		\
-/*TODO*///		}																						\
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
+    //#define DRAW_RLE_MACRO(NAME, TRANSPARENT, OPERATION) 										
+    static void DRAW_RLE(int TRANSPARENT, operation_Ptr OPERATION) {
+        UBytePtr src = new UBytePtr(grom_base, ((itech8_grom_bank.read() << 16) | (u8_blitter_data[0] << 8) | u8_blitter_data[1]) % grom_size);
+        int addr = tms_state.regs[TMS34061_XYADDRESS] | ((tms_state.regs[TMS34061_XYOFFSET] & 0x300) << 8);
+        int ydir = (u8_blitter_data[2] & BLITFLAG_YFLIP) != 0 ? -1 : 1;
+        int xdir = (u8_blitter_data[2] & BLITFLAG_XFLIP) != 0 ? -1 : 1;
+        int count = 0, val = -1, innercount;
+        int color = tms34061_latch_r.handler(0);
+        int width = u8_blitter_data[4];
+        int height = u8_blitter_data[5];
+        int/*UINT8*/ mask = u8_blitter_data[6];
+        int[]/*UINT8*/ skip = new int[3];
+        int xleft, y;
+
+        /* skip past the double-0's */
+        src.inc(2);
+
+        /* compute horiz skip counts */
+        skip[0] = u8_blitter_data[8] & 0xFF;
+        skip[1] = (width <= u8_blitter_data[10]) ? 0 : (width - 1 - u8_blitter_data[10]) & 0xFF;
+        if (xdir == -1) {
+            int temp = skip[0];
+            skip[0] = skip[1];
+            skip[1] = temp;
+        }
+        width -= skip[0] + skip[1];
+
+        /* compute vertical skip counts */
+        if (ydir == 1) {
+            skip[2] = (height <= u8_blitter_data[9]) ? 0 : (height - u8_blitter_data[9]) & 0xFF;
+            if (u8_blitter_data[11] > 1) {
+                height -= u8_blitter_data[11] - 1;
+            }
+        } else {
+            skip[2] = (height <= u8_blitter_data[11]) ? 0 : (height - u8_blitter_data[11]) & 0xFF;
+            if (u8_blitter_data[9] > 1) {
+                height -= u8_blitter_data[9] - 1;
+            }
+        }
+
+        /* skip top */
+        for (y = 0; y < skip[2]; y++) {
+            /* skip dest */
+            addr += xdir * (width + skip[0] + skip[1]);
+
+            /* scan RLE until done */
+            for (xleft = width + skip[0] + skip[1]; xleft > 0;) {
+                /* load next RLE chunk if needed */
+                if (count == 0) {
+                    count = src.readinc();
+                    val = (count & 0x80) != 0 ? -1 : src.readinc();
+                    count &= 0x7f;
+                }
+
+                /* determine how much to bite off */
+                innercount = (xleft > count) ? count : xleft;
+                count -= innercount;
+                xleft -= innercount;
+
+                /* skip past the data */
+                if (val == -1) {
+                    src.inc(innercount);
+                }
+            }
+
+            /* back up one and reverse directions */
+            addr -= xdir;
+            addr += ydir * 256;
+            addr &= 0x3ffff;
+            xdir = -xdir;
+        }
+
+        /* loop over height */
+        for (y = skip[2]; y < height; y++) {
+            /* skip left */
+            addr += xdir * skip[y & 1];
+            for (xleft = skip[y & 1]; xleft > 0;) {
+                /* load next RLE chunk if needed */
+                if (count == 0) {
+                    count = src.readinc();
+                    val = (count & 0x80) != 0 ? -1 : src.readinc();
+                    count &= 0x7f;
+                }
+
+                /* determine how much to bite off */
+                innercount = (xleft > count) ? count : xleft;
+                count -= innercount;
+                xleft -= innercount;
+
+                /* skip past the data */
+                if (val == -1) {
+                    src.inc(innercount);
+                }
+            }
+
+            /* loop over width */
+            for (xleft = width; xleft > 0;) {
+                /* load next RLE chunk if needed */
+                if (count == 0) {
+                    count = src.readinc();
+                    val = (count & 0x80) != 0 ? -1 : src.readinc();
+                    count &= 0x7f;
+                }
+
+                /* determine how much to bite off */
+                innercount = (xleft > count) ? count : xleft;
+                count -= innercount;
+                xleft -= innercount;
+
+                /* run of literals */
+                if (val == -1) {
+                    for (; innercount-- != 0; addr += xdir) {
+                        OPERATION.handler(addr, src.readinc(), mask & 0xFF, color & 0xFF);
+                    }
+                } /* run of non-transparent repeats */ else if (TRANSPARENT == 0 || val != 0) {
+                    for (; innercount-- != 0; addr += xdir) {
+                        OPERATION.handler(addr, val & 0xFF, mask & 0xFF, color & 0xFF);
+                    }
+                } /* run of transparent repeats */ else {
+                    addr += xdir * innercount;
+                }
+            }
+
+            /* skip right */
+            addr += xdir * skip[~y & 1];
+            for (xleft = skip[~y & 1]; xleft > 0;) {
+                /* load next RLE chunk if needed */
+                if (count == 0) {
+                    count = src.readinc();
+                    val = (count & 0x80) != 0 ? -1 : src.readinc();
+                    count &= 0x7f;
+                }
+
+                /* determine how much to bite off */
+                innercount = (xleft > count) ? count : xleft;
+                count -= innercount;
+                xleft -= innercount;
+
+                /* skip past the data */
+                if (val == -1) {
+                    src.inc(innercount);
+                }
+            }
+
+            /* back up one and reverse directions */
+            addr -= xdir;
+            addr += ydir * 256;
+            addr &= 0x3ffff;
+            xdir = -xdir;
+        }
+    }
+
+    /*TODO*///	
 /*TODO*///	
 /*TODO*///	/*************************************
 /*TODO*///	 *
@@ -551,10 +560,8 @@ public class itech8 {
 /*TODO*///	DRAW_RAW_MACRO(draw_raw_shift_trans4, 1, draw_byte_shift_trans4)
 /*TODO*///	DRAW_RAW_MACRO(draw_raw_shift_trans8, 1, draw_byte_shift_trans8)
 /*TODO*///	
-/*TODO*///	DRAW_RLE_MACRO(draw_rle,              0, draw_byte)
 /*TODO*///	DRAW_RLE_MACRO(draw_rle_shift,        0, draw_byte_shift)
 /*TODO*///	DRAW_RLE_MACRO(draw_rle_trans4,       1, draw_byte_trans4)
-/*TODO*///	DRAW_RLE_MACRO(draw_rle_trans8,       1, draw_byte_trans8)
 /*TODO*///	DRAW_RLE_MACRO(draw_rle_shift_trans4, 1, draw_byte_shift_trans4)
 /*TODO*///	DRAW_RLE_MACRO(draw_rle_shift_trans8, 1, draw_byte_shift_trans8)
 /*TODO*///	
@@ -568,69 +575,194 @@ public class itech8 {
 /*TODO*///	DRAW_RLE_MACRO(draw_rle_trans4_xflip,       1, draw_byte_trans4_xflip)
 /*TODO*///	DRAW_RLE_MACRO(draw_rle_shift_trans4_xflip, 1, draw_byte_shift_trans4_xflip)
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	static void (*blit_table4[0x20])(void) =
-/*TODO*///	{
-/*TODO*///		draw_raw,			draw_raw_shift,			draw_raw,			draw_raw_shift,
-/*TODO*///		draw_raw,			draw_raw_shift,			draw_raw,			draw_raw_shift,
-/*TODO*///		draw_rle,			draw_rle_shift,			draw_rle,			draw_rle_shift,
-/*TODO*///		draw_rle,			draw_rle_shift,			draw_rle,			draw_rle_shift,
-/*TODO*///		draw_raw_trans4,	draw_raw_shift_trans4,	draw_raw_trans4,	draw_raw_shift_trans4,
-/*TODO*///		draw_raw_trans4,	draw_raw_shift_trans4,	draw_raw_trans4,	draw_raw_shift_trans4,
-/*TODO*///		draw_rle_trans4,	draw_rle_shift_trans4,	draw_rle_trans4,	draw_rle_shift_trans4,
-/*TODO*///		draw_rle_trans4,	draw_rle_shift_trans4,	draw_rle_trans4,	draw_rle_shift_trans4
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	static void (*blit_table4_xflip[0x20])(void) =
-/*TODO*///	{
-/*TODO*///		draw_raw_xflip,			draw_raw_shift_xflip,			draw_raw_xflip,			draw_raw_shift_xflip,
-/*TODO*///		draw_raw_xflip,			draw_raw_shift_xflip,			draw_raw_xflip,			draw_raw_shift_xflip,
-/*TODO*///		draw_rle_xflip,			draw_rle_shift_xflip,			draw_rle_xflip,			draw_rle_shift_xflip,
-/*TODO*///		draw_rle_xflip,			draw_rle_shift_xflip,			draw_rle_xflip,			draw_rle_shift_xflip,
-/*TODO*///		draw_raw_trans4_xflip,	draw_raw_shift_trans4_xflip,	draw_raw_trans4_xflip,	draw_raw_shift_trans4_xflip,
-/*TODO*///		draw_raw_trans4_xflip,	draw_raw_shift_trans4_xflip,	draw_raw_trans4_xflip,	draw_raw_shift_trans4_xflip,
-/*TODO*///		draw_rle_trans4_xflip,	draw_rle_shift_trans4_xflip,	draw_rle_trans4_xflip,	draw_rle_shift_trans4_xflip,
-/*TODO*///		draw_rle_trans4_xflip,	draw_rle_shift_trans4_xflip,	draw_rle_trans4_xflip,	draw_rle_shift_trans4_xflip
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	static void (*blit_table8[0x20])(void) =
-/*TODO*///	{
-/*TODO*///		draw_raw,			draw_raw_shift,			draw_raw,			draw_raw_shift,
-/*TODO*///		draw_raw,			draw_raw_shift,			draw_raw,			draw_raw_shift,
-/*TODO*///		draw_rle,			draw_rle_shift,			draw_rle,			draw_rle_shift,
-/*TODO*///		draw_rle,			draw_rle_shift,			draw_rle,			draw_rle_shift,
-/*TODO*///		draw_raw_trans8,	draw_raw_shift_trans8,	draw_raw_trans8,	draw_raw_shift_trans8,
-/*TODO*///		draw_raw_trans8,	draw_raw_shift_trans8,	draw_raw_trans8,	draw_raw_shift_trans8,
-/*TODO*///		draw_rle_trans8,	draw_rle_shift_trans8,	draw_rle_trans8,	draw_rle_shift_trans8,
-/*TODO*///		draw_rle_trans8,	draw_rle_shift_trans8,	draw_rle_trans8,	draw_rle_shift_trans8
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Blitter operations
-/*TODO*///	 *
-/*TODO*///	 *************************************/
+    public static abstract interface blitter_table_Ptr {
+
+        public abstract void handler();
+    }
+    public static blitter_table_Ptr draw_raw = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_raw_shift = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_rle = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            DRAW_RLE(0, draw_byte);
+        }
+    };
+    public static blitter_table_Ptr draw_rle_shift = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_raw_trans4 = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_raw_shift_trans4 = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_rle_trans4 = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_rle_shift_trans4 = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    static blitter_table_Ptr blit_table4[]
+            = {
+                draw_raw, draw_raw_shift, draw_raw, draw_raw_shift,
+                draw_raw, draw_raw_shift, draw_raw, draw_raw_shift,
+                draw_rle, draw_rle_shift, draw_rle, draw_rle_shift,
+                draw_rle, draw_rle_shift, draw_rle, draw_rle_shift,
+                draw_raw_trans4, draw_raw_shift_trans4, draw_raw_trans4, draw_raw_shift_trans4,
+                draw_raw_trans4, draw_raw_shift_trans4, draw_raw_trans4, draw_raw_shift_trans4,
+                draw_rle_trans4, draw_rle_shift_trans4, draw_rle_trans4, draw_rle_shift_trans4,
+                draw_rle_trans4, draw_rle_shift_trans4, draw_rle_trans4, draw_rle_shift_trans4
+            };
+
+    public static blitter_table_Ptr draw_raw_xflip = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_raw_shift_xflip = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_rle_xflip = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_rle_shift_xflip = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_raw_trans4_xflip = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_raw_shift_trans4_xflip = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_rle_trans4_xflip = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_rle_shift_trans4_xflip = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    static blitter_table_Ptr blit_table4_xflip[]
+            = {
+                draw_raw_xflip, draw_raw_shift_xflip, draw_raw_xflip, draw_raw_shift_xflip,
+                draw_raw_xflip, draw_raw_shift_xflip, draw_raw_xflip, draw_raw_shift_xflip,
+                draw_rle_xflip, draw_rle_shift_xflip, draw_rle_xflip, draw_rle_shift_xflip,
+                draw_rle_xflip, draw_rle_shift_xflip, draw_rle_xflip, draw_rle_shift_xflip,
+                draw_raw_trans4_xflip, draw_raw_shift_trans4_xflip, draw_raw_trans4_xflip, draw_raw_shift_trans4_xflip,
+                draw_raw_trans4_xflip, draw_raw_shift_trans4_xflip, draw_raw_trans4_xflip, draw_raw_shift_trans4_xflip,
+                draw_rle_trans4_xflip, draw_rle_shift_trans4_xflip, draw_rle_trans4_xflip, draw_rle_shift_trans4_xflip,
+                draw_rle_trans4_xflip, draw_rle_shift_trans4_xflip, draw_rle_trans4_xflip, draw_rle_shift_trans4_xflip
+            };
+
+    public static blitter_table_Ptr draw_raw_trans8 = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_raw_shift_trans8 = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+    public static blitter_table_Ptr draw_rle_trans8 = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            DRAW_RLE(1, draw_byte_trans8);
+        }
+    };
+    public static blitter_table_Ptr draw_rle_shift_trans8 = new blitter_table_Ptr() {
+        @Override
+        public void handler() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+
+    static blitter_table_Ptr blit_table8[]
+            = {
+                draw_raw, draw_raw_shift, draw_raw, draw_raw_shift,
+                draw_raw, draw_raw_shift, draw_raw, draw_raw_shift,
+                draw_rle, draw_rle_shift, draw_rle, draw_rle_shift,
+                draw_rle, draw_rle_shift, draw_rle, draw_rle_shift,
+                draw_raw_trans8, draw_raw_shift_trans8, draw_raw_trans8, draw_raw_shift_trans8,
+                draw_raw_trans8, draw_raw_shift_trans8, draw_raw_trans8, draw_raw_shift_trans8,
+                draw_rle_trans8, draw_rle_shift_trans8, draw_rle_trans8, draw_rle_shift_trans8,
+                draw_rle_trans8, draw_rle_shift_trans8, draw_rle_trans8, draw_rle_shift_trans8
+            };
+
+    /**
+     * ***********************************
+     *
+     * Blitter operations
+     *
+     ************************************
+     */
     static int perform_blit() {
         /* debugging */
- /*TODO*///		if (FULL_LOGGING != 0)
-/*TODO*///			logerror("Blit: scan=%d  src=%06x @ (%05x) for %dx%d ... flags=%02x\n",
-/*TODO*///					cpu_getscanline(),
-/*TODO*///					(itech8_grom_bank.read() << 16) | (u8_blitter_data[0] << 8) | u8_blitter_data[1],
-/*TODO*///					0, u8_blitter_data[4], u8_blitter_data[5], u8_blitter_data[2]);
-/*TODO*///	
-/*TODO*///		/* draw appropriately */
-/*TODO*///		if ((u8_blitter_data[7] & 0x40) != 0)
-/*TODO*///		{
-/*TODO*///			if ((u8_blitter_data[2] & BLITFLAG_XFLIP) != 0)
-/*TODO*///				(*blit_table4_xflip[u8_blitter_data[2] & 0x1f])();
-/*TODO*///			else
-/*TODO*///				(*blit_table4[u8_blitter_data[2] & 0x1f])();
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///			(*blit_table8[u8_blitter_data[2] & 0x1f])();
-/*TODO*///	
+        if (FULL_LOGGING != 0) {
+            logerror("Blit: scan=%d  src=%06x @ (%05x) for %dx%d ... flags=%02x\n",
+                    cpu_getscanline(),
+                    (itech8_grom_bank.read() << 16) | (u8_blitter_data[0] << 8) | u8_blitter_data[1],
+                    0, u8_blitter_data[4], u8_blitter_data[5], u8_blitter_data[2]);
+        }
+
+        /* draw appropriately */
+        if ((u8_blitter_data[7] & 0x40) != 0) {
+            if ((u8_blitter_data[2] & BLITFLAG_XFLIP) != 0) {
+                (blit_table4_xflip[u8_blitter_data[2] & 0x1f]).handler();
+            } else {
+                (blit_table4[u8_blitter_data[2] & 0x1f]).handler();
+            }
+        } else {
+            (blit_table8[u8_blitter_data[2] & 0x1f]).handler();
+        }
+
         /* return the number of bytes processed */
         return u8_blitter_data[4] * u8_blitter_data[5];
     }
