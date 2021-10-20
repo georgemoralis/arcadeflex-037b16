@@ -1125,7 +1125,7 @@ public class common {
 -------------------------------------------------*/
     static int copy_rom_data(rom_load_data romdata, RomModule[] romp, int rom_ptr) {
         UBytePtr base = new UBytePtr(romdata.regionbase, ROM_GETOFFSET(romp, rom_ptr));
-        int srcregion = ROM_GETFLAGS(romp, rom_ptr) >> 24 &0xFF;//shadow : TODO is this 8-bit??? to check
+        int srcregion = ROM_GETFLAGS(romp, rom_ptr) >>> 24;
         int numbytes = ROM_GETLENGTH(romp, rom_ptr);
         int srcoffs = ROM_GETCRC(romp, rom_ptr);
         UBytePtr srcbase;

@@ -313,86 +313,86 @@ public class itech8 {
 /*TODO*///	 *
 /*TODO*///	 *************************************/
 /*TODO*///	
-/*TODO*///	#define DRAW_RAW_MACRO(NAME, TRANSPARENT, OPERATION) 										\
-/*TODO*///	static void NAME(void)																		\
-/*TODO*///	{																							\
-/*TODO*///		UINT8 *src = &grom_base[((itech8_grom_bank.read() << 16) | (u8_blitter_data[0] << 8) | u8_blitter_data[1]) % grom_size];\
-/*TODO*///		offs_t addr = tms_state.regs[TMS34061_XYADDRESS] | ((tms_state.regs[TMS34061_XYOFFSET] & 0x300) << 8);\
-/*TODO*///		int ydir = (u8_blitter_data[2] & BLITFLAG_YFLIP) ? -1 : 1;									\
-/*TODO*///		int xdir = (u8_blitter_data[2] & BLITFLAG_XFLIP) ? -1 : 1;									\
-/*TODO*///		int color = tms34061_latch_r(0);														\
-/*TODO*///		int width = u8_blitter_data[4];																\
-/*TODO*///		int height = u8_blitter_data[5];															\
-/*TODO*///		UINT8 mask = u8_blitter_data[6];																\
-/*TODO*///		UINT8 skip[3];																			\
-/*TODO*///		int x, y;																				\
-/*TODO*///																								\
-/*TODO*///		/* compute horiz skip counts */															\
-/*TODO*///		skip[0] = u8_blitter_data[8];																\
-/*TODO*///		skip[1] = (width <= u8_blitter_data[10]) ? 0 : width - 1 - u8_blitter_data[10];						\
-/*TODO*///		if (xdir == -1) { int temp = skip[0]; skip[0] = skip[1]; skip[1] = temp; }				\
-/*TODO*///		width -= skip[0] + skip[1];																\
-/*TODO*///																								\
-/*TODO*///		/* compute vertical skip counts */														\
-/*TODO*///		if (ydir == 1)																			\
-/*TODO*///		{																						\
-/*TODO*///			skip[2] = (height <= u8_blitter_data[9]) ? 0 : height - u8_blitter_data[9];					\
-/*TODO*///			if (u8_blitter_data[11] > 1) height -= u8_blitter_data[11] - 1;									\
-/*TODO*///		}																						\
-/*TODO*///		else																					\
-/*TODO*///		{																						\
-/*TODO*///			skip[2] = (height <= u8_blitter_data[11]) ? 0 : height - u8_blitter_data[11];					\
-/*TODO*///			if (u8_blitter_data[9] > 1) height -= u8_blitter_data[9] - 1;								\
-/*TODO*///		}																						\
-/*TODO*///																								\
-/*TODO*///		/* skip top */																			\
-/*TODO*///		for (y = 0; y < skip[2]; y++)															\
-/*TODO*///		{																						\
-/*TODO*///			/* skip src and dest */																\
-/*TODO*///			addr += xdir * (width + skip[0] + skip[1]);											\
-/*TODO*///			src += width + skip[0] + skip[1];													\
-/*TODO*///																								\
-/*TODO*///			/* back up one and reverse directions */											\
-/*TODO*///			addr -= xdir;																		\
-/*TODO*///			addr += ydir * 256;																	\
-/*TODO*///			addr &= 0x3ffff;																	\
-/*TODO*///			xdir = -xdir;																		\
-/*TODO*///		}																						\
-/*TODO*///																								\
-/*TODO*///		/* loop over height */																	\
-/*TODO*///		for (y = skip[2]; y < height; y++)														\
-/*TODO*///		{																						\
-/*TODO*///			/* skip left */																		\
-/*TODO*///			addr += xdir * skip[y & 1];															\
-/*TODO*///			src += skip[y & 1];																	\
-/*TODO*///																								\
-/*TODO*///			/* loop over width */																\
-/*TODO*///			for (x = 0; x < width; x++)															\
-/*TODO*///			{																					\
-/*TODO*///				OPERATION(addr, *src++, mask, color);											\
-/*TODO*///				addr += xdir;																	\
-/*TODO*///			}																					\
-/*TODO*///																								\
-/*TODO*///			/* skip right */																	\
-/*TODO*///			addr += xdir * skip[~y & 1];														\
-/*TODO*///			src += skip[~y & 1];																\
-/*TODO*///																								\
-/*TODO*///			/* back up one and reverse directions */											\
-/*TODO*///			addr -= xdir;																		\
-/*TODO*///			addr += ydir * 256;																	\
-/*TODO*///			addr &= 0x3ffff;																	\
-/*TODO*///			xdir = -xdir;																		\
-/*TODO*///		}																						\
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Compressed blitter macro
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
+/*TODO*///	#define DRAW_RAW_MACRO(NAME, TRANSPARENT, OPERATION) 										
+    static void DRAW_RAW(int TRANSPARENT, operation_Ptr OPERATION) {
+        UBytePtr src = new UBytePtr(grom_base, ((itech8_grom_bank.read() << 16) | (u8_blitter_data[0] << 8) | u8_blitter_data[1]) % grom_size);
+        int addr = tms_state.regs[TMS34061_XYADDRESS] | ((tms_state.regs[TMS34061_XYOFFSET] & 0x300) << 8);
+        int ydir = (u8_blitter_data[2] & BLITFLAG_YFLIP) != 0 ? -1 : 1;
+        int xdir = (u8_blitter_data[2] & BLITFLAG_XFLIP) != 0 ? -1 : 1;
+        int color = tms34061_latch_r.handler(0);
+        int width = u8_blitter_data[4];
+        int height = u8_blitter_data[5];
+        int/*UINT8*/ mask = u8_blitter_data[6];
+        int[]/*UINT8*/ skip = new int[3];
+        int x, y;
+
+        /* compute horiz skip counts */
+        skip[0] = u8_blitter_data[8];
+        skip[1] = (width <= u8_blitter_data[10]) ? 0 : (width - 1 - u8_blitter_data[10]) & 0xFF;
+        if (xdir == -1) {
+            int temp = skip[0];
+            skip[0] = skip[1];
+            skip[1] = temp;
+        }
+        width -= skip[0] + skip[1];
+
+        /* compute vertical skip counts */
+        if (ydir == 1) {
+            skip[2] = (height <= u8_blitter_data[9]) ? 0 : (height - u8_blitter_data[9]) & 0xFF;
+            if (u8_blitter_data[11] > 1) {
+                height -= u8_blitter_data[11] - 1;
+            }
+        } else {
+            skip[2] = (height <= u8_blitter_data[11]) ? 0 : (height - u8_blitter_data[11]) & 0xFF;
+            if (u8_blitter_data[9] > 1) {
+                height -= u8_blitter_data[9] - 1;
+            }
+        }
+
+        /* skip top */
+        for (y = 0; y < skip[2]; y++) {
+            /* skip src and dest */
+            addr += xdir * (width + skip[0] + skip[1]);
+            src.inc(width + skip[0] + skip[1]);
+
+            /* back up one and reverse directions */
+            addr -= xdir;
+            addr += ydir * 256;
+            addr &= 0x3ffff;
+            xdir = -xdir;
+        }
+
+        /* loop over height */
+        for (y = skip[2]; y < height; y++) {
+            /* skip left */
+            addr += xdir * skip[y & 1];
+            src.inc(skip[y & 1]);
+
+            /* loop over width */
+            for (x = 0; x < width; x++) {
+                OPERATION.handler(addr, src.readinc(), mask & 0xFF, color & 0xFF);
+                addr += xdir;
+            }
+
+            /* skip right */
+            addr += xdir * skip[~y & 1];
+            src.inc(skip[~y & 1]);
+
+            /* back up one and reverse directions */
+            addr -= xdir;
+            addr += ydir * 256;
+            addr &= 0x3ffff;
+            xdir = -xdir;
+        }
+    }
+
+    /**
+     * ***********************************
+     *
+     * Compressed blitter macro
+     *
+     ************************************
+     */
     //#define DRAW_RLE_MACRO(NAME, TRANSPARENT, OPERATION) 										
     static void DRAW_RLE(int TRANSPARENT, operation_Ptr OPERATION) {
         UBytePtr src = new UBytePtr(grom_base, ((itech8_grom_bank.read() << 16) | (u8_blitter_data[0] << 8) | u8_blitter_data[1]) % grom_size);
@@ -553,7 +553,7 @@ public class itech8 {
 /*TODO*///	 *
 /*TODO*///	 *************************************/
 /*TODO*///	
-/*TODO*///	DRAW_RAW_MACRO(draw_raw,              0, draw_byte)
+/*TODO*///	
 /*TODO*///	DRAW_RAW_MACRO(draw_raw_shift,        0, draw_byte_shift)
 /*TODO*///	DRAW_RAW_MACRO(draw_raw_trans4,       1, draw_byte_trans4)
 /*TODO*///	DRAW_RAW_MACRO(draw_raw_trans8,       1, draw_byte_trans8)
@@ -582,7 +582,7 @@ public class itech8 {
     public static blitter_table_Ptr draw_raw = new blitter_table_Ptr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            DRAW_RAW(0, draw_byte);
         }
     };
     public static blitter_table_Ptr draw_raw_shift = new blitter_table_Ptr() {
