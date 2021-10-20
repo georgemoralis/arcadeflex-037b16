@@ -243,27 +243,33 @@ public class itech8 {
      *
      ************************************
      */
-    public static void draw_byte_shift(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch) {
-        tms_state.vram.write(addr, (tms_state.vram.read(addr) & 0xf0) | ((val & mask) >> 4));
-        tms_state.latchram.write(addr, (tms_state.latchram.read(addr) & 0xf0) | (latch >> 4));
-        tms_state.vram.write(addr + 1, (tms_state.vram.read(addr + 1) & 0x0f) | ((val & mask) << 4));
-        tms_state.latchram.write(addr + 1, (tms_state.latchram.read(addr + 1) & 0x0f) | (latch << 4));
-    }
-
-    public static void draw_byte_shift_trans4(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch) {
-        if (val == 0) {
-            return;
-        }
-
-        if ((val & 0xf0) != 0) {
+    public static operation_Ptr draw_byte_shift = new operation_Ptr() {
+        @Override
+        public void handler(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch) {
             tms_state.vram.write(addr, (tms_state.vram.read(addr) & 0xf0) | ((val & mask) >> 4));
             tms_state.latchram.write(addr, (tms_state.latchram.read(addr) & 0xf0) | (latch >> 4));
-        }
-        if ((val & 0x0f) != 0) {
             tms_state.vram.write(addr + 1, (tms_state.vram.read(addr + 1) & 0x0f) | ((val & mask) << 4));
             tms_state.latchram.write(addr + 1, (tms_state.latchram.read(addr + 1) & 0x0f) | (latch << 4));
         }
-    }
+    };
+
+    public static operation_Ptr draw_byte_shift_trans4 = new operation_Ptr() {
+        @Override
+        public void handler(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch) {
+            if (val == 0) {
+                return;
+            }
+
+            if ((val & 0xf0) != 0) {
+                tms_state.vram.write(addr, (tms_state.vram.read(addr) & 0xf0) | ((val & mask) >> 4));
+                tms_state.latchram.write(addr, (tms_state.latchram.read(addr) & 0xf0) | (latch >> 4));
+            }
+            if ((val & 0x0f) != 0) {
+                tms_state.vram.write(addr + 1, (tms_state.vram.read(addr + 1) & 0x0f) | ((val & mask) << 4));
+                tms_state.latchram.write(addr + 1, (tms_state.latchram.read(addr + 1) & 0x0f) | (latch << 4));
+            }
+        }
+    };
 
     /*TODO*///	INLINE void draw_byte_shift_trans8(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 /*TODO*///	{

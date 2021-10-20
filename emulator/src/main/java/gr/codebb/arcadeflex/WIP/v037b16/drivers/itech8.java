@@ -20,6 +20,8 @@ import static arcadeflex056.fileio.osd_fread;
 import static arcadeflex056.fileio.osd_fwrite;
 import static common.libc.cstdlib.rand;
 import common.ptr.UBytePtr;
+import static gr.codebb.arcadeflex.WIP.v037b16.machine._6821pia.pia_0_r;
+import static gr.codebb.arcadeflex.WIP.v037b16.machine._6821pia.pia_0_w;
 import static gr.codebb.arcadeflex.WIP.v037b16.machine._6821pia.pia_config;
 import static gr.codebb.arcadeflex.WIP.v037b16.machine._6821pia.pia_reset;
 import static gr.codebb.arcadeflex.WIP.v037b16.machine._6821pia.pia_unconfig;
@@ -44,6 +46,9 @@ import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.SOUND_YM2203;
 import static gr.codebb.arcadeflex.v037b16.sound._2203intf.*;
 import static gr.codebb.arcadeflex.v037b16.sound._2203intfH.YM2203_VOL;
 import gr.codebb.arcadeflex.v037b16.sound._2203intfH.YM2203interface;
+import static gr.codebb.arcadeflex.v037b16.sound._3812intf.YM3812_control_port_0_w;
+import static gr.codebb.arcadeflex.v037b16.sound._3812intf.YM3812_status_port_0_r;
+import static gr.codebb.arcadeflex.v037b16.sound._3812intf.YM3812_write_port_0_w;
 import gr.codebb.arcadeflex.v037b16.sound._3812intfH.YM3812interface;
 import static gr.codebb.arcadeflex.v037b16.sound.okim6295.*;
 import gr.codebb.arcadeflex.v037b16.sound.okim6295H.OKIM6295interface;
@@ -191,7 +196,7 @@ public class itech8 {
             pia_unconfig();
             pia_config(0, PIA_STANDARD_ORDERING, pia_interface);
             pia_reset();
-            	
+
             /*TODO*///		/* reset the VIA chip (if used) */
 /*TODO*///		via6522_timer_count[0] = via6522_timer_count[1] = 0;
 /*TODO*///		via6522_timer[0] = via6522_timer[1] = 0;
@@ -602,38 +607,40 @@ public class itech8 {
         new Memory_WriteAddress(0x4000, 0xffff, MWA_ROM),
         new Memory_WriteAddress(MEMPORT_MARKER, 0)
     };
+
+    /*------ Golden Tee Golf II 1992 layout ------*/
+    public static Memory_ReadAddress gtg2_readmem[] = {
+        new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+        new Memory_ReadAddress(0x1000, 0x1fff, itech8_tms34061_r),
+        new Memory_ReadAddress(0x0100, 0x0100, input_port_0_r),
+        new Memory_ReadAddress(0x0120, 0x0120, input_port_1_r),
+        new Memory_ReadAddress(0x0140, 0x0140, input_port_2_r),
+        new Memory_ReadAddress(0x0180, 0x0197, itech8_blitter_r),
+        new Memory_ReadAddress(0x0198, 0x0199, input_port_3_r),
+        new Memory_ReadAddress(0x019a, 0x019b, input_port_4_r),
+        new Memory_ReadAddress(0x019c, 0x019d, input_port_5_r),
+        new Memory_ReadAddress(0x019e, 0x019f, input_port_6_r),
+        new Memory_ReadAddress(0x2000, 0x3fff, MRA_RAM),
+        new Memory_ReadAddress(0x4000, 0xffff, MRA_BANK1),
+        new Memory_ReadAddress(MEMPORT_MARKER, 0)
+    };
+
+    public static Memory_WriteAddress gtg2_writemem[] = {
+        new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+        new Memory_WriteAddress(0x1000, 0x1fff, itech8_tms34061_w),
+        new Memory_WriteAddress(0x01c0, 0x01c0, gtg2_sound_data_w),
+        new Memory_WriteAddress(0x0160, 0x0160, MWA_RAM, itech8_grom_bank),
+        new Memory_WriteAddress(0x0120, 0x0120, MWA_RAM, itech8_display_page),
+        new Memory_WriteAddress(0x01e0, 0x01e0, tms34061_latch_w),
+        new Memory_WriteAddress(0x0100, 0x0100, nmi_ack_w),
+        new Memory_WriteAddress(0x0180, 0x019f, blitter_w),
+        new Memory_WriteAddress(0x0140, 0x0140, itech8_palette_address_w),
+        new Memory_WriteAddress(0x0142, 0x0143, itech8_palette_data_w),
+        new Memory_WriteAddress(0x2000, 0x3fff, MWA_RAM, main_ram, main_ram_size),
+        new Memory_WriteAddress(0x4000, 0xffff, MWA_ROM),
+        new Memory_WriteAddress(MEMPORT_MARKER, 0)
+    };
     /*TODO*///	
-/*TODO*///	/*------ Golden Tee Golf II 1992 layout ------*/
-/*TODO*///	public static Memory_ReadAddress gtg2_readmem[]={
-/*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_ReadAddress( 0x1000, 0x1fff, itech8_tms34061_r ),
-/*TODO*///		new Memory_ReadAddress( 0x0100, 0x0100, input_port_0_r ),
-/*TODO*///		new Memory_ReadAddress( 0x0120, 0x0120, input_port_1_r ),
-/*TODO*///		new Memory_ReadAddress( 0x0140, 0x0140, input_port_2_r ),
-/*TODO*///		new Memory_ReadAddress( 0x0180, 0x0197, itech8_blitter_r ),
-/*TODO*///		new Memory_ReadAddress( 0x0198, 0x0199, input_port_3_r ),
-/*TODO*///		new Memory_ReadAddress( 0x019a, 0x019b, input_port_4_r ),
-/*TODO*///		new Memory_ReadAddress( 0x019c, 0x019d, input_port_5_r ),
-/*TODO*///		new Memory_ReadAddress( 0x019e, 0x019f, input_port_6_r ),
-/*TODO*///		new Memory_ReadAddress( 0x2000, 0x3fff, MRA_RAM ),
-/*TODO*///		new Memory_ReadAddress( 0x4000, 0xffff, MRA_BANK1 ),
-/*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, 0)
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	public static Memory_WriteAddress gtg2_writemem[]={
-/*TODO*///		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_WriteAddress( 0x1000, 0x1fff, itech8_tms34061_w ),
-/*TODO*///		new Memory_WriteAddress( 0x01c0, 0x01c0, gtg2_sound_data_w ),
-/*TODO*///		new Memory_WriteAddress( 0x0160, 0x0160, MWA_RAM, &itech8_grom_bank ),
-/*TODO*///		new Memory_WriteAddress( 0x0120, 0x0120, MWA_RAM, &itech8_display_page ),
-/*TODO*///		new Memory_WriteAddress( 0x01e0, 0x01e0, tms34061_latch_w ),
-/*TODO*///		new Memory_WriteAddress( 0x0100, 0x0100, nmi_ack_w ),
-/*TODO*///		new Memory_WriteAddress( 0x0180, 0x019f, blitter_w ),
-/*TODO*///		new Memory_WriteAddress( 0x0140, 0x0140, itech8_palette_address_w ),
-/*TODO*///		new Memory_WriteAddress( 0x0142, 0x0143, itech8_palette_data_w ),
-/*TODO*///		new Memory_WriteAddress( 0x2000, 0x3fff, MWA_RAM, &main_ram, &main_ram_size ),
-/*TODO*///		new Memory_WriteAddress( 0x4000, 0xffff, MWA_ROM ),
-/*TODO*///		new Memory_WriteAddress(MEMPORT_MARKER, 0)
-/*TODO*///	};
-/*TODO*///	
 /*TODO*///	/*------ Ninja Clowns layout ------*/
 /*TODO*///	static MEMORY_READ16_START( ninclown_readmem )
 /*TODO*///		{ 0x000000, 0x003fff, MRA16_RAM },
@@ -695,35 +702,37 @@ public class itech8 {
         new Memory_WriteAddress(MEMPORT_MARKER, 0)
     };
 
-    /*TODO*///	
-/*TODO*///	/*------ YM3812-based sound board ------*/
-/*TODO*///	public static Memory_ReadAddress sound3812_readmem[]={
-/*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_ReadAddress( 0x1000, 0x1000, sound_data_r ),
-/*TODO*///		new Memory_ReadAddress( 0x2000, 0x2000, YM3812_status_port_0_r ),
-/*TODO*///		new Memory_ReadAddress( 0x3000, 0x37ff, MRA_RAM ),
-/*TODO*///		new Memory_ReadAddress( 0x4000, 0x4000, OKIM6295_status_0_r ),
-/*TODO*///		new Memory_ReadAddress( 0x5000, 0x5003, pia_0_r ),
-/*TODO*///		new Memory_ReadAddress( 0x8000, 0xffff, MRA_ROM ),
-/*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, 0)
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	public static Memory_WriteAddress sound3812_writemem[]={
-/*TODO*///		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_WriteAddress( 0x0000, 0x0000, MWA_NOP ),
-/*TODO*///		new Memory_WriteAddress( 0x2000, 0x2000, YM3812_control_port_0_w ),
-/*TODO*///		new Memory_WriteAddress( 0x2001, 0x2001, YM3812_write_port_0_w ),
-/*TODO*///		new Memory_WriteAddress( 0x3000, 0x37ff, MWA_RAM ),
-/*TODO*///		new Memory_WriteAddress( 0x4000, 0x4000, OKIM6295_data_0_w ),
-/*TODO*///		new Memory_WriteAddress( 0x5000, 0x5003, pia_0_w ),
-/*TODO*///		new Memory_WriteAddress( 0x8000, 0xffff, MWA_ROM ),
-/*TODO*///		new Memory_WriteAddress(MEMPORT_MARKER, 0)
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Other CPU memory handlers
-/*TODO*///	 *
-/*TODO*///	 *************************************/
+    /*------ YM3812-based sound board ------*/
+    public static Memory_ReadAddress sound3812_readmem[] = {
+        new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+        new Memory_ReadAddress(0x1000, 0x1000, sound_data_r),
+        new Memory_ReadAddress(0x2000, 0x2000, YM3812_status_port_0_r),
+        new Memory_ReadAddress(0x3000, 0x37ff, MRA_RAM),
+        new Memory_ReadAddress(0x4000, 0x4000, OKIM6295_status_0_r),
+        new Memory_ReadAddress(0x5000, 0x5003, pia_0_r),
+        new Memory_ReadAddress(0x8000, 0xffff, MRA_ROM),
+        new Memory_ReadAddress(MEMPORT_MARKER, 0)
+    };
+
+    	
+	public static Memory_WriteAddress sound3812_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	
+            new Memory_WriteAddress( 0x0000, 0x0000, MWA_NOP ),
+		new Memory_WriteAddress( 0x2000, 0x2000, YM3812_control_port_0_w ),
+		new Memory_WriteAddress( 0x2001, 0x2001, YM3812_write_port_0_w ),
+		new Memory_WriteAddress( 0x3000, 0x37ff, MWA_RAM ),
+		new Memory_WriteAddress( 0x4000, 0x4000, OKIM6295_data_0_w ),
+		new Memory_WriteAddress( 0x5000, 0x5003, pia_0_w ),
+		new Memory_WriteAddress( 0x8000, 0xffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
+	
+	
+	/*************************************
+	 *
+	 *	Other CPU memory handlers
+	 *
+	 *************************************/
 /*TODO*///	
 /*TODO*///	public static Memory_ReadAddress slikz80_readmem[]={
 /*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_ReadAddress( 0x0000, 0x7ff, MRA_ROM ),
@@ -2036,8 +2045,7 @@ public class itech8 {
 /*TODO*///		via6522 = install_mem_write_handler(1, 0x5000, 0x500f, via6522_w);
 /*TODO*///	} };
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	static public static InitDriverPtr init_slikshot = new InitDriverPtr() { public void handler() 
+    /*TODO*///	static public static InitDriverPtr init_slikshot = new InitDriverPtr() { public void handler() 
 /*TODO*///	{
 /*TODO*///		install_mem_read_handler (0, 0x0180, 0x0180, slikshot_z80_r);
 /*TODO*///		install_mem_read_handler (0, 0x01cf, 0x01cf, slikshot_z80_control_r);
@@ -2078,12 +2086,12 @@ public class itech8 {
 /*TODO*///	 *
 /*TODO*///	 *************************************/
 /*TODO*///	
-	public static GameDriver driver_wfortune	   = new GameDriver("1989"	,"wfortune"	,"itech8.java"	,rom_wfortune,null	,machine_driver_tmshi2203	,input_ports_wfortune	,null	,ROT0	,	"GameTek", "Wheel Of Fortune" );
-	public static GameDriver driver_wfortuna	   = new GameDriver("1989"	,"wfortuna"	,"itech8.java"	,rom_wfortuna,driver_wfortune	,machine_driver_tmshi2203	,input_ports_wfortune	,null	,ROT0	,	"GameTek", "Wheel Of Fortune (alternate)" );
-	public static GameDriver driver_stratab	   = new GameDriver("1990"	,"stratab"	,"itech8.java"	,rom_stratab,null	,machine_driver_tmshi2203	,input_ports_stratab	,null	,ROT270	,	"Strata/Incredible Technologies", "Strata Bowling" );
-/*TODO*///	public static GameDriver driver_sstrike	   = new GameDriver("1990"	,"sstrike"	,"itech8.java"	,rom_sstrike,null	,machine_driver_sstrike	,input_ports_sstrike	,init_sstrike	,ROT270	,	"Strata/Incredible Technologies", "Super Strike Bowling", GAME_NOT_WORKING )
-	public static GameDriver driver_gtg	   = new GameDriver("1990"	,"gtg"	,"itech8.java"	,rom_gtg,null	,machine_driver_tmshi2203	,input_ports_gtg	,null	,ROT0	,	"Strata/Incredible Technologies", "Golden Tee Golf" );
-/*TODO*///	public static GameDriver driver_slikshot	   = new GameDriver("1990"	,"slikshot"	,"itech8.java"	,rom_slikshot,null	,machine_driver_slikshot	,input_ports_slikshot	,init_slikshot	,ROT90	,	"Grand Products/Incredible Technologies", "Slick Shot (V2.2)" )
+    public static GameDriver driver_wfortune = new GameDriver("1989", "wfortune", "itech8.java", rom_wfortune, null, machine_driver_tmshi2203, input_ports_wfortune, null, ROT0, "GameTek", "Wheel Of Fortune");
+    public static GameDriver driver_wfortuna = new GameDriver("1989", "wfortuna", "itech8.java", rom_wfortuna, driver_wfortune, machine_driver_tmshi2203, input_ports_wfortune, null, ROT0, "GameTek", "Wheel Of Fortune (alternate)");
+    public static GameDriver driver_stratab = new GameDriver("1990", "stratab", "itech8.java", rom_stratab, null, machine_driver_tmshi2203, input_ports_stratab, null, ROT270, "Strata/Incredible Technologies", "Strata Bowling");
+    /*TODO*///	public static GameDriver driver_sstrike	   = new GameDriver("1990"	,"sstrike"	,"itech8.java"	,rom_sstrike,null	,machine_driver_sstrike	,input_ports_sstrike	,init_sstrike	,ROT270	,	"Strata/Incredible Technologies", "Super Strike Bowling", GAME_NOT_WORKING )
+    public static GameDriver driver_gtg = new GameDriver("1990", "gtg", "itech8.java", rom_gtg, null, machine_driver_tmshi2203, input_ports_gtg, null, ROT0, "Strata/Incredible Technologies", "Golden Tee Golf");
+    /*TODO*///	public static GameDriver driver_slikshot	   = new GameDriver("1990"	,"slikshot"	,"itech8.java"	,rom_slikshot,null	,machine_driver_slikshot	,input_ports_slikshot	,init_slikshot	,ROT90	,	"Grand Products/Incredible Technologies", "Slick Shot (V2.2)" )
 /*TODO*///	public static GameDriver driver_sliksh17	   = new GameDriver("1990"	,"sliksh17"	,"itech8.java"	,rom_sliksh17,driver_slikshot	,machine_driver_slikshot	,input_ports_slikshot	,init_slikshot	,ROT90	,	"Grand Products/Incredible Technologies", "Slick Shot (V1.7)" )
 /*TODO*///	public static GameDriver driver_hstennis	   = new GameDriver("1990"	,"hstennis"	,"itech8.java"	,rom_hstennis,null	,machine_driver_hstennis	,input_ports_hstennis	,null	,ROT90	,	"Strata/Incredible Technologies", "Hot Shots Tennis" )
 /*TODO*///	public static GameDriver driver_arlingtn	   = new GameDriver("1991"	,"arlingtn"	,"itech8.java"	,rom_arlingtn,null	,machine_driver_arlingtn	,input_ports_arlingtn	,null	,ROT0	,	"Strata/Incredible Technologies", "Arlington Horse Racing" )
