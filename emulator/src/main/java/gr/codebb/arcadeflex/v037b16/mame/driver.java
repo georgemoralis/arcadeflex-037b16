@@ -1940,21 +1940,21 @@ public class driver {
         driver_wfortuna, /* (c) 1989 GameTek */
         driver_stratab, /* (c) 1990 Strata/Incredible Technologies */
         driver_gtg, /* (c) 1990 Strata/Incredible Technologies */
-        /*TODO*///	driver_hstennis,	/* (c) 1990 Strata/Incredible Technologies */
-        /*TODO*///	driver_slikshot,	/* (c) 1990 Grand Products/Incredible Technologies */
-        /*TODO*///	driver_sliksh17,	/* (c) 1990 Grand Products/Incredible Technologies */
-        /*TODO*///	driver_arlingtn,	/* (c) 1991 Strata/Incredible Technologies */
-        /*TODO*///	driver_peggle,	/* (c) 1991 Strata/Incredible Technologies */
-        /*TODO*///	driver_pegglet,	/* (c) 1991 Strata/Incredible Technologies */
-        /*TODO*///	driver_rimrockn,	/* (c) 1991 Strata/Incredible Technologies */
-        /*TODO*///	driver_rimrck20,	/* (c) 1991 Strata/Incredible Technologies */
-        /*TODO*///	driver_rimrck16,	/* (c) 1991 Strata/Incredible Technologies */
-        /*TODO*///	driver_rimrck12,	/* (c) 1991 Strata/Incredible Technologies */
+        driver_hstennis, /* (c) 1990 Strata/Incredible Technologies */
+        driver_slikshot, /* (c) 1990 Grand Products/Incredible Technologies */
+        driver_sliksh17, /* (c) 1990 Grand Products/Incredible Technologies */
+        driver_arlingtn, /* (c) 1991 Strata/Incredible Technologies */
+        driver_peggle, /* (c) 1991 Strata/Incredible Technologies */
+        driver_pegglet, /* (c) 1991 Strata/Incredible Technologies */
+        driver_rimrockn, /* (c) 1991 Strata/Incredible Technologies */
+        driver_rimrck20, /* (c) 1991 Strata/Incredible Technologies */
+        driver_rimrck16, /* (c) 1991 Strata/Incredible Technologies */
+        driver_rimrck12, /* (c) 1991 Strata/Incredible Technologies */
         /*TODO*///	driver_ninclown,	/* (c) 1991 Strata/Incredible Technologies */
-        /*TODO*///	driver_gtg2,		/* (c) 1992 Strata/Incredible Technologies */
-        /*TODO*///	driver_gtg2t,		/* (c) 1989 Strata/Incredible Technologies */
-        /*TODO*///	driver_gtg2j,		/* (c) 1991 Strata/Incredible Technologies */
-        /*TODO*///	driver_neckneck,	/* (c) 1992 Bundra Games/Incredible Technologies */
+        driver_gtg2, /* (c) 1992 Strata/Incredible Technologies */
+        driver_gtg2t, /* (c) 1989 Strata/Incredible Technologies */
+        driver_gtg2j, /* (c) 1991 Strata/Incredible Technologies */
+        driver_neckneck, /* (c) 1992 Bundra Games/Incredible Technologies */
         /*TODO*///	driver_timekill,	/* (c) 1992 Strata/Incredible Technologies */
         /*TODO*///	driver_timek131,	/* (c) 1992 Strata/Incredible Technologies */
         /*TODO*///	driver_hardyard,	/* (c) 1993 Strata/Incredible Technologies */
@@ -2310,21 +2310,21 @@ public class driver {
         /*TODO*///	driver_puyopuy2,	/* (c) 1994 Compile + Sega license */
         /*TODO*///	driver_potopoto,	/* (c) 1994 Sega */
         /*TODO*///	driver_zunkyou,	/* (c) 1994 Sega */
-        
+
         /* Data East "Burger Time hardware" games */
-        driver_lnc,		/* (c) 1981 */
-        driver_zoar,		/* (c) 1982 */
-        driver_btime,		/* (c) 1982 */
-        driver_btime2,	/* (c) 1982 */
-        driver_btimem,	/* (c) 1982 + Midway */
-        driver_cookrace,	/* bootleg */
-        driver_wtennis,	/* bootleg 1982 */
-        driver_brubber,	/* (c) 1982 */
-        driver_bnj,		/* (c) 1982 + Midway */
-        driver_caractn,	/* bootleg */
-        driver_disco,		/* (c) 1982 */
-        driver_discof,	/* (c) 1982 */
-        driver_mmonkey,	/* (c) 1982 Technos Japan + Roller Tron */
+        driver_lnc, /* (c) 1981 */
+        driver_zoar, /* (c) 1982 */
+        driver_btime, /* (c) 1982 */
+        driver_btime2, /* (c) 1982 */
+        driver_btimem, /* (c) 1982 + Midway */
+        driver_cookrace, /* bootleg */
+        driver_wtennis, /* bootleg 1982 */
+        driver_brubber, /* (c) 1982 */
+        driver_bnj, /* (c) 1982 + Midway */
+        driver_caractn, /* bootleg */
+        driver_disco, /* (c) 1982 */
+        driver_discof, /* (c) 1982 */
+        driver_mmonkey, /* (c) 1982 Technos Japan + Roller Tron */
         /*TODO*///	/* cassette system */
         /*TODO*///	driver_ctsttape,	/* parent driver */
         /*TODO*///	driver_cterrani,	/* 04 (c) 1981 */
@@ -2367,28 +2367,27 @@ public class driver {
         driver_brkthru, /* (c) 1986 Data East USA (US) */
         driver_brkthruj, /* (c) 1986 Data East Corporation (Japan) */
         driver_darwin, /* (c) 1986 Data East Corporation (Japan) */
-        driver_shootout,	/* (c) 1985 Data East USA (US) */
-        driver_shootouj,	/* (c) 1985 Data East USA (Japan) */
-        driver_shootoub,	/* bootleg */
+        driver_shootout, /* (c) 1985 Data East USA (US) */
+        driver_shootouj, /* (c) 1985 Data East USA (Japan) */
+        driver_shootoub, /* bootleg */
         /*TODO*///	driver_sidepckt,	/* (c) 1986 Data East Corporation */
         /*TODO*///	driver_sidepctj,	/* (c) 1986 Data East Corporation */
         /*TODO*///	driver_sidepctb,	/* bootleg */
-        driver_exprraid,	/* (c) 1986 Data East USA (US) */
-        driver_wexpress,	/* (c) 1986 Data East Corporation (World?) */
-        driver_wexpresb,	/* bootleg */
-        driver_wexpresc,	/* bootleg */
-        driver_pcktgal,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_pcktgalb,	/* bootleg */
-        driver_pcktgal2,	/* (c) 1989 Data East Corporation (World?) */
-        driver_spool3,	/* (c) 1989 Data East Corporation (World?) */
-        driver_spool3i,	/* (c) 1990 Data East Corporation + I-Vics license */
+        driver_exprraid, /* (c) 1986 Data East USA (US) */
+        driver_wexpress, /* (c) 1986 Data East Corporation (World?) */
+        driver_wexpresb, /* bootleg */
+        driver_wexpresc, /* bootleg */
+        driver_pcktgal, /* (c) 1987 Data East Corporation (Japan) */
+        driver_pcktgalb, /* bootleg */
+        driver_pcktgal2, /* (c) 1989 Data East Corporation (World?) */
+        driver_spool3, /* (c) 1989 Data East Corporation (World?) */
+        driver_spool3i, /* (c) 1990 Data East Corporation + I-Vics license */
         /*TODO*///	driver_battlera,	/* (c) 1988 Data East Corporation (World) */
         /*TODO*///	driver_bldwolf,	/* (c) 1988 Data East USA (US) */
-        driver_actfancr,	/* (c) 1989 Data East Corporation (World) */
-        driver_actfanc1,	/* (c) 1989 Data East Corporation (World) */
-        driver_actfancj,	/* (c) 1989 Data East Corporation (Japan) */
-        driver_triothep,	/* (c) 1989 Data East Corporation (Japan) */
-
+        driver_actfancr, /* (c) 1989 Data East Corporation (World) */
+        driver_actfanc1, /* (c) 1989 Data East Corporation (World) */
+        driver_actfancj, /* (c) 1989 Data East Corporation (Japan) */
+        driver_triothep, /* (c) 1989 Data East Corporation (Japan) */
         /* Data East 8-bit games */
         driver_lastmiss, /* (c) 1986 Data East USA (US) */
         driver_lastmss2, /* (c) 1986 Data East USA (US) */
@@ -2587,8 +2586,8 @@ public class driver {
         driver_combascb, /* bootleg */
         driver_rockrage, /* GX620 (c) 1986 (World?) */
         driver_rockragj, /* GX620 (c) 1986 (Japan) */
-        driver_mx5000,	/* GX669 (c) 1987 */
-        driver_flkatck,	/* GX669 (c) 1987 (Japan) */
+        driver_mx5000, /* GX669 (c) 1987 */
+        driver_flkatck, /* GX669 (c) 1987 (Japan) */
         driver_fastlane, /* GX752 (c) 1987 */
         driver_tricktrp, /* GX771 (c) 1987 */
         driver_labyrunr, /* GX771 (c) 1987 (Japan) */
@@ -2608,13 +2607,13 @@ public class driver {
         /*TODO*///	driver_scontraj,	/* GX775 (c) 1988 (Japan) */
         /*TODO*///	driver_thunderx,	/* GX873 (c) 1988 */
         /*TODO*///	driver_thnderxj,	/* GX873 (c) 1988 (Japan) */
-        driver_mainevt,	/* GX799 (c) 1988 */
-        driver_mainevt2,	/* GX799 (c) 1988 */
-        driver_ringohja,	/* GX799 (c) 1988 (Japan) */
-        driver_devstors,	/* GX890 (c) 1988 */
-        driver_devstor2,	/* GX890 (c) 1988 */
-        driver_devstor3,	/* GX890 (c) 1988 */
-        driver_garuka,	/* GX890 (c) 1988 (Japan) */
+        driver_mainevt, /* GX799 (c) 1988 */
+        driver_mainevt2, /* GX799 (c) 1988 */
+        driver_ringohja, /* GX799 (c) 1988 (Japan) */
+        driver_devstors, /* GX890 (c) 1988 */
+        driver_devstor2, /* GX890 (c) 1988 */
+        driver_devstor3, /* GX890 (c) 1988 */
+        driver_garuka, /* GX890 (c) 1988 (Japan) */
         driver_88games, /* GX861 (c) 1988 */
         driver_konami88, /* GX861 (c) 1988 */
         driver_hypsptsp, /* GX861 (c) 1988 (Japan) */
@@ -3105,10 +3104,10 @@ public class driver {
         driver_ddragonb, /* bootleg */
         /*TODO*///	driver_spdodgeb,	/* TA-0022 (c) 1987 */
         /*TODO*///	driver_nkdodgeb,	/* TA-0022 (c) 1987 (Japan) */
-        driver_chinagat,	/* TA-0023 (c) 1988 Taito + Romstar license (US) */
-        driver_saiyugou,	/* TA-0023 (c) 1988 (Japan) */
-        driver_saiyugb1,	/* bootleg */
-        driver_saiyugb2,	/* bootleg */
+        driver_chinagat, /* TA-0023 (c) 1988 Taito + Romstar license (US) */
+        driver_saiyugou, /* TA-0023 (c) 1988 (Japan) */
+        driver_saiyugb1, /* bootleg */
+        driver_saiyugb2, /* bootleg */
         /*TODO*///	driver_wwfsstar,	/* TA-0024 (c) 1989 (US) */
         /*TODO*///	driver_vball,		/* TA-0025 (c) 1988 */
         /*TODO*///	driver_vball2pj,	/* TA-0025 (c) 1988 (Japan) */

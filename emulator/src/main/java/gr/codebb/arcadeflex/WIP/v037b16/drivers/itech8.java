@@ -27,22 +27,32 @@ import static gr.codebb.arcadeflex.WIP.v037b16.machine._6821pia.pia_reset;
 import static gr.codebb.arcadeflex.WIP.v037b16.machine._6821pia.pia_unconfig;
 import static gr.codebb.arcadeflex.WIP.v037b16.machine._6821piaH.PIA_STANDARD_ORDERING;
 import gr.codebb.arcadeflex.WIP.v037b16.machine._6821piaH.pia6821_interface;
+import static gr.codebb.arcadeflex.WIP.v037b16.machine.slikshot.slikshot_z80_control_r;
+import static gr.codebb.arcadeflex.WIP.v037b16.machine.slikshot.slikshot_z80_control_w;
+import static gr.codebb.arcadeflex.WIP.v037b16.machine.slikshot.slikshot_z80_r;
+import static gr.codebb.arcadeflex.WIP.v037b16.machine.slikshot.slikz80_port_r;
+import static gr.codebb.arcadeflex.WIP.v037b16.machine.slikshot.slikz80_port_w;
 import static gr.codebb.arcadeflex.WIP.v037b16.vidhrdw.tms34061.tms34061_latch_w;
 import static gr.codebb.arcadeflex.v037b16.mame.common.*;
 import static gr.codebb.arcadeflex.v037b16.mame.commonH.*;
 import gr.codebb.arcadeflex.v037b16.mame.drawgfxH.rectangle;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.GAME_NOT_WORKING;
 import gr.codebb.arcadeflex.v037b16.mame.driverH.GameDriver;
 import gr.codebb.arcadeflex.v037b16.mame.driverH.MachineDriver;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.ROT0;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.ROT270;
+import static gr.codebb.arcadeflex.v037b16.mame.driverH.ROT90;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.VIDEO_MODIFIES_PALETTE;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.VIDEO_TYPE_RASTER;
 import static gr.codebb.arcadeflex.v037b16.mame.driverH.VIDEO_UPDATE_BEFORE_VBLANK;
 import static gr.codebb.arcadeflex.v037b16.mame.inptportH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.inputH.*;
+import static gr.codebb.arcadeflex.v037b16.mame.memory.install_mem_read_handler;
+import static gr.codebb.arcadeflex.v037b16.mame.memory.install_mem_write_handler;
 import gr.codebb.arcadeflex.v037b16.mame.sndintrfH.MachineSound;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.SOUND_OKIM6295;
 import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.SOUND_YM2203;
+import static gr.codebb.arcadeflex.v037b16.mame.sndintrfH.SOUND_YM3812;
 import static gr.codebb.arcadeflex.v037b16.sound._2203intf.*;
 import static gr.codebb.arcadeflex.v037b16.sound._2203intfH.YM2203_VOL;
 import gr.codebb.arcadeflex.v037b16.sound._2203intfH.YM2203interface;
@@ -714,46 +724,49 @@ public class itech8 {
         new Memory_ReadAddress(MEMPORT_MARKER, 0)
     };
 
-    	
-	public static Memory_WriteAddress sound3812_writemem[]={
-		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	
-            new Memory_WriteAddress( 0x0000, 0x0000, MWA_NOP ),
-		new Memory_WriteAddress( 0x2000, 0x2000, YM3812_control_port_0_w ),
-		new Memory_WriteAddress( 0x2001, 0x2001, YM3812_write_port_0_w ),
-		new Memory_WriteAddress( 0x3000, 0x37ff, MWA_RAM ),
-		new Memory_WriteAddress( 0x4000, 0x4000, OKIM6295_data_0_w ),
-		new Memory_WriteAddress( 0x5000, 0x5003, pia_0_w ),
-		new Memory_WriteAddress( 0x8000, 0xffff, MWA_ROM ),
-		new Memory_WriteAddress(MEMPORT_MARKER, 0)
-	};
-	
-	
-	/*************************************
-	 *
-	 *	Other CPU memory handlers
-	 *
-	 *************************************/
-/*TODO*///	
-/*TODO*///	public static Memory_ReadAddress slikz80_readmem[]={
-/*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_ReadAddress( 0x0000, 0x7ff, MRA_ROM ),
-/*TODO*///		new Memory_ReadAddress(MEMPORT_MARKER, 0)
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	public static Memory_WriteAddress slikz80_writemem[]={
-/*TODO*///		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),	new Memory_WriteAddress( 0x0000, 0x7f, MWA_ROM ),
-/*TODO*///		new Memory_WriteAddress(MEMPORT_MARKER, 0)
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	public static IO_ReadPort slikz80_readport[]={
-/*TODO*///		new IO_ReadPort(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),	new IO_ReadPort( 0x00, 0x00, slikz80_port_r ),
-/*TODO*///	MEMORY_END
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static IO_WritePort slikz80_writeport[]={
-/*TODO*///		new IO_WritePort(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),	new IO_WritePort( 0x00, 0x00, slikz80_port_w ),
-/*TODO*///	MEMORY_END
-/*TODO*///	
-/*TODO*///	
+    public static Memory_WriteAddress sound3812_writemem[] = {
+        new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+        new Memory_WriteAddress(0x0000, 0x0000, MWA_NOP),
+        new Memory_WriteAddress(0x2000, 0x2000, YM3812_control_port_0_w),
+        new Memory_WriteAddress(0x2001, 0x2001, YM3812_write_port_0_w),
+        new Memory_WriteAddress(0x3000, 0x37ff, MWA_RAM),
+        new Memory_WriteAddress(0x4000, 0x4000, OKIM6295_data_0_w),
+        new Memory_WriteAddress(0x5000, 0x5003, pia_0_w),
+        new Memory_WriteAddress(0x8000, 0xffff, MWA_ROM),
+        new Memory_WriteAddress(MEMPORT_MARKER, 0)
+    };
+
+    /**
+     * ***********************************
+     *
+     * Other CPU memory handlers
+     *
+     ************************************
+     */
+    public static Memory_ReadAddress slikz80_readmem[] = {
+        new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+        new Memory_ReadAddress(0x0000, 0x7ff, MRA_ROM),
+        new Memory_ReadAddress(MEMPORT_MARKER, 0)
+    };
+
+    public static Memory_WriteAddress slikz80_writemem[] = {
+        new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+        new Memory_WriteAddress(0x0000, 0x7f, MWA_ROM),
+        new Memory_WriteAddress(MEMPORT_MARKER, 0)
+    };
+
+    public static IO_ReadPort slikz80_readport[] = {
+        new IO_ReadPort(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+        new IO_ReadPort(0x00, 0x00, slikz80_port_r),
+        new IO_ReadPort(MEMPORT_MARKER, 0)
+    };
+
+    public static IO_WritePort slikz80_writeport[] = {
+        new IO_WritePort(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+        new IO_WritePort(0x00, 0x00, slikz80_port_w),
+        new IO_WritePort(MEMPORT_MARKER, 0)
+    };
+
     /**
      * ***********************************
      *
@@ -1407,53 +1420,43 @@ public class itech8 {
      *
      ************************************
      */
-    /*TODO*///	
-/*TODO*///	#define ITECH_DRIVER(NAME, CPUTYPE, CPUCLOCK, MAINMEM, YMTYPE, OKISPEED, XMIN, XMAX)	
-/*TODO*///	static MachineDriver machine_driver_##NAME = new MachineDriver
-/*TODO*///	(																				
-/*TODO*///		/* basic machine hardware */												
-/*TODO*///		new MachineCPU[] {																			
-/*TODO*///			new MachineCPU(																		
-/*TODO*///				CPU_##CPUTYPE,														
-/*TODO*///				CPUCLOCK,															
-/*TODO*///				MAINMEM##_readmem,MAINMEM##_writemem,null,null,							
-/*TODO*///				generate_nmi,1														
-/*TODO*///			),																		
-/*TODO*///			new MachineCPU(																		
-/*TODO*///				CPU_M6809,															
-/*TODO*///				CLOCK_8MHz/4,														
-/*TODO*///				sound##YMTYPE##_readmem,sound##YMTYPE##_writemem,null,null,				
-/*TODO*///				ignore_interrupt,1													
-/*TODO*///			)																		
-/*TODO*///		},																			
-/*TODO*///		60,(int)(((263. - 240.) / 263.) * 1000000. / 60.),							
-/*TODO*///		1,																			
-/*TODO*///		init_machine,																
-/*TODO*///																					
-/*TODO*///		/* video hardware */														
-/*TODO*///		512, 263, new rectangle( XMIN, XMAX, 0, 239 ),											
-/*TODO*///		null,																			
-/*TODO*///		256,256,																	
-/*TODO*///		null,																			
-/*TODO*///																					
-/*TODO*///		VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,	
-/*TODO*///		null,																			
-/*TODO*///		itech8_vh_start,															
-/*TODO*///		itech8_vh_stop,																
-/*TODO*///		itech8_vh_screenrefresh,													
-/*TODO*///																					
-/*TODO*///		/* sound hardware */														
-/*TODO*///		0,0,0,0,																	
-/*TODO*///		new MachineSound[] {																			
-/*TODO*///			new MachineSound( SOUND_YM##YMTYPE, ym##YMTYPE##_interface ),							
-/*TODO*///			new MachineSound( SOUND_OKIM6295, oki6295_interface_##OKISPEED ),						
-/*TODO*///		},																			
-/*TODO*///		nvram_handler																
-/*TODO*///	)
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*           NAME,      CPU,    CPUCLOCK,      MAINMEM,  YMTYPE, OKISPEED, XMIN, XMAX) */
-/*TODO*///	ITECH_DRIVER(tmslo2203, M6809,  CLOCK_8MHz/4,  tmslo,    2203,   high,     0,    255);
+    static MachineDriver machine_driver_tmslo2203 = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        tmslo_readmem, tmslo_writemem, null, null,
+                        generate_nmi, 1
+                ),
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        sound2203_readmem, sound2203_writemem, null, null,
+                        ignore_interrupt, 1
+                )
+            },
+            60, (int) (((263. - 240.) / 263.) * 1000000. / 60.),
+            1,
+            init_machine,
+            /* video hardware */
+            512, 263, new rectangle(0, 255, 0, 239),
+            null,
+            256, 256,
+            null,
+            VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,
+            null,
+            itech8_vh_start,
+            itech8_vh_stop,
+            itech8_vh_screenrefresh,
+            /* sound hardware */
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(SOUND_YM2203, ym2203_interface),
+                new MachineSound(SOUND_OKIM6295, oki6295_interface_high),},
+            nvram_handler
+    );
+
     static MachineDriver machine_driver_tmshi2203 = new MachineDriver(
             /* basic machine hardware */
             new MachineCPU[]{
@@ -1491,112 +1494,354 @@ public class itech8 {
             },
             nvram_handler
     );
-    /*TODO*///	ITECH_DRIVER(gtg2,      M6809,  CLOCK_8MHz/4,  gtg2,     3812,   high,     0,    255);
-/*TODO*///	ITECH_DRIVER(peggle,    M6809,  CLOCK_8MHz/4,  tmslo,    3812,   high,     18,   367);
-/*TODO*///	ITECH_DRIVER(arlingtn,  M6809,  CLOCK_8MHz/4,  tmshi,    3812,   low,      16,   389);
-/*TODO*///	ITECH_DRIVER(neckneck,  M6809,  CLOCK_8MHz/4,  tmslo,    3812,   high,     8,    375);
-/*TODO*///	ITECH_DRIVER(hstennis,  M6809,  CLOCK_8MHz/4,  tmshi,    3812,   high,     0,    375);
-/*TODO*///	ITECH_DRIVER(rimrockn,  M6809,  CLOCK_12MHz/4, tmshi,    3812,   high,     24,   375);
-/*TODO*///	ITECH_DRIVER(ninclown,  M68000, CLOCK_12MHz,   ninclown, 3812,   high,     64,   423);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static MachineDriver machine_driver_slikshot = new MachineDriver
-/*TODO*///	(
-/*TODO*///		/* basic machine hardware */
-/*TODO*///		new MachineCPU[] {
-/*TODO*///			new MachineCPU(
-/*TODO*///				CPU_M6809,
-/*TODO*///				CLOCK_8MHz/4,
-/*TODO*///				tmshi_readmem,tmshi_writemem,null,null,
-/*TODO*///				generate_nmi,1
-/*TODO*///			),
-/*TODO*///			new MachineCPU(
-/*TODO*///				CPU_M6809,
-/*TODO*///				CLOCK_8MHz/4,
-/*TODO*///				sound2203_readmem,sound2203_writemem,null,null,
-/*TODO*///				ignore_interrupt,1
-/*TODO*///			),
-/*TODO*///			new MachineCPU(
-/*TODO*///				CPU_Z80,
-/*TODO*///				CLOCK_8MHz/2,
-/*TODO*///				slikz80_readmem,slikz80_writemem,slikz80_readport,slikz80_writeport,
-/*TODO*///				ignore_interrupt,1
-/*TODO*///			)
-/*TODO*///		},
-/*TODO*///		60,(int)(((263. - 240.) / 263.) * 1000000. / 60.),
-/*TODO*///		1,
-/*TODO*///		init_machine,
-/*TODO*///	
-/*TODO*///		/* video hardware */
-/*TODO*///		512, 263, new rectangle( 0, 255, 0, 239 ),
-/*TODO*///		null,
-/*TODO*///		257,257,
-/*TODO*///		null,
-/*TODO*///	
-/*TODO*///		VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,
-/*TODO*///		null,
-/*TODO*///		slikshot_vh_start,
-/*TODO*///		itech8_vh_stop,
-/*TODO*///		itech8_vh_screenrefresh,
-/*TODO*///	
-/*TODO*///		/* sound hardware */
-/*TODO*///		0,0,0,0,
-/*TODO*///		new MachineSound[] {
-/*TODO*///			new MachineSound( SOUND_YM2203, ym2203_interface ),
-/*TODO*///			new MachineSound( SOUND_OKIM6295, oki6295_interface_high ),
-/*TODO*///		},
-/*TODO*///		nvram_handler
+
+    static MachineDriver machine_driver_gtg2 = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        gtg2_readmem, gtg2_writemem, null, null,
+                        generate_nmi, 1
+                ),
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        sound3812_readmem, sound3812_writemem, null, null,
+                        ignore_interrupt, 1
+                )
+            },
+            60, (int) (((263. - 240.) / 263.) * 1000000. / 60.),
+            1,
+            init_machine,
+            /* video hardware */
+            512, 263, new rectangle(0, 255, 0, 239),
+            null,
+            256, 256,
+            null,
+            VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,
+            null,
+            itech8_vh_start,
+            itech8_vh_stop,
+            itech8_vh_screenrefresh,
+            /* sound hardware */
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(SOUND_YM3812, ym3812_interface),
+                new MachineSound(SOUND_OKIM6295, oki6295_interface_high),},
+            nvram_handler
+    );
+
+    static MachineDriver machine_driver_peggle = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        tmslo_readmem, tmslo_writemem, null, null,
+                        generate_nmi, 1
+                ),
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        sound3812_readmem, sound3812_writemem, null, null,
+                        ignore_interrupt, 1
+                )
+            },
+            60, (int) (((263. - 240.) / 263.) * 1000000. / 60.),
+            1,
+            init_machine,
+            /* video hardware */
+            512, 263, new rectangle(18, 367, 0, 239),
+            null,
+            256, 256,
+            null,
+            VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,
+            null,
+            itech8_vh_start,
+            itech8_vh_stop,
+            itech8_vh_screenrefresh,
+            /* sound hardware */
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(SOUND_YM3812, ym3812_interface),
+                new MachineSound(SOUND_OKIM6295, oki6295_interface_high),},
+            nvram_handler
+    );
+
+    static MachineDriver machine_driver_arlingtn = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        tmshi_readmem, tmshi_writemem, null, null,
+                        generate_nmi, 1
+                ),
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        sound3812_readmem, sound3812_writemem, null, null,
+                        ignore_interrupt, 1
+                )
+            },
+            60, (int) (((263. - 240.) / 263.) * 1000000. / 60.),
+            1,
+            init_machine,
+            /* video hardware */
+            512, 263, new rectangle(16, 389, 0, 239),
+            null,
+            256, 256,
+            null,
+            VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,
+            null,
+            itech8_vh_start,
+            itech8_vh_stop,
+            itech8_vh_screenrefresh,
+            /* sound hardware */
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(SOUND_YM3812, ym3812_interface),
+                new MachineSound(SOUND_OKIM6295, oki6295_interface_low),},
+            nvram_handler
+    );
+    static MachineDriver machine_driver_neckneck = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        tmslo_readmem, tmslo_writemem, null, null,
+                        generate_nmi, 1
+                ),
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        sound3812_readmem, sound3812_writemem, null, null,
+                        ignore_interrupt, 1
+                )
+            },
+            60, (int) (((263. - 240.) / 263.) * 1000000. / 60.),
+            1,
+            init_machine,
+            /* video hardware */
+            512, 263, new rectangle(8, 375, 0, 239),
+            null,
+            256, 256,
+            null,
+            VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,
+            null,
+            itech8_vh_start,
+            itech8_vh_stop,
+            itech8_vh_screenrefresh,
+            /* sound hardware */
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(SOUND_YM3812, ym3812_interface),
+                new MachineSound(SOUND_OKIM6295, oki6295_interface_high),},
+            nvram_handler
+    );
+
+    static MachineDriver machine_driver_hstennis = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        tmshi_readmem, tmshi_writemem, null, null,
+                        generate_nmi, 1
+                ),
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        sound3812_readmem, sound3812_writemem, null, null,
+                        ignore_interrupt, 1
+                )
+            },
+            60, (int) (((263. - 240.) / 263.) * 1000000. / 60.),
+            1,
+            init_machine,
+            /* video hardware */
+            512, 263, new rectangle(0, 375, 0, 239),
+            null,
+            256, 256,
+            null,
+            VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,
+            null,
+            itech8_vh_start,
+            itech8_vh_stop,
+            itech8_vh_screenrefresh,
+            /* sound hardware */
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(SOUND_YM3812, ym3812_interface),
+                new MachineSound(SOUND_OKIM6295, oki6295_interface_high),},
+            nvram_handler
+    );
+
+    static MachineDriver machine_driver_rimrockn = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_12MHz / 4,
+                        tmshi_readmem, tmshi_writemem, null, null,
+                        generate_nmi, 1
+                ),
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        sound3812_readmem, sound3812_writemem, null, null,
+                        ignore_interrupt, 1
+                )
+            },
+            60, (int) (((263. - 240.) / 263.) * 1000000. / 60.),
+            1,
+            init_machine,
+            /* video hardware */
+            512, 263, new rectangle(24, 375, 0, 239),
+            null,
+            256, 256,
+            null,
+            VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,
+            null,
+            itech8_vh_start,
+            itech8_vh_stop,
+            itech8_vh_screenrefresh,
+            /* sound hardware */
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(SOUND_YM3812, ym3812_interface),
+                new MachineSound(SOUND_OKIM6295, oki6295_interface_high),},
+            nvram_handler
+    );
+
+    /*TODO*///	static MachineDriver machine_driver_ninclown = new MachineDriver
+/*TODO*///	(																				
+/*TODO*///		/* basic machine hardware */												
+/*TODO*///		new MachineCPU[] {																			
+/*TODO*///			new MachineCPU(																		
+/*TODO*///				CPU_M68000,														
+/*TODO*///				CLOCK_12MHz,															
+/*TODO*///				ninclown_readmem,ninclown_writemem,null,null,							
+/*TODO*///				generate_nmi,1														
+/*TODO*///			),																		
+/*TODO*///			new MachineCPU(																		
+/*TODO*///				CPU_M6809,															
+/*TODO*///				CLOCK_8MHz/4,														
+/*TODO*///				sound3812_readmem,sound3812_writemem,null,null,				
+/*TODO*///				ignore_interrupt,1													
+/*TODO*///			)																		
+/*TODO*///		},																			
+/*TODO*///		60,(int)(((263. - 240.) / 263.) * 1000000. / 60.),							
+/*TODO*///		1,																			
+/*TODO*///		init_machine,																
+/*TODO*///																					
+/*TODO*///		/* video hardware */														
+/*TODO*///		512, 263, new rectangle( 64,   423, 0, 239 ),											
+/*TODO*///		null,																			
+/*TODO*///		256,256,																	
+/*TODO*///		null,																			
+/*TODO*///																					
+/*TODO*///		VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,	
+/*TODO*///		null,																			
+/*TODO*///		itech8_vh_start,															
+/*TODO*///		itech8_vh_stop,																
+/*TODO*///		itech8_vh_screenrefresh,													
+/*TODO*///																					
+/*TODO*///		/* sound hardware */														
+/*TODO*///		0,0,0,0,																	
+/*TODO*///		new MachineSound[] {																			
+/*TODO*///			new MachineSound( SOUND_YM3812, ym3812_interface ),							
+/*TODO*///			new MachineSound( SOUND_OKIM6295, oki6295_interface_high ),						
+/*TODO*///		},																			
+/*TODO*///		nvram_handler																
 /*TODO*///	);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static MachineDriver machine_driver_sstrike = new MachineDriver
-/*TODO*///	(
-/*TODO*///		/* basic machine hardware */
-/*TODO*///		new MachineCPU[] {
-/*TODO*///			new MachineCPU(
-/*TODO*///				CPU_M6809,
-/*TODO*///				CLOCK_8MHz/4,
-/*TODO*///				tmslo_readmem,tmslo_writemem,null,null,
-/*TODO*///				generate_nmi,1
-/*TODO*///			),
-/*TODO*///			new MachineCPU(
-/*TODO*///				CPU_M6809,
-/*TODO*///				CLOCK_8MHz/4,
-/*TODO*///				sound2203_readmem,sound2203_writemem,null,null,
-/*TODO*///				ignore_interrupt,1
-/*TODO*///			),
-/*TODO*///			new MachineCPU(
-/*TODO*///				CPU_Z80,
-/*TODO*///				CLOCK_8MHz/2,
-/*TODO*///				slikz80_readmem,slikz80_writemem,slikz80_readport,slikz80_writeport,
-/*TODO*///				ignore_interrupt,1
-/*TODO*///			)
-/*TODO*///		},
-/*TODO*///		60,(int)(((263. - 240.) / 263.) * 1000000. / 60.),
-/*TODO*///		1,
-/*TODO*///		init_machine,
-/*TODO*///	
-/*TODO*///		/* video hardware */
-/*TODO*///		512, 263, new rectangle( 0, 255, 0, 239 ),
-/*TODO*///		null,
-/*TODO*///		257,257,
-/*TODO*///		null,
-/*TODO*///	
-/*TODO*///		VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,
-/*TODO*///		null,
-/*TODO*///		slikshot_vh_start,
-/*TODO*///		itech8_vh_stop,
-/*TODO*///		itech8_vh_screenrefresh,
-/*TODO*///	
-/*TODO*///		/* sound hardware */
-/*TODO*///		0,0,0,0,
-/*TODO*///		new MachineSound[] {
-/*TODO*///			new MachineSound( SOUND_YM2203, ym2203_interface ),
-/*TODO*///			new MachineSound( SOUND_OKIM6295, oki6295_interface_high ),
-/*TODO*///		},
-/*TODO*///		nvram_handler
-/*TODO*///	);
+    static MachineDriver machine_driver_slikshot = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        tmshi_readmem, tmshi_writemem, null, null,
+                        generate_nmi, 1
+                ),
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        sound2203_readmem, sound2203_writemem, null, null,
+                        ignore_interrupt, 1
+                ),
+                new MachineCPU(
+                        CPU_Z80,
+                        CLOCK_8MHz / 2,
+                        slikz80_readmem, slikz80_writemem, slikz80_readport, slikz80_writeport,
+                        ignore_interrupt, 1
+                )
+            },
+            60, (int) (((263. - 240.) / 263.) * 1000000. / 60.),
+            1,
+            init_machine,
+            /* video hardware */
+            512, 263, new rectangle(0, 255, 0, 239),
+            null,
+            257, 257,
+            null,
+            VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,
+            null,
+            slikshot_vh_start,
+            itech8_vh_stop,
+            itech8_vh_screenrefresh,
+            /* sound hardware */
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(SOUND_YM2203, ym2203_interface),
+                new MachineSound(SOUND_OKIM6295, oki6295_interface_high),},
+            nvram_handler
+    );
+
+    static MachineDriver machine_driver_sstrike = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        tmslo_readmem, tmslo_writemem, null, null,
+                        generate_nmi, 1
+                ),
+                new MachineCPU(
+                        CPU_M6809,
+                        CLOCK_8MHz / 4,
+                        sound2203_readmem, sound2203_writemem, null, null,
+                        ignore_interrupt, 1
+                ),
+                new MachineCPU(
+                        CPU_Z80,
+                        CLOCK_8MHz / 2,
+                        slikz80_readmem, slikz80_writemem, slikz80_readport, slikz80_writeport,
+                        ignore_interrupt, 1
+                )
+            },
+            60, (int) (((263. - 240.) / 263.) * 1000000. / 60.),
+            1,
+            init_machine,
+            /* video hardware */
+            512, 263, new rectangle(0, 255, 0, 239),
+            null,
+            257, 257,
+            null,
+            VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE | VIDEO_UPDATE_BEFORE_VBLANK,
+            null,
+            slikshot_vh_start,
+            itech8_vh_stop,
+            itech8_vh_screenrefresh,
+            /* sound hardware */
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(SOUND_YM2203, ym2203_interface),
+                new MachineSound(SOUND_OKIM6295, oki6295_interface_high),},
+            nvram_handler
+    );
     /**
      * ***********************************
      *
@@ -2030,80 +2275,81 @@ public class itech8 {
 /*TODO*///		ROM_REGION( 0x180000, REGION_GFX1, 0 );	ROM_LOAD( "nc-grom0", 0x000000, 0x40000, 0x532f7bff );	ROM_LOAD( "nc-grom1", 0x040000, 0x40000, 0x45640d4a );	ROM_LOAD( "nc-grom2", 0x080000, 0x40000, 0xc8281d06 );	ROM_LOAD( "nc-grom3", 0x0c0000, 0x40000, 0x2a6d33ac );	ROM_LOAD( "nc-grom4", 0x100000, 0x40000, 0x910876ba );	ROM_LOAD( "nc-grom5", 0x140000, 0x40000, 0x2533279b );
 /*TODO*///		ROM_REGION( 0x40000, REGION_SOUND1, 0 );	ROM_LOAD( "srom0.bin", 0x00000, 0x40000, 0xf6b501e1 );ROM_END(); }}; 
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Driver-specific init
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	static public static InitDriverPtr init_viasound = new InitDriverPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		/* some games with a YM3812 use a VIA(6522) for timing and communication */
+    /**
+     * ***********************************
+     *
+     * Driver-specific init
+     *
+     ************************************
+     */
+    public static InitDriverPtr init_viasound = new InitDriverPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+            /*TODO*///		/* some games with a YM3812 use a VIA(6522) for timing and communication */
 /*TODO*///		install_mem_read_handler (1, 0x5000, 0x500f, via6522_r);
 /*TODO*///		via6522 = install_mem_write_handler(1, 0x5000, 0x500f, via6522_w);
-/*TODO*///	} };
-/*TODO*///	
-    /*TODO*///	static public static InitDriverPtr init_slikshot = new InitDriverPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		install_mem_read_handler (0, 0x0180, 0x0180, slikshot_z80_r);
-/*TODO*///		install_mem_read_handler (0, 0x01cf, 0x01cf, slikshot_z80_control_r);
-/*TODO*///		install_mem_write_handler(0, 0x01cf, 0x01cf, slikshot_z80_control_w);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static public static InitDriverPtr init_sstrike = new InitDriverPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		install_mem_read_handler (0, 0x1180, 0x1180, slikshot_z80_r);
-/*TODO*///		install_mem_read_handler (0, 0x11cf, 0x11cf, slikshot_z80_control_r);
-/*TODO*///		install_mem_write_handler(0, 0x11cf, 0x11cf, slikshot_z80_control_w);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static public static InitDriverPtr init_rimrockn = new InitDriverPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		/* additional input ports */
-/*TODO*///		install_mem_read_handler (0, 0x0161, 0x0161, input_port_3_r);
-/*TODO*///		install_mem_read_handler (0, 0x0162, 0x0162, input_port_4_r);
-/*TODO*///		install_mem_read_handler (0, 0x0163, 0x0163, input_port_5_r);
-/*TODO*///		install_mem_read_handler (0, 0x0164, 0x0164, input_port_6_r);
-/*TODO*///		install_mem_read_handler (0, 0x0165, 0x0165, input_port_7_r);
-/*TODO*///	
-/*TODO*///		/* different banking mechanism (disable the old one) */
-/*TODO*///		install_mem_write_handler(0, 0x01a0, 0x01a0, rimrockn_bank_w);
-/*TODO*///		install_mem_write_handler(0, 0x01c0, 0x01df, itech8_blitter_w);
-/*TODO*///	
-/*TODO*///		/* VIA-based sound timing */
-/*TODO*///		init_viasound();
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Game drivers
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
+        }
+    };
+
+    public static InitDriverPtr init_slikshot = new InitDriverPtr() {
+        public void handler() {
+            install_mem_read_handler(0, 0x0180, 0x0180, slikshot_z80_r);
+            install_mem_read_handler(0, 0x01cf, 0x01cf, slikshot_z80_control_r);
+            install_mem_write_handler(0, 0x01cf, 0x01cf, slikshot_z80_control_w);
+        }
+    };
+
+    public static InitDriverPtr init_sstrike = new InitDriverPtr() {
+        public void handler() {
+            install_mem_read_handler(0, 0x1180, 0x1180, slikshot_z80_r);
+            install_mem_read_handler(0, 0x11cf, 0x11cf, slikshot_z80_control_r);
+            install_mem_write_handler(0, 0x11cf, 0x11cf, slikshot_z80_control_w);
+        }
+    };
+
+    public static InitDriverPtr init_rimrockn = new InitDriverPtr() {
+        public void handler() {
+            /* additional input ports */
+            install_mem_read_handler(0, 0x0161, 0x0161, input_port_3_r);
+            install_mem_read_handler(0, 0x0162, 0x0162, input_port_4_r);
+            install_mem_read_handler(0, 0x0163, 0x0163, input_port_5_r);
+            install_mem_read_handler(0, 0x0164, 0x0164, input_port_6_r);
+            install_mem_read_handler(0, 0x0165, 0x0165, input_port_7_r);
+
+            /* different banking mechanism (disable the old one) */
+            install_mem_write_handler(0, 0x01a0, 0x01a0, rimrockn_bank_w);
+            install_mem_write_handler(0, 0x01c0, 0x01df, itech8_blitter_w);
+
+            /* VIA-based sound timing */
+            init_viasound.handler();
+        }
+    };
+
+    /**
+     * ***********************************
+     *
+     * Game drivers
+     *
+     ************************************
+     */
     public static GameDriver driver_wfortune = new GameDriver("1989", "wfortune", "itech8.java", rom_wfortune, null, machine_driver_tmshi2203, input_ports_wfortune, null, ROT0, "GameTek", "Wheel Of Fortune");
     public static GameDriver driver_wfortuna = new GameDriver("1989", "wfortuna", "itech8.java", rom_wfortuna, driver_wfortune, machine_driver_tmshi2203, input_ports_wfortune, null, ROT0, "GameTek", "Wheel Of Fortune (alternate)");
     public static GameDriver driver_stratab = new GameDriver("1990", "stratab", "itech8.java", rom_stratab, null, machine_driver_tmshi2203, input_ports_stratab, null, ROT270, "Strata/Incredible Technologies", "Strata Bowling");
-    /*TODO*///	public static GameDriver driver_sstrike	   = new GameDriver("1990"	,"sstrike"	,"itech8.java"	,rom_sstrike,null	,machine_driver_sstrike	,input_ports_sstrike	,init_sstrike	,ROT270	,	"Strata/Incredible Technologies", "Super Strike Bowling", GAME_NOT_WORKING )
+    public static GameDriver driver_sstrike = new GameDriver("1990", "sstrike", "itech8.java", rom_sstrike, null, machine_driver_sstrike, input_ports_sstrike, init_sstrike, ROT270, "Strata/Incredible Technologies", "Super Strike Bowling", GAME_NOT_WORKING);
     public static GameDriver driver_gtg = new GameDriver("1990", "gtg", "itech8.java", rom_gtg, null, machine_driver_tmshi2203, input_ports_gtg, null, ROT0, "Strata/Incredible Technologies", "Golden Tee Golf");
-    /*TODO*///	public static GameDriver driver_slikshot	   = new GameDriver("1990"	,"slikshot"	,"itech8.java"	,rom_slikshot,null	,machine_driver_slikshot	,input_ports_slikshot	,init_slikshot	,ROT90	,	"Grand Products/Incredible Technologies", "Slick Shot (V2.2)" )
-/*TODO*///	public static GameDriver driver_sliksh17	   = new GameDriver("1990"	,"sliksh17"	,"itech8.java"	,rom_sliksh17,driver_slikshot	,machine_driver_slikshot	,input_ports_slikshot	,init_slikshot	,ROT90	,	"Grand Products/Incredible Technologies", "Slick Shot (V1.7)" )
-/*TODO*///	public static GameDriver driver_hstennis	   = new GameDriver("1990"	,"hstennis"	,"itech8.java"	,rom_hstennis,null	,machine_driver_hstennis	,input_ports_hstennis	,null	,ROT90	,	"Strata/Incredible Technologies", "Hot Shots Tennis" )
-/*TODO*///	public static GameDriver driver_arlingtn	   = new GameDriver("1991"	,"arlingtn"	,"itech8.java"	,rom_arlingtn,null	,machine_driver_arlingtn	,input_ports_arlingtn	,null	,ROT0	,	"Strata/Incredible Technologies", "Arlington Horse Racing" )
-/*TODO*///	public static GameDriver driver_peggle	   = new GameDriver("1991"	,"peggle"	,"itech8.java"	,rom_peggle,null	,machine_driver_peggle	,input_ports_peggle	,null	,ROT90	,	"Strata/Incredible Technologies", "Peggle (Joystick)" )
-/*TODO*///	public static GameDriver driver_pegglet	   = new GameDriver("1991"	,"pegglet"	,"itech8.java"	,rom_pegglet,driver_peggle	,machine_driver_peggle	,input_ports_pegglet	,null	,ROT90	,	"Strata/Incredible Technologies", "Peggle (Trackball)" )
-/*TODO*///	public static GameDriver driver_rimrockn	   = new GameDriver("1991"	,"rimrockn"	,"itech8.java"	,rom_rimrockn,null	,machine_driver_rimrockn	,input_ports_rimrockn	,init_rimrockn	,ROT0	,	"Strata/Incredible Technologies", "Rim Rockin' Basketball (V2.2)" )
-/*TODO*///	public static GameDriver driver_rimrck20	   = new GameDriver("1991"	,"rimrck20"	,"itech8.java"	,rom_rimrck20,driver_rimrockn	,machine_driver_rimrockn	,input_ports_rimrockn	,init_rimrockn	,ROT0	,	"Strata/Incredible Technologies", "Rim Rockin' Basketball (V2.0)" )
-/*TODO*///	public static GameDriver driver_rimrck16	   = new GameDriver("1991"	,"rimrck16"	,"itech8.java"	,rom_rimrck16,driver_rimrockn	,machine_driver_rimrockn	,input_ports_rimrockn	,init_rimrockn	,ROT0	,	"Strata/Incredible Technologies", "Rim Rockin' Basketball (V1.6)" )
-/*TODO*///	public static GameDriver driver_rimrck12	   = new GameDriver("1991"	,"rimrck12"	,"itech8.java"	,rom_rimrck12,driver_rimrockn	,machine_driver_rimrockn	,input_ports_rimrockn	,init_rimrockn	,ROT0	,	"Strata/Incredible Technologies", "Rim Rockin' Basketball (V1.2)" )
-/*TODO*///	public static GameDriver driver_ninclown	   = new GameDriver("1991"	,"ninclown"	,"itech8.java"	,rom_ninclown,null	,machine_driver_ninclown	,input_ports_ninclown	,init_viasound	,ROT0	,	"Strata/Incredible Technologies", "Ninja Clowns" )
-/*TODO*///	public static GameDriver driver_gtg2	   = new GameDriver("1992"	,"gtg2"	,"itech8.java"	,rom_gtg2,null	,machine_driver_gtg2	,input_ports_gtg2	,init_viasound	,ROT0	,	"Strata/Incredible Technologies", "Golden Tee Golf II (Trackball, V2.2)" )
-/*TODO*///	public static GameDriver driver_gtg2t	   = new GameDriver("1989"	,"gtg2t"	,"itech8.java"	,rom_gtg2t,driver_gtg2	,machine_driver_tmshi2203	,input_ports_gtg2t	,null	,ROT0	,	"Strata/Incredible Technologies", "Golden Tee Golf II (Trackball, V1.1)" )
-/*TODO*///	public static GameDriver driver_gtg2j	   = new GameDriver("1991"	,"gtg2j"	,"itech8.java"	,rom_gtg2j,driver_gtg2	,machine_driver_tmslo2203	,input_ports_gtg	,null	,ROT0	,	"Strata/Incredible Technologies", "Golden Tee Golf II (Joystick, V1.0)" )
-/*TODO*///	public static GameDriver driver_neckneck	   = new GameDriver("1992"	,"neckneck"	,"itech8.java"	,rom_neckneck,null	,machine_driver_neckneck	,input_ports_neckneck	,null	,ROT0	,	"Bundra Games/Incredible Technologies", "Neck-n-Neck" )
+    public static GameDriver driver_slikshot = new GameDriver("1990", "slikshot", "itech8.java", rom_slikshot, null, machine_driver_slikshot, input_ports_slikshot, init_slikshot, ROT90, "Grand Products/Incredible Technologies", "Slick Shot (V2.2)");
+    public static GameDriver driver_sliksh17 = new GameDriver("1990", "sliksh17", "itech8.java", rom_sliksh17, driver_slikshot, machine_driver_slikshot, input_ports_slikshot, init_slikshot, ROT90, "Grand Products/Incredible Technologies", "Slick Shot (V1.7)");
+    public static GameDriver driver_hstennis = new GameDriver("1990", "hstennis", "itech8.java", rom_hstennis, null, machine_driver_hstennis, input_ports_hstennis, null, ROT90, "Strata/Incredible Technologies", "Hot Shots Tennis");
+    public static GameDriver driver_arlingtn = new GameDriver("1991", "arlingtn", "itech8.java", rom_arlingtn, null, machine_driver_arlingtn, input_ports_arlingtn, null, ROT0, "Strata/Incredible Technologies", "Arlington Horse Racing");
+    public static GameDriver driver_peggle = new GameDriver("1991", "peggle", "itech8.java", rom_peggle, null, machine_driver_peggle, input_ports_peggle, null, ROT90, "Strata/Incredible Technologies", "Peggle (Joystick)");
+    public static GameDriver driver_pegglet = new GameDriver("1991", "pegglet", "itech8.java", rom_pegglet, driver_peggle, machine_driver_peggle, input_ports_pegglet, null, ROT90, "Strata/Incredible Technologies", "Peggle (Trackball)");
+    public static GameDriver driver_rimrockn = new GameDriver("1991", "rimrockn", "itech8.java", rom_rimrockn, null, machine_driver_rimrockn, input_ports_rimrockn, init_rimrockn, ROT0, "Strata/Incredible Technologies", "Rim Rockin' Basketball (V2.2)");
+    public static GameDriver driver_rimrck20 = new GameDriver("1991", "rimrck20", "itech8.java", rom_rimrck20, driver_rimrockn, machine_driver_rimrockn, input_ports_rimrockn, init_rimrockn, ROT0, "Strata/Incredible Technologies", "Rim Rockin' Basketball (V2.0)");
+    public static GameDriver driver_rimrck16 = new GameDriver("1991", "rimrck16", "itech8.java", rom_rimrck16, driver_rimrockn, machine_driver_rimrockn, input_ports_rimrockn, init_rimrockn, ROT0, "Strata/Incredible Technologies", "Rim Rockin' Basketball (V1.6)");
+    public static GameDriver driver_rimrck12 = new GameDriver("1991", "rimrck12", "itech8.java", rom_rimrck12, driver_rimrockn, machine_driver_rimrockn, input_ports_rimrockn, init_rimrockn, ROT0, "Strata/Incredible Technologies", "Rim Rockin' Basketball (V1.2)");
+    /*TODO*///	public static GameDriver driver_ninclown	   = new GameDriver("1991"	,"ninclown"	,"itech8.java"	,rom_ninclown,null	,machine_driver_ninclown	,input_ports_ninclown	,init_viasound	,ROT0	,	"Strata/Incredible Technologies", "Ninja Clowns" );
+    public static GameDriver driver_gtg2 = new GameDriver("1992", "gtg2", "itech8.java", rom_gtg2, null, machine_driver_gtg2, input_ports_gtg2, init_viasound, ROT0, "Strata/Incredible Technologies", "Golden Tee Golf II (Trackball, V2.2)");
+    public static GameDriver driver_gtg2t = new GameDriver("1989", "gtg2t", "itech8.java", rom_gtg2t, driver_gtg2, machine_driver_tmshi2203, input_ports_gtg2t, null, ROT0, "Strata/Incredible Technologies", "Golden Tee Golf II (Trackball, V1.1)");
+    public static GameDriver driver_gtg2j = new GameDriver("1991", "gtg2j", "itech8.java", rom_gtg2j, driver_gtg2, machine_driver_tmslo2203, input_ports_gtg, null, ROT0, "Strata/Incredible Technologies", "Golden Tee Golf II (Joystick, V1.0)");
+    public static GameDriver driver_neckneck = new GameDriver("1992", "neckneck", "itech8.java", rom_neckneck, null, machine_driver_neckneck, input_ports_neckneck, null, ROT0, "Bundra Games/Incredible Technologies", "Neck-n-Neck");
 }

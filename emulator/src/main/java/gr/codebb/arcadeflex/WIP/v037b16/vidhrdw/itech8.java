@@ -208,24 +208,27 @@ public class itech8 {
         }
     };
 
-    public static void draw_byte_trans4(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch) {
-        if (val == 0) {
-            return;
-        }
-
-        if ((val & 0xf0) != 0) {
-            if ((val & 0x0f) != 0) {
-                tms_state.vram.write(addr, val & mask);
-                tms_state.latchram.write(addr, latch);
-            } else {
-                tms_state.vram.write(addr, (tms_state.vram.read(addr) & 0x0f) | (val & mask & 0xf0));
-                tms_state.latchram.write(addr, (tms_state.latchram.read(addr) & 0x0f) | (latch & 0xf0));
+    public static operation_Ptr draw_byte_trans4 = new operation_Ptr() {
+        @Override
+        public void handler(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch) {
+            if (val == 0) {
+                return;
             }
-        } else {
-            tms_state.vram.write(addr, (tms_state.vram.read(addr) & 0xf0) | (val & mask & 0x0f));
-            tms_state.latchram.write(addr, (tms_state.latchram.read(addr) & 0xf0) | (latch & 0x0f));
+
+            if ((val & 0xf0) != 0) {
+                if ((val & 0x0f) != 0) {
+                    tms_state.vram.write(addr, val & mask);
+                    tms_state.latchram.write(addr, latch);
+                } else {
+                    tms_state.vram.write(addr, (tms_state.vram.read(addr) & 0x0f) | (val & mask & 0xf0));
+                    tms_state.latchram.write(addr, (tms_state.latchram.read(addr) & 0x0f) | (latch & 0xf0));
+                }
+            } else {
+                tms_state.vram.write(addr, (tms_state.vram.read(addr) & 0xf0) | (val & mask & 0x0f));
+                tms_state.latchram.write(addr, (tms_state.latchram.read(addr) & 0xf0) | (latch & 0x0f));
+            }
         }
-    }
+    };
 
     public static operation_Ptr draw_byte_trans8 = new operation_Ptr() {
         @Override
@@ -305,12 +308,15 @@ public class itech8 {
 /*TODO*///	}
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	INLINE void draw_byte_shift_trans4_xflip(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
-/*TODO*///	{
-/*TODO*///		val = (val >> 4) | (val << 4);
-/*TODO*///		draw_byte_shift_trans4(addr, val, mask, latch);
-/*TODO*///	}
-/*TODO*///	
+    public static operation_Ptr draw_byte_shift_trans4_xflip = new operation_Ptr() {
+        @Override
+        public void handler(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch) {
+            val = (val >> 4) | (val << 4);
+            draw_byte_shift_trans4.handler(addr, val, mask, latch);
+        }
+    };
+
+    /*TODO*///	
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	/*************************************
@@ -566,9 +572,7 @@ public class itech8 {
 /*TODO*///	DRAW_RAW_MACRO(draw_raw_shift_trans4, 1, draw_byte_shift_trans4)
 /*TODO*///	DRAW_RAW_MACRO(draw_raw_shift_trans8, 1, draw_byte_shift_trans8)
 /*TODO*///	
-/*TODO*///	DRAW_RLE_MACRO(draw_rle_shift,        0, draw_byte_shift)
-/*TODO*///	DRAW_RLE_MACRO(draw_rle_trans4,       1, draw_byte_trans4)
-/*TODO*///	DRAW_RLE_MACRO(draw_rle_shift_trans4, 1, draw_byte_shift_trans4)
+/*TODO*///	
 /*TODO*///	DRAW_RLE_MACRO(draw_rle_shift_trans8, 1, draw_byte_shift_trans8)
 /*TODO*///	
 /*TODO*///	DRAW_RAW_MACRO(draw_raw_xflip,              0, draw_byte_xflip)
@@ -606,7 +610,7 @@ public class itech8 {
     public static blitter_table_Ptr draw_rle_shift = new blitter_table_Ptr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            DRAW_RLE(0, draw_byte_shift);
         }
     };
     public static blitter_table_Ptr draw_raw_trans4 = new blitter_table_Ptr() {
@@ -624,13 +628,13 @@ public class itech8 {
     public static blitter_table_Ptr draw_rle_trans4 = new blitter_table_Ptr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            DRAW_RLE(1, draw_byte_trans4);
         }
     };
     public static blitter_table_Ptr draw_rle_shift_trans4 = new blitter_table_Ptr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            DRAW_RLE(1, draw_byte_shift_trans4);
         }
     };
     static blitter_table_Ptr blit_table4[]
@@ -944,24 +948,21 @@ public class itech8 {
  /* pages are selected via the display page register */
  /* width can be up to 512 pixels */
             if ((u8_blitter_data[7] & 0x40) != 0) {
-                throw new UnsupportedOperationException("Unsupported");
-                /*TODO*///			int halfwidth = (Machine.visible_area.max_x + 2) / 2;
-/*TODO*///			UINT8 *base = &tms_state.vram[(~itech8_display_page.read() & 0x80) << 10];
-/*TODO*///			UINT8 *latch = &tms_state.latchram[(~itech8_display_page.read() & 0x80) << 10];
-/*TODO*///	
-/*TODO*///			/* now regenerate the bitmap */
-/*TODO*///			for (ty = 0, y = Machine.visible_area.min_y; y <= Machine.visible_area.max_y; y++, ty++)
-/*TODO*///			{
-/*TODO*///				UINT8 scanline[512];
-/*TODO*///				int x;
-/*TODO*///	
-/*TODO*///				for (x = 0; x < halfwidth; x++)
-/*TODO*///				{
-/*TODO*///					scanline[x * 2 + 0] = (latch[256 * ty + x] & 0xf0) | (base[256 * ty + x] >> 4);
-/*TODO*///					scanline[x * 2 + 1] = (latch[256 * ty + x] << 4) | (base[256 * ty + x] & 0x0f);
-/*TODO*///				}
-/*TODO*///				draw_scanline8(bitmap, 0, y, 2 * halfwidth, scanline, Machine.pens, -1);
-/*TODO*///			}
+                int halfwidth = (Machine.visible_area.max_x + 2) / 2;
+                UBytePtr base = new UBytePtr(tms_state.vram, (~itech8_display_page.read() & 0x80) << 10);
+                UBytePtr latch = new UBytePtr(tms_state.latchram, (~itech8_display_page.read() & 0x80) << 10);
+
+                /* now regenerate the bitmap */
+                for (ty = 0, y = Machine.visible_area.min_y; y <= Machine.visible_area.max_y; y++, ty++) {
+                    char[]/*UINT8*/ scanline = new char[512];
+                    int x;
+
+                    for (x = 0; x < halfwidth; x++) {
+                        scanline[x * 2 + 0] = (char) (((latch.read(256 * ty + x) & 0xf0) | (base.read(256 * ty + x) >> 4)) & 0xFF);
+                        scanline[x * 2 + 1] = (char) (((latch.read(256 * ty + x) << 4) | (base.read(256 * ty + x) & 0x0f)) & 0xFF);
+                    }
+                    draw_scanline8(bitmap, 0, y, 2 * halfwidth, new UBytePtr(scanline), new IntArray(Machine.pens), -1);
+                }
             } /* blit mode one: 8bpp in the TMS34061 RAM */ /* two planes are available, at 0x00000 and 0x20000 */ /* both planes are rendered; with 0x20000 transparent via color 0 */ /* width can be up to 256 pixels */ else {
                 UBytePtr base = new UBytePtr(tms_state.vram, tms_state.dispstart & ~0x30000);
 
