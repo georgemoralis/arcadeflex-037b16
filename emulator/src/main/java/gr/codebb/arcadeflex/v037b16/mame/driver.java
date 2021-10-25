@@ -101,6 +101,8 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.pcktgal.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.mainevt.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.flkatck.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.chinagat.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.jedi.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.cclimber.*;
 
 public class driver {
 
@@ -260,25 +262,25 @@ public class driver {
         driver_flyboyb, /* bootleg */
         driver_fastfred, /* (c) 1982 Atari */
         driver_jumpcoas, /* (c) 1983 Kaneko */
-        /*TODO*///	/* "Crazy Climber hardware" games */
-        /*TODO*///	driver_cclimber,	/* (c) 1980 Nichibutsu */
-        /*TODO*///	driver_cclimbrj,	/* (c) 1980 Nichibutsu */
-        /*TODO*///	driver_ccboot,	/* bootleg */
-        /*TODO*///	driver_ccboot2,	/* bootleg */
-        /*TODO*///	driver_ckong,		/* (c) 1981 Falcon */
-        /*TODO*///	driver_ckonga,	/* (c) 1981 Falcon */
-        /*TODO*///	driver_ckongjeu,	/* bootleg */
-        /*TODO*///	driver_ckongo,	/* bootleg */
-        /*TODO*///	driver_ckongalc,	/* bootleg */
-        /*TODO*///	driver_monkeyd,	/* bootleg */
-        /*TODO*///	driver_rpatrolb,	/* bootleg */
-        /*TODO*///	driver_silvland,	/* Falcon */
-        /*TODO*///	driver_yamato,	/* (c) 1983 Sega */
-        /*TODO*///	driver_yamato2,	/* (c) 1983 Sega */
-        /*TODO*///	driver_swimmer,	/* (c) 1982 Tehkan */
-        /*TODO*///	driver_swimmera,	/* (c) 1982 Tehkan */
-        /*TODO*///	driver_guzzler,	/* (c) 1983 Tehkan */
-        /*TODO*///
+        /* "Crazy Climber hardware" games */
+        driver_cclimber,	/* (c) 1980 Nichibutsu */
+        driver_cclimbrj,	/* (c) 1980 Nichibutsu */
+        driver_ccboot,	/* bootleg */
+        driver_ccboot2,	/* bootleg */
+        driver_ckong,		/* (c) 1981 Falcon */
+        driver_ckonga,	/* (c) 1981 Falcon */
+        driver_ckongjeu,	/* bootleg */
+        driver_ckongo,	/* bootleg */
+        driver_ckongalc,	/* bootleg */
+        driver_monkeyd,	/* bootleg */
+        driver_rpatrolb,	/* bootleg */
+        driver_silvland,	/* Falcon */
+/*TODO*///        driver_yamato,	/* (c) 1983 Sega */
+/*TODO*///        driver_yamato2,	/* (c) 1983 Sega */
+        driver_swimmer,	/* (c) 1982 Tehkan */
+        driver_swimmera,	/* (c) 1982 Tehkan */
+        driver_guzzler,	/* (c) 1983 Tehkan */
+
         /*TODO*///	/* Nichibutsu games */
         /*TODO*///	driver_friskyt,	/* (c) 1981 */
         /*TODO*///	driver_radrad,	/* (c) 1982 Nichibutsu USA */
@@ -2881,7 +2883,7 @@ public class driver {
         /*TODO*///	driver_ccastle2,	/* 136022			(c) 1983 */
         /*TODO*///	driver_cloak,		/* 136023			(c) 1983 */
         /*TODO*///	driver_cloud9,	/* (proto)			(c) 1983 */
-        /*TODO*///	driver_jedi,		/* 136030			(c) 1984 */
+        driver_jedi,		/* 136030			(c) 1984 */
         /*TODO*///
         /*TODO*///	/* Atari System 1 games */
         /*TODO*///	driver_peterpak,	/* 136028			(c) 1984 */
