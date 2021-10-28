@@ -70,6 +70,9 @@ import static gr.codebb.arcadeflex.v056.machine.ticketH.TICKET_STATUS_ACTIVE_LOW
 import gr.codebb.arcadeflex.v056.mame.timer.timer_callback;
 import static gr.codebb.arcadeflex.v056.mame.timer.timer_set;
 import static gr.codebb.arcadeflex.v056.mame.timerH.TIME_NOW;
+import static gr.codebb.arcadeflex.v056.mame.timer.timer_pulse;
+import static gr.codebb.arcadeflex.v056.mame.timer.timer_remove;
+import static gr.codebb.arcadeflex.v056.mame.timerH.TIME_IN_HZ;
 
 public class itech8 {
 
@@ -94,12 +97,11 @@ public class itech8 {
     static int/*data8_t*/ u8_pia_porta_data;
     static int/*data8_t*/ u8_pia_portb_data;
 
-    /*TODO*///	
-/*TODO*///	static data8_t *via6522;
-/*TODO*///	static data16_t via6522_timer_count[2];
-/*TODO*///	static void *via6522_timer[2];
-/*TODO*///	static data8_t via6522_int_state;
-/*TODO*///	
+    static UBytePtr via6522 = new UBytePtr();
+    static char[] via6522_timer_count = new char[2];
+    static Object[] via6522_timer = new Object[2];
+    static int via6522_int_state;
+
     static UBytePtr main_ram = new UBytePtr();
     static int[] main_ram_size = new int[1];
 
@@ -207,11 +209,11 @@ public class itech8 {
             pia_config(0, PIA_STANDARD_ORDERING, pia_interface);
             pia_reset();
 
-            /*TODO*///		/* reset the VIA chip (if used) */
-/*TODO*///		via6522_timer_count[0] = via6522_timer_count[1] = 0;
-/*TODO*///		via6522_timer[0] = via6522_timer[1] = 0;
-/*TODO*///		via6522_int_state = 0;
-/*TODO*///	
+            /* reset the VIA chip (if used) */
+            via6522_timer_count[0] = via6522_timer_count[1] = 0;
+            via6522_timer[0] = via6522_timer[1] = null;
+            via6522_int_state = 0;
+
             /* reset the ticket dispenser */
             ticket_dispenser_init(200, TICKET_MOTOR_ACTIVE_HIGH, TICKET_STATUS_ACTIVE_LOW);
         }
@@ -350,91 +352,99 @@ public class itech8 {
             return u8_sound_data & 0xFF;
         }
     };
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Sound 6522 VIA handling
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	INLINE void update_via_int(void)
-/*TODO*///	{
-/*TODO*///		/* if interrupts are enabled and one is pending, set the line */
-/*TODO*///		if ((via6522[14] & 0x80) && (via6522_int_state & via6522[14]))
-/*TODO*///			cpu_set_irq_line(1, M6809_FIRQ_LINE, ASSERT_LINE);
-/*TODO*///		else
-/*TODO*///			cpu_set_irq_line(1, M6809_FIRQ_LINE, CLEAR_LINE);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static void via6522_timer_callback(int which)
-/*TODO*///	{
-/*TODO*///		via6522_int_state |= 0x40 >> which;
-/*TODO*///		update_via_int();
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr via6522_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		/* update the data */
-/*TODO*///		via6522[offset] = data;
-/*TODO*///	
-/*TODO*///		/* switch off the offset */
-/*TODO*///		switch (offset)
-/*TODO*///		{
-/*TODO*///			case 0:		/* write to port B */
-/*TODO*///				pia_portb_out(0, data);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 5:		/* write into high order timer 1 */
-/*TODO*///				via6522_timer_count[0] = (via6522[5] << 8) | via6522[4];
-/*TODO*///				if (via6522_timer[0])
-/*TODO*///					timer_remove(via6522_timer[0]);
-/*TODO*///				via6522_timer[0] = timer_pulse(TIME_IN_HZ(CLOCK_8MHz/4) * (double)via6522_timer_count[0], 0, via6522_timer_callback);
-/*TODO*///	
-/*TODO*///				via6522_int_state &= ~0x40;
-/*TODO*///				update_via_int();
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 13:	/* write interrupt flag register */
-/*TODO*///				via6522_int_state &= ~data;
-/*TODO*///				update_via_int();
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			default:	/* log everything else */
-/*TODO*///				if (FULL_LOGGING != 0) logerror("VIA write(%02x) = %02x\n", offset, data);
-/*TODO*///				break;
-/*TODO*///		}
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr via6522_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		int result = 0;
-/*TODO*///	
-/*TODO*///		/* switch off the offset */
-/*TODO*///		switch (offset)
-/*TODO*///		{
-/*TODO*///			case 4:		/* read low order timer 1 */
-/*TODO*///				via6522_int_state &= ~0x40;
-/*TODO*///				update_via_int();
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 13:	/* interrupt flag register */
-/*TODO*///				result = via6522_int_state & 0x7f;
-/*TODO*///				if (via6522_int_state & via6522[14]) result |= 0x80;
-/*TODO*///				break;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		if (FULL_LOGGING != 0) logerror("VIA read(%02x) = %02x\n", offset, result);
-/*TODO*///		return result;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
+
+    /**
+     * ***********************************
+     *
+     * Sound 6522 VIA handling
+     *
+     ************************************
+     */
+    public static void update_via_int() {
+        /* if interrupts are enabled and one is pending, set the line */
+        if ((via6522.read(14) & 0x80) != 0 && (via6522_int_state & via6522.read(14)) != 0) {
+            cpu_set_irq_line(1, M6809_FIRQ_LINE, ASSERT_LINE);
+        } else {
+            cpu_set_irq_line(1, M6809_FIRQ_LINE, CLEAR_LINE);
+        }
+    }
+
+    public static timer_callback via6522_timer_callback = new timer_callback() {
+        public void handler(int which) {
+            via6522_int_state |= 0x40 >> which;
+            update_via_int();
+        }
+    };
+
+    public static WriteHandlerPtr via6522_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            /* update the data */
+            via6522.write(offset, data);
+
+            /* switch off the offset */
+            switch (offset) {
+                case 0:
+                    /* write to port B */
+                    pia_portb_out.handler(0, data);
+                    break;
+
+                case 5:
+                    /* write into high order timer 1 */
+                    via6522_timer_count[0] = (char) ((via6522.read(5) << 8) | via6522.read(4));
+                    if (via6522_timer[0] != null) {
+                        timer_remove(via6522_timer[0]);
+                    }
+                    via6522_timer[0] = timer_pulse(TIME_IN_HZ(CLOCK_8MHz / 4) * (double) via6522_timer_count[0], 0, via6522_timer_callback);
+
+                    via6522_int_state &= ~0x40;
+                    update_via_int();
+                    break;
+
+                case 13:
+                    /* write interrupt flag register */
+                    via6522_int_state &= ~data;
+                    update_via_int();
+                    break;
+
+                default:
+                    /* log everything else */
+                    if (FULL_LOGGING != 0) {
+                        logerror("VIA write(%02x) = %02x\n", offset, data);
+                    }
+                    break;
+            }
+        }
+    };
+
+    public static ReadHandlerPtr via6522_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            int result = 0;
+
+            /* switch off the offset */
+            switch (offset) {
+                case 4:
+                    /* read low order timer 1 */
+                    via6522_int_state &= ~0x40;
+                    update_via_int();
+                    break;
+
+                case 13:
+                    /* interrupt flag register */
+                    result = via6522_int_state & 0x7f;
+                    if ((via6522_int_state & via6522.read(14)) != 0) {
+                        result |= 0x80;
+                    }
+                    break;
+            }
+
+            if (FULL_LOGGING != 0) {
+                logerror("VIA read(%02x) = %02x\n", offset, result);
+            }
+            return result;
+        }
+    };
+
+    /*TODO*///	/*************************************
 /*TODO*///	 *
 /*TODO*///	 *	16-bit memory shunts
 /*TODO*///	 *
@@ -519,7 +529,6 @@ public class itech8 {
 /*TODO*///		else if (ACCESSING_LSB != 0)
 /*TODO*///			itech8_tms34061_w(offset * 2 + 1, data);
 /*TODO*///	}
-
     /**
      * ***********************************
      *
@@ -2284,10 +2293,9 @@ public class itech8 {
      */
     public static InitDriverPtr init_viasound = new InitDriverPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///		/* some games with a YM3812 use a VIA(6522) for timing and communication */
-/*TODO*///		install_mem_read_handler (1, 0x5000, 0x500f, via6522_r);
-/*TODO*///		via6522 = install_mem_write_handler(1, 0x5000, 0x500f, via6522_w);
+            /* some games with a YM3812 use a VIA(6522) for timing and communication */
+            install_mem_read_handler(1, 0x5000, 0x500f, via6522_r);
+            via6522 = install_mem_write_handler(1, 0x5000, 0x500f, via6522_w);
         }
     };
 

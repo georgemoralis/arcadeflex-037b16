@@ -294,13 +294,15 @@ public class itech8 {
 /*TODO*///	}
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	INLINE void draw_byte_trans4_xflip(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
-/*TODO*///	{
-/*TODO*///		val = (val >> 4) | (val << 4);
-/*TODO*///		draw_byte_trans4(addr, val, mask, latch);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
+    public static operation_Ptr draw_byte_trans4_xflip = new operation_Ptr() {
+        @Override
+        public void handler(int addr, int/*UINT8*/ val, int/*UINT8*/ mask, int/*UINT8*/ latch) {
+            val = ((val >> 4) | (val << 4)) & 0xFF;
+            draw_byte_trans4.handler(addr, val, mask, latch);
+        }
+    };
+
+    /*TODO*///	
 /*TODO*///	INLINE void draw_byte_shift_xflip(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 /*TODO*///	{
 /*TODO*///		val = (val >> 4) | (val << 4);
@@ -582,8 +584,8 @@ public class itech8 {
 /*TODO*///	
 /*TODO*///	DRAW_RLE_MACRO(draw_rle_xflip,              0, draw_byte_xflip)
 /*TODO*///	DRAW_RLE_MACRO(draw_rle_shift_xflip,        0, draw_byte_shift_xflip)
-/*TODO*///	DRAW_RLE_MACRO(draw_rle_trans4_xflip,       1, draw_byte_trans4_xflip)
-/*TODO*///	DRAW_RLE_MACRO(draw_rle_shift_trans4_xflip, 1, draw_byte_shift_trans4_xflip)
+/*TODO*///	
+/*TODO*///	
 /*TODO*///	
     public static abstract interface blitter_table_Ptr {
 
@@ -688,13 +690,13 @@ public class itech8 {
     public static blitter_table_Ptr draw_rle_trans4_xflip = new blitter_table_Ptr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            DRAW_RLE(1, draw_byte_trans4_xflip);
         }
     };
     public static blitter_table_Ptr draw_rle_shift_trans4_xflip = new blitter_table_Ptr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            DRAW_RLE(1, draw_byte_shift_trans4_xflip);
         }
     };
     static blitter_table_Ptr blit_table4_xflip[]
