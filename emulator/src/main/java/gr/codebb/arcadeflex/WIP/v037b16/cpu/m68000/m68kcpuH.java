@@ -146,7 +146,7 @@ public class m68kcpuH
 /*TODO*///	#define EXCEPTION_TRAPV                    7
 /*TODO*///	#define EXCEPTION_PRIVILEGE_VIOLATION      8
 /*TODO*///	#define EXCEPTION_TRACE                    9
-/*TODO*///	#define EXCEPTION_1010                    10
+	public static final int EXCEPTION_1010                    = 10;
 /*TODO*///	#define EXCEPTION_1111                    11
 /*TODO*///	#define EXCEPTION_FORMAT_ERROR            14
 /*TODO*///	#define EXCEPTION_UNINITIALIZED_INTERRUPT 15
@@ -1745,25 +1745,26 @@ public class m68kcpuH
 /*TODO*///		/* Use up some clock cycles and undo the instruction's cycles */
 /*TODO*///		USE_CYCLES(CYC_EXCEPTION[EXCEPTION_PRIVILEGE_VIOLATION] - CYC_INSTRUCTION[REG_IR]);
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	/* Exception for A-Line instructions */
-/*TODO*///	INLINE void m68ki_exception_1010(void)
-/*TODO*///	{
+	
+	/* Exception for A-Line instructions */
+	public static void m68ki_exception_1010()
+	{
+            throw new UnsupportedOperationException("Unimplemented");
 /*TODO*///		uint sr;
 /*TODO*///	#if M68K_LOG_1010_1111 == OPT_ON
 /*TODO*///		M68K_DO_LOG_EMU((M68K_LOG_FILEHANDLE "%s at %08x: called 1010 instruction %04x (%s)\n",
 /*TODO*///						 m68ki_cpu_names[CPU_TYPE], ADDRESS_68K(REG_PPC), REG_IR,
 /*TODO*///						 m68ki_disassemble_quick(ADDRESS_68K(REG_PPC))));
 /*TODO*///	#endif
-/*TODO*///	
+
 /*TODO*///		sr = m68ki_init_exception();
 /*TODO*///		m68ki_stack_frame_0000(REG_PC-2, sr, EXCEPTION_1010);
 /*TODO*///		m68ki_jump_vector(EXCEPTION_1010);
-/*TODO*///	
+
 /*TODO*///		/* Use up some clock cycles and undo the instruction's cycles */
 /*TODO*///		USE_CYCLES(CYC_EXCEPTION[EXCEPTION_1010] - CYC_INSTRUCTION[REG_IR]);
-/*TODO*///	}
-/*TODO*///	
+	}
+	
 /*TODO*///	/* Exception for F-Line instructions */
 /*TODO*///	INLINE void m68ki_exception_1111(void)
 /*TODO*///	{
