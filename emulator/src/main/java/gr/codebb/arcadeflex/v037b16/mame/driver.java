@@ -103,6 +103,7 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.flkatck.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.chinagat.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.jedi.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.cclimber.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.galivan.*;
 
 public class driver {
 
@@ -296,13 +297,13 @@ public class driver {
         driver_terracre, /* (c) 1985 */
         driver_terracrb, /* (c) 1985 */
         driver_terracra, /* (c) 1985 */
-        /*TODO*///	driver_galivan,	/* (c) 1985 */
-        /*TODO*///	driver_galivan2,	/* (c) 1985 */
-        /*TODO*///	driver_dangar,	/* (c) 1986 */
-        /*TODO*///	driver_dangar2,	/* (c) 1986 */
-        /*TODO*///	driver_dangarb,	/* bootleg */
-        /*TODO*///	driver_ninjemak,	/* (c) 1986 (US?) */
-        /*TODO*///	driver_youma,		/* (c) 1986 (Japan) */
+        driver_galivan,	/* (c) 1985 */
+        driver_galivan2,	/* (c) 1985 */
+        driver_dangar,	/* (c) 1986 */
+        driver_dangar2,	/* (c) 1986 */
+        driver_dangarb,	/* bootleg */
+        driver_ninjemak,	/* (c) 1986 (US?) */
+        driver_youma,		/* (c) 1986 (Japan) */
         /*TODO*///	driver_terraf,	/* (c) 1987 */
         /*TODO*///	driver_terrafu,	/* (c) 1987 Nichibutsu USA */
         /*TODO*///	driver_kodure,	/* (c) 1987 (Japan) */
