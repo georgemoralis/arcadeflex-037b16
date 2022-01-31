@@ -38,6 +38,9 @@ import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 //to be organized
 import static arcadeflex036.osdepend.*;
+import gr.codebb.arcadeflex.WIP.v037b16.cpu.i8085.i8080;
+import gr.codebb.arcadeflex.WIP.v037b16.cpu.i8085.i8085;
+import static gr.codebb.arcadeflex.WIP.v037b16.cpu.i8085.i8085H.*;
 import java.util.ArrayList;
 import static mame037b16.mame.Machine;
 import static mame037b16.mame.updatescreen;
@@ -325,8 +328,8 @@ public class cpuintrf {
     public static cpu_interface cpuintf[]
             = {new dummy_cpu(),
                 new z80(),//CPU1(Z80,	   z80, 	 1,255,1.00,Z80_IGNORE_INT,    Z80_IRQ_INT,    Z80_NMI_INT,    8, 16,	  0,16,LE,1, 4	),
-                new dummy_cpu(),//CPU0(8080,	   i8080,	 4,255,1.00,I8080_NONE, 	   I8080_INTR,	   I8080_TRAP,	   8, 16,	  0,16,LE,1, 3	),
-                new dummy_cpu(),//CPU0(8085A,    i8085,	 4,255,1.00,I8085_NONE, 	   I8085_INTR,	   I8085_TRAP,	   8, 16,	  0,16,LE,1, 3	),
+                new i8080(),//CPU0(8080,	   i8080,	 4,255,1.00,I8080_NONE, 	   I8080_INTR,	   I8080_TRAP,	   8, 16,	  0,16,LE,1, 3	),
+                new i8085(),//CPU0(8085A,    i8085,	 4,255,1.00,I8085_NONE, 	   I8085_INTR,	   I8085_TRAP,	   8, 16,	  0,16,LE,1, 3	),
                 new m6502(),//CPU0(M6502,    m6502,	 1,  0,1.00,M6502_INT_NONE,    M6502_INT_IRQ,  M6502_INT_NMI,  8, 16,	  0,16,LE,1, 3	),
                 new dummy_cpu(),//CPU0(M65C02,   m65c02,	 1,  0,1.00,M65C02_INT_NONE,   M65C02_INT_IRQ, M65C02_INT_NMI, 8, 16,	  0,16,LE,1, 3	),
                 new dummy_cpu(),//CPU0(M65SC02,  m65sc02,  1,  0,1.00,M65SC02_INT_NONE,  M65SC02_INT_IRQ,M65SC02_INT_NMI,8, 16,	  0,16,LE,1, 3	),
@@ -1599,25 +1602,44 @@ public class cpuintrf {
                         break;
                     /*TODO*///#endif
 /*TODO*///#if (HAS_8080)
-/*TODO*///			case CPU_8080:
-/*TODO*///				switch (num)
-/*TODO*///				{
-/*TODO*///				case I8080_INTR:		irq_line = 0; LOG(("I8080 INTR\n")); break;
-/*TODO*///				default:				irq_line = 0; LOG(("I8080 unknown\n"));
-/*TODO*///				}
-/*TODO*///				break;
+			case CPU_8080:
+				switch (num)
+				{
+				case I8080_INTR:		
+                                    irq_line = 0; 
+                                    //LOG(("I8080 INTR\n")); 
+                                    break;
+				default:				
+                                    irq_line = 0; 
+                                    //LOG(("I8080 unknown\n"));
+				}
+				break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_8085A)
-/*TODO*///			case CPU_8085A:
-/*TODO*///				switch (num)
-/*TODO*///				{
-/*TODO*///				case I8085_INTR:		irq_line = 0; LOG(("I8085 INTR\n")); break;
-/*TODO*///				case I8085_RST55:		irq_line = 1; LOG(("I8085 RST55\n")); break;
-/*TODO*///				case I8085_RST65:		irq_line = 2; LOG(("I8085 RST65\n")); break;
-/*TODO*///				case I8085_RST75:		irq_line = 3; LOG(("I8085 RST75\n")); break;
-/*TODO*///				default:				irq_line = 0; LOG(("I8085 unknown\n"));
-/*TODO*///				}
-/*TODO*///				break;
+			case CPU_8085A:
+				switch (num)
+				{
+				case I8085_INTR:		
+                                    irq_line = 0; 
+                                    //LOG(("I8085 INTR\n")); 
+                                    break;
+				case I8085_RST55:		
+                                    irq_line = 1; 
+                                    //LOG(("I8085 RST55\n")); 
+                                    break;
+				case I8085_RST65:		
+                                    irq_line = 2; 
+                                    //LOG(("I8085 RST65\n")); 
+                                    break;
+				case I8085_RST75:		
+                                    irq_line = 3; 
+                                    //LOG(("I8085 RST75\n")); 
+                                    break;
+				default:				
+                                    irq_line = 0; 
+                                    //LOG(("I8085 unknown\n"));
+				}
+				break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_M6502)
 			case CPU_M6502: 			
