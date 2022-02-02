@@ -141,6 +141,18 @@ public class cstring {
             dst[i] = src[i];
         }
     }
+    
+    public static void memcpy(short[] dst, short[] src, int size) {
+        for (int i = 0; i < Math.min(size, src.length); i++) {
+            dst[i] = src[i];
+        }
+    }
+    
+    public static void memcpy(UBytePtr dst, char[] src, int size) {
+        for (int i = 0; i < Math.min(size, src.length); i++) {
+            dst.memory[i] = src[i];
+        }
+    }
 
     public static void memcpy(char[] dst, int dstofs, char[] src, int srcofs, int size) {
         for (int mem = 0; mem < size; mem++) {
