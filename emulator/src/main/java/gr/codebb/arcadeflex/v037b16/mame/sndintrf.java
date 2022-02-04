@@ -45,6 +45,7 @@ import static mame037b16.mame.Machine;
 import mame056.sound.namco;
 import gr.codebb.arcadeflex.v037b16.sound.pokey;
 import mame037b7.sound.y8950intf;
+import gr.codebb.arcadeflex.WIP.v037b16.sound.nes_apu;
 
 public class sndintrf {
 
@@ -142,23 +143,25 @@ public class sndintrf {
 /*TODO*///	latch2 = cleared_value;
 /*TODO*///}
 /*TODO*///
-/*TODO*///
-/*TODO*///static int latch3,read_debug3;
-/*TODO*///
-/*TODO*///static void soundlatch3_callback(int param)
-/*TODO*///{
-/*TODO*///	if (read_debug3 == 0 && latch3 != param)
-/*TODO*///		logerror("Warning: sound latch 3 written before being read. Previous: %02x, new: %02x\n",latch3,param);
-/*TODO*///	latch3 = param;
-/*TODO*///	read_debug3 = 0;
-/*TODO*///}
-/*TODO*///
-/*TODO*///WRITE_HANDLER( soundlatch3_w )
-/*TODO*///{
-/*TODO*///	/* make all the CPUs synchronize, and only AFTER that write the new command to the latch */
-/*TODO*///	timer_set(TIME_NOW,data,soundlatch3_callback);
-/*TODO*///}
-/*TODO*///
+
+    static int latch3,read_debug3;
+
+    public static timer_callback soundlatch3_callback = new timer_callback() {
+        public void handler(int param) {
+            if (read_debug3 == 0 && latch3 != param)
+                    logerror("Warning: sound latch 3 written before being read. Previous: %02x, new: %02x\n",latch3,param);
+            latch3 = param;
+            read_debug3 = 0;
+        }
+    };
+
+    public static WriteHandlerPtr soundlatch3_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            /* make all the CPUs synchronize, and only AFTER that write the new command to the latch */
+            timer_set(TIME_NOW,data,soundlatch3_callback);
+        }
+    };
+
 /*TODO*///WRITE16_HANDLER( soundlatch3_word_w )
 /*TODO*///{
 /*TODO*///	static data16_t word;
@@ -168,12 +171,15 @@ public class sndintrf {
 /*TODO*///	timer_set(TIME_NOW,word,soundlatch3_callback);
 /*TODO*///}
 /*TODO*///
-/*TODO*///READ_HANDLER( soundlatch3_r )
-/*TODO*///{
-/*TODO*///	read_debug3 = 1;
-/*TODO*///	return latch3;
-/*TODO*///}
-/*TODO*///
+    public static ReadHandlerPtr soundlatch3_r = new ReadHandlerPtr() {
+        @Override
+        public int handler(int offset) {
+            read_debug3 = 1;
+            return latch3;
+        }
+    };
+
+    
 /*TODO*///READ16_HANDLER( soundlatch3_word_r )
 /*TODO*///{
 /*TODO*///	read_debug3 = 1;
@@ -458,18 +464,7 @@ public class sndintrf {
                 new sn76477(),
                 new sn76496(),
                 new pokey(),
-                /*TODO*///#endif
-                /*TODO*///#if (HAS_NES)
-                /*TODO*///    {
-                /*TODO*///		SOUND_NES,
-                /*TODO*///		"Nintendo",
-                /*TODO*///		NES_num,
-                /*TODO*///		0,
-                /*TODO*///		NESPSG_sh_start,
-                /*TODO*///		NESPSG_sh_stop,
-                /*TODO*///		NESPSG_sh_update,
-                /*TODO*///		0
-                /*TODO*///	},
+                new nes_apu(),                
                 new Dummy_snd(),
                 /*TODO*///#endif
                 /*TODO*///#if (HAS_ASTROCADE)
@@ -483,7 +478,6 @@ public class sndintrf {
                 /*TODO*///		astrocade_sh_update,
                 /*TODO*///		0
                 /*TODO*///	},
-                new Dummy_snd(),
                 new namco(),
                 new tms36xx(),
                 new _5110intf(),

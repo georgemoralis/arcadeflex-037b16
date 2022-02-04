@@ -473,6 +473,6 @@ public class ptr {
             return base;
         }
         public int base;
-        char[] memory;
+        public char[] memory;
     }
 }

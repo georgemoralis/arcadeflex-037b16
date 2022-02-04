@@ -5126,41 +5126,42 @@ static void common_drawgfxzoom( osd_bitmap dest_bmp, GfxElement gfx,
         }
     }
 
-    /*TODO*///
-/*TODO*///DECLARE(blockmove_NtoN_opaque_noremap_flipx,(
-/*TODO*///		const DATA_TYPE *srcdata,int srcwidth,int srcheight,int srcmodulo,
-/*TODO*///		DATA_TYPE *dstdata,int dstmodulo),
-/*TODO*///{
-/*TODO*///	DATA_TYPE *end;
-/*TODO*///
-/*TODO*///	srcmodulo += srcwidth;
-/*TODO*///	dstmodulo -= srcwidth;
-/*TODO*///	//srcdata += srcwidth-1;
-/*TODO*///
-/*TODO*///	while (srcheight)
-/*TODO*///	{
-/*TODO*///		end = dstdata + srcwidth;
-/*TODO*///		while (dstdata <= end - 8)
-/*TODO*///		{
-/*TODO*///			srcdata -= 8;
-/*TODO*///			dstdata[0] = srcdata[8];
-/*TODO*///			dstdata[1] = srcdata[7];
-/*TODO*///			dstdata[2] = srcdata[6];
-/*TODO*///			dstdata[3] = srcdata[5];
-/*TODO*///			dstdata[4] = srcdata[4];
-/*TODO*///			dstdata[5] = srcdata[3];
-/*TODO*///			dstdata[6] = srcdata[2];
-/*TODO*///			dstdata[7] = srcdata[1];
-/*TODO*///			dstdata += 8;
-/*TODO*///		}
-/*TODO*///		while (dstdata < end)
-/*TODO*///			*(dstdata++) = *(srcdata--);
-/*TODO*///
-/*TODO*///		srcdata += srcmodulo;
-/*TODO*///		dstdata += dstmodulo;
-/*TODO*///		srcheight--;
-/*TODO*///	}
-/*TODO*///})
+    public static void blockmove_NtoN_opaque_noremap8_flipx(
+		UBytePtr srcdata,int srcwidth,int srcheight,int srcmodulo,
+		UBytePtr dstdata,int dstmodulo)
+    {
+        UBytePtr end;
+
+        srcmodulo += srcwidth;
+        dstmodulo -= srcwidth;
+        //srcdata += srcwidth-1;
+
+        while (srcheight != 0)
+        {
+		end = new UBytePtr(dstdata, srcwidth);
+		while (dstdata.offset <= end.offset - 8)
+		{
+			srcdata.offset -= 8;
+			dstdata.write(0, srcdata.read(8));
+			dstdata.write(1, srcdata.read(7));
+			dstdata.write(2, srcdata.read(6));
+			dstdata.write(3, srcdata.read(5));
+			dstdata.write(4, srcdata.read(4));
+			dstdata.write(5, srcdata.read(3));
+			dstdata.write(6, srcdata.read(2));
+			dstdata.write(7, srcdata.read(1));
+			dstdata.offset += 8;
+		}
+		while (dstdata.offset < end.offset){
+			dstdata.writeinc( srcdata.read() );
+                        srcdata.dec();
+                }
+
+		srcdata.offset += srcmodulo;
+		dstdata.offset += dstmodulo;
+		srcheight--;
+    	}
+    }
 /*TODO*///
 /*TODO*///DECLARE(blockmove_NtoN_opaque_remap,(
 /*TODO*///		const DATA_TYPE *srcdata,int srcwidth,int srcheight,int srcmodulo,
@@ -5966,8 +5967,9 @@ static void common_drawgfxzoom( osd_bitmap dest_bmp, GfxElement gfx,
 /*TODO*///
             case TRANSPARENCY_NONE_RAW:
                 if (flipx != 0) {
-                    throw new UnsupportedOperationException("Unsupported");
+                    //throw new UnsupportedOperationException("Unsupported");
                     //blockmove_##function##_flipx##8 args ;//BLOCKMOVE(NtoN_opaque_noremap,flipx,(sd,sw,sh,sm,dd,dm));
+                    blockmove_NtoN_opaque_noremap8_flipx(sd,sw,sh,sm,dd,dm);
                 } else {
                     blockmove_NtoN_opaque_noremap8(sd, sw, sh, sm, dd, dm);
                 }

@@ -45,6 +45,8 @@ import gr.codebb.arcadeflex.WIP.v037b16.cpu.i8039.i8039;
 import gr.codebb.arcadeflex.WIP.v037b16.cpu.i8039.i8048;
 import gr.codebb.arcadeflex.WIP.v037b16.cpu.i8039.n7751;
 import static gr.codebb.arcadeflex.WIP.v037b16.cpu.i8085.i8085H.*;
+import gr.codebb.arcadeflex.WIP.v037b16.cpu.m6502.n2a03;
+import gr.codebb.arcadeflex.WIP.v037b16.cpu.s2650.s2650;
 import java.util.ArrayList;
 import static mame037b16.mame.Machine;
 import static mame037b16.mame.updatescreen;
@@ -343,7 +345,7 @@ public class cpuintrf {
                 new dummy_cpu(),//CPU0(M6510T,   m6510t,	 1,  0,1.00,M6510T_INT_NONE,   M6510T_INT_IRQ, M6510T_INT_NMI, 8, 16,	  0,16,LE,1, 3	),
                 new dummy_cpu(),//CPU0(M7501,    m7501,	 1,  0,1.00,M7501_INT_NONE,    M7501_INT_IRQ,  M7501_INT_NMI,  8, 16,	  0,16,LE,1, 3	),
                 new dummy_cpu(),//CPU0(M8502,    m8502,	 1,  0,1.00,M8502_INT_NONE,    M8502_INT_IRQ,  M8502_INT_NMI,  8, 16,	  0,16,LE,1, 3	),
-                new dummy_cpu(),//CPU0(N2A03,    n2a03,	 1,  0,1.00,N2A03_INT_NONE,    N2A03_INT_IRQ,  N2A03_INT_NMI,  8, 16,	  0,16,LE,1, 3	),
+                new n2a03(),//CPU0(N2A03,    n2a03,	 1,  0,1.00,N2A03_INT_NONE,    N2A03_INT_IRQ,  N2A03_INT_NMI,  8, 16,	  0,16,LE,1, 3	),
                 new dummy_cpu(),//CPU0(M4510,    m4510,	 1,  0,1.00,M4510_INT_NONE,    M4510_INT_IRQ,  M4510_INT_NMI,  8, 20,	  0,20,LE,1, 3	),
                 new h6280(),//CPU0(H6280,    h6280,	 3,  0,1.00,H6280_INT_NONE,    -1,			   H6280_INT_NMI,  8, 21,	  0,21,LE,1, 3	),
                 new dummy_cpu(),//CPU0(I86,	   i86, 	 1,  0,1.00,I86_INT_NONE,	   -1000,		   I86_NMI_INT,    8, 20,	  0,20,LE,1, 5	),
@@ -377,7 +379,7 @@ public class cpuintrf {
                 new dummy_cpu(),//CPU0(M68EC020, m68ec020, 8, -1,1.00,MC68EC020_INT_NONE,-1,			   -1,			   32,24bedw, 0,24,BE,4,10	),
                 new dummy_cpu(),//CPU0(M68020,   m68020,	 8, -1,1.00,MC68020_INT_NONE,	-1, 		   -1,			   32,32bedw, 0,32,BE,4,10	),
                 new dummy_cpu(),//CPU0(T11,	   t11, 	 4,  0,1.00,T11_INT_NONE,	   -1,			   -1,			   16,16lew,  0,16,LE,2, 6	),
-                new dummy_cpu(),//CPU0(S2650,    s2650,	 2,  0,1.00,S2650_INT_NONE,    -1,			   -1,			   8, 16,	  0,15,LE,1, 3	),
+                new s2650(),//CPU0(S2650,    s2650,	 2,  0,1.00,S2650_INT_NONE,    -1,			   -1,			   8, 16,	  0,15,LE,1, 3	),
                 new dummy_cpu(),//CPU2(TMS34010, tms34010, 2,  0,1.00,TMS34010_INT_NONE, TMS34010_INT1,  -1,			   16,29lew,  3,29,LE,2,10	),
                 new dummy_cpu(),//CPU2(TMS34020, tms34020, 2,  0,1.00,TMS34020_INT_NONE, TMS34020_INT1,  -1,			   16,29lew,  3,29,LE,2,10	),
                 new dummy_cpu(),//CPU0(TMS9900,  tms9900,  1,  0,1.00,TMS9900_NONE,	   -1,			   -1,			   16,16bew,  0,16,BE,2, 6	),
@@ -1676,7 +1678,10 @@ public class cpuintrf {
 /*TODO*///			case CPU_M8502: 			irq_line = 0; LOG(("M8502 IRQ\n")); break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_N2A03)
-/*TODO*///			case CPU_N2A03: 			irq_line = 0; LOG(("N2A03 IRQ\n")); break;
+			case CPU_N2A03: 			
+                            irq_line = 0; 
+                            //LOG(("N2A03 IRQ\n")); 
+                            break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_M4510)
 /*TODO*///			case CPU_M4510: 			irq_line = 0; LOG(("M4510 IRQ\n")); break;
@@ -1939,7 +1944,10 @@ public class cpuintrf {
 /*TODO*///				break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_S2650)
-/*TODO*///			case CPU_S2650: 			irq_line = 0; LOG(("S2650 IRQ\n")); break;
+			case CPU_S2650: 			
+                            irq_line = 0; 
+                            //LOG(("S2650 IRQ\n")); 
+                            break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_TMS34010)
 /*TODO*///			case CPU_TMS34010:

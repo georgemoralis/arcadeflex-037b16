@@ -5,11 +5,14 @@
 package gr.codebb.arcadeflex.WIP.v037b16.drivers;
 
 //generic imports
+import static gr.codebb.arcadeflex.WIP.v037b16.cpu.s2650.s2650H.S2650_SENSE_PORT;
 import static gr.codebb.arcadeflex.v037b16.generic.fucPtr.*;
 //drivers imports
 import static gr.codebb.arcadeflex.v037b16.drivers.frogger.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.galaxian.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.amidar.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.cclimber.driver_ckong;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.cvs.driver_hunchbak;
 //mame imports
 import static gr.codebb.arcadeflex.v037b16.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b16.mame.cpuintrfH.*;
@@ -295,7 +298,7 @@ public class scramble {
     };
 
     public static IO_ReadPort hunchbks_readport[] = {
-        /*TODO*///		new IO_ReadPort(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),    new IO_ReadPort( S2650_SENSE_PORT, S2650_SENSE_PORT, input_port_3_r ),
+        new IO_ReadPort(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),    new IO_ReadPort( S2650_SENSE_PORT, S2650_SENSE_PORT, input_port_3_r ),
         new IO_ReadPort(MEMPORT_MARKER, 0)
     };
 
@@ -1900,11 +1903,11 @@ public class scramble {
     public static GameDriver driver_knockout = new GameDriver("1982", "knockout", "scramble.java", rom_knockout, driver_triplep, machine_driver_triplep, input_ports_triplep, init_scobra, ROT90, "KKK", "Knock Out!!");
     public static GameDriver driver_mariner = new GameDriver("1981", "mariner", "scramble.java", rom_mariner, null, machine_driver_mariner, input_ports_scramble, init_mariner, ROT90, "Amenip", "Mariner");
     public static GameDriver driver_800fath = new GameDriver("1981", "800fath", "scramble.java", rom_800fath, driver_mariner, machine_driver_mariner, input_ports_scramble, init_mariner, ROT90, "Amenip (US Billiards Inc. license)", "800 Fathoms");
-    /*TODO*///public static GameDriver driver_ckongs = new GameDriver("1981", "ckongs", "scramble.java", rom_ckongs, driver_ckong, machine_driver_ckongs, input_ports_ckongs, init_ckongs, ROT90, "bootleg", "Crazy Kong (Scramble hardware)");
+    public static GameDriver driver_ckongs = new GameDriver("1981", "ckongs", "scramble.java", rom_ckongs, driver_ckong, machine_driver_ckongs, input_ports_ckongs, init_ckongs, ROT90, "bootleg", "Crazy Kong (Scramble hardware)");
     public static GameDriver driver_mars = new GameDriver("1981", "mars", "scramble.java", rom_mars, null, machine_driver_mars, input_ports_mars, init_mars, ROT90, "Artic", "Mars");
     public static GameDriver driver_devilfsh = new GameDriver("1982", "devilfsh", "scramble.java", rom_devilfsh, null, machine_driver_devilfsh, input_ports_devilfsh, init_mars, ROT90, "Artic", "Devil Fish");
     public static GameDriver driver_newsin7 = new GameDriver("1983", "newsin7", "scramble.java", rom_newsin7, null, machine_driver_newsin7, input_ports_newsin7, init_mars, ROT90, "ATW USA, Inc.", "New Sinbad 7", GAME_IMPERFECT_COLORS);
     public static GameDriver driver_hotshock = new GameDriver("1982", "hotshock", "scramble.java", rom_hotshock, null, machine_driver_hotshock, input_ports_hotshock, init_hotshock, ROT90, "E.G. Felaco", "Hot Shocker");
-    /*TODO*///public static GameDriver driver_hunchbks = new GameDriver("1983", "hunchbks", "scramble.java", rom_hunchbks, driver_hunchbak, machine_driver_hunchbks, input_ports_hunchbks, init_scobra, ROT90, "Century", "Hunchback (Scramble hardware)");
+    public static GameDriver driver_hunchbks = new GameDriver("1983", "hunchbks", "scramble.java", rom_hunchbks, driver_hunchbak, machine_driver_hunchbks, input_ports_hunchbks, init_scobra, ROT90, "Century", "Hunchback (Scramble hardware)");
     public static GameDriver driver_cavelon = new GameDriver("1983", "cavelon", "scramble.java", rom_cavelon, null, machine_driver_cavelon, input_ports_cavelon, init_cavelon, ROT90, "Jetsoft", "Cavelon");
 }

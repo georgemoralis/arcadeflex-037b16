@@ -106,6 +106,15 @@ import static gr.codebb.arcadeflex.WIP.v037b16.drivers.cclimber.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.galivan.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.phoenix.*;
 import static gr.codebb.arcadeflex.WIP.v037b16.drivers.meteor.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.redalert.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.blockade.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.safarir.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.geebee.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.m79amb.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.stactics.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.starcrus.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.dkong.*;
+import static gr.codebb.arcadeflex.WIP.v037b16.drivers.cvs.*;
 
 public class driver {
 
@@ -214,7 +223,7 @@ public class driver {
         driver_atlants2, /* (c) 1981 Comsoft */
         driver_theend, /* (c) 1980 Konami */
         driver_theends, /* (c) 1980 Stern */
-        /*TODO*///	driver_ckongs,	/* bootleg */
+        driver_ckongs,	/* bootleg */
         driver_froggers, /* bootleg */
         driver_amidars, /* (c) 1982 Konami */
         driver_triplep, /* (c) 1982 KKI */
@@ -225,7 +234,7 @@ public class driver {
         driver_devilfsh, /* (c) 1982 Artic */
         driver_newsin7, /* (c) 1983 ATW USA, Inc. */
         driver_hotshock, /* (c) 1982 E.G. Felaco */
-        /*TODO*///	driver_hunchbks,	/* (c) 1983 Century */
+        driver_hunchbks,	/* (c) 1983 Century */
         driver_cavelon, /* (c) 1983 Jetsoft */
         driver_scobra, /* GX316 (c) 1981 Konami */
         driver_scobras, /* GX316 (c) 1981 Stern */
@@ -397,7 +406,7 @@ public class driver {
         /*TODO*///	driver_niyanpai,	/* (c) 1996 */
         
         /* "Phoenix hardware" (and variations) games */
-        /*TODO*///	driver_safarir,	/* Shin Nihon Kikaku (SNK) */
+        driver_safarir,	/* Shin Nihon Kikaku (SNK) */
         driver_phoenix,	/* (c) 1980 Amstar */
         driver_phoenixa,	/* (c) 1980 Amstar + Centuri license */
         driver_phoenixt,	/* (c) 1980 Taito */
@@ -413,16 +422,16 @@ public class driver {
         /*TODO*///	driver_popflame,	/* (c) 1982 Jaleco */
         /*TODO*///	driver_popflama,	/* (c) 1982 Jaleco */
         /*TODO*///TESTdriver_popflamb,
-        /*TODO*///
-        /*TODO*///	/* Namco games (plus some intruders on similar hardware) */
-        /*TODO*///	driver_geebee,	/* [1978] Namco */
-        /*TODO*///	driver_geebeeg,	/* [1978] Gremlin */
-        /*TODO*///	driver_bombbee,	/* [1979] Namco */
-        /*TODO*///	driver_cutieq,	/* (c) 1979 Namco */
-        /*TODO*///	driver_navalone,	/* (c) 1980 Namco */
-        /*TODO*///	driver_kaitei,	/* [1980] K.K. Tokki */
-        /*TODO*///	driver_kaitein,	/* [1980] Namco */
-        /*TODO*///	driver_sos,		/* [1980] Namco */
+        
+        /* Namco games (plus some intruders on similar hardware) */
+        driver_geebee,	/* [1978] Namco */
+        driver_geebeeg,	/* [1978] Gremlin */
+        /*TODO*///      driver_bombbee,	/* [1979] Namco */
+        /*TODO*///      driver_cutieq,	/* (c) 1979 Namco */
+        driver_navalone,	/* (c) 1980 Namco */
+        driver_kaitei,	/* [1980] K.K. Tokki */
+        driver_kaitein,	/* [1980] Namco */
+        driver_sos,		/* [1980] Namco */
         /*TODO*///	driver_tankbatt,	/* (c) 1980 Namco */
         /*TODO*///	driver_warpwarp,	/* (c) 1981 Namco */
         /*TODO*///	driver_warpwarr,	/* (c) 1981 Rock-ola - the high score table says "NAMCO" */
@@ -647,23 +656,23 @@ public class driver {
         /*TODO*///	driver_dowild,	/* (c) 1984 */
         /*TODO*///	driver_jjack,		/* (c) 1984 */
         /*TODO*///	driver_kickridr,	/* (c) 1984 */
-        /*TODO*///
-        /*TODO*///	/* Nintendo games */
-        /*TODO*///	driver_radarscp,	/* (c) 1980 Nintendo */
-        /*TODO*///	driver_dkong,		/* (c) 1981 Nintendo of America */
-        /*TODO*///	driver_dkongjp,	/* (c) 1981 Nintendo */
-        /*TODO*///	driver_dkongjpo,	/* (c) 1981 Nintendo */
-        /*TODO*///	driver_dkongjr,	/* (c) 1982 Nintendo of America */
-        /*TODO*///	driver_dkngjrjp,	/* no copyright notice */
-        /*TODO*///	driver_dkjrjp,	/* (c) 1982 Nintendo */
-        /*TODO*///	driver_dkjrbl,	/* (c) 1982 Nintendo of America */
-        /*TODO*///	driver_dkong3,	/* (c) 1983 Nintendo of America */
-        /*TODO*///	driver_dkong3j,	/* (c) 1983 Nintendo */
+        
+        /* Nintendo games */
+        driver_radarscp,	/* (c) 1980 Nintendo */
+        driver_dkong,		/* (c) 1981 Nintendo of America */
+        driver_dkongjp,	/* (c) 1981 Nintendo */
+        driver_dkongjpo,	/* (c) 1981 Nintendo */
+        driver_dkongjr,	/* (c) 1982 Nintendo of America */
+        driver_dkngjrjp,	/* no copyright notice */
+        driver_dkjrjp,	/* (c) 1982 Nintendo */
+        driver_dkjrbl,	/* (c) 1982 Nintendo of America */
+        driver_dkong3,	/* (c) 1983 Nintendo of America */
+        driver_dkong3j,	/* (c) 1983 Nintendo */
         /*TODO*///	driver_mario,		/* (c) 1983 Nintendo of America */
         /*TODO*///	driver_mariojp,	/* (c) 1983 Nintendo */
         /*TODO*///	driver_masao,		/* bootleg */
-        /*TODO*///	driver_hunchbkd,	/* (c) 1983 Century */
-        /*TODO*///	driver_herbiedk,	/* (c) 1984 CVS */
+        driver_hunchbkd,	/* (c) 1983 Century */
+        driver_herbiedk,	/* (c) 1984 CVS */
         /*TODO*///TESTdriver_herocast,
         /*TODO*///	driver_popeye,
         /*TODO*///	driver_popeye2,
@@ -829,7 +838,7 @@ public class driver {
         /*TODO*///	driver_polaris,	/* PS  (c) 1980 Taito */
         /*TODO*///	driver_polarisa,	/* PS  (c) 1980 Taito */
         /*TODO*///	driver_ballbomb,	/* TN  (c) 1980 Taito */
-        /*TODO*///	driver_m79amb,
+        driver_m79amb,
         /*TODO*///	driver_alieninv,
         /*TODO*///	driver_sitv,
         /*TODO*///	driver_sicv,
@@ -867,10 +876,10 @@ public class driver {
         /*TODO*///	driver_outline,	/* (c) 1982 Century */
         /*TODO*///	driver_goldbug,	/* (c) 1982 Century */
         /*TODO*///	driver_heartatk,	/* (c) 1983 Century Electronics */
-        /*TODO*///	driver_hunchbak,	/* (c) 1983 Century */
+        driver_hunchbak,	/* (c) 1983 Century */
         /*TODO*///	driver_superbik,	/* (c) 1983 Century */
         /*TODO*///	driver_hero,		/* (c) 1983 Seatongrove (c) 1984 CVS */
-        /*TODO*///	driver_huncholy,	/* (c) 1984 Seatongrove (c) CVS */
+        driver_huncholy,	/* (c) 1984 Seatongrove (c) CVS */
         /*TODO*///
         /*TODO*///	/* Midway "Astrocade" games */
         /*TODO*///	driver_seawolf2,
@@ -968,8 +977,8 @@ public class driver {
         /*TODO*///	driver_skychut,	/* (c) [1980] */
         /*TODO*///	driver_spacbeam,	/* M15 no copyright notice */
         /*TODO*///TESTdriver_greenber,
-        /*TODO*///
-        /*TODO*///	driver_redalert,	/* (c) 1981 + "GDI presents" */
+        
+        driver_redalert,	/* (c) 1981 + "GDI presents" */
         /*TODO*///	driver_olibochu,	/* M47 (c) 1981 + "GDI presents" */
         /*TODO*///	driver_mpatrol,	/* M52 (c) 1982 */
         /*TODO*///	driver_mpatrolw,	/* M52 (c) 1982 + Williams license */
@@ -2003,14 +2012,14 @@ public class driver {
         /*TODO*///	driver_wsf,		/* (c) 1990 Leland */
         /*TODO*///	driver_indyheat,	/* (c) 1991 Leland */
         /*TODO*///	driver_brutforc,	/* (c) 1991 Leland */
-        /*TODO*///
-        /*TODO*///	/* Gremlin 8080 games */
-        /*TODO*///	/* the numbers listed are the range of ROM part numbers */
-        /*TODO*///	driver_blockade,	/* 1-4 [1977 Gremlin] */
-        /*TODO*///	driver_comotion,	/* 5-7 [1977 Gremlin] */
-        /*TODO*///	driver_hustle,	/* 16-21 [1977 Gremlin] */
-        /*TODO*///	driver_blasto,	/* [1978 Gremlin] */
-        /*TODO*///
+        
+        /* Gremlin 8080 games */
+        /* the numbers listed are the range of ROM part numbers */
+        driver_blockade,	/* 1-4 [1977 Gremlin] */
+        driver_comotion,	/* 5-7 [1977 Gremlin] */
+        driver_hustle,	/* 16-21 [1977 Gremlin] */
+        driver_blasto,	/* [1978 Gremlin] */
+        
         /*TODO*///	/* Gremlin/Sega "VIC dual game board" games */
         /*TODO*///	/* the numbers listed are the range of ROM part numbers */
         /*TODO*///	driver_depthch,	/* 50-55 [1977 Gremlin?] */
@@ -3701,7 +3710,7 @@ public class driver {
         driver_hexa, /* D. R. Korea */
         /*TODO*///	driver_spiders,	/* (c) 1981 Sigma Ent. Inc. */
         /*TODO*///	driver_spiders2,	/* (c) 1981 Sigma Ent. Inc. */
-        /*TODO*///	driver_stactics,	/* [1981 Sega] */
+        driver_stactics,	/* [1981 Sega] */
         /*TODO*///	driver_exterm,	/* (c) 1989 Premier Technology - a Gottlieb game */
         /*TODO*///	driver_kingofb,	/* (c) 1985 Woodplace Inc. */
         /*TODO*///	driver_ringking,	/* (c) 1985 Data East USA */
@@ -3709,7 +3718,7 @@ public class driver {
         /*TODO*///	driver_ringkin3,	/* (c) 1985 Data East USA */
         /*TODO*///	driver_clshroad,	/* (c) 1986 Woodplace Inc. */
         driver_ambush, /* (c) 1983 Nippon Amuse Co-Ltd */
-        /*TODO*///	driver_starcrus,	/* [1977 Ramtek] */
+        driver_starcrus,	/* [1977 Ramtek] */
         /*TODO*///	driver_homo,		/* bootleg */
         /*TODO*///TESTdriver_dlair,
         /*TODO*///	driver_aztarac,	/* (c) 1983 Centuri (vector game) */
